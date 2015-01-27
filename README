@@ -4,4 +4,14 @@ Google Cloud Deployment Manager is an infrastructure management service that mak
 
 This repository contains example templates for use with Deployment Manager.
 
-See https://cloud.google.com/deployment-manager/overview for more information. 
+See https://cloud.google.com/deployment-manager/overview for more information.
+
+## Contributing
+
+Contributions to this library are always welcome and highly encouraged.
+
+See [CONTRIBUTING](CONTRIBUTING) for more information on how to get started.
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE) for more information.
