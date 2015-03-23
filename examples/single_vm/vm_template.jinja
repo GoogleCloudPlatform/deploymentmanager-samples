@@ -31,6 +31,14 @@ resources:
   properties:
     zone: {{ properties["zone"] }}
     machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    metadata:
+      items:
+      # For more ways to use startup scripts on an instance, see:
+      #   https://cloud.google.com/compute/docs/startupscript
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          python -m SimpleHTTPServer 8080
     disks:
     - deviceName: boot
       type: PERSISTENT

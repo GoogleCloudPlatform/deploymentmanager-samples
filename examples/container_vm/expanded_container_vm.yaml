@@ -27,10 +27,10 @@ resources:
     metadata:
       items:
       - key: google-container-manifest
-        value: '{''version'': ''v1beta2'', ''containers'': [{''name'': ''simple-echo'',
-          ''image'': ''busybox'', ''ports'': [{''name'': ''nc-echo'', ''containerPort'':
-          8080, ''hostPort'': 8080}], ''command'': [''nc'', ''-p'', ''8080'', ''-l'',
-          ''-l'', ''-e'', ''echo'', ''hello world!'']}]}'
+        value: '{''version'': ''v1beta2'', ''containers'': [{''image'': ''busybox'',
+          ''name'': ''simple-echo'', ''command'': [''nc'', ''-p'', ''8080'', ''-l'',
+          ''-l'', ''-e'', ''echo'', ''hello world!''], ''ports'': [{''name'': ''nc-echo'',
+          ''hostPort'': 8080, ''containerPort'': 8080}]}]}'
     networkInterfaces:
     - accessConfigs:
       - name: external-nat
