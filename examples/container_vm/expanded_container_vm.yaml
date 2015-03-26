@@ -21,7 +21,7 @@ resources:
       deviceName: boot
       initializeParams:
         diskName: my-container-vm-YOUR_DEPLOYMENT_NAME-disk
-        sourceImage: https://www.googleapis.com/compute/v1/projects/google-containers/global/images/container-vm-v20140731
+        sourceImage: https://www.googleapis.com/compute/v1/projects/google-containers/global/images/container-vm-v20150317
       type: PERSISTENT
     machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/n1-standard-1
     metadata:

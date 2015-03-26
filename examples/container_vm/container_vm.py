@@ -21,7 +21,7 @@
 #% - name: containerImage
 #%   type: string
 #%   description: Name of the Google Cloud Container VM Image
-#%     (e.g., container-vm-v20140731).
+#%     (e.g., container-vm-v20150317).
 #%   required: true
 #% - name: containerManifest
 #%   type: string

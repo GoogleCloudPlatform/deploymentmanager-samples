@@ -19,6 +19,6 @@ resources:
     type: container_vm.py
     properties:
       zone: ZONE_TO_RUN
-      containerImage: container-vm-v20140731
+      containerImage: container-vm-v20150317
       containerManifest: container_manifest.yaml
 
