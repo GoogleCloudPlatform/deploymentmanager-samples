@@ -1,0 +1,165 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: YOUR_DEPLOYMENT_NAME-minions-0
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #! /bin/bash
+          sudo echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' >> /etc/apt/sources.list
+          sudo wget -q -O- http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install salt-minion
+          sudo sed -i 's/#master: salt/master: YOUR_DEPLOYMENT_NAME-salt-cluster-master/' /etc/salt/minion
+          sudo salt-minion -l debug
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance
+- name: YOUR_DEPLOYMENT_NAME-minions-1
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #! /bin/bash
+          sudo echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' >> /etc/apt/sources.list
+          sudo wget -q -O- http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install salt-minion
+          sudo sed -i 's/#master: salt/master: YOUR_DEPLOYMENT_NAME-salt-cluster-master/' /etc/salt/minion
+          sudo salt-minion -l debug
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance
+- name: YOUR_DEPLOYMENT_NAME-minions-2
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #! /bin/bash
+          sudo echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' >> /etc/apt/sources.list
+          sudo wget -q -O- http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install salt-minion
+          sudo sed -i 's/#master: salt/master: YOUR_DEPLOYMENT_NAME-salt-cluster-master/' /etc/salt/minion
+          sudo salt-minion -l debug
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance
+- name: YOUR_DEPLOYMENT_NAME-minions-3
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #! /bin/bash
+          sudo echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' >> /etc/apt/sources.list
+          sudo wget -q -O- http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install salt-minion
+          sudo sed -i 's/#master: salt/master: YOUR_DEPLOYMENT_NAME-salt-cluster-master/' /etc/salt/minion
+          sudo salt-minion -l debug
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance
+- name: YOUR_DEPLOYMENT_NAME-salt-cluster-master-firewall
+  properties:
+    allowed:
+    - IPProtocol: tcp
+      ports:
+      - '4505'
+      - '4506'
+    network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    sourceRanges:
+    - 0.0.0.0/0
+  type: compute.v1.firewall
+- name: YOUR_DEPLOYMENT_NAME-salt-cluster-master
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #! /bin/bash
+          sudo echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' >> /etc/apt/sources.list
+          sudo wget -q -O- http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install salt-master
+          sudo salt-master -l debug
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance

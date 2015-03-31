@@ -1,0 +1,49 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: datadisk-YOUR_DEPLOYMENT_NAME
+  properties:
+    sizeGb: 100
+    type: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/diskTypes/pd-standard
+    zone: ZONE_TO_RUN
+  type: compute.v1.disk
+- name: vm-YOUR_DEPLOYMENT_NAME
+  properties:
+    disks:
+    - autoDelete: true
+      boot: true
+      deviceName: boot
+      initializeParams:
+        diskName: disk-YOUR_DEPLOYMENT_NAME
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      type: PERSISTENT
+    - autoDelete: true
+      deviceName: datadisk-YOUR_DEPLOYMENT_NAME
+      source: $(ref.datadisk-YOUR_DEPLOYMENT_NAME.selfLink)
+      type: PERSISTENT
+    machineType: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          python -m SimpleHTTPServer 8080
+    networkInterfaces:
+    - accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      network: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/global/networks/default
+    zone: ZONE_TO_RUN
+  type: compute.v1.instance
