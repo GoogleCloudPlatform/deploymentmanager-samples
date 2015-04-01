@@ -15,7 +15,10 @@
 # Note that we - redundantly - provide the imports of salt_cluster.jinja.
 # Once Expander supports Type Descriptors, it will be able to compute the
 # transitive closure of dependencies itself.
-imports: ["salt_cluster.jinja", "minion.jinja", "master.py"]
+imports:
+- path: salt_cluster.jinja
+- path: minion.jinja
+- path: master.py
 
 resources:
 - name: salt-cluster

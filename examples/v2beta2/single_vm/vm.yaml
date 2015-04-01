@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports: ["vm_template.jinja"]
+imports:
+- path: vm_template.jinja
 
 resources:
 - name: vm_template

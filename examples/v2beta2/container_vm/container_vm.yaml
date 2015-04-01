@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports: ["container_manifest.yaml", "container_vm.py"]
+imports:
+- path: container_manifest.yaml
+- path: container_vm.py
 
 resources:
   - name: my-container-vm
