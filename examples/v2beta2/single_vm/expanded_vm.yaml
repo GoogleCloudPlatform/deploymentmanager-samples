@@ -15,7 +15,7 @@
 resources:
 - name: datadisk-YOUR_DEPLOYMENT_NAME
   properties:
-    sizeGb: 100
+    sizeGb: 10
     type: https://www.googleapis.com/compute/v1/projects/YOUR_PROJECT_NAME/zones/ZONE_TO_RUN/diskTypes/pd-standard
     zone: ZONE_TO_RUN
   type: compute.v1.disk

@@ -22,7 +22,7 @@ resources:
   name: {{ DATADISK }}
   properties:
     zone: {{ properties["zone"] }}
-    sizeGb: 100
+    sizeGb: 10
     # Disk type is a full URI.  Example uses pd-standard, but pd-ssd can be used as well
     type: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/pd-standard
 
