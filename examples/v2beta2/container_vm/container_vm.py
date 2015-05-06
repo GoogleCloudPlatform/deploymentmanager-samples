@@ -34,10 +34,24 @@
 import yaml
 
 
+def GenerateEmbeddableYaml(yaml_string):
+  # Because YAML is a space delimited format, we need to be careful about
+  # embedding one YAML document in another. This function takes in a string in
+  # YAML format and produces an equivalent YAML representation that can be
+  # inserted into arbitrary points of another YAML document. It does so by
+  # printing the YAML string in a single line format. Consistent ordering of
+  # the string is also guaranteed by using yaml.dump.
+  yaml_object = yaml.load(yaml_string)
+  dumped_yaml = yaml.dump(yaml_object, default_flow_style=True)
+  return dumped_yaml
+
+
 def GenerateConfig(context):
-  # Loading the container manifest into a YAML object model so that it will be
-  # serialized as a single JSON-like object when converted to string.
-  manifest = yaml.load(context.imports[context.properties["containerManifest"]])
+  # We need to specify the container manifest as a YAML string in the instance's
+  # metadata. Generate a YAML string that can be inserted into the overall
+  # document.
+  manifest = GenerateEmbeddableYaml(
+      context.imports[context.properties["containerManifest"]])
 
   return """
 resources:
