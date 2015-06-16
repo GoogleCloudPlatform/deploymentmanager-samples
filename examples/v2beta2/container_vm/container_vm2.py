@@ -34,6 +34,8 @@ def ZonalComputeUrl(project, zone, collection, name):
 def GenerateConfig(context):
   """Generate configuration."""
 
+  base_name = context.env['deployment'] + '-' + context.env['name']
+
   # Properties for the container-based instance.
   instance = {
       'zone': context.properties['zone'],
@@ -53,7 +55,7 @@ def GenerateConfig(context):
           'autoDelete': True,
           'boot': True,
           'initializeParams': {
-              'diskName': context.env['name'] + '-disk',
+              'diskName': base_name + '-disk',
               'sourceImage': GlobalComputeUrl('google-containers',
                                               'images',
                                               context.properties[
@@ -74,7 +76,7 @@ def GenerateConfig(context):
   # Resources to return.
   resources = {
       'resources': [{
-          'name': context.env['deployment'] + '-' + context.env['name'],
+          'name': base_name,
           'type': 'compute.v1.instance',
           'properties': instance
           }]
