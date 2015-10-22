@@ -14,13 +14,13 @@
 
 imports:
 - path: container_manifest.yaml
-- path: container_vm.py
+- path: container_vm2.py
 
 resources:
   - name: my-container-vm
-    type: container_vm.py
+    type: container_vm2.py
     properties:
       zone: ZONE_TO_RUN
-      containerImage: container-vm-v20150317
+      containerImage: container-vm-v20150806
       containerManifest: container_manifest.yaml
 

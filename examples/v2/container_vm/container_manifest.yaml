@@ -14,13 +14,16 @@
 
 # This is a container manifest, as described here:
 #   https://cloud.google.com/compute/docs/containers/container_vms
-version: v1beta2
-containers:
-  - name: simple-echo
-    image: busybox
-    command: ['nc', '-p', '8080', '-l', '-l', '-e', 'echo', 'hello world!']
-    ports:
-      - name: nc-echo
-        hostPort: 8080
-        containerPort: 8080
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-echo
+spec:
+  containers:
+    - name: simple-echo
+      image: gcr.io/google-containers/busybox
+      command: ['nc', '-p', '8080', '-l', '-l', '-e', 'echo', 'hello world!']
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
