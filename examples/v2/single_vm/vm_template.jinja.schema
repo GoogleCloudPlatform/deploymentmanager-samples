@@ -1,0 +1,12 @@
+info:
+  title: Single VM
+  author: Google Inc.
+  description: Creates a disk and a vm, and attaches the disk to the vm.
+
+required:
+  - zone
+
+properties:
+  zone:
+    description: Zone to create the resources in.
+    type: string
