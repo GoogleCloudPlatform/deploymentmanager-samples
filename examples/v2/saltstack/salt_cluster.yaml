@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Note that we - redundantly - provide the imports of salt_cluster.jinja.
-# Once Expander supports Type Descriptors, it will be able to compute the
-# transitive closure of dependencies itself.
+# Note that the salt_cluster.jinja.schema defines the sub templates
+# used by salt_cluster.jinja.
 imports:
 - path: salt_cluster.jinja
-- path: minion.jinja
-- path: master.py
 
 resources:
 - name: salt-cluster
@@ -26,4 +23,3 @@ resources:
   properties:
     minionCount: 4
     zone: ZONE_TO_RUN
-

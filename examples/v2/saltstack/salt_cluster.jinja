@@ -13,18 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-#% description: Creates a set of VMs each running either a Salt master or minion daemon in a Docker container.
-#% imports: ["minion.jinja", "master.py"]
-#% parameters:
-#% - name: minionCount
-#%   type: int
-#%   description: How many minion VMs to set up.
-#%   default: 1
-#% - name: zone
-#%   type: string
-#%   description: Zone to create the resources in.
-#%   required: true
-
 {% set MASTER_NAME = env["deployment"] + "-" + env["name"] + "-master" %}
 
 resources:
