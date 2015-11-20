@@ -1,0 +1,38 @@
+
+{% macro diskName(diskObj) -%}{{ env["deployment"]}}-disk-{{ diskObj["name"] }}{%- endmacro %}
+
+resources:
+
+{% for diskObj in properties["disks"] %}
+- name: {{ diskName(diskObj) }}
+  type: compute.v1.disk
+  properties:
+    zone: {{ properties["zone"] }}
+    sizeGb: {{ diskObj["sizeGb"] }}
+    type: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ diskObj["diskType"] }}
+{% endfor %}
+
+- name: {{ env["deployment"] }}-vm
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        diskName: {{ env["deployment"] }}-boot
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+    {% for diskObj in properties["disks"] %}
+    - deviceName: {{ diskName(diskObj) }}
+      type: PERSISTENT
+      source: $(ref.{{ diskName(diskObj) }}.selfLink)
+      autoDelete: true
+    {% endfor %}

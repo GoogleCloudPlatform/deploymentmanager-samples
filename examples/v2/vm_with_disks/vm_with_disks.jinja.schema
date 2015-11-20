@@ -1,0 +1,33 @@
+info:
+  title: VM with Disks
+  author: Google Inc.
+  description: Creates a single vm, then attaches disks to it.
+
+required:
+- zone
+
+properties:
+  zone:
+    type: string
+    description: GCP zone
+    default: us-central1-a
+  disks:
+    type: array
+    items:
+      type: object
+      required:
+      - name
+      - sizeGb
+      - diskType
+      properties:
+        name:
+          type: string
+          description: Suffix for this disk
+        sizeGb:
+          type: integer
+        diskType:
+          type: string
+          enum:
+          - pd-standard
+          - pd-ssd
+      additionalProperties: false
