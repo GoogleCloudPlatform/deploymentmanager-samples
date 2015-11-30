@@ -17,16 +17,16 @@ properties:
       type: object
       required:
       - name
-      - sizeGb
-      - diskType
       properties:
         name:
           type: string
           description: Suffix for this disk
         sizeGb:
           type: integer
+          default: 100
         diskType:
           type: string
+          default: pd-standard
           enum:
           - pd-standard
           - pd-ssd
