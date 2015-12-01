@@ -9,15 +9,15 @@ resources:
   type: container_vm.py
   properties:
     zone: {{ properties["zone"] }}
-    dockerImage: vaikas/mysql
-    containerImage: container-vm-v20150806
+    dockerImage: gcr.io/deployment-manager-examples/mysql
+    containerImage: container-vm-v20151103
     port: {{ MYSQL_PORT }}
 
 - name: {{ FRONTEND }}
   type: frontend.py
   properties:
     zone: {{ properties["zone"] }}
-    dockerImage: vaikas/nodejsservice
+    dockerImage: gcr.io/deployment-manager-examples/nodejsservice
     port: {{ APPLICATION_PORT }}
 
     # Define the variables that are exposed to container as env variables.

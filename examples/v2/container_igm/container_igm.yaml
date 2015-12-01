@@ -21,7 +21,7 @@ resources:
   type: container_igm.jinja
   properties:
     zone: us-central1-f
-    containerImage: container-vm-v20150806
+    containerImage: container-vm-v20151103
     containerManifest: container_manifest.yaml
     targetSize: 2
     maxReplicas: 5

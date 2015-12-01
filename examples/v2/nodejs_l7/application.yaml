@@ -33,6 +33,6 @@ resources:
   properties:
     primaryZone: ZONE_TO_RUN
     secondaryZone: SECOND_ZONE_TO_RUN
-    backendImage: vaikas/mysql
-    frontendImage: vaikas/nodejsservice
-    staticImage: vaikas/nodejsservicestatic
+    backendImage: gcr.io/deployment-manager-examples/mysql
+    frontendImage: gcr.io/deployment-manager-examples/nodejsservice
+    staticImage: gcr.io/deployment-manager-examples/nodejsservicestatic
