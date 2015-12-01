@@ -1,0 +1,38 @@
+# Launches an autoscaled, load-balanced frontend in two zones running nodejs
+# for serving traffic using L7 loadbalancing. Also launches a single MySQL
+# container instance, wires the two together using references, and passes
+# them as env variables to the underlying frontend Docker containers.
+#
+# NOTE: Due to the fact that IGM does not allow specifying service/port to
+# created IG, you must run the following commands after creation of the
+# template:
+#
+# export PROJECT=<YOUR PROJECT>
+# export DEPLOYMENT=<DEPLOYMENT NAME>
+# export PRIMARY_ZONE=<PRIMARY ZONE>
+# export SECONDARY_ZONE=<SECONDARY ZONE>
+#
+# gcloud --project=${PROJECT} compute instance-groups set-named-ports frontend-${DEPLOYMENT}-pri-igm --named-ports http:8080 --zone ${PRIMARY_ZONE}
+# gcloud --project=${PROJECT} compute instance-groups set-named-ports frontend-${DEPLOYMENT}-sec-igm --named-ports http:8080 --zone ${SECONDARY_ZONE}
+# gcloud --project=${PROJECT} compute instance-groups set-named-ports static-service-${DEPLOYMENT}-pri-igm --named-ports httpstatic:8080 --zone ${PRIMARY_ZONE}
+# gcloud --project=${PROJECT} compute instance-groups set-named-ports static-service-${DEPLOYMENT}-sec-igm --named-ports httpstatic:8080 --zone ${SECONDARY_ZONE}
+#
+# Then to see the IP that exposes the application, you can do:
+# gcloud compute forwarding-rules list | grep application-${DEPLOYMENT}-l7lb
+imports:
+- path: application.jinja
+- path: service.py
+- path: autoscaled_group.py
+- path: container_instance_template.py
+- path: container_vm.py
+- path: container_helper.py
+
+resources:
+- name: nodejs
+  type: application.jinja
+  properties:
+    primaryZone: ZONE_TO_RUN
+    secondaryZone: SECOND_ZONE_TO_RUN
+    backendImage: vaikas/mysql
+    frontendImage: vaikas/nodejsservice
+    staticImage: vaikas/nodejsservicestatic

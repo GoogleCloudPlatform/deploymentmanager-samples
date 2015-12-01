@@ -1,0 +1,39 @@
+{% set BACKEND = "backend-" + env["deployment"] %}
+{% set FRONTEND = "frontend-" + env["deployment"] %}
+{% set FIREWALL = "application-fw-" + env["deployment"] %}
+{% set APPLICATION_PORT = 8080 %}
+{% set MYSQL_PORT = 8080 %}
+
+resources:
+- name: {{ BACKEND }}
+  type: container_vm.py
+  properties:
+    zone: {{ properties["zone"] }}
+    dockerImage: vaikas/mysql
+    containerImage: container-vm-v20150806
+    port: {{ MYSQL_PORT }}
+
+- name: {{ FRONTEND }}
+  type: frontend.py
+  properties:
+    zone: {{ properties["zone"] }}
+    dockerImage: vaikas/nodejsservice
+    port: {{ APPLICATION_PORT }}
+
+    # Define the variables that are exposed to container as env variables.
+    dockerEnv:
+      SEVEN_SERVICE_MYSQL_PORT: {{ MYSQL_PORT }}
+      SEVEN_SERVICE_PROXY_HOST: $(ref.{{ BACKEND }}.networkInterfaces[0].networkIP)
+
+    # If left out will default to 1
+    size: 2
+    # If left out will default to 1
+    maxSize: 20
+
+- name: {{ FIREWALL }}
+  type: compute.v1.firewall
+  properties:
+    allowed:
+      - IPProtocol: TCP
+        ports: [ {{ APPLICATION_PORT }} ]
+    sourceRanges: [ 0.0.0.0/0 ]

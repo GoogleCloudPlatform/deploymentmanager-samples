@@ -1,0 +1,105 @@
+#% parameters:
+#% - name: primaryZone
+#%   type: string
+#%   description: Primary Zone in which to run the service
+#%   required: true
+#% - name: secondaryZone
+#%   type: string
+#%   description: Secondary Zone in which to run the service.
+#%   required: true
+#% - name: backendImage
+#%   type: string
+#%   description: Docker image to use in the backend.
+#%   required: true
+#% - name: frontendImage
+#%   type: string
+#%   description: Docker image to use in the frontend service.
+#%   required: true
+#% - name: staticImage
+#%   type: string
+#%   description: Docker image to use in the static service.
+#%   required: true
+
+{% set BACKEND = "backend-" + env["deployment"] %}
+{% set FRONTEND = "frontend-" + env["deployment"] %}
+{% set STATIC_SERVICE = "static-service-" + env["deployment"] %}
+{% set APPLICATION = "application-" + env["deployment"] %}
+
+{% set APPLICATION_PORT = 8080 %}
+{% set LB_PORT = 8080 %}
+{% set MYSQL_PORT = 8080 %}
+
+{% set CONTAINER_IMAGE = "container-vm-v20150806" %}
+
+resources:
+- name: {{ BACKEND }}
+  type: container_vm.py
+  properties:
+    zone: {{ properties["primaryZone"] }}
+    dockerImage: {{ properties["backendImage"] }}
+    containerImage: {{ CONTAINER_IMAGE }}
+    port: {{ MYSQL_PORT }}
+
+- name: {{ FRONTEND }}
+  type: service.py
+  properties:
+    primaryZone: {{ properties["primaryZone"] }}
+    primarySize: 2
+    secondaryZone: {{ properties["secondaryZone"] }}
+    secondarySize: 0
+    dockerImage: {{ properties["frontendImage"] }}
+    containerImage: {{ CONTAINER_IMAGE }}
+    port: {{ APPLICATION_PORT }}
+    service: http
+    # If left out will default to 1
+    maxSize: 20
+
+    # Define the variables that are exposed to container as env variables.
+    dockerEnv:
+      SEVEN_SERVICE_MYSQL_PORT: {{ MYSQL_PORT }}
+      SEVEN_SERVICE_PROXY_HOST: $(ref.{{ BACKEND }}.networkInterfaces[0].networkIP)
+
+- name: {{ STATIC_SERVICE }}
+  type: service.py
+  properties:
+    primaryZone: {{ properties["primaryZone"] }}
+    primarySize: 2
+    secondaryZone: {{ properties["secondaryZone"] }}
+    secondarySize: 0
+    dockerImage: {{ properties["staticImage"] }}
+    containerImage: {{ CONTAINER_IMAGE }}
+    port: {{ APPLICATION_PORT }}
+    service: httpstatic
+    # If left out will default to 1
+    maxSize: 20
+
+- name: {{ APPLICATION }}-urlmap
+  type: compute.v1.urlMap
+  properties:
+    defaultService: $(ref.{{ FRONTEND }}-bes.selfLink)
+    hostRules:
+      - hosts: ["*"]
+        pathMatcher: pathmap
+    pathMatchers:
+      - name: pathmap
+        defaultService: $(ref.{{ FRONTEND }}-bes.selfLink)
+        pathRules:
+          - paths: ["/static", "/static/*"]
+            service: $(ref.{{ STATIC_SERVICE }}-bes.selfLink)
+- name: {{ APPLICATION }}-targetproxy
+  type: compute.v1.targetHttpProxy
+  properties:
+    urlMap: $(ref.{{ APPLICATION }}-urlmap.selfLink)
+- name: {{ APPLICATION }}-l7lb
+  type: compute.v1.globalForwardingRule
+  properties:
+    IPProtocol: TCP
+    portRange: {{ LB_PORT }}
+    target: $(ref.{{ APPLICATION }}-targetproxy.selfLink)
+- name: {{ APPLICATION }}-fw
+  type: compute.v1.firewall
+  properties:
+    allowed:
+      - IPProtocol: TCP
+        ports: [ {{ LB_PORT }} ]
+    sourceRanges: [ 0.0.0.0/0 ]
