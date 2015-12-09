@@ -1,7 +1,6 @@
 """Creates a Container VM with the provided Container manifest."""
 
 from container_helper import GenerateManifest
-import yaml
 
 
 def GenerateConfig(context):
@@ -45,5 +44,5 @@ def GenerateConfig(context):
           }
       }
 
-  return yaml.dump({'resources': [instance_template]})
+  return {'resources': [instance_template]}
 

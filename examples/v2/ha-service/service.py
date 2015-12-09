@@ -14,8 +14,6 @@
 
 """Creates autoscaled, network LB IGM running specified docker image."""
 
-import yaml
-
 # Defaults
 SIZE_KEY = 'size'
 DEFAULT_SIZE = 1
@@ -82,5 +80,5 @@ def GenerateConfig(context):
       }
   }]
 
-  return yaml.dump({'resources': resources})
+  return {'resources': resources}
 

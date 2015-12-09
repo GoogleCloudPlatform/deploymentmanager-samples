@@ -14,8 +14,6 @@
 
 """Generates configuration for a network load balancer."""
 
-import yaml
-
 
 def GenerateConfig(context):
   """Generates config."""
@@ -53,4 +51,4 @@ def GenerateConfig(context):
       }
   }]
 
-  return yaml.dump({'resources': resources})
+  return {'resources': resources}

@@ -39,4 +39,5 @@ def GenerateManifest(context):
   if env_list:
     manifest['spec']['containers'][0]['env'] = env_list
 
+  # We want to return string here, since it _is_ a string.
   return yaml.dump(manifest, default_flow_style=False)

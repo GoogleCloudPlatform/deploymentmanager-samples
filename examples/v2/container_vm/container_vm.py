@@ -15,8 +15,6 @@
 """Creates a Container VM with the provided Container manifest.
 """
 
-import yaml
-
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
@@ -34,7 +32,9 @@ def ZonalComputeUrl(project, zone, collection, name):
 def GenerateConfig(context):
   """Generate configuration."""
 
-  base_name = context.env['deployment'] + '-' + context.env['name']
+  res = []
+  base_name = (context.env['deployment'] + '-' +
+               context.env['name'] + '-')
 
   # Properties for the container-based instance.
   instance = {
@@ -46,9 +46,10 @@ def GenerateConfig(context):
       'metadata': {
           'items': [{
               'key': 'google-container-manifest',
-              'value': context.imports[context.properties['containerManifest']]
+              'value': context.imports[
+                  context.properties['containerManifest']],
               }]
-          },
+      },
       'disks': [{
           'deviceName': 'boot',
           'type': 'PERSISTENT',
@@ -61,7 +62,7 @@ def GenerateConfig(context):
                                               context.properties[
                                                   'containerImage'])
               },
-          }],
+      }],
       'networkInterfaces': [{
           'accessConfigs': [{
               'name': 'external-nat',
@@ -70,16 +71,16 @@ def GenerateConfig(context):
           'network': GlobalComputeUrl(context.env['project'],
                                       'networks',
                                       'default')
-          }]
-      }
-
+      }]
+  }
+  res.append({
+      'name': base_name,
+      'type': 'compute.v1.instance',
+      'properties': instance
+  })
   # Resources to return.
   resources = {
-      'resources': [{
-          'name': base_name,
-          'type': 'compute.v1.instance',
-          'properties': instance
-          }]
-      }
+      'resources': res,
+  }
 
-  return yaml.dump(resources)
+  return resources

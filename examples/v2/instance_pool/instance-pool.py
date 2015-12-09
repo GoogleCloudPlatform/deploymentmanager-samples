@@ -13,15 +13,13 @@
 # limitations under the License.
 """Python template for creating a pool of similar instances."""
 
-import yaml
-
 
 def GenerateConfig(context):
   """Generate the yaml config for a pool of instances."""
   resources = []
   for index in range(1, context.properties['count'] + 1):
     resources.append(GenerateInstanceConfig(context, index))
-  return yaml.dump({'resources': resources})
+  return {'resources': resources}
 
 
 def GenerateInstanceConfig(context, index):

@@ -14,8 +14,6 @@
 
 """Creates a Compute Instance with the provided metadata."""
 
-import yaml
-
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
@@ -46,10 +44,9 @@ def GenerateConfig(context):
   # Properties for the container-based instance.
   instance = {
       'zone': context.properties['zone'],
-      'machineType': ZonalComputeUrl(context.env['project'],
-                                     context.properties['zone'],
-                                     'machineTypes',
-                                     'f1-micro'),
+      'machineType': ZonalComputeUrl(
+          context.env['project'], context.properties['zone'], 'machineTypes',
+          'f1-micro'),
       'metadata': metadata,
       'disks': [{
           'deviceName': 'boot',
@@ -58,10 +55,9 @@ def GenerateConfig(context):
           'boot': True,
           'initializeParams': {
               'diskName': base_name + '-disk',
-              'sourceImage': GlobalComputeUrl('debian-cloud',
-                                              'images',
-                                              ''.join(['backports-debian',
-                                                       '-7-wheezy-v20151104']))
+              'sourceImage': GlobalComputeUrl(
+                  'debian-cloud', 'images',
+                  ''.join(['backports-debian', '-7-wheezy-v20151104']))
               },
           }],
       'networkInterfaces': [{
@@ -69,9 +65,8 @@ def GenerateConfig(context):
               'name': 'external-nat',
               'type': 'ONE_TO_ONE_NAT'
               }],
-          'network': GlobalComputeUrl(context.env['project'],
-                                      'networks',
-                                      'default')
+          'network': GlobalComputeUrl(
+              context.env['project'], 'networks', 'default')
           }]
       }
 
@@ -84,4 +79,4 @@ def GenerateConfig(context):
           }]
       }
 
-  return yaml.dump(resources)
+  return resources

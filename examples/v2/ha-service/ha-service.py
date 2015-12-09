@@ -14,8 +14,6 @@
 
 """Creates an HA service configuration."""
 
-import yaml
-
 
 def GenerateConfig(context):
   """Generates config."""
@@ -54,5 +52,5 @@ def GenerateConfig(context):
 
   config['resources'].append(lb)
 
-  return yaml.dump(config)
+  return config
 
