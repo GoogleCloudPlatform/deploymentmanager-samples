@@ -1,0 +1,72 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Autoscaled Group Template
+  author: Google Inc.
+  description: Creates an autoscaled IGM with a passed template.
+  version: 1.0
+
+imports:
+  - path: autoscaled_group.py
+  - path: common.py
+  - path: default.py
+  - path: replicated_service.py
+  - path: vm_instance.py
+  - path: vm_instance_template.py
+
+required:
+  - defaultService
+  - hostRules
+  - pathMatchers
+  - port
+
+properties:
+  addFirewall:
+    description: Whether to add a firewall to this load balancer
+    type: boolean
+    default: True
+  defaultService:
+    description: >
+      The URL of the BackendService resource to use if none of the hostRules
+      match.
+    type: string
+  hostRules:
+    description: >
+      The list of HostRules to use against the URL. See
+      https://cloud.google.com/compute/docs/reference/latest/urlMaps
+    type: array
+  IPProtocol:
+    description: >
+      The IP protocol that is allowed for this rule.
+      This is required when creating a firewall.
+    type: string
+    default: TCP
+  numberOfIps:
+    description: Number of Global IP addresses to be created
+    type: integer
+    default: 1
+  pathMatchers:
+    description: >
+      The list of named PathMatchers to use against the URL. See
+      https://cloud.google.com/compute/docs/reference/latest/urlMaps
+    type: array
+  port:
+    description: Load balancer port.
+    type: integer
+  sourceRanges:
+    description: >
+      The IP address blocks that this rule applies to, expressed in CIDR format
+    type: array
+    default: ['0.0.0.0/0']

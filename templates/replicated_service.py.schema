@@ -1,0 +1,68 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Autoscaled Group Template
+  author: Google Inc.
+  description: Creates an autoscaled IGM with a passed template.
+  version: 1.0
+
+imports:
+  - path: autoscaled_group.py
+  - path: common.py
+  - path: default.py
+
+required:
+  - instanceTemplate
+
+properties:
+  instanceTemplate:
+    description: Name (or url) of a valid instance template resource
+    type: string
+  service:
+    description: The backend service port name.
+    type: string
+    default: httpservice
+  port:
+    description: The backend service port number
+    type: integer
+    default: 80
+  healthPath:
+    description: The request path of the HTTPS health check request
+    type: string
+    default: /_ah/health
+  replicas:
+    description: Configuration for zones and number of replicas in each zone
+    type: array
+    default: [{'pri': {'zone': 'us-central1-f'}}]
+    items:
+      type: object
+      required:
+      - name
+      - zone
+      properties:
+        name:
+         type: string
+         description: "Name for this replica, i.e.: \"primary\""
+        zone:
+          type: string
+          description: A valid GCP zone.
+        size:
+          type: integer
+          description: Default number of instances for this zone
+          default: 1
+        maxNumReplicas:
+          type: integer
+          description: Maximum number of instances for this zone
+          default: 1
