@@ -152,11 +152,12 @@ def ListPropertyValuesOfType(res_dict, prop, res_type):
   return [r['properties'][prop] for r in res_dict if r['type'] == res_type]
 
 
-def MakeResource(resource_list):
+def MakeResource(resource_list, output_list=None):
   """Wrapper for a DM template basic spec."""
-  resources = {'resources': resource_list}
-
-  return yaml.dump(resources)
+  content = {'resources': resource_list}
+  if output_list:
+    content['outputs'] = output_list
+  return yaml.dump(content)
 
 
 def TakeZoneOut(properties):
