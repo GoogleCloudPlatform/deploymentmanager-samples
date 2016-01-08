@@ -34,7 +34,7 @@ def GenerateConfig(context):
 
   res = []
   base_name = (context.env['deployment'] + '-' +
-               context.env['name'] + '-')
+               context.env['name'])
 
   # Properties for the container-based instance.
   instance = {

@@ -19,6 +19,7 @@ import vm_instance
 
 # Properties for this component, also look at the vm_instance properties
 VM_COPIES = default.VM_COPIES
+ENDPOINT_NAME = default.ENDPOINT_NAME
 
 
 # The optional and mandatory fields are the same as a vm_instance
@@ -28,6 +29,7 @@ def GenerateMultipleComputeVMs(context):
   if VM_COPIES not in prop:
     raise common.Error('%s property is needed for multiple VM generation' %
                        VM_COPIES)
+  use_endpoint = ENDPOINT_NAME in prop
   n_of_copies = prop[VM_COPIES]
   resources = []
   new_disks = []
@@ -44,7 +46,10 @@ def GenerateMultipleComputeVMs(context):
       # Modifies the disks in idx_prop to have a unique name
       # Adding the vm extension to match the final hostname
       NameTheDisks(idx_prop[default.DISKS], disk_prefix)
-    resources.append(vm_instance.GenerateComputeVM(ctx)[-1])
+    if use_endpoint:
+      idx_prop[ENDPOINT_NAME] += AddIdx(idx)
+    resources += vm_instance.GenerateComputeVM(ctx)
+    resources += vm_instance.AddServiceEndpointIfNeeded(ctx)
     new_disks += common.AddDiskResourcesIfNeeded(ctx)
   AddDisksToContext(context, new_disks)
   return resources

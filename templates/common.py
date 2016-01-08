@@ -95,7 +95,7 @@ def LocalComputeLink(project, zone, key, value):
 
 
 def ReadContext(context, prop_key):
-  return (context.env['project'], context.properties['zone'],
+  return (context.env['project'], context.properties.get('zone', None),
           context.properties[prop_key])
 
 
@@ -113,6 +113,10 @@ def MakeGlobalComputeLink(context, key):
     return value
   else:
     return GlobalComputeLink(project, key + 's', value)
+
+
+def MakeFQHN(context, name):
+  return '%s.c.%s.internal' % (name, context.env['project'])
 
 
 # TODO(victorg): Consider moving this method to a different file
