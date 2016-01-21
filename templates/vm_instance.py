@@ -37,7 +37,8 @@ SERVICE_ACCOUNTS = default.SERVICE_ACCOUNTS
 SRCIMAGE = default.SRCIMAGE
 TAGS = default.TAGS
 ZONE = default.ZONE
-GENERATE_PASSWORD_KEYS = 'generate_password_keys'
+GENERATE_PASSWORD_KEYS = 'generatePasswordKeys'
+AUTODELETE_BOOTDISK = 'bootDiskAutodelete'
 
 # Defaults used for modules that imports this one
 DEFAULT_DISKTYPE = 'pd-standard'
@@ -46,6 +47,7 @@ DEFAULT_MACHINETYPE = 'n1-standard-1'
 DEFAULT_NETWORK = 'default'
 DEFAULT_PROVIDE_BOOT = True
 DEFAULT_BOOTDISKSIZE = 10
+DEFAULT_AUTODELETE_BOOTDISK = True
 DEFAULT_DATADISKSIZE = 500
 DEFAULT_ZONE = 'us-central1-f'
 DEFAULT_PERSISTENT = 'PERSISTENT'
@@ -97,10 +99,11 @@ def GenerateComputeVM(context):
     dev_mode = DEVIMAGE in prop and prop[DEVIMAGE]
     src_image = common.MakeC2DImageLink(prop[SRCIMAGE], dev_mode)
     boot_name = common.AutoName(context.env['name'], default.DISK, 'boot')
-    disk_size = (prop[BOOTDISKSIZE] if BOOTDISKSIZE in prop else
-                 DEFAULT_BOOTDISKSIZE)
+    disk_size = prop.get(BOOTDISKSIZE, DEFAULT_BOOTDISKSIZE)
     disk_type = common.MakeLocalComputeLink(context, DISKTYPE)
-    disks = PrependBootDisk(disks, boot_name, disk_type, disk_size, src_image)
+    autodelete = prop.get(AUTODELETE_BOOTDISK, DEFAULT_AUTODELETE_BOOTDISK)
+    disks = PrependBootDisk(
+        disks, boot_name, disk_type, disk_size, src_image, autodelete)
   if local_ssd:
     disks = AppendLocalSSDDisks(context, disks, local_ssd)
   machine_type = common.MakeLocalComputeLink(context, default.MACHINETYPE)
@@ -141,11 +144,12 @@ def GenerateComputeVM(context):
   return resource
 
 
-def PrependBootDisk(disk_list, name, disk_type, disk_size, src_image):
+def PrependBootDisk(disk_list, name, disk_type, disk_size, src_image,
+                    autodelete):
   """Appends the boot disk."""
   # Request boot disk creation (mark for autodelete)
   boot_disk = [{
-      'autoDelete': True,
+      'autoDelete': autodelete,
       'boot': True,
       'deviceName': name,
       'initializeParams': {
