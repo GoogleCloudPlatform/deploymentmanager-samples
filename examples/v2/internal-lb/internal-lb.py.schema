@@ -54,3 +54,7 @@ properties:
     type: string
     description: GCP zone
 
+outputs:
+  address:
+    type: string
+    description: Internal IP address for load balancer.

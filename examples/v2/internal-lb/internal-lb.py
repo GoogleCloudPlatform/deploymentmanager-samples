@@ -23,6 +23,11 @@ igm_pattern = re.compile('zones/([^/]+)/instanceGroups/(.*)$')
 def GenerateConfig(context):
   """Generate configuration."""
 
+  lb_name = ''.join([context.env['deployment'],
+                     '-',
+                     context.env['name'],
+                     '-internal-lb'])
+
   metadata = {
       'algorithm': context.properties['algorithm'],
       'app-port': context.properties['app-port'],
@@ -37,7 +42,7 @@ def GenerateConfig(context):
   metadata['groups'] = groups
 
   resources = [{
-      'name': context.env['name'] + '-internal-lb',
+      'name': lb_name,
       'type': 'instance.py',
       'properties': {
           'machine-type': context.properties['machine-type'],
@@ -49,5 +54,11 @@ def GenerateConfig(context):
       }
   }]
 
-  return {'resources': resources}
+  return {
+      'resources': resources,
+      'outputs': [{
+          'name': 'address',
+          'value': '$(ref.' + lb_name + '.networks.networkIP)'
+      }]
+  }
 
