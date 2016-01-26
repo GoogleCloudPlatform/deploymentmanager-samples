@@ -62,7 +62,7 @@ def GenerateConfig(context):
               'diskName': base_name + '-disk',
               'sourceImage': GlobalComputeUrl(
                   'debian-cloud', 'images',
-                  ''.join(['backports-debian', '-7-wheezy-v20151104']))
+                  'backports-debian-7-wheezy-v20160119')
               },
           }],
       'networkInterfaces': [{
