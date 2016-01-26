@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ info:
 
 imports:
 - path: service.py
-- path: container_helper.py
-- path: container_instance_template.py
 - path: lb-l3.py
 
 required:
@@ -33,12 +31,6 @@ required:
 - dockerImage
 
 properties:
-  zones:
-    type: array
-    description: Zones in which to run the service. Must be in the same region.
-    minItems: 1
-    items:
-      type: string
   dockerImage:
     type: string
     description: Container image to run on VMs.
@@ -47,4 +39,10 @@ properties:
     description: Port on which to expose service, both on VMs and in load
       balancer.
     default: 8080
+  zones:
+    type: array
+    description: Zones in which to run the service. Must be in the same region.
+    minItems: 1
+    items:
+      type: string
 
