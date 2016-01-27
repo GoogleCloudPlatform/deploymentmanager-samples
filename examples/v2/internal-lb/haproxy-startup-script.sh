@@ -42,9 +42,12 @@ PORT=$(get_metadata port)
 # instance group information comes in as a list of <group-name>:<zone> tuples.
 SERVERS=
 for g in $(get_metadata groups); do
-  IFS=':' read -a garr <<< "${g}"
-
-  SERVERS=${SERVERS}$'\n'$(/usr/local/bin/gcloud compute instance-groups list-instances ${garr[0]} --zone ${garr[1]} | grep -v NAME | sed "s/^\(.*\) .*\$/  server \1 \1:${APP_PORT} check/")
+  if [[ "${g}" =~ zones/([^/]+)/instanceGroups/(.*)$ ]];
+  then
+    SERVERS=${SERVERS}$'\n'$(/usr/local/bin/gcloud compute instance-groups list-instances ${BASH_REMATCH[2]} --zone ${BASH_REMATCH[1]} | grep -v NAME | sed "s/^\(.*\) .*\$/  server \1 \1:${APP_PORT} check/")
+  else
+    echo "Invalid group: ${g}"
+  fi
 done
 
 # Set up config file.

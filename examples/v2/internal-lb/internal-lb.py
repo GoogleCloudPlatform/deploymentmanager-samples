@@ -14,11 +14,6 @@
 
 """Creates a load balancer using HAProxy."""
 
-import re
-
-
-igm_pattern = re.compile('zones/([^/]+)/instanceGroups/(.*)$')
-
 
 def GenerateConfig(context):
   """Generate configuration."""
@@ -31,15 +26,9 @@ def GenerateConfig(context):
   metadata = {
       'algorithm': context.properties['algorithm'],
       'app-port': context.properties['app-port'],
-      'port': context.properties['port']
+      'port': context.properties['port'],
+      'groups': ' '.join(context.properties['groups'])
   }
-
-  groups = ''
-  for igm in context.properties['groups']:
-    m = igm_pattern.search(igm)
-    groups = groups + m.group(2) + ':' + m.group(1) + ' '
-
-  metadata['groups'] = groups
 
   resources = [{
       'name': lb_name,
