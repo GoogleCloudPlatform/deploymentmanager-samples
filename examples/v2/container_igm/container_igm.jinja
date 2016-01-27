@@ -26,7 +26,7 @@ resources:
         utilizationTarget: 0.8
       coolDownPeriodSec: 90
 - name: {{ IGM }}
-  type: compute.v1.instanceGroupManagers
+  type: compute.v1.instanceGroupManager
   properties:
     baseInstanceName: {{ env["deployment"] }}-instance
     instanceTemplate: $(ref.{{ INSTANCE_TEMPLATE }}.selfLink)
