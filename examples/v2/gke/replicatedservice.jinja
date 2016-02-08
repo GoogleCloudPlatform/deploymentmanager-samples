@@ -36,7 +36,6 @@ resources:
       type: LoadBalancer
       ports:
       - port: {{ PORT }}
-        targetPort: {{ PORT }}
         protocol: TCP
       selector:
         name: {{ NAME_PREFIX }}
