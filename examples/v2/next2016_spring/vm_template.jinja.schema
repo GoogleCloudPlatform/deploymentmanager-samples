@@ -1,0 +1,22 @@
+info:
+  title: Single VM template
+  author: vaikas@google.com
+  description: A simple type that creates dev or prod version of our software
+  version: 0.1
+
+required:
+  - name
+  - sourceImage
+
+properties:
+  name:
+    type: string
+    description: Name of the VM to create
+
+  sourceImage:
+    type: string
+    description: Full url to the compute image that the VM will boot up from
+
+  environment:
+    type: string
+    description: Release environment to create the image in, use "prod" for production, anything else is dev.
