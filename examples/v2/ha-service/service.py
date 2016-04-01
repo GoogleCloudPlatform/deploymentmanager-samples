@@ -73,7 +73,7 @@ def GenerateConfig(context):
       ],
       'outputs': [{
           'name': 'group',
-          'value': '$(ref.' + igm_name + '.group)'
+          'value': '$(ref.' + igm_name + '.instanceGroup)'
       }]
   }
 
