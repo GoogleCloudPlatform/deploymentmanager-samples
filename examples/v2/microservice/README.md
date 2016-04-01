@@ -1,4 +1,4 @@
-# High-availability Service
+# Internal Micro-service
 
 ## Overview
 This is a [Google Cloud Deployment
