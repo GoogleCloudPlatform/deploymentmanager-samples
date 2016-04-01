@@ -85,13 +85,15 @@ def GenerateConfig(context):
           }]
       }
 
-  # Resources to return.
-  resources = {
+  return {
       'resources': [{
           'name': base_name,
           'type': 'compute.v1.instance',
           'properties': instance
-          }]
-      }
+      }],
+      'outputs': [{
+          'name': 'address',
+          'value': '$(ref.' + base_name + '.networkInterfaces[0].networkIP)'
+      }]
+  }
 
-  return resources

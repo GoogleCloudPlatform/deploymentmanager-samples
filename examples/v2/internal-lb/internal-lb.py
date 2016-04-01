@@ -47,7 +47,7 @@ def GenerateConfig(context):
       'resources': resources,
       'outputs': [{
           'name': 'address',
-          'value': '$(ref.' + lb_name + '.networks.networkIP)'
+          'value': '$(ref.' + lb_name + '.address)'
       }]
   }
 
