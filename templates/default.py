@@ -88,6 +88,7 @@ ZONE = 'zone'
 VM_ZONE_PROPERTIES = [DISKTYPE, MACHINETYPE, BOOTDISK]
 
 # Resource type defaults names
+ADDRESS = 'compute.v1.address'
 AUTOSCALER = 'compute.v1.autoscaler'
 BACKEND_SERVICE = 'compute.v1.backendService'
 DISK = 'compute.v1.disk'

@@ -68,6 +68,14 @@ def ShortenZoneName(zone):
   return geo + '-' + coord + number + letter
 
 
+def ZoneToRegion(zone):
+  """Derives the region from a zone name."""
+  parts = zone.split('-')
+  if len(parts) != 3:
+    raise Error('Cannot derive region from zone "%s"' % zone)
+  return '-'.join(parts[:2])
+
+
 def FormatException(message):
   """Adds more information to the exception."""
   message = ('Exception Type: %s\n'

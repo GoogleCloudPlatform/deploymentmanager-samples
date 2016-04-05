@@ -37,8 +37,9 @@ SERVICE_ACCOUNTS = default.SERVICE_ACCOUNTS
 SRCIMAGE = default.SRCIMAGE
 TAGS = default.TAGS
 ZONE = default.ZONE
-GENERATE_PASSWORD_KEYS = 'generatePasswordKeys'
 AUTODELETE_BOOTDISK = 'bootDiskAutodelete'
+STATIC_IP = 'staticIP'
+NAT_IP = 'natIP'
 
 # Defaults used for modules that imports this one
 DEFAULT_DISKTYPE = 'pd-standard'
@@ -48,6 +49,7 @@ DEFAULT_NETWORK = 'default'
 DEFAULT_PROVIDE_BOOT = True
 DEFAULT_BOOTDISKSIZE = 10
 DEFAULT_AUTODELETE_BOOTDISK = True
+DEFAULT_STATIC_IP = False
 DEFAULT_DATADISKSIZE = 500
 DEFAULT_ZONE = 'us-central1-f'
 DEFAULT_PERSISTENT = 'PERSISTENT'
@@ -57,6 +59,7 @@ DEFAULT_SERVICE_ACCOUNT = [{
         'https://www.googleapis.com/auth/cloud.useraccounts.readonly',
         'https://www.googleapis.com/auth/devstorage.read_only',
         'https://www.googleapis.com/auth/logging.write',
+        'https://www.googleapis.com/auth/monitoring.write',
     ]
 }]
 
@@ -95,6 +98,8 @@ def GenerateComputeVM(context):
   provide_boot = prop.setdefault(PROVIDE_BOOT, DEFAULT_PROVIDE_BOOT)
   tags = prop.setdefault(TAGS, dict([('items', [])]))
   zone = prop.setdefault(ZONE, DEFAULT_ZONE)
+  static_ip = prop.get(STATIC_IP, DEFAULT_STATIC_IP)
+  nat_ip = prop.get(NAT_IP, None)
   if provide_boot:
     dev_mode = DEVIMAGE in prop and prop[DEVIMAGE]
     src_image = common.MakeC2DImageLink(prop[SRCIMAGE], dev_mode)
@@ -102,8 +107,8 @@ def GenerateComputeVM(context):
     disk_size = prop.get(BOOTDISKSIZE, DEFAULT_BOOTDISKSIZE)
     disk_type = common.MakeLocalComputeLink(context, DISKTYPE)
     autodelete = prop.get(AUTODELETE_BOOTDISK, DEFAULT_AUTODELETE_BOOTDISK)
-    disks = PrependBootDisk(
-        disks, boot_name, disk_type, disk_size, src_image, autodelete)
+    disks = PrependBootDisk(disks, boot_name, disk_type, disk_size, src_image,
+                            autodelete)
   if local_ssd:
     disks = AppendLocalSSDDisks(context, disks, local_ssd)
   machine_type = common.MakeLocalComputeLink(context, default.MACHINETYPE)
@@ -116,32 +121,53 @@ def GenerateComputeVM(context):
   else:  # Make sure there is a default service account
     prop.setdefault(SERVICE_ACCOUNTS, copy.deepcopy(DEFAULT_SERVICE_ACCOUNT))
 
-  # pyformat: disable
-  resource = [
-      {
-          'name': vm_name,
-          'type': default.INSTANCE,
-          'properties': {
-              'zone': zone,
-              'machineType': machine_type,
-              'canIpForward': can_ip_fwd,
-              'disks': disks,
-              'networkInterfaces': [{
-                  'network': network,
-                  'accessConfigs': [{'name': default.EXTERNAL,
-                                     'type': default.ONE_NAT}]
-              }],
-              'tags': tags,
-              'metadata': metadata,
-          }
+  resource = []
+  access_config = {'name': default.EXTERNAL, 'type': default.ONE_NAT}
+
+  if static_ip and nat_ip:
+    raise common.Error(
+        'staticIP=True and natIP cannot be specified at the same time')
+  if static_ip:
+    address_resource, nat_ip = MakeStaticAddress(vm_name, zone)
+    resource.append(address_resource)
+  if nat_ip:
+    access_config['natIP'] = nat_ip
+
+  resource.insert(0, {
+      'name': vm_name,
+      'type': default.INSTANCE,
+      'properties': {
+          'zone': zone,
+          'machineType': machine_type,
+          'canIpForward': can_ip_fwd,
+          'disks': disks,
+          'networkInterfaces': [{
+              'network': network,
+              'accessConfigs': [access_config]
+          }],
+          'tags': tags,
+          'metadata': metadata,
       }
-  ]
-  # pyformat: enable
+  })
 
   # Pass through any additional property to the VM
   if SERVICE_ACCOUNTS in prop:
     resource[0]['properties'].update({SERVICE_ACCOUNTS: prop[SERVICE_ACCOUNTS]})
   return resource
+
+
+def MakeStaticAddress(vm_name, zone):
+  """Creates a static IP address resource; returns it and the natIP."""
+  address_name = vm_name + '-address'
+  address_resource = {
+      'name': address_name,
+      'type': default.ADDRESS,
+      'properties': {
+          'name': address_name,
+          'region': common.ZoneToRegion(zone),
+      },
+  }
+  return (address_resource, '$(ref.%s.address)' % address_name)
 
 
 def PrependBootDisk(disk_list, name, disk_type, disk_size, src_image,
@@ -247,13 +273,6 @@ def GenerateDisks(context, disk_list, new_disks):
   return sourced_disks, new_disks
 
 
-def GeneratePasswordOutputs(keys):
-  """Returns list of output entries for generated passwords."""
-  # Lazy import to avoid pulling this dependency when not needed.
-  import password
-  return [{'name': key, 'value': password.GeneratePassword()} for key in keys]
-
-
 def AddServiceEndpointIfNeeded(context):
   """If the endpoint property is present, it will add a service endpoint."""
   prop = context.properties
@@ -286,18 +305,14 @@ def GenerateResourceList(context):
   return resources
 
 
-def GenerateOutputList(context, resource_list):
+def GenerateOutputList(unused_context, resource_list):
   """Returns list of outputs generated by this module."""
-  prop = context.properties
   vm_res = resource_list[0]
   outputs = [{
       'name': 'ip',
-      'value': ('$(ref.%s.networkInterfaces[0].accessConfigs[0].natIP)'
-                % vm_res['name']),
+      'value': ('$(ref.%s.networkInterfaces[0].accessConfigs[0].natIP)' %
+                vm_res['name']),
   }]
-  if prop.get(GENERATE_PASSWORD_KEYS):
-    password_outputs = GeneratePasswordOutputs(prop[GENERATE_PASSWORD_KEYS])
-    outputs += password_outputs
   return outputs
 
 
