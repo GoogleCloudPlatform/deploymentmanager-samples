@@ -1,4 +1,4 @@
-# Single VM with data disk
+# VM with Startup Script
 
 ## Overview
 This is a [Google Cloud Deployment

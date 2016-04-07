@@ -21,11 +21,12 @@ resources:
   properties:
     zone: {{ properties["zone"] }}
     machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+
+{% if 'startup-script' in properties %}
     metadata:
       items:
       # For more ways to use startup scripts on an instance, see:
       #   https://cloud.google.com/compute/docs/startupscript
-{% if 'startup-script' in properties %}
       - key: startup-script
         value: |
 {% for line in properties['startup-script'].split('\n') %}
