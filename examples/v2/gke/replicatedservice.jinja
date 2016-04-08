@@ -1,0 +1,63 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
+
+{% set COLLECTION_PREFIX = '/api/v1/namespaces/{namespace}/' %}
+{% set RC_COLLECTION = COLLECTION_PREFIX + 'replicationcontrollers' %}
+{% set SERVICE_COLLECTION = COLLECTION_PREFIX + 'services' %}
+
+{% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
+
+{% set PORT = properties['port'] %}
+
+resources:
+- name: {{ NAME_PREFIX }}
+  type: {{ CLUSTER_TYPE }}:{{ SERVICE_COLLECTION }}
+  properties:
+    apiVersion: v1
+    kind: Service
+    namespace: default
+    metadata:
+      name: {{ NAME_PREFIX }}
+    spec:
+      # Creates an external IP through network load-balancer.
+      type: LoadBalancer
+      ports:
+      - port: {{ PORT }}
+        targetPort: {{ PORT }}
+        protocol: TCP
+      selector:
+        name: {{ NAME_PREFIX }}
+
+- name: {{ NAME_PREFIX }}-rc
+  type: {{ CLUSTER_TYPE }}:{{ RC_COLLECTION }}
+  properties:
+    apiVersion: v1
+    kind: ReplicationController
+    namespace: default
+    metadata:
+      name: {{ NAME_PREFIX }}-rc
+    spec:
+      template:
+        metadata:
+          labels:
+            name: {{ NAME_PREFIX }}
+        spec:
+          containers:
+          - name: container
+            image: {{ properties['image'] }}
+            ports:
+            - containerPort: {{ PORT }}
+
