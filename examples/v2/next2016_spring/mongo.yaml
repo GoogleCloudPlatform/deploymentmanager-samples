@@ -10,9 +10,10 @@ resources:
 # Create an endpoint for mongo db, exposed as:
 # mongodb-endpoint.global.service.quantum-reducer-434.internal
 - name: mongodb-endpoint
-  type: serviceregistry.alpha.endpoint
+  type: serviceregistry.v1alpha.endpoint
   properties:
-    address: $(ref.mongodb.networkInterfaces[0].networkIP)
-    visibility:
+    addresses:
+      - address: $(ref.mongodb.networkInterfaces[0].networkIP)
+    dnsIntegration:
       networks:
         - https://www.googleapis.com/compute/v1/projects/quantum-reducer-434/global/networks/default

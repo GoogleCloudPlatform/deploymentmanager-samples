@@ -123,6 +123,13 @@ def MakeGlobalComputeLink(context, key):
     return GlobalComputeLink(project, key + 's', value)
 
 
+def MakeSubnetworkComputeLink(context, key):
+  project, zone, value = ReadContext(context, key)
+  region = ZoneToRegion(zone)
+  return ''.join([default.COMPUTE_URL_BASE, 'projects/', project, '/regions/',
+                  region, '/subnetworks/', value])
+
+
 def MakeFQHN(context, name):
   return '%s.c.%s.internal' % (name, context.env['project'])
 

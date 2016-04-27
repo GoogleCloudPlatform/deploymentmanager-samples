@@ -30,6 +30,7 @@ INSTANCE_NAME = default.INSTANCE_NAME
 MACHINETYPE = default.MACHINETYPE
 METADATA = default.METADATA
 NETWORK = default.NETWORK
+SUBNETWORK = default.SUBNETWORK
 NO_SCOPE = default.NO_SCOPE
 PROJECT = default.PROJECT
 PROVIDE_BOOT = default.PROVIDE_BOOT
@@ -113,6 +114,10 @@ def GenerateComputeVM(context):
     disks = AppendLocalSSDDisks(context, disks, local_ssd)
   machine_type = common.MakeLocalComputeLink(context, default.MACHINETYPE)
   network = common.MakeGlobalComputeLink(context, default.NETWORK)
+  subnetwork = ''
+  if default.SUBNETWORK in prop:
+    subnetwork = common.MakeSubnetworkComputeLink(context, default.SUBNETWORK)
+
   # To be consistent with Dev console and gcloud, service accounts need to be
   #  explicitly disabled
   remove_scopes = prop[NO_SCOPE] if NO_SCOPE in prop else False
@@ -133,6 +138,19 @@ def GenerateComputeVM(context):
   if nat_ip:
     access_config['natIP'] = nat_ip
 
+  network_interfaces = []
+  if subnetwork:
+    network_interfaces.insert(0, {
+        'network': network,
+        'subnetwork': subnetwork,
+        'accessConfigs': [access_config]
+    })
+  else:
+    network_interfaces.insert(0, {
+        'network': network,
+        'accessConfigs': [access_config]
+    })
+
   resource.insert(0, {
       'name': vm_name,
       'type': default.INSTANCE,
@@ -141,10 +159,7 @@ def GenerateComputeVM(context):
           'machineType': machine_type,
           'canIpForward': can_ip_fwd,
           'disks': disks,
-          'networkInterfaces': [{
-              'network': network,
-              'accessConfigs': [access_config]
-          }],
+          'networkInterfaces': network_interfaces,
           'tags': tags,
           'metadata': metadata,
       }

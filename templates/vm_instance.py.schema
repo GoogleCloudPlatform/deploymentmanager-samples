@@ -48,6 +48,9 @@ properties:
     description: Network in which this instance should be placed
     type: string
     default: default
+  subnetwork:
+    description: Subnetwork in which this instance should be placed
+    type: string
   noScope:
     description: Explicitly remove all default access scopes for instance
     type: boolean

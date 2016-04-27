@@ -57,10 +57,12 @@ def GenerateConfig(context):
       }
   }, {
       'name': endpoint_name,
-      'type': 'serviceregistry.alpha.endpoint',
+      'type': 'serviceregistry.v1alpha.endpoint',
       'properties': {
-          'address': '$(ref.' + lb_name + '.address)',
-          'visibility': {
+          'addresses': [
+              {'address': '$(ref.' + lb_name + '.address)'}
+          ],
+          'dnsIntegration': {
               'networks': [
                   default_network
               ]
