@@ -302,8 +302,10 @@ def AddServiceEndpointIfNeeded(context):
           'name': name,
           'type': default.ENDPOINT,
           'properties': {
-              'address': address,
-              'visibility': {
+              'addresses': [
+                  {'address': address}
+              ],
+              'dnsIntegration': {
                   'networks': [network]
               }
           }
