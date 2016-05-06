@@ -1,0 +1,35 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+required:
+- clusterName
+- clusterVersion
+- key
+- image
+- containerPort
+
+properties:
+  clusterName:
+    type: string
+    description: Cluster name. Requires that the type "<cluster>-extensions-v1beta1" exists.
+  key:
+    type: string
+    description: API (or License) key.
+  image:
+    type: string
+    description: dockerhub or gcr.io image path to my-agent.
+  containerPort:
+    type: integer
+    description: container port for my-agent.
+    dafault: 9042

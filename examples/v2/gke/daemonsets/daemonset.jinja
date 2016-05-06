@@ -1,0 +1,52 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set apiVersion = "v1" %}
+{% set clusterTypeVersion = "v1" %}
+
+{% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
+
+{% set CLUSTER_TYPE = env['project'] + '/' + properties['cluster'] + '-v1' %}
+{% set DAEMONSETS_COLLECTION = '/apis/v1/namespaces/{namespace}/daemonsets' %}
+
+- name: {{ NAME_PREFIX }}-ds
+  type: {{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}
+  properties:
+    namespace: default
+    apiVersion:  v1
+    kind: DaemonSet
+    metadata:
+      name: {{ NAME_PREFIX }}
+      labels:
+        app:{{ NAME_PREFIX }}
+    spec:
+      containers:
+      - image: {{ properties['image'] }}
+        imagePullPolicy: Always
+        name: {{ NAME_PREFIX }}
+        ports:
+          - containerPort: {{ properties['containerPort'] }}
+            name: statsdport
+        env:
+          - name: API_KEY
+            value: {{ properties['key'] }}
+        volumeMounts:
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: procdir
+            mountPath: /host/proc
+            readOnly: true
+          - name: cgroups
+            mountPath: /host/sys/fs/cgroup
+            readOnly: true
