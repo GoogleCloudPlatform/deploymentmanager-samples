@@ -1,0 +1,5 @@
+projects/my-project/global/instanceTemplates/ha-service-us-central1-f-it
+projects/my-project/zones/us-central1-f/instanceGroupManagers/ha-service-us-central1-f-igm
+projects/my-project/regions/us-central1/targetPools/ha-lb-tp
+projects/my-project/regions/us-central1/forwardingRules/ha-lb-fr
+projects/my-project/global/httpHealthChecks/ha-lb-hc

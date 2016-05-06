@@ -1,0 +1,5 @@
+imports:
+- path: generated.jinja
+resources:
+- name: generated
+  type: generated.jinja

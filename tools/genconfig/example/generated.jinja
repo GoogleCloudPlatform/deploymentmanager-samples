@@ -1,0 +1,73 @@
+resources:
+- name: ha-service-us-central1-f-it
+  properties:
+    description: ''
+    properties:
+      disks:
+      - autoDelete: true
+        boot: true
+        deviceName: boot
+        initializeParams:
+          sourceImage: https://www.googleapis.com/compute/v1/projects/google-containers/global/images/container-vm-v20151215
+        mode: READ_WRITE
+        type: PERSISTENT
+      machineType: f1-micro
+      metadata:
+        items:
+        - key: google-container-manifest
+          value: "apiVersion: v1\nkind: Pod\nmetadata:\n  name: ha-service-us-central1-f-it\n\
+            spec:\n  containers:\n  - image: gcr.io/deployment-manager-examples/nodejsservicestatic\n\
+            \    name: ha-service-us-central1-f-it\n    ports:\n    - containerPort:\
+            \ 8080\n      hostPort: 8080\n"
+      networkInterfaces:
+      - accessConfigs:
+        - name: external-nat
+          type: ONE_TO_ONE_NAT
+        network: https://www.googleapis.com/compute/v1/projects/{{env['project']}}/global/networks/default
+  type: compute.v1.instanceTemplate
+- name: ha-service-us-central1-f-igm
+  properties:
+    baseInstanceName: ha-service-us-central1-f-instance
+    instanceTemplate: $(ref.ha-service-us-central1-f-it.selfLink)
+    targetPools:
+    - $(ref.ha-lb-tp.selfLink)
+    targetSize: 1
+    zone: us-central1-f
+  type: compute.v1.instanceGroupManager
+- name: ha-service-us-central1-f-as
+  properties:
+    autoscalingPolicy:
+      coolDownPeriodSec: 60
+      cpuUtilization:
+        utilizationTarget: 0.6
+      maxNumReplicas: 1
+      minNumReplicas: 1
+    target: $(ref.ha-service-us-central1-f-igm.selfLink)
+    zone: us-central1-f
+  type: compute.v1.autoscaler
+- name: ha-lb-tp
+  properties:
+    description: ''
+    healthChecks:
+    - $(ref.ha-lb-hc.selfLink)
+    region: us-central1
+  type: compute.v1.targetPool
+- name: ha-lb-fr
+  properties:
+    IPProtocol: TCP
+    description: ''
+    portRange: 8080-8080
+    region: us-central1
+    target: $(ref.ha-lb-tp.selfLink)
+  type: compute.v1.forwardingRule
+- name: ha-lb-hc
+  properties:
+    checkIntervalSec: 5
+    description: ''
+    healthyThreshold: 2
+    host: ''
+    port: 8080
+    requestPath: /_ah/health
+    timeoutSec: 5
+    unhealthyThreshold: 2
+  type: compute.v1.httpHealthCheck
