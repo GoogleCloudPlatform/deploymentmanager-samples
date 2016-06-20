@@ -1,0 +1,44 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+imports:
+- path: instance.py
+- path: waiter.jinja
+
+resources:
+- name: my-instance
+  type: instance.py
+  properties:
+    instanceName: my-instance
+    zone: ZONE_TO_RUN
+
+    # This startup script uses gcloud. Alternatively for images that
+    # do not include gcloud, the same behavior can be replicated with
+    # a script that uses curl or other http tools.
+    metadata:
+      startup-script: |
+        #!/bin/sh
+        gcloud components update -q
+        gcloud components install alpha -q
+        gcloud alpha deployment-manager runtime-configs variables set \
+            success/my-instance success --config-name $(ref.my-waiter.configName)
+
+    # The following scope allows this instance to create variable resources.
+    scopes:
+      - 'https://www.googleapis.com/auth/cloudruntimeconfig'
+
+- name: my-waiter
+  type: waiter.jinja
+  properties:
+    instanceName: my-instance

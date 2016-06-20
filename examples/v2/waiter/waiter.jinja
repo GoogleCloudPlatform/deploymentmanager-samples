@@ -1,0 +1,77 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This template generates one RuntimeConfig and one Waiter resource for use
+# in a deployment. VMs can signal the generated waiter by creating a variable
+# in the RuntimeConfig resource under the /success or /failure paths. The
+# config name is returned as output.
+#
+# For more information, see
+# https://cloud.google.com/deployment-manager/runtime-configurator/
+
+{% set configName = env["deployment"] + "-startup-config" %}
+{% set waiterName = env["deployment"] + "-startup-waiter" %}
+
+resources:
+- type: runtimeconfig.v1beta1.config
+  name: {{ configName }}
+  properties:
+    # The config resource's actual name. This can optionally differ from its name
+    # within the deployment.
+    config: {{ configName }}
+
+- type: runtimeconfig.v1beta1.waiter
+  name: {{ waiterName }}
+  metadata:
+    # By adding this dependency on the instance, Deployment Manager won't create
+    # the waiter until after the VM has been created. While not strictly necessary,
+    # the benefit of blocking the waiter on instance creation is that the waiter's
+    # timeout countdown won't start until after the instance is running, leading to
+    # a more deterministic deployment.
+    dependsOn:
+    - {{ properties["instanceName"] }}
+
+  properties:
+    # By using a reference to the config resource, this Waiter becomes dependent
+    # on the resource and Deployment Manager won't create it until after the config
+    # is created.
+    parent: $(ref.{{ configName }}.name)
+
+    # The waiter resource's actual name. This can optionally differ from its name
+    # within the deployment.
+    waiter: {{ waiterName }}
+
+    # The waiter timeout indicates the maximum amount of time a Waiter will wait for
+    # all necessary success signals. If the signals are not received within the
+    # configured timeout, the deployment will fail.
+    timeout: 300s  # 5 minutes
+
+    # The area for success variables. This waiter considers 1 or more variables
+    # written somewhere under /success to indicate success.
+    success:
+      cardinality:
+        path: /success
+        number: 1
+
+    # The area for failure signals. This waiter considers 1 or more variables
+    # written somewhere under /failure to indicate failure.
+    # (Note: this example doesn't actually generate failure signals.)
+    failure:
+      cardinality:
+        path: /failure
+        number: 1
+
+outputs:
+- name: configName
+  value: {{ configName }}
