@@ -1,0 +1,14 @@
+imports:
+  - path: software_status.py
+
+properties:
+  timeout:
+    type: integer
+  waiterDependsOn:
+    type: array
+
+outputs:
+  config-url:
+    type: string
+  variable-path:
+    type: string
