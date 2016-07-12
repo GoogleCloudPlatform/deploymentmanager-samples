@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,23 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-info:
-  title: Container VM
-  author: Google Inc.
-  description: Creates a Container VM with the provided Container manifest.
+imports:
+- path: ~/deploymentmanager-samples/examples/v2/common/container_manifest.yaml
+  name: container_manifest
+- path: container_vm.jinja
 
-required:
-  - zone
-  - containerImage
-  - containerManifest
-
-properties:
-  zone:
-    description: Zone in which this VM will run
-    type: string
-  containerImage:
-    description: Name of the Google Cloud Container VM Image
-    type: string
-  containerManifest:
-    description: String containing the Container Manifest in YAML
-    type: string
+resources:
+  - name: my-container-vm
+    type: container_vm.jinja
+    properties:
+      zone: ZONE_TO_RUN
+      containerImage: container-vm-v20160217
+      containerManifest: container_manifest

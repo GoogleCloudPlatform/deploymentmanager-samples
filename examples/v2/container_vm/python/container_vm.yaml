@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
 # limitations under the License.
 
 imports:
-- path: container_manifest.yaml
+- path: ~/deploymentmanager-samples/examples/v2/common/container_manifest.yaml
+  name: container_manifest
 - path: container_vm.py
 
 resources:
@@ -21,6 +22,5 @@ resources:
     type: container_vm.py
     properties:
       zone: ZONE_TO_RUN
-      containerImage: container-vm-v20151103
-      containerManifest: container_manifest.yaml
-
+      containerImage: container-vm-v20160217
+      containerManifest: container_manifest
