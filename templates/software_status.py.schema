@@ -6,6 +6,10 @@ properties:
     type: integer
   waiterDependsOn:
     type: array
+  successNumber:
+    type: integer
+  failureNumber:
+    type: integer
 
 outputs:
   config-url:
