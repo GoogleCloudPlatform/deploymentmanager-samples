@@ -53,7 +53,8 @@ import yaml
 RTC_ENDPOINT = 'https://runtimeconfig.googleapis.com/v1beta1'
 STATUS_PATH = 'status'
 DEFAULT_TIMEOUT = '300'  # 5 minutes
-
+DEFAULT_SUCCESS_NUMBER = 1
+DEFAULT_FAILURE_NUMBER = 1
 
 class PropertyError(Exception):
   """An exception raised when property values are invalid."""
@@ -84,6 +85,30 @@ def _Timeout(context):
     return str(int(timeout))
   except ValueError:
     raise PropertyError('Invalid timeout value: {}'.format(timeout))
+
+
+def _SuccessNumber(context):
+  """Returns the successNumber property or a default value if unspecified."""
+  number = context.properties.get('successNumber', DEFAULT_SUCCESS_NUMBER)
+  try:
+    number = int(number)
+    if number < 1:
+      raise PropertyError('successNumber value must be greater than 0.')
+    return number
+  except ValueError:
+    raise PropertyError('Invalid successNumber value: {}'.format(number))
+
+
+def _FailureNumber(context):
+  """Returns the failureNumber property or a default value if unspecified."""
+  number = context.properties.get('failureNumber', DEFAULT_FAILURE_NUMBER)
+  try:
+    number = int(number)
+    if number < 1:
+      raise PropertyError('failureNumber value must be greater than 0.')
+    return number
+  except ValueError:
+    raise PropertyError('Invalid failureNumber value: {}'.format(number))
 
 
 def _WaiterDependsOn(context):
@@ -131,13 +156,13 @@ def _Waiter(context):
           'timeout': '{}s'.format(waiter_timeout),
           'success': {
               'cardinality': {
-                  'number': 1,
+                  'number': _SuccessNumber(context),
                   'path': '{}/success'.format(STATUS_PATH),
               },
           },
           'failure': {
               'cardinality': {
-                  'number': 1,
+                  'number': _FailureNumber(context),
                   'path': '{}/failure'.format(STATUS_PATH),
               },
           },

@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-info:
-  title: Single VM
-  author: Google Inc.
-  description: Creates a disk and a vm, and attaches the disk to the vm.
+imports:
+- path: vm_template.py
 
-required:
-  - zone
-
-properties:
-  zone:
-    description: Zone to create the resources in.
-    type: string
+resources:
+- name: vm_template
+  type: vm_template.py
+  properties:
+    zone: us-central1-f

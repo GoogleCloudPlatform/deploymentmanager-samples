@@ -1,5 +1,5 @@
 {#
-Copyright 2015 Google Inc. All rights reserved.
+Copyright 2016 Google Inc. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -46,7 +46,7 @@ resources:
       autoDelete: true
       initializeParams:
         diskName: disk-{{ env["deployment"] }}
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
 
     # Specify the data disk to mount, note the deviceName can be anything, but by convention is typically set
     # to the same name.  This is the value is used in /dev/disk/by-id/google-<deviceName>.
