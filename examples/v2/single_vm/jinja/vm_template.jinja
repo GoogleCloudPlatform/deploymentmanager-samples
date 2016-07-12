@@ -1,0 +1,64 @@
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+{% set DATADISK = "datadisk-" + env["deployment"] %}
+
+# Creates a Persistent Disk
+# Creates an instance that attaches that Persistent Disk as a data disk
+resources:
+- type: compute.v1.disk
+  name: {{ DATADISK }}
+  properties:
+    zone: {{ properties["zone"] }}
+    sizeGb: 10
+    # Disk type is a full URI.  Example uses pd-standard, but pd-ssd can be used as well
+    type: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/pd-standard
+
+- type: compute.v1.instance
+  name: vm-{{ env["deployment"] }}
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    metadata:
+      items:
+      # For more ways to use startup scripts on an instance, see:
+      #   https://cloud.google.com/compute/docs/startupscript
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          python -m SimpleHTTPServer 8080
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        diskName: disk-{{ env["deployment"] }}
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
+
+    # Specify the data disk to mount, note the deviceName can be anything, but by convention is typically set
+    # to the same name.  This is the value is used in /dev/disk/by-id/google-<deviceName>.
+    # If not set, it will be /dev/disk/by-id/google-persisent-disk-<number>.
+    - deviceName: {{ DATADISK }}
+      type: PERSISTENT
+      source: $(ref.{{ DATADISK }}.selfLink)
+      autoDelete: true
+
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+      # Access Config required to give the instance a public IP address
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
