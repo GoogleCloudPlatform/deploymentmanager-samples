@@ -5,6 +5,8 @@ imports:
 properties:
   checkScript:
     type: string
+  initScript:
+    type: string
 
 outputs:
   startup-script:

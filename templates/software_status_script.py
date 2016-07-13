@@ -32,10 +32,16 @@ def _CheckScript(context):
   return context.properties.get('checkScript', 'return 0')
 
 
+def _InitScript(context):
+  """Returns the initScript property or a successful no-op if unspecified."""
+  return context.properties.get('initScript', 'return 0')
+
+
 def _StartupScript(context):
   """Generates and returns a startup script."""
   params = {
       'check_script': _CheckScript(context),
+      'init_script': _InitScript(context),
   }
   template = context.imports['software_status.sh.tmpl']
   return jinja2.Environment().from_string(template).render(**params)

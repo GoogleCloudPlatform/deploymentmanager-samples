@@ -84,6 +84,11 @@ post_failure() {
   post_result "$(variable_path)/failure" "${1:-Failure}"
 }
 
+# The contents of initScript are contained within this function.
+custom_init() (
+  {{ init_script|indent(2) }}
+)
+
 # The contents of checkScript are contained within this function.
 check_success() (
   {{ check_script|indent(2) }}
@@ -112,9 +117,26 @@ check_success_with_retries() {
   done
 }
 
-main() {
-  echo "software-status: waiting for software to become ready..."
+do_init() {
+  # Run the init script first. If no init script was specified, this
+  # is a no-op.
+  echo "software-status: initializing..."
 
+  set +e
+  message="$(custom_init)"
+  result=$?
+  set -e
+
+  if [ $result -ne 0 ]; then
+    echo "software-status: init failure"
+    post_failure "$message"
+    return 1
+  fi
+}
+
+do_check() {
+  # Poll for success.
+  echo "software-status: waiting for software to become ready..."
   set +e
   message="$(check_success_with_retries)"
   result=$?
@@ -129,8 +151,11 @@ main() {
   fi
 }
 
+# Run the initialization script synchronously.
+do_init || exit $?
+
 # The actual software initialization might come after google's init.d
 # script that executes our startup script. Thus, launch this script
 # into the background so that it does not block init and eventually
 # timeout while waiting for software to start.
-main & disown
+do_check & disown

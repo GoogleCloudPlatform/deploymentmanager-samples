@@ -56,6 +56,7 @@ DEFAULT_TIMEOUT = '300'  # 5 minutes
 DEFAULT_SUCCESS_NUMBER = 1
 DEFAULT_FAILURE_NUMBER = 1
 
+
 class PropertyError(Exception):
   """An exception raised when property values are invalid."""
 
