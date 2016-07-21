@@ -1,29 +1,20 @@
-#% parameters:
-#% - name: primaryZone
-#%   type: string
-#%   description: Primary Zone in which to run the service
-#%   required: true
-#% - name: secondaryZone
-#%   type: string
-#%   description: Secondary Zone in which to run the service.
-#%   required: true
-#% - name: backendImage
-#%   type: string
-#%   description: Docker image to use in the backend.
-#%   required: true
-#% - name: frontendImage
-#%   type: string
-#%   description: Docker image to use in the frontend service.
-#%   required: true
-#% - name: staticImage
-#%   type: string
-#%   description: Docker image to use in the static service.
-#%   required: true
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
 
-{% set BACKEND = "backend-" + env["deployment"] %}
-{% set FRONTEND = "frontend-" + env["deployment"] %}
-{% set STATIC_SERVICE = "static-service-" + env["deployment"] %}
-{% set APPLICATION = "application-" + env["deployment"] %}
+{% set BACKEND = env["deployment"] + "-backend" %}
+{% set FRONTEND = env["deployment"] + "-frontend" %}
+{% set STATIC_SERVICE = env["deployment"] + "-static-service" %}
+{% set APPLICATION = env["deployment"] + "-application" %}
 
 {% set APPLICATION_PORT = 8080 %}
 {% set LB_PORT = 8080 %}
@@ -33,7 +24,7 @@
 
 resources:
 - name: {{ BACKEND }}
-  type: container_vm.py
+  type: container_vm.jinja
   properties:
     zone: {{ properties["primaryZone"] }}
     dockerImage: {{ properties["backendImage"] }}
@@ -41,7 +32,7 @@ resources:
     port: {{ MYSQL_PORT }}
 
 - name: {{ FRONTEND }}
-  type: service.py
+  type: service.jinja
   properties:
     primaryZone: {{ properties["primaryZone"] }}
     primarySize: 2
@@ -60,7 +51,7 @@ resources:
       SEVEN_SERVICE_PROXY_HOST: $(ref.{{ BACKEND }}.networkInterfaces[0].networkIP)
 
 - name: {{ STATIC_SERVICE }}
-  type: service.py
+  type: service.jinja
   properties:
     primaryZone: {{ properties["primaryZone"] }}
     primarySize: 2

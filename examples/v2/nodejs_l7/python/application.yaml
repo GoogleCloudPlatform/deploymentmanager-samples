@@ -1,0 +1,56 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Launches an autoscaled, load-balanced frontend in two zones running nodejs
+# for serving traffic using L7 loadbalancing. Also launches a single MySQL
+# container instance, wires the two together using references, and passes
+# them as env variables to the underlying frontend Docker containers.
+#
+# NOTE: Due to the fact that IGM does not allow specifying service/port to
+# created IG, you must run the following commands after creation of the
+# template:
+#
+# export DEPLOYMENT=<DEPLOYMENT NAME>
+# export PRIMARY_ZONE=<PRIMARY ZONE>
+# export SECONDARY_ZONE=<SECONDARY ZONE>
+#
+# gcloud compute instance-groups unmanaged set-named-ports frontend-${DEPLOYMENT}-pri-igm \
+#  --named-ports http:8080,httpstatic:8080 \
+#  --zone ${PRIMARY_ZONE}
+#
+# gcloud compute instance-groups unmanaged set-named-ports frontend-${DEPLOYMENT}-sec-igm \
+#  --named-ports http:8080,httpstatic:8080 \
+#  --zone ${SECONDARY_ZONE}
+#
+# Then to see the IP that exposes the application, you can do:
+# gcloud compute forwarding-rules list | grep application-${DEPLOYMENT}-l7lb
+
+imports:
+- path: application.py
+- path: ~/deploymentmanager-samples/examples/v2/common/python/container_instance_template.py
+  name: container_instance_template.py
+- path: ~/deploymentmanager-samples/examples/v2/common/python/container_vm.py
+  name: container_vm.py
+- path: ~/deploymentmanager-samples/examples/v2/common/python/container_helper.py
+  name: container_helper.py
+
+resources:
+- name: nodejs
+  type: application.py
+  properties:
+    primaryZone: ZONE_TO_RUN
+    secondaryZone: SECOND_ZONE_TO_RUN
+    backendImage: gcr.io/deployment-manager-examples/mysql
+    frontendImage: gcr.io/deployment-manager-examples/nodejsservice
+    staticImage: gcr.io/deployment-manager-examples/nodejsservicestatic

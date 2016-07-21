@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 """
 
 from container_helper import GenerateManifest
-import yaml
 
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -83,4 +82,4 @@ def GenerateConfig(context):
           }]
       }
 
-  return yaml.dump(resources)
+  return resources
