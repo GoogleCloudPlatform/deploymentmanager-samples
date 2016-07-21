@@ -55,5 +55,4 @@ resources:
         items:
         - key: google-container-manifest
           value: |
-            {{ imports[properties["containerManifest"]] }}
-
+            {{ imports[properties["containerManifest"]]|indent(12) }}
