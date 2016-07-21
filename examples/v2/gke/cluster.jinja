@@ -38,6 +38,13 @@ resources:
   type: deploymentmanager.alpha.type
   properties:
     configurableService:
+      options:
+        validationOptions:
+          # Kubernetes API accepts ints, in fields they annotate with string.
+          # This validation will show as warning rather than failure for
+          # Deployment Manager.
+          # https://github.com/kubernetes/kubernetes/issues/2971
+          schemaValidation: IGNORE_WITH_WARNINGS
       descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/api/v1
       credential:
         basicAuth:
