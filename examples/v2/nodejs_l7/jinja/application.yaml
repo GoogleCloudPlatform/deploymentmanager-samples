@@ -38,11 +38,11 @@
 
 imports:
 - path: application.jinja
-- path: ~/deploymentmanager-samples/examples/v2/common/jinja/container_instance_template.jinja
+- path: ../../common/jinja/container_instance_template.jinja
   name: container_instance_template.jinja
-- path: ~/deploymentmanager-samples/examples/v2/common/jinja/container_vm.jinja
+- path: ../../common/jinja/container_vm.jinja
   name: container_vm.jinja
-- path: ~/deploymentmanager-samples/examples/v2/common/jinja/container_helper.jinja
+- path: ../../common/jinja/container_helper.jinja
   name: container_helper.jinja
 
 resources:

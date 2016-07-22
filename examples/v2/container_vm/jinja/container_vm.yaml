@@ -13,7 +13,7 @@
 # limitations under the License.
 
 imports:
-- path: ~/deploymentmanager-samples/examples/v2/common/container_manifest.yaml
+- path: ../../common/container_manifest.yaml
   name: container_manifest
 - path: container_vm.jinja
 
