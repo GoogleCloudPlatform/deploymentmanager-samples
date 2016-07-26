@@ -63,7 +63,7 @@ class PropertyError(Exception):
 
 def _ConfigName(context):
   """Return the short config name."""
-  return '{}-status-config'.format(context.env['deployment'])
+  return '{}-config'.format(context.env['deployment'])
 
 
 def _ConfigUrl(context):
@@ -76,7 +76,9 @@ def _ConfigUrl(context):
 
 def _WaiterName(context):
   """Returns the short waiter name."""
-  return '{}-status-waiter'.format(context.env['deployment'])
+  # This name is only used for the DM manifest entry. The actual waiter name
+  # within RuntimeConfig is static, as it is scoped to the config resource.
+  return '{}-software'.format(context.env['deployment'])
 
 
 def _Timeout(context):
@@ -153,7 +155,7 @@ def _Waiter(context):
       },
       'properties': {
           'parent': '$(ref.{}.name)'.format(_ConfigName(context)),
-          'waiter': _WaiterName(context),
+          'waiter': 'software',
           'timeout': '{}s'.format(waiter_timeout),
           'success': {
               'cardinality': {
