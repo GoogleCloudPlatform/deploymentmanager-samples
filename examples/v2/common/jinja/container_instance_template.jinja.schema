@@ -18,6 +18,10 @@ info:
   description: Create container instance templates
   version: 1.0
 
+imports:
+- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/common/jinja/container_helper.jinja
+  name: container_helper.jinja
+
 required:
 - port
 - dockerImage

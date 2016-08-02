@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Creates a Container VM with the provided Container manifest.
-"""
+"""Creates a Container VM with the provided Container manifest."""
 
 from container_helper import GenerateManifest
 

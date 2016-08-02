@@ -33,10 +33,10 @@ properties:
 
   size:
     type: integer
-    defaults: 1
+    default: 1
     description: Initial size of the Managed Instance Group
 
   maxSize:
     type: integer
-    defaults: 1
+    default: 1
     description: Maximum size the Managed Instance Group will be autoscaled to

@@ -14,32 +14,9 @@
 
 """Creates autoscaled, network LB IGM running specified docker image."""
 
-# Defaults
-SIZE_KEY = 'size'
-DEFAULT_SIZE = 1
-
-MAX_SIZE_KEY = 'maxSize'
-DEFAULT_MAX_SIZE = 1
-
-CONTAINER_IMAGE_KEY = 'containerImage'
-DEFAULT_CONTAINER_IMAGE = 'container-vm-v20160217'
-
-DOCKER_ENV_KEY = 'dockerEnv'
-DEFAULT_DOCKER_ENV = '{}'
-
 
 def GenerateConfig(context):
   """Generate YAML resource configuration."""
-
-  # Set up some defaults if the user didn't provide any
-  if SIZE_KEY not in context.properties:
-    context.properties[SIZE_KEY] = DEFAULT_SIZE
-  if MAX_SIZE_KEY not in context.properties:
-    context.properties[MAX_SIZE_KEY] = DEFAULT_MAX_SIZE
-  if CONTAINER_IMAGE_KEY not in context.properties:
-    context.properties[CONTAINER_IMAGE_KEY] = DEFAULT_CONTAINER_IMAGE
-  if DOCKER_ENV_KEY not in context.properties:
-    context.properties[DOCKER_ENV_KEY] = DEFAULT_DOCKER_ENV
 
   # Pull the region out of the zone
   region = context.properties['zone'][:context.properties['zone'].rfind('-')]
@@ -50,16 +27,16 @@ def GenerateConfig(context):
       'type': 'container_instance_template.py',
       'properties': {
           'port': context.properties['port'],
-          'dockerEnv': context.properties[DOCKER_ENV_KEY],
+          'dockerEnv': context.properties['dockerEnv'],
           'dockerImage': context.properties['dockerImage'],
-          'containerImage': context.properties[CONTAINER_IMAGE_KEY]
+          'containerImage': context.properties['containerImage']
       }
   }, {
       'name': name + '-igm',
       'type': 'compute.v1.instanceGroupManager',
       'properties': {
           'zone': context.properties['zone'],
-          'targetSize': context.properties[SIZE_KEY],
+          'targetSize': context.properties['size'],
           'targetPools': ['$(ref.' + name + '-tp.selfLink)'],
           'baseInstanceName': name + '-instance',
           'instanceTemplate': '$(ref.' + name + '-it.selfLink)'
@@ -71,7 +48,7 @@ def GenerateConfig(context):
           'zone': context.properties['zone'],
           'target': '$(ref.' + name + '-igm.selfLink)',
           'autoscalingPolicy': {
-              'maxNumReplicas': context.properties[MAX_SIZE_KEY]
+              'maxNumReplicas': context.properties['maxSize']
           }
       }
   }, {

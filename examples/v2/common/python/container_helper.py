@@ -54,4 +54,3 @@ def GenerateManifest(context):
     manifest['spec']['containers'][0]['env'] = env_list
 
   return yaml.dump(manifest, default_flow_style=False)
-
