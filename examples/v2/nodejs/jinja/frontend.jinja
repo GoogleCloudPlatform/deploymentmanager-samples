@@ -11,62 +11,51 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% set SIZE_KEY = 'size' %}
-{% set DEFAULT_SIZE = 1 %}
-
-{% set MAX_SIZE_KEY = 'maxSize' %}
-{% set DEFAULT_MAX_SIZE = 1 %}
-
-{% set CONTAINER_IMAGE_KEY = 'containerImage' %}
-{% set DEFAULT_CONTAINER_IMAGE = 'container-vm-v20160217' %}
-
-{% set DOCKER_ENV_KEY = 'dockerEnv' %}
-
 {% set REGION = properties["zone"][:properties["zone"].rfind("-")] %}
 
 resources:
-  - name: {{ env["name"] }}
-    type: container_instance_template.jinja
-    properties:
-      port: {{ properties["port"] }}
-      dockerEnv: {{ properties[DOCKER_ENV_KEY] if DOCKER_ENV_KEY in properties else NONE }}
-      dockerImage: {{ properties["dockerImage"] }}
-      containerImage: {{ properties[CONTAINER_IMAGE_KEY] if CONTAINER_IMAGE_KEY in properties else DEFAULT_CONTAINER_IMAGE }}
+- name: {{ env["name"] }}
+  type: container_instance_template.jinja
+  properties:
+    port: {{ properties["port"] }}
+    dockerEnv: {{ properties['dockerEnv'] }}
+    dockerImage: {{ properties["dockerImage"] }}
+    containerImage: {{ properties['containerImage'] }}
 
-  - name: {{ env["name"] }}-igm
-    type: compute.v1.instanceGroupManager
-    properties:
-      zone: {{ properties['zone'] }}
-      targetSize: {{ properties[SIZE_KEY]|int if SIZE_KEY in properties else DEFAULT_SIZE }}
-      targetPools:
-        - $(ref.{{ env["name"] }}-tp.selfLink)
-      baseInstanceName: {{ env["name"] }}-instance
-      instanceTemplate: $(ref.{{ env["name"] }}-it.selfLink)
+- name: {{ env["name"] }}-igm
+  type: compute.v1.instanceGroupManager
+  properties:
+    zone: {{ properties['zone'] }}
+    targetSize: {{ properties['size'] }}
+    targetPools:
+      - $(ref.{{ env["name"] }}-tp.selfLink)
+    baseInstanceName: {{ env["name"] }}-instance
+    instanceTemplate: $(ref.{{ env["name"] }}-it.selfLink)
 
-  - name: {{ env["name"] }}-as
-    type: compute.v1.autoscaler
-    properties:
-      zone: {{ properties['zone'] }}
-      target: $(ref.{{ env['name'] }}-igm.selfLink)
-      autoscalingPolicy:
-        maxNumReplicas: {{ properties[MAX_SIZE_KEY]|int if MAX_SIZE_KEY in properties else DEFAULT_MAX_SIZE }}
+- name: {{ env["name"] }}-as
+  type: compute.v1.autoscaler
+  properties:
+    zone: {{ properties['zone'] }}
+    target: $(ref.{{ env['name'] }}-igm.selfLink)
+    autoscalingPolicy:
+      maxNumReplicas: {{ properties['maxSize'] }}
 
-  - name: {{ env["name"] }}-hc
-    type: compute.v1.httpHealthCheck
-    properties:
-      port: {{ properties['port'] }}
-      requestPath: /_ah/health
+- name: {{ env["name"] }}-hc
+  type: compute.v1.httpHealthCheck
+  properties:
+    port: {{ properties['port'] }}
+    requestPath: /_ah/health
 
-  - name: {{ env["name"] }}-tp
-    type: compute.v1.targetPool
-    properties:
-      region: {{ REGION }}
-      healthChecks:
-        - $(ref.{{ env["name"] }}-hc.selfLink)
+- name: {{ env["name"] }}-tp
+  type: compute.v1.targetPool
+  properties:
+    region: {{ REGION }}
+    healthChecks:
+      - $(ref.{{ env["name"] }}-hc.selfLink)
 
-  - name: {{ env["name"] }}-lb
-    type: compute.v1.forwardingRule
-    properties:
-      region: {{ REGION }}
-      portRange: {{ properties['port'] }}
-      target: $(ref.{{ env["name"] }}-tp.selfLink)
+- name: {{ env["name"] }}-lb
+  type: compute.v1.forwardingRule
+  properties:
+    region: {{ REGION }}
+    portRange: {{ properties['port'] }}
+    target: $(ref.{{ env["name"] }}-tp.selfLink)

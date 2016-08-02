@@ -18,6 +18,10 @@ info:
   description: Create container VM templates
   version: 1.0
 
+imports:
+- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/common/python/container_helper.py
+  name: container_helper.py
+
 required:
 - zone
 - containerImage

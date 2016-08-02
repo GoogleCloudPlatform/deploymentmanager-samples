@@ -13,33 +13,20 @@
 # limitations under the License.
 
 info:
-  title: Container Instance Template
+  title: Application Template
   author: Google
-  description: Create container instance templates
+  description: Create application template with back-end and front-end templates
   version: 1.0
 
 imports:
-- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/common/python/container_helper.py
-  name: container_helper.py
+- path: frontend.jinja
+- path: ../../common/jinja/container_vm.jinja
+  name: container_vm.jinja
 
 required:
-- port
-- dockerImage
-- containerImage
+- zone
 
 properties:
-  port:
-    type: integer
-    description: The host port and container port
-
-  dockerImage:
+  zone:
     type: string
-    description: The docker image to be used
-
-  dockerEnv:
-    type: object
-    description: The container environment variables
-
-  containerImage:
-    type: string
-    description: The container image to be used
+    description: The Zone in which to run the service
