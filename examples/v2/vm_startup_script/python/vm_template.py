@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,33 +31,29 @@ def ZonalComputeUrl(project, zone, collection, name):
 def GenerateConfig(context):
   """Generate configuration."""
 
-  base_name = context.env['deployment'] + '-' + context.env['name']
+  name_prefix = context.env['deployment'] + '-' + context.env['name']
 
-  items = []
-  for key, value in context.properties['metadata-from-file'].iteritems():
-    items.append({
-        'key': key,
-        'value': context.imports[value]
-        })
-  metadata = {'items': items}
-
-  # Properties for the container-based instance.
   instance = {
       'zone': context.properties['zone'],
       'machineType': ZonalComputeUrl(
           context.env['project'], context.properties['zone'], 'machineTypes',
           'f1-micro'),
-      'metadata': metadata,
+      'metadata': {
+          'items': [{
+              'key': 'startup-script',
+              'value': context.properties['startup-script']
+          }]
+      },
       'disks': [{
           'deviceName': 'boot',
           'type': 'PERSISTENT',
           'autoDelete': True,
           'boot': True,
           'initializeParams': {
-              'diskName': base_name + '-disk',
+              'diskName': name_prefix + '-disk',
               'sourceImage': GlobalComputeUrl(
-                  'debian-cloud', 'images',
-                  ''.join(['backports-debian', '-7-wheezy-v20151104']))
+                  'debian-cloud', 'images', 'family/debian-8'
+                  )
               },
           }],
       'networkInterfaces': [{
@@ -73,7 +69,7 @@ def GenerateConfig(context):
   # Resources to return.
   resources = {
       'resources': [{
-          'name': base_name,
+          'name': name_prefix + '-vm',
           'type': 'compute.v1.instance',
           'properties': instance
           }]

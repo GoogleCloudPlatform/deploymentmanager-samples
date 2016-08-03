@@ -1,5 +1,5 @@
 {#
-Copyright 2015 Google Inc. All rights reserved.
+Copyright 2016 Google Inc. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -21,19 +21,13 @@ resources:
   properties:
     zone: {{ properties["zone"] }}
     machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
-
-{% if 'startup-script' in properties %}
     metadata:
       items:
       # For more ways to use startup scripts on an instance, see:
       #   https://cloud.google.com/compute/docs/startupscript
       - key: startup-script
         value: |
-{% for line in properties['startup-script'].split('\n') %}
-          {{ line }}
-{% endfor %}
-{% endif %}
-
+          {{ properties["startup-script"]|indent(10) }}
     disks:
     - deviceName: boot
       type: PERSISTENT
@@ -41,7 +35,7 @@ resources:
       autoDelete: true
       initializeParams:
         diskName: {{ NAME_PREFIX }}-disk
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20160329
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
 
     networkInterfaces:
     - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default

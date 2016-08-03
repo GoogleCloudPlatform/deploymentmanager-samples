@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
 # limitations under the License.
 
 info:
-  title: VM with startup script
+  title: VM with metadata from file
   author: Google Inc.
-  description: Creates a disk running the provided startup script.
+  description: Creates a single vm with the naming scheme <deployment>-<name>, populating metadata from imported files.
 
 required:
 - zone
-- startup-script
+- metadata-from-file
 
 properties:
   zone:
-    description: Zone to create the resources in.
     type: string
-  startup-script:
-    description: The startup script to run on VM intialization.
-    type: string
+    description: GCP zone
+
+  metadata-from-file:
+    type: object
+    description: Key is metadata key, value is import file containing metadata value.
