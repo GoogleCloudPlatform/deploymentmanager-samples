@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: instance.py
-- path: startup-script.sh
+info:
+  title: VM with metadata from file
+  author: Google Inc.
+  description: Creates a single vm with the naming scheme <deployment>-<name>, populating metadata from imported files.
 
-resources:
-- name: my-instance
-  type: instance.py
-  properties:
-    metadata-from-file:
-      startup-script: startup-script.sh
-    zone: ZONE_TO_RUN
+required:
+- zone
+- metadata-from-file
+
+properties:
+  zone:
+    type: string
+    description: GCP zone
+
+  metadata-from-file:
+    type: object
+    description: Key is metadata key, value is import file containing metadata value.

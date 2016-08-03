@@ -17,10 +17,10 @@ example to change the machine type, source image, or network.
 ## Properties
 This template takes the following input properties:
 
-* `zone`: the Google Cloud Platform zone in which the VM should run
-* `metadata`: a map of metadata key to file name containing metadata value. The
-  file name must match the name of a file that has been imported as part of the
-  configuration.
+*   `zone`: the Google Cloud Platform zone in which the VM should run
+*   `metadata-from-file`: a map of metadata key to file name containing metadata
+    value. The file name must match the name of a file that has been imported as
+    part of the configuration.
 
 For more details on properties of this template, see the [template
 schema](instance.py.schema).
