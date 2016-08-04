@@ -29,7 +29,6 @@ info:
 required:
 - zone
 - instancetype
-- project
 
 
 optional:
@@ -51,6 +50,3 @@ properties:
     type: string
     default: "someone@somewhere.com"
     description: email address for administrator (used in htcondor config).
-  project:
-    type: string
-    description: user project in which to create the cluster.

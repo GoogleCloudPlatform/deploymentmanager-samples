@@ -79,7 +79,7 @@ resources:
             if  dpkg -s condor >& /dev/null  ; then echo "yes"; else sleep 10; apt-get install -y condor; fi;
             cat <<EOF > /etc/condor/config.d/condor_config.local
             DISCARD_SESSION_KEYRING_ON_STARTUP=False
-            DAEMON_LIST = MASTER
+            DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR
             CONDOR_ADMIN=%(email)s
             ALLOW_WRITE = \$(ALLOW_WRITE),10.240.0.0/16
             EOF
