@@ -24,7 +24,7 @@ To deploy, you must have a GCP account and have gcloud installed.
   ```
   resources:
   - name: condor-cluster
-    type: condor.py
+    type: condor.jinja
     properties:
       count: 4
       zone: us-central1-f
@@ -102,7 +102,7 @@ Description of the files in this repo:
 
 - `README.md` - this file.
 - `condor-cluster.yml` - an example cluster definition file.  edit this to suit your needs by supplying the parameters.
-- `condor.py` and `condor.py.schema` - deployment manager type definition of type _condor_.
+- `condor.jinja` and `condor.jinja.schema` - deployment manager type definition of type _condor_.
 - `condor-simple.yaml` - a condor cluster defined explicitly without creating a type.  used as example only.
 - `applications/primes.c` - sample application to submit into the condor cluster for execution.  
 - `application/submitprimes` - sample submit

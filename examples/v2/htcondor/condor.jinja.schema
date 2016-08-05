@@ -26,6 +26,11 @@ info:
     The base image is Debian 8, and the configuration installs the latest
     production version of HTCondor.
 
+imports:
+- path: startup-master.sh
+- path: startup-submit.sh
+- path: startup-compute.sh
+
 required:
 - zone
 - instancetype

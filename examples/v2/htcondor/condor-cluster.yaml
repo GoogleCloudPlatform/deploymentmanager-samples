@@ -13,11 +13,11 @@
 # limitations under the License.
 
 imports:
-- path: condor.py
+- path: condor.jinja
 
 resources:
 - name: condor-cluster
-  type: condor.py
+  type: condor.jinja
   properties:
     count: 2 
     zone: us-central1-f
