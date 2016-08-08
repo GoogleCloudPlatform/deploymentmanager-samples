@@ -1,0 +1,8 @@
+Universe   = vanilla
+Executable = primes
+Arguments  = 400000
+Log        = /var/log/condor/jobs/simple.log
+#Output     = tmp3/simple.out
+#Error      = tmp3/simple.error
+should_transfer_files = IF_NEEDED
+Queue 100
