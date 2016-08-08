@@ -30,7 +30,8 @@ To deploy, you must have a GCP account and have gcloud installed.
       zone: us-central1-f
       email: your.email@provider.com
       instancetype: n1-standard-4
-      ```
+  ```
+
   * the `count` specifies the number of compute nodes in the  cluster
   * `zone` is the zone and region in which to launch the vms
   * `email` is used for the configuration of htcondor (optional)
