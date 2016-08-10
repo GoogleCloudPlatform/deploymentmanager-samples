@@ -20,6 +20,8 @@ info:
 
 imports:
 - path: autoscaled_group.py
+- path: ../../common/python/container_instance_template.py
+  name: container_instance_template.py
 
 required:
 - port

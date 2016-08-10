@@ -20,6 +20,8 @@ info:
 
 imports:
 - path: service.py
+- path: ../../common/python/container_vm.py
+  name: container_vm.py
 
 required:
 - primaryZone
