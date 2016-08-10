@@ -20,6 +20,8 @@ info:
 
 imports:
 - path: autoscaled_group.jinja
+- path: ../../common/jinja/container_instance_template.jinja
+  name: container_instance_template.jinja
 
 required:
 - port

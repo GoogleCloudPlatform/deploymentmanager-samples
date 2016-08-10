@@ -18,6 +18,8 @@
 # frontend Docker containers.
 imports:
 - path: nodejs.py
+- path: ../../common/python/container_helper.py
+  name: container_helper.py
 
 resources:
 - name: nodejs

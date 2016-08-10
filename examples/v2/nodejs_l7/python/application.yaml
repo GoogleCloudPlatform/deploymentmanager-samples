@@ -38,10 +38,6 @@
 
 imports:
 - path: application.py
-- path: ../../common/python/container_instance_template.py
-  name: container_instance_template.py
-- path: ../../common/python/container_vm.py
-  name: container_vm.py
 - path: ../../common/python/container_helper.py
   name: container_helper.py
 
