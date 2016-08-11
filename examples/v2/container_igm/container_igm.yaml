@@ -14,7 +14,6 @@
 
 imports:
 - path: container_igm.jinja
-- path: container_manifest.yaml
 
 resources:
 - name: autoscaled_container

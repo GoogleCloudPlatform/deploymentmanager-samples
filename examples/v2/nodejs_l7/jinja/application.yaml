@@ -38,8 +38,6 @@
 
 imports:
 - path: application.jinja
-- path: ../../common/jinja/container_helper.jinja
-  name: container_helper.jinja
 
 resources:
 - name: nodejs

@@ -38,8 +38,6 @@
 
 imports:
 - path: application.py
-- path: ../../common/python/container_helper.py
-  name: container_helper.py
 
 resources:
 - name: nodejs

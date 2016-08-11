@@ -18,6 +18,9 @@ info:
   description: Create container VM templates
   version: 1.0
 
+imports:
+- path: container_helper.jinja
+
 required:
 - zone
 - containerImage

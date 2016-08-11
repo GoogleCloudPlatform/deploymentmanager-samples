@@ -18,6 +18,9 @@ info:
   description: Create container instance templates
   version: 1.0
 
+imports:
+- path: container_helper.py
+
 required:
 - port
 - dockerImage
