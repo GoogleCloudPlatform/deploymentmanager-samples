@@ -1,0 +1,102 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: condor-master
+  type: compute.v1.instance
+  properties:
+    zone: us-central1-f
+    machineType: https://www.googleapis.com/compute/v1/projects/condor-1330/zones/us-central1-f/machineTypes/n1-standard-4
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160606
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/condor-1330/global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items:
+        - condor-master
+    metadata:
+      items:
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            apt-get update && apt-get install -y wget net-tools vim
+            echo "deb http://research.cs.wisc.edu/htcondor/debian/stable/ jessie contrib" >> /etc/apt/sources.list
+            wget -qO - http://research.cs.wisc.edu/htcondor/debian/HTCondor-Release.gpg.key | apt-key add -
+            apt-get update && apt-get install -y condor
+            cat <<EOF > /etc/condor/config.d/condor_config.local
+            DISCARD_SESSION_KEYRING_ON_STARTUP=False
+            CONDOR_ADMIN=someone@somewhere.com
+            ALLOW_WRITE = \$(ALLOW_WRITE),*
+            EOF
+            /etc/init.d/condor start
+- name: condor-compute
+  type: compute.v1.instanceTemplate
+  properties:
+    project: condor-1330
+    properties:
+      machineType: n1-standard-4
+      disks:
+      - deviceName: boot
+        type: PERSISTENT
+        boot: true
+        autoDelete: true
+        initializeParams:
+          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160606
+      networkInterfaces:
+      - network: https://www.googleapis.com/compute/v1/projects/condor-1330/global/networks/default
+        accessConfigs:
+        - name: External NAT
+          type: ONE_TO_ONE_NAT
+      tags:
+        items:
+        - condor-compute
+      metadata:
+        items:
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            apt-get update && apt-get install -y wget net-tools vim
+            echo "deb http://research.cs.wisc.edu/htcondor/debian/stable/ jessie contrib" >> /etc/apt/sources.list
+            wget -qO - http://research.cs.wisc.edu/htcondor/debian/HTCondor-Release.gpg.key | apt-key add -
+            apt-get update && apt-get install -y condor
+            cat <<EOF > /etc/condor/config.d/condor_config.local
+            DISCARD_SESSION_KEYRING_ON_STARTUP=False
+            CONDOR_ADMIN=someone@somewhere.com
+            CONDOR_HOST=condor-master
+            DAEMON_LIST = MASTER, STARTD
+            ALLOW_WRITE = $(ALLOW_WRITE), $(CONDOR_HOST)
+            EOF
+            /etc/init.d/condor start
+- name: condor-compute-igm
+  type: compute.v1.instanceGroupManagers
+  properties:
+    baseInstanceName: condor-compute-instance
+    instanceTemplate: $(ref.condor-compute.selfLink)
+    targetSize: 2
+    zone: us-central1-f
+- name: condor-compute-as
+  type: compute.v1.autoscaler
+  properties:
+    zone: us-central1-f
+    target: $(ref.condor-compute-igm.selfLink)
+    autoscalingPolicy:
+      maxNumReplicas: 5
