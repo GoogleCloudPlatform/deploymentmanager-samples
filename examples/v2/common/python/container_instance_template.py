@@ -59,4 +59,3 @@ def GenerateConfig(context):
       }
 
   return {'resources': [instance_template]}
-

@@ -14,26 +14,26 @@ limitations under the License.
 {% from 'container_helper.jinja' import GenerateManifest %}
 
 resources:
-  - name: {{ env['name'] }}-it
-    type: compute.v1.instanceTemplate
+- name: {{ env['name'] }}-it
+  type: compute.v1.instanceTemplate
+  properties:
     properties:
-       properties:
-         metadata:
-           items:
-             - key: google-container-manifest
-               value: GenerateManifest(env['name'], properties['port'],
-                         properties['dockerImage'], properties['dockerEnv'])
-         machineType: f1-micro
-         disks:
-           - deviceName: boot
-             boot: true
-             autoDelete: true
-             mode: READ_WRITE
-             type: PERSISTENT
-             initializeParams:
-               sourceImage: https://www.googleapis.com/compute/v1/projects/google-containers/global/images/{{ properties['containerImage'] }}
-         networkInterfaces:
-           - accessConfigs:
-               - name: external-nat
-                 type: ONE_TO_ONE_NAT
-             network: https://www.googleapis.com/compute/v1/projects/{{ env['project'] }}/global/networks/default
+      metadata:
+        items:
+        - key: google-container-manifest
+          value: GenerateManifest(env['name'], properties['port'],
+                   properties['dockerImage'], properties['dockerEnv'])
+      machineType: f1-micro
+      disks:
+      - deviceName: boot
+        boot: true
+        autoDelete: true
+        mode: READ_WRITE
+        type: PERSISTENT
+        initializeParams:
+          sourceImage: https://www.googleapis.com/compute/v1/projects/google-containers/global/images/{{ properties['containerImage'] }}
+      networkInterfaces:
+      - accessConfigs:
+        - name: external-nat
+          type: ONE_TO_ONE_NAT
+        network: https://www.googleapis.com/compute/v1/projects/{{ env['project'] }}/global/networks/default
