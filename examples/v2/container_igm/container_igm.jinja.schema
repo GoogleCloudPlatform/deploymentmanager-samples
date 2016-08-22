@@ -1,8 +1,0 @@
-info:
-  title: Container instance group manager example
-  author: Google Inc.
-  description: Template to deploy an autoscaled instance group with a container image for each instance.
-
-imports:
-- path: container_manifest.yaml
-

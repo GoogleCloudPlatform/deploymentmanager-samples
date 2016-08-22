@@ -15,25 +15,25 @@ limitations under the License.
 {% set COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/' %}
 
 resources:
-  - name: {{ env['name'] }}
-    type: compute.v1.instance
-    properties:
-      zone: {{ properties['zone'] }}
-      machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/f1-micro
-      metadata:
-        items:
-          - key: google-container-manifest
-            value: {{ GenerateManifest }}
-      disks:
-        - deviceName: boot
-          type: PERSISTENT
-          autoDelete: true
-          boot: true
-          initializeParams:
-            diskName: {{ env['name'] }}-disk
-            sourceImage: {{ COMPUTE_URL_BASE }}projects/google-containers/global/images/{{ properties['containerImage'] }}
-      networkInterfaces:
-        - accessConfigs:
-            - name: external-nat
-              type: ONE_TO_ONE_NAT
-          network: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/global/networks/default
+- name: {{ env['name'] }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties['zone'] }}
+    machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/f1-micro
+    metadata:
+      items:
+      - key: google-container-manifest
+        value: {{ GenerateManifest }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      autoDelete: true
+      boot: true
+      initializeParams:
+        diskName: {{ env['name'] }}-disk
+        sourceImage: {{ COMPUTE_URL_BASE }}projects/google-containers/global/images/{{ properties['containerImage'] }}
+    networkInterfaces:
+    - accessConfigs:
+      - name: external-nat
+        type: ONE_TO_ONE_NAT
+      network: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/global/networks/default

@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
 # limitations under the License.
 
 imports:
-- path: container_igm.jinja
+- path: container_igm.py
 
 resources:
 - name: autoscaled_container
-  type: container_igm.jinja
+  type: container_igm.py
   properties:
     zone: us-central1-f
-    containerImage: container-vm-v20151103
+    containerImage: container-vm-v20160217
     containerManifest: container_manifest.yaml
     targetSize: 2
     maxReplicas: 5
