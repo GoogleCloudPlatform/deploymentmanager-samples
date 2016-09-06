@@ -12,9 +12,10 @@ limitations under the License.
 #}
 
 {% from 'container_helper.jinja' import GenerateManifest %}
+{% set IT_NAME = env['name'] + '-it' %}
 
 resources:
-- name: {{ env['name'] }}-it
+- name: {{ IT_NAME }}
   type: compute.v1.instanceTemplate
   properties:
     properties:
@@ -37,3 +38,7 @@ resources:
         - name: external-nat
           type: ONE_TO_ONE_NAT
         network: https://www.googleapis.com/compute/v1/projects/{{ env['project'] }}/global/networks/default
+
+outputs:
+- name: instanceTemplateSelfLink
+  value: $(ref.{{ IT_NAME }}.selfLink)
