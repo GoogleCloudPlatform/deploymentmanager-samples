@@ -1,0 +1,47 @@
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+{% set IGM_NAME = env['name'] + '-igm' %}
+{% set IT_NAME = env['name'] %}
+
+resources:
+- name: {{ IT_NAME }}
+  type: container_instance_template.jinja
+  properties:
+    containerImage: {{ properties['containerImage'] }}
+    dockerEnv: {{ properties['dockerEnv'] }}
+    dockerImage: {{ properties['dockerImage'] }}
+    port: {{ properties['port'] }}
+- name: {{ IGM_NAME }}
+  type: compute.v1.instanceGroupManager
+  properties:
+    baseInstanceName: {{ env['name'] }}-instance
+    instanceTemplate: $(ref.{{ IT_NAME }}.instanceTemplateSelfLink)
+    targetSize: {{ properties['minSize'] }}
+    zone: {{ properties['zone'] }}
+    {% if properties['targetPool'] %}
+    targetPools:
+    - $(ref.{{ properties['targetPool'] }}.selfLink)
+    {% endif %}
+- name: {{ env['name'] }}-as
+  type: compute.v1.autoscaler
+  properties:
+    autoscalingPolicy:
+      minNumReplicas: {{ properties['minSize'] }}
+      maxNumReplicas: {{ properties['maxSize'] }}
+    target: $(ref.{{ IGM_NAME }}.selfLink)
+    zone: {{ properties['zone'] }}
+
+outputs:
+- name: group
+  value: $(ref.{{ IGM_NAME }}.instanceGroup)

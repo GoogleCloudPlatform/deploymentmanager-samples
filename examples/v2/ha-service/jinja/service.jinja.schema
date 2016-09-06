@@ -1,0 +1,68 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Container-based single-zone service
+  author: Google, Inc.
+  description: |
+    A single-zone container-based service, based on an autoscaled instance
+    group manager, and optionally load balanced using a network load balancer.
+
+    Instances run the Google Container VM image with the specified container.
+
+imports:
+- path: ../../common/jinja/container_instance_template.jinja
+  name: container_instance_template.jinja
+
+required:
+- dockerImage
+- port
+- zone
+
+properties:
+  containerImage:
+    type: string
+    description: Container VM image name to run on VMs.
+    default: container-vm-v20160217
+  dockerImage:
+    type: string
+    description: Container image to run on VMs.
+  dockerEnv:
+    type: object
+    description: Container environment variables.
+    default: {}
+  port:
+    type: integer
+    description: Port on which to expose service.
+  targetPool:
+    type: string
+    description: Optional name of target pool resource in the deployment to use
+      as load balancer.
+    default: ""
+  zone:
+    type: string
+    description: Zone in which to run the service.
+  minSize:
+    type: integer
+    description: Minimum size of the cluster.
+    default: 1
+  maxSize:
+    type: integer
+    description: Maximum size of the cluster for autoscaling
+    default: 1
+
+outputs:
+  group:
+    type: string
+    description: The instance group for the service.

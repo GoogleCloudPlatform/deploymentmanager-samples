@@ -58,4 +58,7 @@ def GenerateConfig(context):
           }
       }
 
-  return {'resources': [instance_template]}
+  outputs = [{'name': 'instanceTemplateSelfLink',
+              'value': '$(ref.' + instance_template['name'] + '.selfLink)'}]
+
+  return {'resources': [instance_template], 'outputs': outputs}

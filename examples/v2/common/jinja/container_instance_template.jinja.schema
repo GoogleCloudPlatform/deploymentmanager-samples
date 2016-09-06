@@ -42,3 +42,8 @@ properties:
   containerImage:
     type: string
     description: The container image to be used
+
+outputs:
+  instanceTemplateSelfLink:
+    type: string
+    description: The selflink of this instance template
