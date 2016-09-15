@@ -1,0 +1,53 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: A template for creating a pool of similar instances in a zone.
+  author: Google, Inc.
+  description: |
+    This template lets users create a collection of instances of a given type,
+    number and zone. This can also be achieved using InstanceGroupManager, but
+    this templates does it without using one.
+
+    NOTE: Unlike InstanceGroupManager pools, this pool does not re-create
+    instances upon failure or termination to keep up with the target pool
+    size.
+
+required:
+- zone
+- image
+- machineType
+- count
+- namePrefix
+- hasExternalIp
+
+properties:
+  zone:
+    type: string
+    description: Zone to run the instances in.
+  image:
+    type: string
+    description: Image to run on the VMs.
+  machineType:
+    type: string
+    descripton: Type of GCE instance to use.
+  count:
+    type: integer
+    description: Number of instances on the pool.
+  namePrefix:
+    type: string
+    description:  The prefix string to use while naming the instances in the pool. Name of the instance is constructed by concatenating namePrefix, deploymentName and an instance id where 1 <= id <= cluster size seperated by '-'
+  hasExternalIp:
+    type: boolean
+    description: True if the instances created should have an external ip.
