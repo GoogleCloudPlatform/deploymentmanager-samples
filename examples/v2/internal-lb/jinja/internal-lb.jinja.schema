@@ -1,0 +1,60 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Internal Load Balancer
+  author: Google Inc.
+  description: Creates a single VM running HAProxy to provide internal load
+    balancing to an instance group.
+
+imports:
+- path: instance.jinja
+- path: ../haproxy-startup-script.sh
+  name: haproxy-startup-script.sh
+
+required:
+- app-port
+- port
+- groups
+- zone
+
+properties:
+  algorithm:
+    type: string
+    default: roundrobin
+    description: HAProxy load balancing algorithm to use.
+  app-port:
+    type: integer
+    description: Port exposed by the servers being load balanced to.
+  port:
+    type: integer
+    description: Port exposed by load balancer.
+  groups:
+    type: array
+    items:
+      pattern: ^https://www.googleapis.com/compute/v1/projects/[^/]+/zones/[^/]+/instanceGroups/[^/]+$
+      type: string
+    description: List of instance group URLs to load balance to.
+  machine-type:
+    type: string
+    default: f1-micro
+    description: Machine type for the VM
+  zone:
+    type: string
+    description: GCP zone
+
+outputs:
+  address:
+    type: string
+    description: Internal IP address for load balancer.
