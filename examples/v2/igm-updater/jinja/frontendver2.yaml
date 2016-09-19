@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
 
 # Import all templates used in deployment
 imports:
-- path: ha-service.py
+- path: ha-service.jinja
 
 # Declare all resources. In this case, one highly available service
 # as defined in the ha-service.py template.
 resources:
 - name: fesvc_next
-  type: ha-service.py
+  type: ha-service.jinja
   properties:
     minSize: 3
     maxSize: 10
-    vmSize: f1-micro
+    machineType: f1-micro
     zones:
     - zone: asia-east1-a
       prev:
-        name: 2b-ubuntu
-        image: "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20160311"
+        name: 1a-debian
+        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8"
       curr:
-        name: 3c-centos
-        image: "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20160301"
+        name: 2b-ubuntu
+        image: "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1404-lts"
     - zone: asia-east1-b
       prev:
         name: 1a-debian
-        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160301"
+        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8"
       curr:
         name: 2b-ubuntu
-        image: "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20160311"
+        image: "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1404-lts"

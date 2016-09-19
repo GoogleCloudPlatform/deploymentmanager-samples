@@ -1,0 +1,57 @@
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+{% set NAME = env['name'] %}
+{% set ZONE = properties['zone'] %}
+{% set IGM_NAME = env['name'] + '-igm' %}
+{% set IT_NAME = env['name'] %}
+{% set CURR_IT_NAME = env['name'] + '-it-' + properties['currVersion']['name']%}
+resources:
+- name: {{ CURR_IT_NAME }}
+  type: instance-template.jinja
+  properties:
+    machineType: {{ properties['machineType'] }}
+    zone: {{ ZONE }}
+    itName: {{ CURR_IT_NAME }}
+    image: {{ properties['currVersion']['image'] }}
+{% if properties['prevVersion'] %}
+{% set PREV_IT_NAME = env['name'] + '-it-' + properties['prevVersion']['name'] %}
+- name: {{ PREV_IT_NAME }}
+  type: instance-template.jinja
+  properties:
+    machineType: {{ properties['machineType'] }}
+    zone: {{ ZONE }}
+    itName: {{ PREV_IT_NAME }}
+    image: {{ properties['prevVersion']['image'] }}
+- name: {{ CURR_IT_NAME }}-igupdater
+  type: replicapoolupdater.v1beta1.rollingUpdate
+  properties:
+    zone: {{ ZONE }}
+    instanceGroupManager: $(ref.{{ IGM_NAME }}.selfLink)
+    actionType: RECREATE
+    instanceTemplate: $(ref.{{ CURR_IT_NAME }}.selfLink)
+{% endif %}
+- name: {{ IGM_NAME }}
+  type: compute.v1.instanceGroupManager
+  properties:
+    baseInstanceName: {{ IGM_NAME }}-instance
+    instanceTemplate: $(ref.{{ CURR_IT_NAME }}.selfLink)
+    zone: {{ ZONE }}
+    targetSize: 1
+- name: {{ NAME }}-as
+  type: compute.v1.autoscaler
+  properties:
+    autoscalingPolicy:
+      minNumReplicas: {{ properties['minSize'] }}
+      maxNumReplicas: {{ properties['maxSize'] }}
+    target: $(ref.{{ IGM_NAME }}.selfLink)
+    zone: {{ ZONE }}
