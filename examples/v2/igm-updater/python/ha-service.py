@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,23 +24,23 @@ def GenerateConfig(context):
   config = {'resources': []}
 
   # A zonal service.py resource for each zone in the properties list.
-  for deployzone in context.properties['zones']:
-    zonename = deployzone['zone']
+  for deploy_zone in context.properties['zones']:
+    zone_name = deploy_zone['zone']
 
     properties = {
-        'currversion': deployzone['curr'],
+        'currVersion': deploy_zone['curr'],
         'targetPool': lb_name + '-tp',
         'minSize': context.properties['minSize'],
         'maxSize': context.properties['maxSize'],
-        'vmSize': context.properties['vmSize'],
-        'zone': zonename
+        'machineType': context.properties['machineType'],
+        'zone': zone_name
     }
 
-    if 'prev' in deployzone:
-      properties['prevversion'] = deployzone['prev']
+    if 'prev' in deploy_zone:
+      properties['prevVersion'] = deploy_zone['prev']
 
     service = {
-        'name': context.env['deployment'] + '-service-' + zonename,
+        'name': context.env['deployment'] + '-service-' + zone_name,
         'type': 'service.py',
         'properties': properties
     }
@@ -52,6 +52,7 @@ def GenerateConfig(context):
       'name': lb_name,
       'type': 'lb-l3.py',
       'properties': {
+          'port': 80,
           'region': region
       }
   }

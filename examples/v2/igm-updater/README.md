@@ -7,22 +7,23 @@ your instance groups.
 
 This example consists of:
 
-* 4 python templates
-    * ha-service.py - the top level template
-        * Uses service.py for each zone.
-        * Uses lb-l3.py to create the load balancer
-    * service.py
-        * Creates the instance templates, using instantacetemplate.py
-        * Creates the instance group
-        * On update, creates the instance group updater
-    * lb-l3.py
-        * Creates the level 3 load balancer over the two regions
-    * instancetemplate.py
-        * Creates the instance templates.
-* a schema file for the top level python template
-    * Defines the required inputs and defaults for the optional ones properties.
-* 3 yaml files - used to test the templates with rolling out different linux
-  distros
+*   4 python templates
+    *   ha-service.py - the top level template
+        *   Uses service.py for each zone.
+        *   Uses lb-l3.py to create the load balancer
+    *   service.py
+        *   Creates the instance templates, using instance-template.py
+        *   Creates the instance group
+        *   On update, creates the instance group updater
+    *   lb-l3.py
+        *   Creates the level 3 load balancer over the two regions
+    *   instance-template.py
+        *   Creates the instance templates.
+*   a schema file for the top level python template
+    *   Defines the required inputs and defaults for the optional ones
+        properties.
+*   3 yaml files - used to test the templates with rolling out different linux
+    distros
 
 To perform a rolling update on an instance group, four resources are needed:
 
@@ -36,12 +37,12 @@ The update will take several minutes to run, so be patient.
 The directory also contains three yaml files.
 To run the example use them in order.
 
-1. Create the deployment and deploy the debian image
-`gcloud deployment-manager deployments create MYDEPLOYMENTNAME --config frontendver1.yaml`
-1. Update the deployment with ubuntu
-`gcloud deployment-manager deployments update test2  --config frontendver2.yaml`
-1. Update just the first zone with centos
-`gcloud deployment-manager deployments update test2  --config frontendver3.yaml`
+1.  Create the deployment and deploy the debian image `gcloud deployment-manager
+    deployments create MYDEPLOYMENTNAME --config frontendver1.yaml`
+1.  Update the deployment with ubuntu `gcloud deployment-manager deployments
+    update MYDEPLOYMENTNAME --config frontendver2.yaml`
+1.  Update just the first zone with centos `gcloud deployment-manager
+    deployments update MYDEPLOYMENTNAME --config frontendver3.yaml`
 
 Although we are using stock OS images, the example is meant to show how images
 baked with your own code can be deployed and updated with Deployment Manager.

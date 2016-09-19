@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ def GenerateConfig(context):
       'type': 'compute.v1.instanceTemplate',
       'properties': {
           'properties': {
-              'machineType': context.properties['vmmachine'],
+              'machineType': context.properties['machineType'],
               'disks': [{
                   'deviceName': 'boot',
                   'boot': True,

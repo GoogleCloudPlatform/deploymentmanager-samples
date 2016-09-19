@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,40 +23,40 @@ def GenerateConfig(context):
 
   name = context.env['name']
   igm_name = name + '-igm'
-  curr_it_name = name + '-it-' + context.properties['currversion']['name']
-  vmmachine = context.properties['vmSize']
+  curr_it_name = name + '-it-' + context.properties['currVersion']['name']
+  machine_type = context.properties['machineType']
   zone = context.properties['zone']
 
   config = {'resources': []}
 
   # The instance template.
-  currentit = {
+  current_it = {
       'name': curr_it_name,
-      'type': 'instancetemplate.py',
+      'type': 'instance-template.py',
       'properties': {
-          'vmmachine': vmmachine,
+          'machineType': machine_type,
           'zone': zone,
           'itName': curr_it_name,
-          'image': context.properties['currversion']['image']
+          'image': context.properties['currVersion']['image']
       }
   }
-  config['resources'].append(currentit)
+  config['resources'].append(current_it)
 
-  if 'prevversion' in context.properties:
+  if 'prevVersion' in context.properties:
     # If performing an instance group update we a need instance template and an
     # updater resource.
-    prev_it_name = name + '-it-' + context.properties['prevversion']['name']
-    newit = {
+    prev_it_name = name + '-it-' + context.properties['prevVersion']['name']
+    new_it = {
         'name': prev_it_name,
-        'type': 'instancetemplate.py',
+        'type': 'instance-template.py',
         'properties': {
-            'vmmachine': vmmachine,
+            'machineType': machine_type,
             'zone': zone,
             'itName': prev_it_name,
-            'image': context.properties['prevversion']['image']
+            'image': context.properties['prevVersion']['image']
         }
     }
-    config['resources'].append(newit)
+    config['resources'].append(new_it)
 
     updater = {
         'name': curr_it_name + '-igupdater',
@@ -86,7 +86,7 @@ def GenerateConfig(context):
   # The autoscaler.
   autoscaler = {
       'name': name + '-as',
-      'type': 'autoscaler.v1beta2.autoscaler',
+      'type': 'compute.v1.autoscaler',
       'properties': {
           'autoscalingPolicy': {
               'minNumReplicas': context.properties['minSize'],
@@ -99,4 +99,3 @@ def GenerateConfig(context):
   config['resources'].append(autoscaler)
 
   return config
-

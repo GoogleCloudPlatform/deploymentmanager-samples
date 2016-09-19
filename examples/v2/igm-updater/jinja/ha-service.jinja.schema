@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ info:
   version: 1.0
 
 imports:
-- path: service.py
-- path: instancetemplate.py
-- path: lb-l3.py
+- path: service.jinja
+- path: instance-template.jinja
+- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/ha-service/jinja/lb-l3.jinja
+  name: lb-l3.jinja
 
 
 properties:
@@ -70,6 +71,6 @@ properties:
     description: the maximum number of vms in each instance group
     default: 10
 
-  vmSize:
+  machineType:
     type: string
     default: n1-standard-1
