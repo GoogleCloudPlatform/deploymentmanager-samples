@@ -38,6 +38,7 @@ properties:
   dockerEnv:
     type: object
     description: The container environment variables
+    default: {}
 
   containerImage:
     type: string

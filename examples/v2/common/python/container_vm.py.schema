@@ -23,6 +23,8 @@ imports:
 
 required:
 - zone
+- port
+- dockerImage
 - containerImage
 
 properties:
@@ -30,6 +32,19 @@ properties:
     type: string
     description: Zone in which this container VM will run
 
+  port:
+    type: integer
+    description: Port to expose on the container (e.g., 8080)
+
   containerImage:
     type: string
     description: The container image to be used
+
+  dockerImage:
+    type: string
+    description: The docker image to be used
+
+  dockerEnv:
+    type: object
+    description: The container environment variables
+    default: {}
