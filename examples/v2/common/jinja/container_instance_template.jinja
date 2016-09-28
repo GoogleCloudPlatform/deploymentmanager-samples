@@ -22,8 +22,8 @@ resources:
       metadata:
         items:
         - key: google-container-manifest
-          value: GenerateManifest(env['name'], properties['port'],
-                   properties['dockerImage'], properties['dockerEnv'])
+          value: |
+            {{ GenerateManifest(env['name'], properties['port'],properties['dockerImage'], properties['dockerEnv'])|indent(12) }}
       machineType: f1-micro
       disks:
       - deviceName: boot

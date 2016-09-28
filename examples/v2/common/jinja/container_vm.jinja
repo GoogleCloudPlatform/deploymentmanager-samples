@@ -23,7 +23,8 @@ resources:
     metadata:
       items:
       - key: google-container-manifest
-        value: {{ GenerateManifest }}
+        value: |
+          {{ GenerateManifest(env['name'], properties['port'], properties['dockerImage'], properties['dockerEnv'])|indent(10) }}
     disks:
     - deviceName: boot
       type: PERSISTENT

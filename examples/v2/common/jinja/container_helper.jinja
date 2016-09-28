@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% macro GenerateManifest(name, port, dockerImage, dockerEnvObj) -%}
+{% macro GenerateManifest(name, port, dockerImage, dockerEnv) -%}
 {# Generates a Container Manifest given a Template context.
 
    Args:
@@ -20,23 +20,23 @@ limitations under the License.
 
    Returns:
      A Container Manifest as a YAML string.
-#}
+-#}
 apiVersion: v1
 kind: Pod
 metadata:
   name: {{ name }}
 spec:
   containers:
-    - name: {{ name }}
-      image: {{ dockerImage }}
-      ports:
-        - hostPort: {{ port }}
-          containerPort: {{ port }}
-      {% if dockerEnv %}
-      env:
-        {% for key, value in dockerEnvObj %}
-        - name: key
-          value: value
-        {% endfor %}
-      {% endif %}
-{%- endmacro %}
+  - name: {{ name }}
+    image: {{ dockerImage }}
+    ports:
+    - hostPort: {{ port }}
+      containerPort: {{ port }}
+    {% if dockerEnv -%}
+    env:
+    {% for key, value in dockerEnv.iteritems() -%}
+    - name: {{ key }}
+      value: '{{ value }}'
+    {% endfor -%}
+    {% endif -%}
+{%- endmacro -%}
