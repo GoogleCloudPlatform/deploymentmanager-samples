@@ -115,6 +115,10 @@ check_success_with_retries() {
 
     sleep 5
   done
+
+  # The check was not successful within the required deadline.
+  echo "status check timeout"
+  return 1
 }
 
 do_init() {
