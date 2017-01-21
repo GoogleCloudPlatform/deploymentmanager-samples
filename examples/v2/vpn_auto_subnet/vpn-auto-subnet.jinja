@@ -1,0 +1,100 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+
+## NETWORK
+- type: compute.v1.network
+  name: {{ env["deployment"] }}-network
+  properties:
+    autoCreateSubnetworks: true
+
+## STATIC IP
+- type: compute.v1.address
+  name: {{ env["deployment"] }}-address
+  properties:
+    region: {{ properties["region"] }}
+
+## VPN GATEWAY
+- type: compute.v1.targetVpnGateway
+  name: {{ env["deployment"] }}-gateway
+  properties:
+    region: {{ properties["region"] }}
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+
+## FORWARDING RULES - ESP
+- type: compute.v1.forwardingRules
+  name: {{ env["deployment"] }}-fr-esp
+  properties:
+    region: {{ properties["region"] }}
+    IPProtocol: ESP
+    IPAddress: $(ref.{{ env["deployment"] }}-address.address)
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+    target: $(ref.{{ env["deployment"] }}-gateway.selfLink)
+
+## FORWARDING RULES - UDP 500
+- type: compute.v1.forwardingRules
+  name: {{ env["deployment"] }}-fr-udp500
+  properties:
+    region: {{ properties["region"] }}
+    IPProtocol: UDP
+    portRange: 500
+    IPAddress: $(ref.{{ env["deployment"] }}-address.address)
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+    target: $(ref.{{ env["deployment"] }}-gateway.selfLink)
+
+## FORWARDING RULES - UDP 4500
+- type: compute.v1.forwardingRules
+  name: {{ env["deployment"] }}-fr-udp4500
+  properties:
+    region: {{ properties["region"] }}
+    IPProtocol: UDP
+    portRange: 4500
+    IPAddress: $(ref.{{ env["deployment"] }}-address.address)
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+    target: $(ref.{{ env["deployment"] }}-gateway.selfLink)
+
+## VPN TUNNEL
+- type: compute.v1.vpnTunnel
+  name: {{ env["deployment"] }}-tunnel
+  properties:
+    region: {{ properties["region"] }}
+    forwardingRule: $(ref.{{ env["deployment"] }}-fr-udp4500.selfLink)
+    ikeVersion: {{ properties["ikeVersion"] }}
+    peerIp: {{ properties["peerIp"] }}
+    sharedSecret: {{ properties["sharedSecret"] }}
+    targetVpnGateway: $(ref.{{ env["deployment"] }}-gateway.selfLink)
+
+## FIREWALL - ALLOW ALL INBOUND FROM PEER NETWORK
+- type: compute.v1.firewall
+  name: {{ env["deployment"] }}-vpn-rule
+  properties:
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+    sourceRanges:
+      - {{ properties["sourceRanges"] }}
+    allowed:
+      - IPProtocol: tcp
+      - IPProtocol: udp
+      - IPProtocol: icmp
+
+## ROUTE - ALL TRAFFIC OUTBOUND GOES TO PEER NETWORK
+- type: compute.v1.route
+  name: {{ env["deployment"] }}-default-route
+  properties:
+    network: $(ref.{{ env["deployment"] }}-network.selfLink)
+    nextHopVpnTunnel: $(ref.{{ env["deployment"] }}-tunnel.selfLink)
+    priority: 100
+    destRange: 0.0.0.0/0
+    tags:
+      - {{ properties["routeTag"] }}
+
+

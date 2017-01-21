@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cluster_yaml]
 imports:
 - path: condor.jinja
 
@@ -23,3 +24,4 @@ resources:
     zone: us-central1-f
     email: someone@somewhere.com
     instancetype: n1-standard-4
+#  [END cluster_yaml]
