@@ -21,33 +21,35 @@ def GenerateConfig(context):
   cluster_name = name_prefix
   type_name = name_prefix + '-type'
 
-  resources = [{
-      'name': cluster_name,
-      'type': 'container.v1.cluster',
-      'properties': {
-          'zone': context.properties['zone'],
-          'cluster': {
-              'name': cluster_name,
-              'initialNodeCount': context.properties['numNodes'],
-              'nodeConfig': {
-                  'oauthScopes': [
-                      'https://www.googleapis.com/auth/compute',
-                      'https://www.googleapis.com/auth/devstorage.read_only',
-                      'https://www.googleapis.com/auth/logging.write',
-                      'https://www.googleapis.com/auth/monitoring'
-                  ]
-              },
-              'masterAuth': {
-                  'username': context.properties['username'],
-                  'password': context.properties['password']
+  resources = [
+      {
+          'name': cluster_name,
+          'type': 'container.v1.cluster',
+          'properties': {
+              'zone': context.properties['zone'],
+              'cluster': {
+                  'name': cluster_name,
+                  'initialNodeCount': context.properties['numNodes'],
+                  'nodeConfig': {
+                      'oauthScopes': [
+                          'https://www.googleapis.com/auth/' + s
+                          for s in [
+                              'compute', 'devstorage.read_only',
+                              'logging.write', 'monitoring'
+                          ]
+                      ]
+                  },
+                  'masterAuth': {
+                      'username': context.properties['username'],
+                      'password': context.properties['password']
+                  }
               }
           }
-      }
-  }, {
-      'name': type_name,
-      'type': 'deploymentmanager.alpha.type',
-      'properties': {
-          'configurableService': {
+      },
+      {
+          'name': type_name,
+          'type': 'deploymentmanager.alpha.typeProvider',
+          'properties': {
               'options': {
                   'validationOptions': {
                       # Kubernetes API accepts ints, in fields they annotate
@@ -55,20 +57,42 @@ def GenerateConfig(context):
                       # than failure for Deployment Manager.
                       # https://github.com/kubernetes/kubernetes/issues/2971
                       'schemaValidation': 'IGNORE_WITH_WARNINGS'
-                  }
+                  },
+                  # According to kubernetes spec, the path parameter 'name'
+                  # should be the value inside the metadata field
+                  # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md
+                  # This mapping specifies that
+                  'inputMappings': [{
+                      'fieldName': 'name',
+                      'location': 'PATH',
+                      'methodMatch': '^(GET|DELETE|PUT)$',
+                      'value': '$.ifNull($.resource.properties.metadata.name, '
+                               '$.resource.name)'
+                  }, {
+                      'fieldName': 'metadata.name',
+                      'location': 'BODY',
+                      'methodMatch': '^(PUT|POST)$',
+                      'value': '$.ifNull($.resource.properties.metadata.name, '
+                               '$.resource.name)'
+                  }]
               },
-              'descriptorUrl': ''.join(['https://$(ref.', cluster_name,
-                                        '.endpoint)/swaggerapi/api/v1']),
+              'descriptorUrl':
+                  ''.join([
+                      'https://$(ref.', cluster_name,
+                      '.endpoint)/swaggerapi/api/v1'
+                  ]),
               'credential': {
                   'basicAuth': {
-                      'user': '$(ref.' + cluster_name + '.masterAuth.username)',
-                      'password': ''.join(['$(ref.', cluster_name,
-                                           '.masterAuth.password)'])
+                      'user':
+                          '$(ref.' + cluster_name + '.masterAuth.username)',
+                      'password':
+                          ''.join(
+                              ['$(ref.', cluster_name, '.masterAuth.password)'])
                   }
               }
           }
       }
-  }]
+  ]
 
   outputs = [{'name': 'clusterType', 'value': type_name}]
 

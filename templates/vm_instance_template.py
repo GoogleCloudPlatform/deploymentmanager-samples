@@ -24,10 +24,11 @@ PROJECT = default.PROJECT
 
 # The optional and mandatory fields are the same as a vm_instance
 def GenerateComputeVMTemplate(context):
-  """Generates one backendService resource."""
+  """Generates one instanceTemplate resource."""
   prop = context.properties
   project = prop.setdefault(PROJECT, context.env[PROJECT])
-  vm_tpl = vm_instance.GenerateComputeVM(context)[-1]
+  vm_tpl = vm_instance.GenerateComputeVM(context,
+                                         create_disks_separately=False)[-1]
   # Copy properties since they will be modified to be used as subproperties
   vm_props = copy.deepcopy(vm_tpl['properties'])
   common.TakeZoneOut(vm_props)

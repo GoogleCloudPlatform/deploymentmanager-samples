@@ -35,21 +35,33 @@ resources:
         password: {{ properties['password'] }}
 
 - name: {{ TYPE_NAME }}
-  type: deploymentmanager.alpha.type
+  type: deploymentmanager.alpha.typeProvider
   properties:
-    configurableService:
-      options:
-        validationOptions:
-          # Kubernetes API accepts ints, in fields they annotate with string.
-          # This validation will show as warning rather than failure for
-          # Deployment Manager.
-          # https://github.com/kubernetes/kubernetes/issues/2971
-          schemaValidation: IGNORE_WITH_WARNINGS
-      descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/api/v1
-      credential:
-        basicAuth:
-          user: $(ref.{{ CLUSTER_NAME }}.masterAuth.username)
-          password: $(ref.{{ CLUSTER_NAME }}.masterAuth.password)
+    options:
+      validationOptions:
+        # Kubernetes API accepts ints, in fields they annotate with string.
+        # This validation will show as warning rather than failure for
+        # Deployment Manager.
+        # https://github.com/kubernetes/kubernetes/issues/2971
+        schemaValidation: IGNORE_WITH_WARNINGS
+      # According to kubernetes spec, the path parameter 'name'
+      # should be the value inside the metadata field
+      # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md
+      # This mapping specifies that
+      inputMappings:
+      - fieldName: name
+        location: PATH
+        methodMatch: ^(GET|DELETE|PUT)$
+        value: $.ifNull($.resource.properties.metadata.name, $.resource.name)
+      - fieldName: metadata.name
+        location: BODY
+        methodMatch: ^(PUT|POST)$
+        value: $.ifNull($.resource.properties.metadata.name, $.resource.name)
+    descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/api/v1
+    credential:
+      basicAuth:
+        user: $(ref.{{ CLUSTER_NAME }}.masterAuth.username)
+        password: $(ref.{{ CLUSTER_NAME }}.masterAuth.password)
 
 outputs:
 - name: clusterType

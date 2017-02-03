@@ -72,6 +72,9 @@ ATTACHED_DISKS = 'ATTACHED_DISKS'
 # Used for SSD special treatment
 SCRATCH = 'SCRATCH'
 
+# Blank image used when sourceImage property is not provided.
+BLANK_IMAGE = 'empty10gb'
+
 
 def MakeVMName(context):
   """Generates the VM name."""
@@ -82,18 +85,35 @@ def MakeVMName(context):
                                                            default.INSTANCE)
 
 
-def GenerateComputeVM(context):
-  """Generates one VM instance resource."""
+def GenerateComputeVM(context, create_disks_separately=True):
+  """Generates one VM instance resource.
+
+  Args:
+    context: Template context dictionary.
+    create_disks_separately: When true (default), all new disk resources are
+      created as separate resources. This is legacy behaviour from when multiple
+      disks creation was not allowed in the disks property.
+  Returns:
+    dictionary representing instance resource.
+  """
   prop = context.properties
   boot_disk_type = prop.setdefault(BOOTDISKTYPE, DEFAULT_DISKTYPE)
   prop[default.DISKTYPE] = boot_disk_type
   can_ip_fwd = prop.setdefault(CAN_IP_FWD, DEFAULT_IP_FWD)
   disks = prop.setdefault(default.DISKS, list())
   local_ssd = prop.setdefault(default.LOCAL_SSD, 0)
-  # Temporary alternative while multiple disks on creation is not allowed
+
   if disks:
-    new_disks = prop.setdefault(default.DISK_RESOURCES, list())
-    disks, prop[DISK_RESOURCES] = GenerateDisks(context, disks, new_disks)
+    if create_disks_separately:
+      # Legacy alternative from when multiple disks on creation were not allowed
+      new_disks = prop.setdefault(default.DISK_RESOURCES, list())
+      SetDiskProperties(context, disks)
+      disks, prop[DISK_RESOURCES] = GenerateDisks(context, disks, new_disks)
+    else:
+      # All new disks (except local ssd) must provide a sourceImage or existing
+      # source. Add blank source image if non provided.
+      SetDiskProperties(context, disks, add_blank_src_img=True)
+
   machine_type = prop.setdefault(MACHINETYPE, DEFAULT_MACHINETYPE)
   metadata = prop.setdefault(METADATA, dict())
   network = prop.setdefault(NETWORK, DEFAULT_NETWORK)
@@ -234,67 +254,98 @@ def AppendLocalSSDDisks(context, disk_list, num_of_local_ssd):
   return disk_list + local_ssd_disks
 
 
+def SetDiskProperties(context, disks, add_blank_src_img=False):
+  """Set properties on each disk to required format.
+
+  Sets default values, and moves properties passed directly into
+  initializeParams where required.
+
+  Args:
+    context: Template context dictionary.
+    disks: List of disks to set properties on.
+    add_blank_src_img: When true, link to blank source image is added for new
+    disks where a source image is not specified.
+  """
+
+  project = context.env[default.PROJECT]
+  zone = context.properties.setdefault(ZONE, DEFAULT_ZONE)
+
+  for disk in disks:
+    disk.setdefault(default.AUTO_DELETE, True)
+    disk.setdefault('boot', False)
+    disk.setdefault(default.TYPE, DEFAULT_PERSISTENT)
+
+    # If disk already exists, no properties to change.
+    if default.DISK_SOURCE in disk:
+      continue
+
+    else:
+      disk_init = disk.setdefault(default.INITIALIZEP, dict())
+      if disk[default.TYPE] == SCRATCH:
+        disk_init.setdefault(DISKTYPE, 'local-ssd')
+      else:
+        # In the Instance API reference, size and type are within this property
+        if disk_init:
+          disk_init.setdefault(default.DISK_SIZE, DEFAULT_DATADISKSIZE)
+          disk_init.setdefault(default.DISKTYPE, DEFAULT_DISKTYPE)
+        # You can also simply pass the size and type properties directly
+        else:
+          disk_init[default.DISK_SIZE] = disk.pop(default.DISK_SIZE,
+                                                  DEFAULT_DATADISKSIZE)
+          disk_init[default.DISKTYPE] = disk.pop(default.DISKTYPE,
+                                                 DEFAULT_DISKTYPE)
+
+        # If disk name was given as a direct property, move to initializeParams
+        if default.DISK_NAME in disk:
+          disk_init[default.DISK_NAME] = disk.pop(default.DISK_NAME)
+
+        # Add link to a blank source image where non-specified
+        if add_blank_src_img and default.SRCIMAGE not in disk_init:
+          disk_init[default.SRCIMAGE] = common.MakeC2DImageLink(BLANK_IMAGE)
+
+      # Change disk type names into URLs
+      disk_init[default.DISKTYPE] = common.LocalComputeLink(
+          project, zone, 'diskTypes', disk_init[default.DISKTYPE])
+
+
 def GenerateDisks(context, disk_list, new_disks):
   """Generates as many disks as passed in the disk_list."""
-  project = context.env[default.PROJECT]
   prop = context.properties
   zone = prop.setdefault(ZONE, DEFAULT_ZONE)
   sourced_disks = []
   disk_names = []
   for disk in disk_list:
-    d_name = (disk[default.DEVICE_NAME] if default.DISK_NAME not in disk else
-              disk[default.DISK_NAME])
-    d_autodelete = (True if default.AUTO_DELETE not in disk else
-                    disk[default.AUTO_DELETE])
-    d_type = (DEFAULT_PERSISTENT if default.TYPE not in disk else
-              disk[default.TYPE])
-
-    if default.DISK_SOURCE in disk:  # Existing disk, expect disk api link
-      source = disk[default.DISK_SOURCE]
-    elif d_type == SCRATCH:  # No special treatment needed for SSD disk
-      if default.INITIALIZEP in disk:
-        disk_type = disk[default.INITIALIZEP][DISKTYPE]
-      else:
-        disk_type = 'local-ssd'
-      disk[default.INITIALIZEP] = {DISKTYPE: common.LocalComputeLink(
-          project, zone, 'diskTypes', disk_type)}
+    if default.DISK_SOURCE in disk or disk[default.TYPE] == SCRATCH:
+      # These disks do not need to be created as separate resources
       sourced_disks.append(disk)
-      continue
     else:
-      if default.DEVICE_NAME not in disk and default.DISK_NAME not in disk:
+      # Extract disk parameters and create as separate resource
+      disk_init = disk[default.INITIALIZEP]
+      if default.DEVICE_NAME in disk:
+        d_name = disk[default.DEVICE_NAME]
+      elif default.DISK_NAME in disk_init:
+        d_name = disk_init[default.DISK_NAME]
+      else:
         raise common.Error('deviceName or diskName is needed for each disk in '
                            'this module implemention of multiple disks per vm.')
-      # In the Instance API reference, size and type are within this property
-      if default.INITIALIZEP in disk:
-        disk_init = disk[default.INITIALIZEP]
-        disk_size = disk_init.setdefault(default.DISK_SIZE,
-                                         DEFAULT_DATADISKSIZE)
-        passed_disk_type = disk_init.setdefault(DISKTYPE, DEFAULT_DISKTYPE)
-      # You can also simply pass the size and type properties directly
-      else:
-        disk_size = disk.setdefault(default.DISK_SIZE, DEFAULT_DATADISKSIZE)
-        passed_disk_type = disk.setdefault(DISKTYPE, DEFAULT_DISKTYPE)
-      disk_type = common.LocalComputeLink(project, zone, 'diskTypes',
-                                          passed_disk_type)
       new_disks.append({
           'name': d_name,
           'type': default.DISK,
           'properties': {
-              'type': disk_type,
-              'sizeGb': disk_size,
+              'type': disk_init[default.DISKTYPE],
+              'sizeGb': disk_init[default.DISK_SIZE],
               'zone': zone
           }
-      })  # pyformat: disable
+      })
       disk_names.append(d_name)
       source = common.Ref(d_name)
-    sourced_disks.append({
-        'deviceName': d_name,
-        'autoDelete': d_autodelete,
-        'boot': False,
-        'source': source,
-        'type': d_type,
-    })
-
+      sourced_disks.append({
+          'deviceName': d_name,
+          'autoDelete': disk[default.AUTO_DELETE],
+          'boot': False,
+          'source': source,
+          'type': disk[default.TYPE],
+      })
   items = prop[METADATA].setdefault('items', list())
   items.append({'key': ATTACHED_DISKS, 'value': ','.join(disk_names)})
   return sourced_disks, new_disks
@@ -326,9 +377,9 @@ def AddServiceEndpointIfNeeded(context):
   return resource
 
 
-def GenerateResourceList(context):
+def GenerateResourceList(context, **kwargs):
   """Returns list of resources generated by this module."""
-  resources = GenerateComputeVM(context)
+  resources = GenerateComputeVM(context, **kwargs)
   resources += common.AddDiskResourcesIfNeeded(context)
   resources += AddServiceEndpointIfNeeded(context)
   return resources
