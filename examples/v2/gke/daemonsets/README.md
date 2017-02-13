@@ -33,7 +33,7 @@ The template files that we will use for deploying the my-agent (as Daemonsets)
 to the GKE cluster are:
 
  - daemonset.yaml
- - daemonset,jinja.schema
+ - daemonset.jinja.schema
  - daemonset.jinja
 
 The cluster created (via DM templates as step1. or using gcloud directly)
