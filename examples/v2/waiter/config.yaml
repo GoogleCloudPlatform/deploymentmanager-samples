@@ -30,8 +30,8 @@ resources:
       startup-script: |
         #!/bin/sh
         gcloud components update -q
-        gcloud components install alpha -q
-        gcloud alpha deployment-manager runtime-configs variables set \
+        gcloud components install beta -q
+        gcloud beta runtime-config configs variables set \
             success/my-instance success --config-name $(ref.my-waiter.configName)
 
     # The following scope allows this instance to create variable resources.

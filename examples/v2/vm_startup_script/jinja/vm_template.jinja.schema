@@ -15,7 +15,7 @@
 info:
   title: VM with startup script
   author: Google Inc.
-  description: Creates a disk running the provided startup script.
+  description: Creates a VM running the provided startup script.
 
 required:
 - zone
