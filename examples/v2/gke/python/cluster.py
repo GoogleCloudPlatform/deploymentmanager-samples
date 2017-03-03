@@ -20,6 +20,10 @@ def GenerateConfig(context):
   name_prefix = context.env['deployment'] + '-' + context.env['name']
   cluster_name = name_prefix
   type_name = name_prefix + '-type'
+  k8s_endpoints = {
+      '': 'api/v1',
+      '-v1beta1-extensions': 'apis/extensions/v1beta1'
+  }
 
   resources = [
       {
@@ -45,55 +49,66 @@ def GenerateConfig(context):
                   }
               }
           }
-      },
-      {
-          'name': type_name,
-          'type': 'deploymentmanager.alpha.typeProvider',
-          'properties': {
-              'options': {
-                  'validationOptions': {
-                      # Kubernetes API accepts ints, in fields they annotate
-                      # with string. This validation will show as warning rather
-                      # than failure for Deployment Manager.
-                      # https://github.com/kubernetes/kubernetes/issues/2971
-                      'schemaValidation': 'IGNORE_WITH_WARNINGS'
-                  },
-                  # According to kubernetes spec, the path parameter 'name'
-                  # should be the value inside the metadata field
-                  # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md
-                  # This mapping specifies that
-                  'inputMappings': [{
-                      'fieldName': 'name',
-                      'location': 'PATH',
-                      'methodMatch': '^(GET|DELETE|PUT)$',
-                      'value': '$.ifNull($.resource.properties.metadata.name, '
-                               '$.resource.name)'
-                  }, {
-                      'fieldName': 'metadata.name',
-                      'location': 'BODY',
-                      'methodMatch': '^(PUT|POST)$',
-                      'value': '$.ifNull($.resource.properties.metadata.name, '
-                               '$.resource.name)'
-                  }]
-              },
-              'descriptorUrl':
-                  ''.join([
-                      'https://$(ref.', cluster_name,
-                      '.endpoint)/swaggerapi/api/v1'
-                  ]),
-              'credential': {
-                  'basicAuth': {
-                      'user':
-                          '$(ref.' + cluster_name + '.masterAuth.username)',
-                      'password':
-                          ''.join(
-                              ['$(ref.', cluster_name, '.masterAuth.password)'])
-                  }
-              }
-          }
       }
   ]
+  for type_suffix, endpoint in k8s_endpoints:
+    resources.add(
+        {
+            'name': type_name + type_suffix,
+            'type': 'deploymentmanager.alpha.typeProvider',
+            'properties': {
+                'options': {
+                    'validationOptions': {
+                        # Kubernetes API accepts ints, in fields they annotate
+                        # with string. This validation will show as warning
+                        # rather than failure for Deployment Manager.
+                        # https://github.com/kubernetes/kubernetes/issues/2971
+                        'schemaValidation': 'IGNORE_WITH_WARNINGS'
+                    },
+                    # According to kubernetes spec, the path parameter 'name'
+                    # should be the value inside the metadata field
+                    # https://github.com/kubernetes/community/blob/master
+                    # /contributors/devel/api-conventions.md
+                    # This mapping specifies that
+                    'inputMappings': [{
+                        'fieldName': 'name',
+                        'location': 'PATH',
+                        'methodMatch': '^(GET|DELETE|PUT)$',
+                        'value': '$.ifNull('
+                                 '$.resource.properties.metadata.name, '
+                                 '$.resource.name)'
+                    }, {
+                        'fieldName': 'metadata.name',
+                        'location': 'BODY',
+                        'methodMatch': '^(PUT|POST)$',
+                        'value': '$.ifNull('
+                                 '$.resource.properties.metadata.name, '
+                                 '$.resource.name)'
+                    }]
+                },
+                'descriptorUrl':
+                    ''.join([
+                        'https://$(ref.', cluster_name,
+                        '.endpoint)/swaggerapi/', endpoint
+                    ]),
+                'credential': {
+                    'basicAuth': {
+                        'user':
+                            '$(ref.' + cluster_name + '.masterAuth.username)',
+                        'password':
+                            ''.join(
+                                ['$(ref.',
+                                 cluster_name,
+                                 '.masterAuth.password)'])
+                    }
+                }
+            }
+        }
+    )
 
-  outputs = [{'name': 'clusterType', 'value': type_name}]
+  outputs = [
+      {'name': 'clusterType' + suffix, 'value': type_name + suffix}
+      for suffix in k8s_endpoints
+  ]
 
   return {'resources': resources, 'outputs': outputs}
