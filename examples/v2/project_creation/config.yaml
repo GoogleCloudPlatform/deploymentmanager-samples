@@ -1,0 +1,39 @@
+imports:
+- path: project.py
+
+resources:
+# The "name" property below will be the name of the new project
+- name: dm-proj-test-2016-11-16-10-46
+  type: project.py
+  properties:
+    # Change this to your organization ID.
+    organization-id: "128653134652"
+    # Change the following to your organization's billing account
+    billing-account-name: billingAccounts/001504-B51098-F3D254
+    # The apis to enable in the new project.
+    # To see the possible APIs, use gcloud CLI: gcloud service-management list
+    apis:
+    - compute-component.googleapis.com
+    - deploymentmanager.googleapis.com
+    - pubsub.googleapis.com
+    - storage-component.googleapis.com
+    - monitoring.googleapis.com
+    - logging.googleapis.com
+    # The service accounts you want to create in the project
+    service-accounts:
+    - my-service-account-1
+    - my-service-account-2
+    # IAM policy on the new project
+    iam-policy:
+      bindings:
+      - role: roles/owner
+        members:
+        # Make sure to include the DM service account that is doing the deployment!
+        - serviceAccount:12345689999@cloudservices.gserviceaccount.com
+        # Add any others you want to have access
+        - serviceAccount:98765432111@cloudservices.gserviceaccount.com
+        - serviceAccount:98765432100@cloudservices.gserviceaccount.com
+      - role: roles/viewer
+        members:
+        - user:iamtester@deployment-manager.net
+

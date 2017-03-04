@@ -1,0 +1,88 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Project
+  author: Google, Inc.
+  description: >
+    Deploys a single project. The project is created, has a billing account
+    attached, permissions altered, APIs activated, and service accounts created.
+
+imports:
+- path: apis.py
+- path: service-accounts.py
+
+required:
+- organization-id
+- billing-account-name
+- iam-policy
+
+properties:
+  organization-id:
+    description: >
+      The ID of the organization that the projects will be under. Typically a
+      base-10 string representation of integer.
+    type: string
+    pattern: ^[0-9]{8,25}$
+  billing-account-name:
+    description: >
+      The ID of the billing account to attach to the projects.
+    type: string
+    pattern: ^billingAccounts/[a-zA-Z0-9]([-a-zA-Z0-9]+[-a-zA-Z0-9]$)?
+  iam-policy:
+    description: >
+      The IAM policy to apply to the project. Note that the service account
+      making the project must continue to be in roles/owner.
+    type: object
+    items:
+      required:
+      - bindings
+      properties:
+        bindings:
+          description: >
+            Bindings of members to roles.
+          type: array
+          item:
+            description: >
+              A set of members bound to a particular role.
+            type: object
+            item:
+              required:
+              - role
+              - members
+              role:
+                description: >
+                  The role that all the members will receive.
+                type: string
+                pattern: ^roles/
+              members:
+                decription: >
+                  The members that will be given the permissions in role.
+                type: array
+                item:
+                  type: string
+                  pattern: "^(user|group|domain|serviceAccount):"
+  apis:
+    description: >
+      The list of APIs to enable for each project.
+    type: array
+    items:
+      type: string
+  service-accounts:
+    description: >
+      The list of service accounts to create for each project.
+    type: array
+    items:
+      type: string
+      pattern: ^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$
