@@ -32,11 +32,10 @@ resources:
         boot: true
         autoDelete: true
         initializeParams:
-          diskName: disk-{{ env["deployment"] }}
-          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160606
+          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
 
 - name: {{ IGM }}
-  type: compute.v1.instanceGroupManagers
+  type: compute.v1.instanceGroupManager
   properties:
     baseInstanceName: {{ env["deployment"] }}-instance
     instanceTemplate: $(ref.{{ INSTANCE_TEMPLATE }}.selfLink)

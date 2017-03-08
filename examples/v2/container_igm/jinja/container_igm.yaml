@@ -20,9 +20,9 @@ resources:
   type: container_igm.jinja
   properties:
     zone: us-central1-f
-    containerImage: container-vm-v20160217
+    containerImage: family/container-vm
     containerManifest: container_manifest.yaml
     targetSize: 2
     maxReplicas: 5
     machineType: f1-micro
-    externalIp: FALSE
+    externalIp: True

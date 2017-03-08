@@ -43,17 +43,16 @@ def GenerateConfig(context):
                   'boot': True,
                   'autoDelete': True,
                   'initializeParams': {
-                      'diskName': 'disk-' + deployment,
                       'sourceImage': ''.join([URL_BASE,
                                               'debian-cloud/global/images/',
-                                              'debian-8-jessie-v20160606'])
+                                              'family/debian-8'])
                   }
               }]
           }
       }
   }, {
       'name': igm,
-      'type': 'compute.v1.instanceGroupManagers',
+      'type': 'compute.v1.instanceGroupManager',
       'properties': {
           'baseInstanceName': deployment + '-instance',
           'instanceTemplate': ''.join(['$(ref.', instance_template,
