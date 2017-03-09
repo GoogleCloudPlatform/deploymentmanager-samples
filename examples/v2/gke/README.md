@@ -39,9 +39,10 @@ Using `replicatedservice.yaml`, deploy a `Service` and a `ReplicationController`
 to the GKE cluster created in the last step. Fill in the following information
 before deploying:
 
-* the cluster type created for the GKE cluster deployed previously
-* the `docker` image to run
-* the port exposed by the image
+* The cluster type created for the GKE cluster deployed previously. This will be
+ "cluster-<cluster-name>-type", visible in the developers console.
+* Optionally, change the `docker` image to run.
+* Optionally, specify the port exposed by the image.
 
 When ready, deploy with the following command:
 

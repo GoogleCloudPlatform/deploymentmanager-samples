@@ -12,41 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% set apiVersion = "v1" %}
-{% set clusterTypeVersion = "v1" %}
-
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
+{% set CLUSTER_TYPE = env['project'] + '/cluster-' + properties['clusterName'] + '-type-v1beta1-extensions' %}
+{% set DAEMONSETS_COLLECTION = '/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets' %}
 
-{% set CLUSTER_TYPE = env['project'] + '/' + properties['cluster'] + '-v1' %}
-{% set DAEMONSETS_COLLECTION = '/apis/v1/namespaces/{namespace}/daemonsets' %}
-
+resources:
 - name: {{ NAME_PREFIX }}-ds
-  type: {{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}
+  type: "{{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}"
   properties:
     namespace: default
-    apiVersion:  v1
+    apiVersion: extensions/v1beta1
     kind: DaemonSet
     metadata:
       name: {{ NAME_PREFIX }}
       labels:
-        app:{{ NAME_PREFIX }}
+        app: {{ NAME_PREFIX }}
     spec:
-      containers:
-      - image: {{ properties['image'] }}
-        imagePullPolicy: Always
-        name: {{ NAME_PREFIX }}
-        ports:
-          - containerPort: {{ properties['containerPort'] }}
-            name: statsdport
-        env:
-          - name: API_KEY
-            value: {{ properties['key'] }}
-        volumeMounts:
-          - name: dockersocket
-            mountPath: /var/run/docker.sock
-          - name: procdir
-            mountPath: /host/proc
-            readOnly: true
-          - name: cgroups
-            mountPath: /host/sys/fs/cgroup
-            readOnly: true
+      template:
+        metadata:
+          labels:
+            label1: my-label
+        spec:
+          nodeSelector:
+            app: datastore-node
+          containers:
+          - name: datastore-shard
+            image: kubernetes/sharded
+            ports:
+              - containerPort: 9042
+                name: main

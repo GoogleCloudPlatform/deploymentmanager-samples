@@ -34,7 +34,7 @@ resources:
       masterAuth:
         username: {{ properties['username'] }}
         password: {{ properties['password'] }}
-{% for typeSuffix, endpoint in K8S_ENDPOINTS %}
+{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
 - name: {{ TYPE_NAME }}{{ typeSuffix }}
   type: deploymentmanager.alpha.typeProvider
   properties:
@@ -66,7 +66,7 @@ resources:
 {% endfor %}
 
 outputs:
-{% for typeSuffix, endpoint in K8S_ENDPOINTS %}
+{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
 - name: clusterType{{ typeSuffix }}
   value: {{ TYPE_NAME }}{{ typeSuffix }}
 {% endfor %}
