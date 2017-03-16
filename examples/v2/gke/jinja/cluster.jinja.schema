@@ -23,8 +23,6 @@ info:
 
 required:
 - zone
-- username
-- password
 
 properties:
   zone:
@@ -34,12 +32,6 @@ properties:
     type: integer
     description: Number of nodes desired in the cluster.
     default: 4
-  username:
-    type: string
-    description: Basic auth username for interacting with the Kubernetes API.
-  password:
-    type: string
-    description: Basic auth password for interacting with the Kubernetes API.
 
 outputs:
   clusterType:

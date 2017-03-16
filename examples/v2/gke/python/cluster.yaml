@@ -17,8 +17,7 @@ imports:
 
 resources:
 - name: <cluster name>
-  type: cluster.py
+  type: cluster.jinja
   properties:
     zone: ZONE_TO_RUN
-    username: <cluster basicauth username>
-    password: <cluster basicauth password>
+
