@@ -17,7 +17,7 @@ imports:
 
 resources:
 - name: <cluster name>
-  type: cluster.jinja
+  type: cluster.py
   properties:
     zone: ZONE_TO_RUN
 
