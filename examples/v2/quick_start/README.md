@@ -9,4 +9,4 @@ file. To use it, replace [MY_PROJECT] with your project ID, and [FAMILY_NAME]
 with image family name, like "debian-8". Then run
 
     gcloud deployment-manager deployments create quick-start-deployment
-    --config/vm.yaml
+    --config vm.yaml
