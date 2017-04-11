@@ -33,7 +33,7 @@ resources:
         - https://www.googleapis.com/auth/monitoring
 {% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
 - name: {{ TYPE_NAME }}{{ typeSuffix }}
-  type: deploymentmanager.alpha.typeProvider
+  type: deploymentmanager.v2beta.typeProvider
   properties:
     options:
       validationOptions:

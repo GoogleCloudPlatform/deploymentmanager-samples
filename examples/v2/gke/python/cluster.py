@@ -51,7 +51,7 @@ def GenerateConfig(context):
   for type_suffix, endpoint in k8s_endpoints.iteritems():
     resources.append({
         'name': type_name + type_suffix,
-        'type': 'deploymentmanager.alpha.typeProvider',
+        'type': 'deploymentmanager.v2beta.typeProvider',
         'properties': {
             'options': {
                 'validationOptions': {
