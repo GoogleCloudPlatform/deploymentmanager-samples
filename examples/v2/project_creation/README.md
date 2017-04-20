@@ -18,6 +18,10 @@ organization (eg the billing account to use).
 The prerequisites to create a project via DM. You can perform these steps via
 the cloud console at https://console.cloud.google.com/
 
+Permission changes can take up to 20 minutes to propagate. Sometimes propagation
+is much faster, but if you run commands too early you may receive errors about
+the user not having permissions.
+
 1.  Create a project that will create and own the deployments.
 
     *   This will be called the "DM Creation Project" for the rest of these
