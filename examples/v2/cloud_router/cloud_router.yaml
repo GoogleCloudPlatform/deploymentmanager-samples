@@ -1,0 +1,11 @@
+imports:
+- path: cloud_router.jinja
+
+resources:
+- name: YOUR_DEPLOYMENT_NAME
+  type: cloud_router.jinja
+  properties:
+    region: REGION_TO_RUN
+    peerAddress: 1.2.3.4
+    asn: 65001
+    sharedSecret: LosPajarosLolos

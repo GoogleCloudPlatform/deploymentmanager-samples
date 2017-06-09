@@ -1,0 +1,26 @@
+resources:
+- name: {{ env['deployment'] }}-my-function
+  type: gcp-types/cloudfunctions-v1beta2:projects.locations.functions
+  properties:
+    location: {{ properties['region'] }}
+    function: my-{{ env['deployment'] }}
+    sourceArchiveUrl: {{ properties["sourceArchiveUrl"] }}
+    entryPoint: {{ properties['entryPoint'] }}
+    eventTrigger:
+      resource: $(ref.my-topic.name)
+      eventType: providers/cloud.pubsub/eventTypes/topic.publish
+- name: my-topic
+  type: gcp-types/pubsub-v1:projects.topics
+  properties:
+    topic: {{ env['deployment'] }}-topic
+- name: {{ env['deployment'] }}-my-function-call
+  action: gcp-types/cloudfunctions-v1beta2:cloudfunctions.projects.locations.functions.call
+  properties:
+    name: $(ref.{{ env['deployment'] }}-my-function.name)
+    data: |
+      {
+        "hola": "mundo"
+      }
+outputs:
+- name: cloud-function-response
+  value: $(ref.{{ env['deployment'] }}-my-function-call.result)
