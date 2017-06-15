@@ -59,5 +59,34 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
+  if context.properties.get('bucket-export-settings'):
+    bucket_name = None
+    action_dependency = [project_id]
+    if context.properties['bucket-export-settings'].get('create-bucket'):
+      bucket_name = project_id + '-export-bucket'
+      resources.append({
+          'name': bucket_name,
+          'type': 'gcp-types/storage-v1:buckets',
+          'properties': {
+              'project': project_id
+          },
+          'metadata': {
+              'dependsOn': [project_id]
+          }
+      })
+      action_dependency.append(bucket_name)
+    else:
+      bucket_name = context.properties['bucket-export-settings']['bucket-name']
+    resources.append({
+        'name': 'set-export-bucket',
+        'action': 'gcp-types/compute-v1:compute.projects.setUsageExportBucket',
+        'properties': {
+            'project': project_id,
+            'bucketName': 'gs://' + bucket_name
+        },
+        'metadata': {
+            'dependsOn': action_dependency
+        }
+    })
 
   return {'resources': resources}

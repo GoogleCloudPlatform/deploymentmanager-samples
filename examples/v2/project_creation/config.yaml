@@ -3,7 +3,7 @@ imports:
 
 resources:
 # The "name" property below will be the name of the new project
-- name: dm-proj-test-2016-11-16-10-46
+- name: dm-proj-test-2017-15-04-02
   type: project.py
   properties:
     # Change this to your organization ID.
@@ -23,6 +23,10 @@ resources:
     service-accounts:
     - my-service-account-1
     - my-service-account-2
+    bucket-export-settings:
+      create-bucket: true
+      # If using an already existing bucket, specify this
+      # bucket: <my bucket name>
     # IAM policy on the new project
     iam-policy:
       bindings:

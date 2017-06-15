@@ -79,6 +79,14 @@ properties:
     type: array
     items:
       type: string
+  bucket-export-settings:
+    description: The specification where to export Compute Logs
+    type: object
+    properties:
+      create-bucket:
+        type: boolean
+      bucket:
+        type: string
   service-accounts:
     description: >
       The list of service accounts to create for each project.
