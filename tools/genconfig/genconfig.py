@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Copyright 2016 Google Inc. All rights reserved.
 #
@@ -62,7 +62,7 @@ def get_config(urls, project):
   """
 
   resources = []
-  for cmd in get_gcloud_cmds(urls):
+  for cmd in get_gcloud_cmds(urls, project):
     if not cmd:
       continue
 
@@ -242,12 +242,12 @@ def check_field(props, field):
                              yaml.dump(props, default_flow_style=False)]))
 
 
-def get_gcloud_cmds(urls):
+def get_gcloud_cmds(urls, project):
   """Returns list of gcloud describe commands given list of resource URLs."""
-  return [get_describe_cmd(u.rstrip()) for u in urls]
+  return [get_describe_cmd(u.rstrip(), project) for u in urls]
 
 
-def get_describe_cmd(url):
+def get_describe_cmd(url, project):
   r"""Builds a gcloud describe command given a resource URL.
 
   gcloud command will look like:
@@ -305,7 +305,8 @@ def get_describe_cmd(url):
                    'describe',
                    name,
                    get_location_flag(location, url),
-                   '--format yaml'])
+                   '--format yaml',
+                   '--project', project])
 
 
 def get_gcloud_command_group(collection):
@@ -412,3 +413,4 @@ def main(argv):
 
 if __name__ == '__main__':
   main(sys.argv)
+
