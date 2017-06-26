@@ -19,4 +19,4 @@ resources:
 - name: vm_template
   type: vm_template.py
   properties:
-    zone: us-central1-f
+    zone: ZONE_TO_RUN

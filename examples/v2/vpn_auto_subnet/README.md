@@ -30,11 +30,11 @@ Templated Cloud VPN deployment with an auto subnet network
 
 Creating the network and Cloud VPN:
 
-    $ gcloud deployment-manager deployments create NETWORK_VPN_DEPLOYMENT \
+    $ gcloud deployment-manager deployments create network-vpn-deployment \
     --config vpn-auto-subnet.jinja --project PROJECT_NAME \
     --properties "peerIp=PEER_VPN_IP,sharedSecret=SECRET,sourceRanges=PEERED_RANGE"
 
 Deleting the network and Cloud VPN
 
-    $ gcloud deployment-manager deployments delete NETWORK_VPN_DEPLOYMENT
+    $ gcloud deployment-manager deployments delete network-vpn-deployment
 

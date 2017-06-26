@@ -22,5 +22,7 @@ This template takes the following input properties:
     value. The file name must match the name of a file that has been imported as
     part of the configuration.
 
+**NOTE**: Replace ZONE_TO_RUN in 'config.yaml' with a specific zone.
+
 For more details on properties of this template, see the [template
 schema](instance.py.schema).

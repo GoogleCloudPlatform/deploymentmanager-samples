@@ -34,6 +34,8 @@ The load balancer takes the following input properties:
 * `machine-type`: the machine type to use for the load balancer VM.
 * `zone`: the zone to use for the load balancer VM.
 
+**NOTE**: Replace ZONE_TO_RUN in 'config.yaml' with a specific zone.
+
 For more details on properties of this template, see the [template
 schema](internal-lb.py.schema).
 
