@@ -25,7 +25,7 @@ def GenerateConfig(context):
   """
 
   properties = context.properties
-  prefix = context.env['deployment']
+  prefix = context.properties['region'] + '-' + context.env['deployment']
 
   healthcheck_name = prefix + '-healthcheck'
   loadbalancer_name = prefix + '-loadbalancer'
@@ -97,5 +97,10 @@ def GenerateConfig(context):
   }]
 
   return {
-      'resources': resources,
+      'resources':
+          resources,
+      'outputs': [{
+          'name': 'ip',
+          'value': '$(ref.' + forwardingrule_name + '.IPAddress)'
+      }]
   }

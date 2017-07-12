@@ -24,9 +24,19 @@ imports:
 
 required:
 - region
+- zones
 
 properties:
   region:
     type: string
     description: GCP region to create resources in.
     default: us-central1
+  zones:
+    type: array
+    description: Zones in which to run the service. Must be in the same region.
+    minItems: 1
+    items:
+      type: string
+    default:
+      - us-central1-a
+      - us-central1-b

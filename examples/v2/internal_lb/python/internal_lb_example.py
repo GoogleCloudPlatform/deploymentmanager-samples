@@ -14,7 +14,7 @@
 """Creates a full internal load balancer sample."""
 
 
-def TestingResources(network_ref, subnet_ref):
+def TestingResources(network_ref, subnet_ref, region, zones):
   """Get the resources necessary to test an internal load balancer.
 
   This creates a test service, and a standalone client.
@@ -22,6 +22,8 @@ def TestingResources(network_ref, subnet_ref):
   Args:
     network_ref: A reference to a GCE network for resources to act in.
     subnet_ref: A reference to a GCE subnetwork for resources to act in.
+    region: The region to deploy the load balancer.
+    zones: A list of zones to deploy the service.
 
   Returns:
     A list of resource definitions.
@@ -32,6 +34,8 @@ def TestingResources(network_ref, subnet_ref):
       'properties': {
           'network': network_ref,
           'subnet': subnet_ref,
+          'region': region,
+          'zones': zones
       }
   }, {
       'name': 'standalone-client',
@@ -39,6 +43,7 @@ def TestingResources(network_ref, subnet_ref):
       'properties': {
           'network': network_ref,
           'subnet': subnet_ref,
+          'zone': zones[0]
       }
   }]
 
@@ -53,15 +58,14 @@ def GenerateConfig(context):
     A config object for Deployment Manager (basically a dict with resources).
   """
 
-  prefix = context.env['deployment']
+  region = context.properties['region']
+  prefix = region + '-' + context.env['deployment']
 
   network_name = prefix + '-network'
   subnet_name = prefix + '-subnetwork'
 
   network_ref = '$(ref.{}.selfLink)'.format(network_name)
   subnet_ref = '$(ref.{}.selfLink)'.format(subnet_name)
-
-  region = context.properties['region']
 
   # Basic network, firewall rules, and load balancer
   resources = [{
@@ -107,12 +111,18 @@ def GenerateConfig(context):
           'network': network_ref,
           'subnet': subnet_ref,
           'instance-groups': '$(ref.test-service.instance-groups)',
-          'instance-tag': '$(ref.test-service.instance-tag)'
+          'instance-tag': '$(ref.test-service.instance-tag)',
+          'region': region,
       }
   }]
 
-  resources += TestingResources(network_ref, subnet_ref)
+  resources += TestingResources(network_ref, subnet_ref, region,
+                                context.properties['zones'])
 
   return {
       'resources': resources,
+      'outputs': [{
+          'name': 'ip',
+          'value': '$(ref.internal-lb.ip)'
+      }]
   }

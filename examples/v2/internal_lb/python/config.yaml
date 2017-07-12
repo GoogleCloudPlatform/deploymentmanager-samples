@@ -16,5 +16,14 @@ imports:
 - path: internal_lb_example.py
 
 resources:
-- name: internal-lb-sample
+- name: internal-lb-sample-us-central1
   type: internal_lb_example.py
+  properties:
+    region: us-central1
+    zones:
+    - us-central1-a
+    - us-central1-b
+outputs:
+- name: lb-us-central1
+  value: $(ref.internal-lb-sample-us-central1.ip)
+

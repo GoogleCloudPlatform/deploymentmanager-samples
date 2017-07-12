@@ -32,8 +32,11 @@ def GenerateConfig(context):
   resources = []
 
   resources.append({
-      'name': context.env['deployment'] + '-standalone-instance',
-      'type': 'compute.v1.instance',
+      'name':
+          context.env['deployment'] + '-standalone-instance-' +
+          properties['zone'],
+      'type':
+          'compute.v1.instance',
       'properties': {
           'zone':
               properties['zone'],
@@ -67,8 +70,11 @@ def GenerateConfig(context):
   })
 
   resources.append({
-      'name': context.env['deployment'] + '-allow-ssh-to-standalone',
-      'type': 'compute.v1.firewall',
+      'name':
+          context.env['deployment'] + '-allow-ssh-to-standalone-' +
+          properties['zone'],
+      'type':
+          'compute.v1.firewall',
       'properties': {
           'network': properties['network'],
           'allowed': [{
