@@ -2,7 +2,7 @@ imports:
 - path: bigtable.jinja
 
 resources:
-- name: YOUR_DEPLOYMENT_NAME
+- name: my-bigtable
   type: bigtable.jinja
   properties:
     zone: us-central1-b

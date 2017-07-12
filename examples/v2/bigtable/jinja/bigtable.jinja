@@ -14,7 +14,7 @@ resources:
         defaultStorageType: HDD
         location: projects/{{ env["project"] }}/locations/{{ properties["zone"] }}
     instance:
-      displayName: My Deployment Manager Instance.
+      displayName: dm-example-bigtable
       type: DEVELOPMENT
 - name: {{ TABLE }}
   type: bigtableadmin.v2.instance.table

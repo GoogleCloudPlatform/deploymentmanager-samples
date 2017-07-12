@@ -2,7 +2,7 @@ imports:
 - path: cloud_router.jinja
 
 resources:
-- name: YOUR_DEPLOYMENT_NAME
+- name: my-cloud-router
   type: cloud_router.jinja
   properties:
     region: REGION_TO_RUN

@@ -17,18 +17,17 @@ is a two step process, as described below.
 Using `cluster.yaml`, deploy a GKE cluster to use for deploying the solution
 later. Fill in the following information before deploying:
 
-* desired cluster name
 * zone in which to run the cluster
 * basicauth username and password for authenticating access to the cluster
 
 When ready, deploy with the following command:
 
-    gcloud deployment-manager deployments create cluster --config cluster.yaml
+    gcloud deployment-manager deployments create gke-cluster --config cluster.yaml
 
 This will result in two resources:
 
-* a GKE cluster with the name specified in `cluster.yaml`
-* a Deployment Manager type named `<deployment-name>-<cluster-name>-type`
+* a GKE cluster named `gke-cluster-my-cluster`
+* a Deployment Manager type named `gke-cluster-my-cluster-type`
 
 The type can now be used in other deployments to deploy kubernetes resources
 using the cluster API.
@@ -39,8 +38,8 @@ Using `replicatedservice.yaml`, deploy a `Service` and a `ReplicationController`
 to the GKE cluster created in the last step. Fill in the following information
 before deploying:
 
-* The cluster type created for the GKE cluster deployed previously. This will be
- "cluster-<cluster-name>-type", visible in the developers console.
+* The cluster type created for the GKE cluster deployed previously. This will
+  be `gke-cluster-my-cluster-type`, visible in the developers console.
 * Optionally, change the `docker` image to run.
 * Optionally, specify the port exposed by the image.
 
@@ -53,7 +52,7 @@ When ready, deploy with the following command:
 Be sure your `kubectl` command-line tool is set up to communicate with the
 cluster you have deployed:
 
-    gcloud container clusters get-credentials <cluster-name> --zone <zone>
+    gcloud container clusters get-credentials gke-cluster-my-cluster --zone <zone>
 
 Now you can see the resources that have been deployed using `kubectl`:
 
