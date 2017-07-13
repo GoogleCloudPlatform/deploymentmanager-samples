@@ -82,11 +82,13 @@ properties:
     type: boolean
     default: False
   disks:
-   description: |
-     Disks to be attached to the machine, this template is also capable of
-     dynamically creating the disks. Otherwise, it follows the spec from
-     https://cloud.google.com/compute/docs/reference/latest/instances
-   type: array
+    description: |
+      Disks to be attached to the machine, this template is also capable of
+      dynamically creating the disks. Otherwise, it follows the spec from
+      https://cloud.google.com/compute/docs/reference/latest/instances
+    type: array
+  guestAccelerators:
+    type: array
   machineType:
     description: No zones or url needed. Just write the machine type
     type: string

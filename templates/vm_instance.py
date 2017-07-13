@@ -26,6 +26,7 @@ DISK = default.DISK
 DISKTYPE = default.DISKTYPE
 DISK_RESOURCES = default.DISK_RESOURCES
 ENDPOINT_NAME = default.ENDPOINT_NAME
+GUEST_ACCELERATORS = default.GUEST_ACCELERATORS
 INSTANCE_NAME = default.INSTANCE_NAME
 MACHINETYPE = default.MACHINETYPE
 METADATA = default.METADATA
@@ -124,6 +125,7 @@ def GenerateComputeVM(context, create_disks_separately=True):
   has_external_ip = prop.get(HAS_EXTERNAL_IP, DEFAULT_HAS_EXTERNAL_IP)
   static_ip = prop.get(STATIC_IP, DEFAULT_STATIC_IP)
   nat_ip = prop.get(NAT_IP, None)
+
   if provide_boot:
     dev_mode = DEVIMAGE in prop and prop[DEVIMAGE]
     src_image = common.MakeC2DImageLink(prop[SRCIMAGE], dev_mode)
@@ -197,9 +199,19 @@ def GenerateComputeVM(context, create_disks_separately=True):
       }
   })
 
-  # Pass through any additional property to the VM
+  # Pass through any additional properties to the VM
   if SERVICE_ACCOUNTS in prop:
     resource[0]['properties'].update({SERVICE_ACCOUNTS: prop[SERVICE_ACCOUNTS]})
+  if GUEST_ACCELERATORS in prop:
+    for accelerators in prop[GUEST_ACCELERATORS]:
+      accelerators['acceleratorType'] = common.MakeAcceleratorTypeLink(
+          context, accelerators['acceleratorType'])
+    resource[0]['properties'].update(
+        {GUEST_ACCELERATORS: prop[GUEST_ACCELERATORS]})
+    # GPUs cannot be attached to live migratable instances. See:
+    # https://cloud.google.com/compute/docs/gpus/#restrictions
+    resource[0]['properties'].update(
+        {'scheduling': {'onHostMaintenance': 'terminate'}})
   return resource
 
 

@@ -130,6 +130,13 @@ def MakeSubnetworkComputeLink(context, key):
                   region, '/subnetworks/', value])
 
 
+def MakeAcceleratorTypeLink(context, accelerator_type):
+  project = context.env['project']
+  zone = context.properties.get('zone', None)
+  return ''.join([default.COMPUTE_URL_BASE, 'projects/', project, '/zones/',
+                  zone, '/acceleratorTypes/', accelerator_type])
+
+
 def MakeFQHN(context, name):
   return '%s.c.%s.internal' % (name, context.env['project'])
 
