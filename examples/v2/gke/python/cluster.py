@@ -33,7 +33,7 @@ def GenerateConfig(context):
               'zone': context.properties['zone'],
               'cluster': {
                   'name': cluster_name,
-                  'initialNodeCount': context.properties['numNodes'],
+                  'initialNodeCount': context.properties['initialNodeCount'],
                   'nodeConfig': {
                       'oauthScopes': [
                           'https://www.googleapis.com/auth/' + s

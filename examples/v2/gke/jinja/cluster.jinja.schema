@@ -28,9 +28,9 @@ properties:
   zone:
     type: string
     description: Zone in which the cluster should run.
-  numNodes:
+  initialNodeCount:
     type: integer
-    description: Number of nodes desired in the cluster.
+    description: Initial number of nodes desired in the cluster.
     default: 4
 
 outputs:

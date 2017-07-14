@@ -24,7 +24,7 @@ resources:
     zone: {{ properties['zone'] }}
     cluster:
       name: {{ CLUSTER_NAME }}
-      initialNodeCount: {{ properties['numNodes'] }}
+      initialNodeCount: {{ properties['initialNodeCount'] }}
       nodeConfig:
         oauthScopes:
         - https://www.googleapis.com/auth/compute
