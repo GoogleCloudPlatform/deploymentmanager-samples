@@ -84,7 +84,7 @@ project creation exclusively.**
 2.  Ensure you include the creating DM Service Account under "roles/owner" in your yaml config.
 3.  Create the project. If using the CLI:
 
-    gcloud deployment-manager deployments create <deployment name> --config
+    gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME <deployment name> --config
     config.yaml
 
 **Note: Project names are globally unique, and cannot be reused. Make sure you
