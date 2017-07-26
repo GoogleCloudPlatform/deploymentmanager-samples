@@ -2,8 +2,7 @@
 
 ## Overview
 
-These are [Google Cloud Deployment Manager]
-(https://cloud.google.com/deployment-manager/configuration/create-configuration-file#declaring_resource_properties)
+These are [Google Cloud Deployment Manager](https://cloud.google.com/deployment-manager/docs/configuration/create-basic-configuration#declaring_resource_properties)
 configuration files that define the properties of resources.
 
 ### vm.yaml
