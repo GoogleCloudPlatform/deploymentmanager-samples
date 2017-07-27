@@ -20,7 +20,7 @@ resources:
 - name: condor-cluster
   type: condor.jinja
   properties:
-    count: 2 
+    count: 2
     zone: us-central1-f
     email: someone@somewhere.com
     instancetype: n1-standard-4

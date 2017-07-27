@@ -9,7 +9,7 @@ deploys a Cloud Router and VPN Tunnel.
 ## Deploy the template
 
 Use `cloud_router.yaml` to deploy this example template after changing
-YOUR_DEPLOYMENT_NAME and REGION_TO_RUN. 
+YOUR_DEPLOYMENT_NAME and REGION_TO_RUN.
 
 When ready, deploy with the following command:
 

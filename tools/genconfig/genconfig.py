@@ -259,6 +259,7 @@ def get_describe_cmd(url, project):
 
   Args:
     url: the URL for this resource.
+    project: the project of this resource.
 
   Returns:
     The gcloud command to be used to describe the resource in YAML, or empty
