@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% set COMPUTE_URL_BASE ='https://www.googleapis.com/compute/v1/' %}
+{% set COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/' %}
 {% set BASE_NAME = env['deployment'] + '-' + env['name'] %}
 
 {% macro GlobalComputeUrl(project, collection, name) -%}
