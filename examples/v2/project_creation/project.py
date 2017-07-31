@@ -68,7 +68,8 @@ def GenerateConfig(context):
           'name': bucket_name,
           'type': 'gcp-types/storage-v1:buckets',
           'properties': {
-              'project': project_id
+              'project': project_id,
+              'name': bucket_name
           },
           'metadata': {
               'dependsOn': [project_id]
