@@ -24,6 +24,7 @@ def GenerateConfig(context):
       'name': project_id,
       'type': 'cloudresourcemanager.v1.project',
       'properties': {
+          'name': project_id,
           'projectId': project_id,
           'parent': {
               'type': 'organization',
