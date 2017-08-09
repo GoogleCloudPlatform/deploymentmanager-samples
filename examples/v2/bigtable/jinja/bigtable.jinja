@@ -23,7 +23,4 @@ resources:
     tableId: {{ TABLE }}
     table:
       granularity: MILLIS
-      columnFamilies:
-        col1:
-          gcRule:
-            maxNumVersions: 2
+      columnFamilies: {{ properties["columnFamilies"] }}

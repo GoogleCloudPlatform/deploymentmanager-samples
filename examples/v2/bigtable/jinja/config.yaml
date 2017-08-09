@@ -6,3 +6,10 @@ resources:
   type: bigtable.jinja
   properties:
     zone: us-central1-b
+    columnFamilies:
+      col1:
+        gcRule:
+          maxNumVersions: 2
+      col2:
+        gcRule:
+          maxNumVersions: 2
