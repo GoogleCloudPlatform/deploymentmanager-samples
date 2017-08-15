@@ -75,7 +75,8 @@ project creation exclusively.**
 
 1.  Now customize the templates for your organization. You will need to:
 
-    *   Set the name of the new project you want to create.
+    *   Set the name of the new project you want to create. It must be unique
+        among all project names.
     *   Set the organization id.
     *   Set the billing account to use.
     *   Set the APIs to turn on.
