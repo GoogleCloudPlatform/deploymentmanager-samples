@@ -35,7 +35,7 @@ def GenerateConfig(context):
       'name': healthcheck_name,
       'type': 'compute.v1.healthCheck',
       'properties': {
-          'type': 'tcp',
+          'type': 'TCP',
           'tcpHealthCheck': {
               'port': 80
           },
