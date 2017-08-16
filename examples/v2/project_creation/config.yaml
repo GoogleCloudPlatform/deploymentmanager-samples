@@ -13,7 +13,7 @@ resources:
     # The apis to enable in the new project.
     # To see the possible APIs, use gcloud CLI: gcloud service-management list
     apis:
-    - compute-component.googleapis.com
+    - compute.googleapis.com
     - deploymentmanager.googleapis.com
     - pubsub.googleapis.com
     - storage-component.googleapis.com
