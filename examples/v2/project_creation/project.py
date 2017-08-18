@@ -50,7 +50,9 @@ def GenerateConfig(context):
       'properties': {
           'project': project_id,
           'billing': billing_name,
-          'apis': context.properties['apis']
+          'apis': context.properties['apis'],
+          'concurrent_api_activation': 
+              context.properties['concurrent_api_activation']
       }
   }, {
       'name': 'service-accounts',
