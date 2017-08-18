@@ -51,7 +51,7 @@ def GenerateConfig(context):
           'project': project_id,
           'billing': billing_name,
           'apis': context.properties['apis'],
-          'concurrent_api_activation': 
+          'concurrent_api_activation':
               context.properties['concurrent_api_activation']
       }
   }, {
