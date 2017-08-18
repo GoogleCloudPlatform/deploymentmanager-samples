@@ -26,7 +26,6 @@ imports:
 required:
 - organization-id
 - billing-account-name
-- iam-policy
 
 properties:
   organization-id:
@@ -42,8 +41,9 @@ properties:
     pattern: ^billingAccounts/[a-zA-Z0-9]([-a-zA-Z0-9]+[-a-zA-Z0-9]$)?
   iam-policy:
     description: >
-      The IAM policy to apply to the project. Note that the service account
-      making the project must continue to be in roles/owner.
+      The IAM policy to apply to the project. This is optional. The template
+      will automatically add/merge in the service account making the project
+      as an owner. 
     type: object
     items:
       required:

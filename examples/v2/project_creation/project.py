@@ -13,6 +13,7 @@
 # limitations under the License.
 """Creates a single project with specified service accounts and APIs enabled."""
 
+import copy
 from apis import ApiResourceName
 
 def GenerateConfig(context):
@@ -33,7 +34,9 @@ def GenerateConfig(context):
           }
       },
       'accessControl': {
-          'gcpIamPolicy': context.properties['iam-policy']
+          'gcpIamPolicy':
+              MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+                  context.env, context.properties)
       }
   }, {
       'name': billing_name,
@@ -98,3 +101,38 @@ def GenerateConfig(context):
     })
 
   return {'resources': resources}
+
+def MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(env, properties):
+  """ A helper function that merges the acting service account of the project
+      creator as an owner of the project being created
+  """
+  service_account = ('serviceAccount:{0}@cloudservices.gserviceaccount.com'
+                     .format(env['project_number']))
+  set_creator_sa_as_owner = {
+      'role': 'roles/owner',
+      'members': [
+          service_account,
+      ]
+  }
+  if 'iam-policy' not in properties:
+    return {
+        'bindings': [
+            set_creator_sa_as_owner,
+        ]
+    }
+
+  bindings = []
+  if 'bindings' in properties['iam-policy']:
+    bindings = copy.deepcopy(properties['iam-policy']['bindings'])
+
+  merged = False
+  for binding in bindings:
+    if binding['role'] == 'roles/owner':
+      merged = True
+      if service_account not in binding['members']:
+        binding['members'].append(service_account)
+      break
+
+  if not merged:
+    bindings.append(set_creator_sa_as_owner)
+  return {'bindings': bindings}
