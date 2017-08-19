@@ -27,7 +27,7 @@ def GenerateConfig(context):
     # Serialize the activation of all the apis by making api_n depend on api_n-1
     if (not concurrent_api_activation) and index != 0:
       depends_on.append(
-        ApiResourceName(project_id, context.properties['apis'][index-1]))
+          ApiResourceName(project_id, context.properties['apis'][index-1]))
     resources.append({
         'name': ApiResourceName(project_id, api),
         'type': 'deploymentmanager.v2.virtual.enableService',
@@ -39,7 +39,6 @@ def GenerateConfig(context):
             'serviceName': api
         }
     })
-
   return {'resources': resources}
 
 
