@@ -13,6 +13,7 @@
 # limitations under the License.
 """Creates a single project with specified service accounts and APIs enabled."""
 
+from apis import ApiResourceName
 
 def GenerateConfig(context):
   """Generates config."""
@@ -64,7 +65,8 @@ def GenerateConfig(context):
   }]
   if context.properties.get('bucket-export-settings'):
     bucket_name = None
-    action_dependency = [project_id]
+    action_dependency = [project_id,
+                         ApiResourceName(project_id, 'compute.googleapis.com')]
     if context.properties['bucket-export-settings'].get('create-bucket'):
       bucket_name = project_id + '-export-bucket'
       resources.append({
@@ -75,7 +77,9 @@ def GenerateConfig(context):
               'name': bucket_name
           },
           'metadata': {
-              'dependsOn': [project_id]
+              'dependsOn': [project_id,
+                            ApiResourceName(
+                                project_id, 'storage-component.googleapis.com')]
           }
       })
       action_dependency.append(bucket_name)
