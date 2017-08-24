@@ -121,9 +121,12 @@ def MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(env, properties):
         ]
     }
 
+  iam_policy = copy.deepcopy(properties['iam-policy'])
   bindings = []
-  if 'bindings' in properties['iam-policy']:
-    bindings = copy.deepcopy(properties['iam-policy']['bindings'])
+  if 'bindings' in iam_policy:
+    bindings = iam_policy['bindings']
+  else:
+    iam_policy['bindings'] = bindings
 
   merged = False
   for binding in bindings:
@@ -135,4 +138,5 @@ def MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(env, properties):
 
   if not merged:
     bindings.append(set_creator_sa_as_owner)
-  return {'bindings': bindings}
+    
+  return iam_policy

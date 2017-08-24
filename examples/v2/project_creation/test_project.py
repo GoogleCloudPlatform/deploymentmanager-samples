@@ -126,15 +126,52 @@ class ProjectTestCase(unittest.TestCase):
     properties = {
         'iam-policy': {
             'foobar': {
-                'strangekey': 1,
+                'strangekey': 1
             }
         }
     }
     expected = {
+        'foobar': {
+            'strangekey': 1
+        },
         'bindings': [
             {
                 'role': 'roles/owner',
                 'members': [('serviceAccount:123@cloudservices'
+                             '.gserviceaccount.com')]
+            }
+        ]
+    }
+    self.assertEqual(expected,
+                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+                         env, properties))
+
+  def test_merge_with_different_owner_policy_and_other_key(self):
+    """Test output of the function when there is an existing but different
+      owner IAM policy in the properties and some unknown key that exists"""
+    env = {'project_number': '123'}
+    properties = {
+        'iam-policy': {
+            'foobar': {
+                'strangekey': 1
+            },
+            'bindings': [
+                {
+                    'role': 'roles/owner',
+                    'members': ['user:foobar@barbaz.com']
+                }
+            ]
+        }
+    }
+    expected = {
+        'foobar': {
+            'strangekey': 1
+        },
+        'bindings': [
+            {
+                'role': 'roles/owner',
+                'members': ['user:foobar@barbaz.com',
+                            ('serviceAccount:123@cloudservices'
                              '.gserviceaccount.com')]
             }
         ]
