@@ -32,9 +32,9 @@ resources:
       bindings:
       - role: roles/owner
         members:
-        # Make sure to include the DM service account that is doing the deployment!
-        - serviceAccount:12345689999@cloudservices.gserviceaccount.com
-        # Add any others you want to have access
+        # NOTE: The DM service account that is creating this project will
+        # automatically be added as an owner.
+        # Add any accounts you want to have access
         - serviceAccount:98765432111@cloudservices.gserviceaccount.com
         - serviceAccount:98765432100@cloudservices.gserviceaccount.com
       - role: roles/viewer
