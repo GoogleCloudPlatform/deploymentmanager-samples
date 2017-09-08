@@ -1,0 +1,55 @@
+imports:
+- path: sd_template.py
+
+resources:
+- name: scheduled-deployment-resources
+  type: sd_template.py
+  properties:
+    region: us-central1
+    project: [PROJECT-ID]
+    sourceArchiveUrl: gs://[PROJECT-ID].appspot.com/scheduled-deployments.zip
+    descriptorUrl: https://storage.googleapis.com/[PROJECT-ID].appspot.com/openapi.json
+    schedulingEntryPoint: router
+    deploymentEntryPoint: deployScheduledDeployments
+    typeProviderName: [TYPE-PROVIDER-NAME]
+    routerFunctionName: [ROUTER-FUNCTION-NAME]
+    pubsubTopicName: sd-master-timer
+- name: sd-example
+  type: [PROJECT-ID]/[TYPE-PROVIDER-NAME]:/[ROUTER-FUNCTION-NAME]/{name}
+  properties:
+    name: sd-sample-deployment
+    user: [USER]
+    description: Simple deployment as a sample.
+    triggers:
+    - name: create-trigger
+      type: timer
+      time: 30 6 * * 1-5
+      action: CREATE_OR_UPDATE
+      description: Ready to do some computing!
+      config:
+        resources:
+        - name: my-scheduled-vm
+          type: compute.v1.instance
+          properties:
+            zone: us-central1-f
+            machineType: zones/us-central1-f/machineTypes/f1-micro
+            disks:
+            - deviceName: boot
+              type: PERSISTENT
+              boot: true
+              autoDelete: true
+              initializeParams:
+                sourceImage: projects/debian-cloud/global/images/family/debian-8
+            networkInterfaces:
+            - network: global/networks/default
+              accessConfigs:
+              - name: External NAT
+                type: ONE_TO_ONE_NAT
+    - name: delete-trigger
+      type: timer
+      time: 0 19 * * 1-5
+      action: DELETE
+      description: Time to shut down our VM!
+  metadata:
+    dependsOn:
+    - [ROUTER-FUNCTION-NAME]

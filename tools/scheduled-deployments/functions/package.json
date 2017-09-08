@@ -1,0 +1,26 @@
+{
+  "name": "scheduled-deployments",
+  "version": "1.0.0",
+  "description": "Cloud Functions used to implement Scheduled Deployments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Google Inc.",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@google-cloud/datastore": "^1.0.7",
+    "async": "^2.5.0",
+    "cron-parser": "^2.4.1",
+    "describe": "^1.2.0",
+    "googleapis": "^20.1.0",
+    "js-base64": "^2.1.9",
+    "uuid": "^3.1.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0",
+    "sinon": "^3.2.1"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Scheduled Deployments",
+    "version": "1.0.0",
+    "description": "Automate the deployment and deletion of resources based on a Cron timer."
+  },
+  "host": "[REGION]-[PROJECT-ID].cloudfunctions.net",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/[ROUTER-FUNCTION-NAME]": {
+      "post": {
+        "description": "Create a Scheduled Deployment by recording details in Datastore.",
+        "summary": "Create a Scheduled Deployment.",
+        "operationId": "createSD",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "description": "The Scheduled Deployment configuration.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user",
+                "description",
+                "triggers"
+              ],
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "triggers": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created."
+          },
+          "default": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/[ROUTER-FUNCTION-NAME]/{name}": {
+      "get": {
+        "description": "Retrieve details of a Scheduled Deployment.",
+        "operationId": "readSD",
+        "responses": {
+          "200": {
+            "description": "Successfully read."
+          },
+          "default": {
+            "description": "Unexpected error."
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "put": {
+        "description": "Update a Scheduled Deployment.",
+        "operationId": "updateSD",
+        "responses": {
+          "200": {
+            "description": "Successfully updated."
+          },
+          "default": {
+            "description": "Unexpected error."
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "user",
+                "description",
+                "triggers"
+              ],
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "triggers": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a Scheduled Deployment.",
+        "operationId": "deleteSD",
+        "responses": {
+          "200": {
+            "description": "Successfully deleted."
+          },
+          "default": {
+            "description": "Unexpected error."
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    }
+  }
+}
