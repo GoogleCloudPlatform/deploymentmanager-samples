@@ -1,0 +1,24 @@
+#% description: Creates a Dataproc cluster.
+#% parameters:
+
+# Can't use deployment name as it is going to be filled in with a generated
+# name which has dashes in it, which are not valid bigquery name characters.
+{% set clusterName = (env["deployment"] + "-dataproc-cluster") %}
+
+resources:
+- name: {{ clusterName }}
+  type: dataproc.v1.cluster
+  properties:
+    region: {{ properties["region"] }}
+    projectId: {{ env["project"] }}
+    clusterName: {{ clusterName }}
+    config:
+      gceClusterConfig:
+        zoneUri: https://www.googleapis.com/compute/v1/projects/shuainie-project0/zones/{{ properties["zone"] }}
+      masterConfig:
+        numInstances: 1
+        machineTypeUri: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/n1-standard-2
+      workerConfig:
+        numInstances: 2
+        machineTypeUri: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/n1-standard-2
+

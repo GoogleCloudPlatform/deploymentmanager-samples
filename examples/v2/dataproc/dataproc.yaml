@@ -1,0 +1,9 @@
+imports:
+- path: dataproc.jinja
+
+resources:
+- name: dataproc
+  type: dataproc.jinja
+  properties:
+    region: REGION_TO_RUN
+    zone: ZONE_TO_RUN
