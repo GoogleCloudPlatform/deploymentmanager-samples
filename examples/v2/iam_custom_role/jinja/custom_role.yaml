@@ -1,0 +1,11 @@
+imports:
+- path: custom_role.jinja
+
+resources:
+- name: custom-role
+  type: custom_role.jinja
+  properties:
+    roleId: aCustomRole
+    includedPermissions:
+    - bigquery.config.get
+    - bigquery.datasets.get

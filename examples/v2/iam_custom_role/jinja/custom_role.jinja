@@ -1,0 +1,8 @@
+  resources:
+  - name: custom-role
+    type: gcp-types/iam-v1:projects.roles
+    properties:
+      parent: projects/{{ env["project"] }}
+      roleId: {{ properties["roleId"] }}
+      role:
+        includedPermissions: {{ properties["includedPermissions"] }}
