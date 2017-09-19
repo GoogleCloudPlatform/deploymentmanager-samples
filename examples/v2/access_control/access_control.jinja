@@ -1,0 +1,15 @@
+resources:
+- name: my-topic
+  type: pubsub.v1.topic
+  properties:
+    topic: {{ env['deployment'] }}-topic
+  accessControl:
+    gcpIamPolicy:
+      bindings:
+        - members:
+          - user:YOUR_EMAIL_HERE
+          # The default Deployment Manager service account should retain permissions.
+          # Replace this with a different value if you use DM with different
+          # credentials.
+          - serviceAccount:{{ env['project_number'] }}@cloudservices.gserviceaccount.com
+          role: roles/pubsub.admin
