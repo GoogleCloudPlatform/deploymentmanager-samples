@@ -1,10 +1,25 @@
 """Unit tests for `project.py`"""
 
+import copy
 import unittest
-from project import MergeCallingServiceAccountWithOwnerPermissinsIntoBindings
+import project as p
+
+class Context:
+  def __init__(self, env, properties):
+    self.env = env
+    self.properties = properties
 
 class ProjectTestCase(unittest.TestCase):
   """Tests for `project.py`."""
+  default_env = {'name': 'my-project', 'project_number': '1234'}
+  default_properties = {
+      'organization-id': "1234",
+      'billing-account-name': 'foo',
+      'apis': [],
+      'concurrent_api_activation': True,
+      'service-accounts': []
+  }
+
   def test_merge_no_iam_policies(self):
     """Test output of the function when there are no IAM policies in the
       properties"""
@@ -19,9 +34,10 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
 
   def test_merge_with_existing_non_owner_policy(self):
     """Test output of the function when there are existing non owner IAM
@@ -50,9 +66,10 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
 
   def test_merge_with_different_owner_policy(self):
     """Test output of the function when there is an existing but different
@@ -78,9 +95,10 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
 
   def test_merge_with_same_owner_policy(self):
     """Test output of the function when the exact same policy already exists"""
@@ -115,9 +133,10 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
 
   def test_merge_with_missing_bindings_but_other_key_present(self):
     """"Test the function when there are no bindings in the iam policy block
@@ -142,9 +161,10 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
 
   def test_merge_with_different_owner_policy_and_other_key(self):
     """Test output of the function when there is an existing but different
@@ -176,9 +196,89 @@ class ProjectTestCase(unittest.TestCase):
             }
         ]
     }
-    self.assertEqual(expected,
-                     MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-                         env, properties))
+    actual_iam_policies = (
+        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+            env, properties))
+    self.assertEqual(expected, actual_iam_policies)
+
+  def test_only_one_of_organizationid_or_parentfolderid(self):
+    """Test that we validate that there can be exactly one of organization-id
+      or parent-folder-id specified"""
+    properties_oid = {
+        'organization-id': "12345"
+    }
+    properties_folder = {
+        'parent-folder-id': "12345"
+    }
+    properties_both = {
+        'organization-id': "12345",
+        'parent-folder-id': "12345"
+    }
+    properties_none = {}
+
+    self.assertTrue(p.IsProjectParentValid(properties_oid))
+    self.assertTrue(p.IsProjectParentValid(properties_folder))
+    self.assertFalse(p.IsProjectParentValid(properties_both))
+    self.assertFalse(p.IsProjectParentValid(properties_none))
+
+  def test_generateconfig_sets_project_parent(self):
+    """Test that we set the right values for project parent"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_project_parent = {
+        'type': 'organization',
+        'id': "1234"
+    }
+    project_resource = [
+        resource for resource in resources
+        if resource['type'] == 'cloudresourcemanager.v1.project']
+    self.assertEquals(
+        expected_project_parent, project_resource[0]['properties']['parent'])
+
+    properties['parent-folder-id'] = "1234"
+    del properties['organization-id']
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+    expected_project_parent = {
+        'type': 'folder',
+        'id': "1234"
+    }
+    project_resource = [
+        resource for resource in resources
+        if resource['type'] == 'cloudresourcemanager.v1.project']
+    self.assertEquals(
+        expected_project_parent, project_resource[0]['properties']['parent'])
+
+  def test_generateconfig_fails_if_both_folder_and_org_present(self):
+    """Test that we sys.exit() if both the parents are present"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['parent-folder-id'] = "1234"
+    context = Context(env, properties)
+
+    with self.assertRaises(SystemExit) as cm:
+      p.GenerateConfig(context)
+
+    self.assertEqual(cm.exception.code,
+                     ('Invalid [organization-id, parent-folder-id], '
+                      'must specify exactly one.'))
+
+  def test_generateconfig_fails_if_neither_folder_nor_org_present(self):
+    """Test that we sys.exit() if both the parents are present"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    del properties['organization-id']
+    context = Context(env, properties)
+
+    with self.assertRaises(SystemExit) as cm:
+      p.GenerateConfig(context)
+
+    self.assertEqual(cm.exception.code,
+                     ('Invalid [organization-id, parent-folder-id], '
+                      'must specify exactly one.'))
 
 if __name__ == '__main__':
   unittest.main()
