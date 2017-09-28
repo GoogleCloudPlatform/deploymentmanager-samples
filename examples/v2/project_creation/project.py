@@ -14,6 +14,7 @@
 """Creates a single project with specified service accounts and APIs enabled."""
 
 import copy
+import sys
 from apis import ApiResourceName
 
 def GenerateConfig(context):
@@ -22,6 +23,20 @@ def GenerateConfig(context):
   project_id = context.env['name']
   billing_name = 'billing_' + project_id
 
+  if not IsProjectParentValid(context.properties):
+    sys.exit(('Invalid [organization-id, parent-folder-id], '
+              'must specify exactly one.'))
+
+  parent_type = ''
+  parent_id = ''
+
+  if 'organization-id' in context.properties:
+    parent_type = 'organization'
+    parent_id = context.properties['organization-id']
+  else:
+    parent_type = 'folder'
+    parent_id = context.properties['parent-folder-id']
+
   resources = [{
       'name': project_id,
       'type': 'cloudresourcemanager.v1.project',
@@ -29,8 +44,8 @@ def GenerateConfig(context):
           'name': project_id,
           'projectId': project_id,
           'parent': {
-              'type': 'organization',
-              'id': context.properties['organization-id']
+              'type': parent_type,
+              'id': parent_id
           }
       },
       'accessControl': {
@@ -138,5 +153,16 @@ def MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(env, properties):
 
   if not merged:
     bindings.append(set_creator_sa_as_owner)
-    
+
   return iam_policy
+
+def IsProjectParentValid(properties):
+  """ A helper function to validate that the project is either under a folder
+      or under an organization and not both
+  """
+  if ('organization-id' not in properties and
+      'parent-folder-id' not in properties):
+    return False
+  if 'organization-id' in properties and 'parent-folder-id' in properties:
+    return False
+  return True

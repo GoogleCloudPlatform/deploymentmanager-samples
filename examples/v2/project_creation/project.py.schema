@@ -24,13 +24,18 @@ imports:
 - path: service-accounts.py
 
 required:
-- organization-id
 - billing-account-name
 
 properties:
   organization-id:
     description: >
       The ID of the organization that the projects will be under. Typically a
+      base-10 string representation of integer.
+    type: string
+    pattern: ^[0-9]{8,25}$
+  parent-folder-id:
+    description: >
+      The ID of the parent folder that the projects will be under. Typically a
       base-10 string representation of integer.
     type: string
     pattern: ^[0-9]{8,25}$
