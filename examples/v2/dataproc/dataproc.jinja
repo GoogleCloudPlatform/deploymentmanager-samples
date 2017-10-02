@@ -28,7 +28,7 @@ resources:
     clusterName: {{ clusterName }}
     config:
       gceClusterConfig:
-        zoneUri: https://www.googleapis.com/compute/v1/projects/shuainie-project0/zones/{{ properties["zone"] }}
+        zoneUri: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}
       masterConfig:
         numInstances: 1
         machineTypeUri: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/n1-standard-2
