@@ -1,0 +1,12 @@
+imports:
+- path: cloudkms.py
+
+resources:
+- name: kms-key
+  type: cloudkms.py
+  properties:
+    region: us-central1
+
+outputs:
+- name: cryptoKeyVersion
+  value: $(ref.kms-key.primaryVersion)
