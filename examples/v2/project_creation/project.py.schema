@@ -80,11 +80,10 @@ properties:
                   pattern: "^(user|group|domain|serviceAccount):"
   set-dm-service-account-as-owner:
     description: >
-      Set true so that the service account that Deployment Manager will use
-      on the generated project is owner, so that it can set IAM policies
-      on resources created within that project.
+      If set to true, the service account that Deployment Manager will use in
+      the newly created project will be made Owner. This would allow
+      Deployment Manager to set IAM policies within this project.
     type: boolean
-    default: false
   apis:
     description: >
       The list of APIs to enable for each project.
