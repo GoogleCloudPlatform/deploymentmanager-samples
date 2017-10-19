@@ -84,7 +84,7 @@ properties:
       on the generated project is owner, so that it can set IAM policies
       on resources created within that project.
     type: boolean
-    default: true
+    default: false
   apis:
     description: >
       The list of APIs to enable for each project.
