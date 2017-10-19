@@ -81,6 +81,35 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
+  if context.properties.get('set-dm-service-account-as-owner'):
+      resources.extend([{
+          'name': 'get-iam-policy',
+          'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
+          'properties': {
+            'resource': project_id,
+          },
+          'metadata': {
+            'dependsOn': [ApiResourceName(
+                project_id, 'deploymentmanager.googleapis.com')]
+          }
+      }, {
+       # Add the service account that deployment manager will use in this project
+       # as owner so it can set IAM policies on resources
+          'name': 'patch-iam-policy',
+          'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',
+          'properties': {
+            'resource': project_id,
+            'policy': '$(ref.get-iam-policy)',
+            'gcpIamPolicyPatch': {
+               'add': [{
+                 'role': 'roles/owner',
+                 'members': [
+                   'serviceAccount:$(ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
+                 ]
+               }]
+             }
+          }
+      }])
   if context.properties.get('bucket-export-settings'):
     bucket_name = None
     action_dependency = [project_id,

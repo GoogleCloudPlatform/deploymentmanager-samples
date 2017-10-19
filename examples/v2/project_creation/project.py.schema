@@ -48,7 +48,7 @@ properties:
     description: >
       The IAM policy to apply to the project. This is optional. The template
       will automatically add/merge in the service account making the project
-      as an owner. 
+      as an owner.
     type: object
     items:
       required:
@@ -78,6 +78,12 @@ properties:
                 item:
                   type: string
                   pattern: "^(user|group|domain|serviceAccount):"
+  set-dm-service-account-as-owner:
+    description: >
+      If set to true, the service account that Deployment Manager will use in
+      the newly created project will be made Owner. This would allow
+      Deployment Manager to set IAM policies within this project.
+    type: boolean
   apis:
     description: >
       The list of APIs to enable for each project.
@@ -109,4 +115,3 @@ properties:
       lot slower.
     type: boolean
     default: False
-    

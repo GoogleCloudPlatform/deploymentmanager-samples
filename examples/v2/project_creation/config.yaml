@@ -27,6 +27,9 @@ resources:
       create-bucket: true
       # If using an already existing bucket, specify this
       # bucket: <my bucket name>
+    # Makes the service account that Deployment Manager would use
+    # in the generated project an admin
+    set-dm-service-account-as-owner: true
     # IAM policy on the new project
     iam-policy:
       bindings:
@@ -40,4 +43,3 @@ resources:
       - role: roles/viewer
         members:
         - user:iamtester@deployment-manager.net
-
