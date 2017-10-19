@@ -16,6 +16,7 @@ class ProjectTestCase(unittest.TestCase):
       'organization-id': "1234",
       'billing-account-name': 'foo',
       'apis': [],
+      'set-dm-service-account-as-owner': True,
       'concurrent_api_activation': True,
       'service-accounts': []
   }
@@ -234,7 +235,7 @@ class ProjectTestCase(unittest.TestCase):
     }
     project_resource = [
         resource for resource in resources
-        if resource['type'] == 'cloudresourcemanager.v1.project']
+        if resource.get('type') == 'cloudresourcemanager.v1.project']
     self.assertEquals(
         expected_project_parent, project_resource[0]['properties']['parent'])
 
@@ -248,9 +249,39 @@ class ProjectTestCase(unittest.TestCase):
     }
     project_resource = [
         resource for resource in resources
-        if resource['type'] == 'cloudresourcemanager.v1.project']
+        if resource.get('type') == 'cloudresourcemanager.v1.project']
     self.assertEquals(
         expected_project_parent, project_resource[0]['properties']['parent'])
+
+  def test_patch_iam_policy_with_owner(self):
+    """Test that we set the right values for project parent"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }]
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+    del properties['set-dm-service-account-as-owner']
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'set-dm-service-account-as-owner']
+    self.assertEquals([], patch_action)
 
   def test_generateconfig_fails_if_both_folder_and_org_present(self):
     """Test that we sys.exit() if both the parents are present"""
