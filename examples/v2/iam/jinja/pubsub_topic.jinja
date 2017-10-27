@@ -20,5 +20,4 @@ resources:
       bindings:
       - role: roles/pubsub.subscriber
         members:
-        # Refs are currently not evaluated within accessControl, so we avoid using $(ref.vm-name-access.email).
-        - "serviceAccount:{{ properties['serviceAccountId'] }}@{{ env['project'] }}.iam.gserviceaccount.com"
+        - "serviceAccount:$(ref.{{ properties['serviceAccountId'] }}.email)"
