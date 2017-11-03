@@ -41,5 +41,17 @@ def GenerateConfig(context):
           'instance': instance_name,
           'charset': 'utf8'
       }
+  }, {
+      'name': 'delete-root',
+      'action': 'gcp-types/sqladmin-v1beta4:sql.users.delete',
+      'metadata': {
+          'runtimePolicy': ['CREATE']
+      },
+      'properties': {
+          'project': context.env['project'],
+          'instance': '$(ref.' + context.env['deployment'] + '-instance.name)',
+          'name': 'root',
+          'host': 'localhost'
+      }
   }]
   return { 'resources': resources }
