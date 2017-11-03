@@ -1,0 +1,25 @@
+resources:
+- name: {{ env['deployment'] }}-instance
+  type: gcp-types/sqladmin-v1beta4:instances
+  properties:
+    settings:
+      tier: {{ properties['tier'] }}
+- name: {{ env['deployment'] }}-db
+  type: gcp-types/sqladmin-v1beta4:databases
+  metadata:
+    dependsOn:
+    - {{ env['deployment'] }}-instance
+  properties:
+    name: {{ env['deployment'] }}-db
+    instance: $(ref.{{ env['deployment'] }}-instance.name)
+    charset: utf8
+- name: delete-root
+  action: gcp-types/sqladmin-v1beta4:sql.users.delete
+  metadata:
+    runtimePolicy:
+    - CREATE
+  properties:
+    project: {{ env['project'] }}
+    instance: $(ref.{{ env['deployment'] }}-instance.name)
+    host: localhost
+    name: root

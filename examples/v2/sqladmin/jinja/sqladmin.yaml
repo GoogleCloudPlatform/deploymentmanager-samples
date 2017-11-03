@@ -1,0 +1,8 @@
+imports:
+- path: sqladmin.jinja
+
+resources:
+- name: database
+  type: sqladmin.jinja
+  properties:
+    tier: D1
