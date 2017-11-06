@@ -1,0 +1,8 @@
+imports:
+- path: sqladmin.py
+
+resources:
+- name: database
+  type: sqladmin.py
+  properties:
+    tier: D1
