@@ -17,9 +17,11 @@ when the action changes), DELETE (call on deletes).
 
 ## Deploy the template
 
-Use `cloudbuild.yaml` to deploy this example template. You need to ensure
-the Cloud Container Builder service account has read access to DM for the sample.
-More information can be found
+Use `cloudbuild.yaml` to deploy this example template. Enable the API
+[here]( https://pantheon.corp.google.com/apis/library/cloudbuild.googleapis.com/).
+You also need to ensure the Cloud Container Builder service account has read
+access to DM for the sample (Project Viewer is the simplest option).  More
+information can be found
 [here](https://cloud.google.com/container-builder/docs/how-to/service-account-permissions).
 
 When ready, deploy with the following command:
