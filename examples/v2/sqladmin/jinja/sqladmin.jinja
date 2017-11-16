@@ -28,7 +28,6 @@ resources:
   metadata:
     dependsOn:
     - {{ database_name }}
-    - add-user-{{ properties['username'] }}
   properties:
     region: {{ properties['region'] }}  
     masterInstanceName: $(ref.{{ instance_name }}.name)
@@ -49,18 +48,3 @@ resources:
     instance: $(ref.{{ env['deployment'] }}-instance.name)
     name: root
     host: "%"
-
-- name: add-user-{{ properties['username'] }}
-  action: gcp-types/sqladmin-v1beta4:sql.users.insert
-  metadata:
-    runtimePolicy:
-    - CREATE
-    dependsOn:
-    - delete-user-root
-    - {{ database_name }}
-  properties:
-    project: {{ env['project'] }}
-    instance: $(ref.{{ instance_name }}.name)
-    name: {{ properties['username'] }}
-    host: {{ properties['host'] }}
-    password: {{ properties['password'] }}
