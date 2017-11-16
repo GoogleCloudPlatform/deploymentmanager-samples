@@ -5,4 +5,10 @@ resources:
 - name: database
   type: sqladmin.jinja
   properties:
-    tier: D1
+    tier: db-n1-standard-1
+    region: us-central1
+    readReplicas: 1
+    replicationType: SYNCHRONOUS
+    username: alice
+    password: foo
+    host: localhost
