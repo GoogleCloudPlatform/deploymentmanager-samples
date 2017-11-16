@@ -9,6 +9,3 @@ resources:
     region: us-central1
     readReplicas: 1
     replicationType: SYNCHRONOUS
-    username: alice
-    password: foo
-    host: localhost

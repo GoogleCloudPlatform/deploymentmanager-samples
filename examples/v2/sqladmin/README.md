@@ -23,7 +23,7 @@ Use `sqladmin.yaml` to deploy this example template. When ready, deploy
 with the following command:
 
 ```
-    gcloud deployment-manager deployments create my-database --config sqladmin.yaml
+gcloud deployment-manager deployments create my-database --config sqladmin.yaml
 ```
 
 ## More information
