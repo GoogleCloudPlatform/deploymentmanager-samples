@@ -1,0 +1,64 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: env_demo_project
+  type: env_demo_project.py
+  properties:
+    envName: dev
+    
+imports:
+- path: env_demo_project.py
+- path: templates/simple_frontend.py
+  name: simple_frontend.py
+
+# Helper classes
+- path: helper/config_merger.py
+
+# Organization level config
+- path: configs/master_config.py
+
+# Project level config
+- path: configs/project_config.py
+
+# Environment level global configs
+- path: configs/envs/dev.py
+- path: configs/envs/test.py
+- path: configs/envs/prod.py
+
+# Module level global configs
+- path: configs/modules/frontend.py
+
+# Environment and Module level configs
+- path: configs/dev/frontend.py
+- path: configs/test/frontend.py
+- path: configs/prod/frontend.py
+
+outputs:
+- name: Environment name defined in main.yaml
+  value: $(ref.env_demo_project.env_name)
+- name: CONTEXT value demonstrates overrides
+  value: $(ref.env_demo_project.context)
+## NOTE: HC_Address is a dictionary with 2 elements. This will result 2 separate output for the deployment.
+## This demonstrates how the project level configuration overwrites the global Headquarter address City but
+## leaves the country untouched.
+- name: Headquarter address 
+  value: $(ref.env_demo_project.HQ_Address)
+- name: Environment level overwrite of version number
+  value: $(ref.env_demo_project.versionNR)
+- name: Module level overwrite of Service Name
+  value: $(ref.env_demo_project.ServiceName)
+- name: Full dump of aggregated context aware properties
+  value: $(ref.env_demo_project.outp_3)
+  
