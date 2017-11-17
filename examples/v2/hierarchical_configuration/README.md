@@ -37,7 +37,7 @@ The goal is to create a framework for configuration variable management for mid/
 ```bash
 
 # These 5 commands will get you up and running! This will deploy Dev,Test, Prod env as specified in the CLI argument
-$ gcloud source repos clone dm-hierarchical-conf --project=ocsi-178614 # Adam’s code
+$ gcloud source repos clone dm-hierarchical-conf --project=ocsi-178614 # Change project code
 $ cd dm-hierarchical-conf
 # set project_id <your-personal-project-id> # (or add it to next command gcloud)
 # Deploy Dev example
@@ -74,7 +74,7 @@ Full dump of aggregated context aware properties
    'versionNR':'v12.333',
    'Log_bucket':'gc://bucketname_great2',
    'CONTEXT':'We are in PROD-Frontend context',
-   'Org_Name':'Ocsisoft',
+   'Org_Name':'Sample Inc',
    'ProjectName':'Silly Naming project',
    'ServiceName':'FrontendApache',
    'InstanceMin':'3',
