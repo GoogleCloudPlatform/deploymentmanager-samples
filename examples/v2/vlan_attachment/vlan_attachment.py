@@ -4,13 +4,6 @@ def networkUrl(project_id, name):
 def interconnectUrl(project_id, name):
 	return 'https://www.googleapis.com/compute/v1/projects/%s/global/interconnects/%s' % (project_id, name)
 
-def extractIPAddressFromCIDR(cidr):
-	return cidr[0:cidr.find('/')]
-
-def extractMaskLengthFromCIDR(cidr):
-	return cidr[cidr.find('/'):]
-
-
 def GenerateConfig(context):
 	resources = []
 
@@ -87,9 +80,7 @@ def GenerateConfig(context):
 					'peerIpAddress': context.properties['peer_ip_address']
 				}]
 			},
-			'metadata': {
-        		'dependsOn': [router_interface_name]
-      },
+			'metadata': {'dependsOn': [router_interface_name]}
 		}) 		
 
 
