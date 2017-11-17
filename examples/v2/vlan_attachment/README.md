@@ -8,17 +8,26 @@ deploys a new [Cloud Router](https://cloud.google.com/router/docs/how-to/creatin
 
 ## IAM setup
 If you are creating a VLAN attachment not in the same project where Interconnect is, i.e. vpc_project_id != interconnect_project_id, make sure that deployment manager's service account <VPC_PROJECT_NUMBER>@cloudservices.gserviceaccount.com has the following permissions assigned in  interconnect_project_id project:
- - compute.interconnects.use 
- - resourcemanager.projects.get 
+* compute.interconnects.use 
+* resourcemanager.projects.get 
 Both permissions are available in the "Compute Network User" role, please consider assigning this role (or any other roles with these permissions) to the service account.
 
 ## Deploy the template
 
-Use `vlan_attachment.yaml` to deploy this example template after changing values of the properties.
+1. Change values of properties in  `vlan_attachment.yaml`, do not uncomment peer_ip_address property so far
 
-When ready, deploy with the following command:
+2. Deploy with the following command:
 
-    gcloud deployment-manager deployments create demo-vlan-attachment --config ./vlan_attachment.yaml
+    gcloud deployment-manager deployments create <your_deployment_name> --config ./vlan_attachment.yaml
+
+3. Find customer_router_ip output value by [viewing the configuration layout](https://cloud.google.com/deployment-manager/docs/deployments/viewing-manifest#configuration_layout) 
+
+4. Uncomment peer_ip_address property in `vlan_attachment.yaml` and set it's value to the IP address part of  customer_router_ip (e.g. if customer_router_ip is 169.254.68.162/29, use 169.254.68.162 as a value)
+
+5. UPdete the deployment with the following command:
+
+    gcloud deployment-manager deployments update <your_deployment_name> --config ./vlan_attachment.yaml
+
 
 ## More information
 

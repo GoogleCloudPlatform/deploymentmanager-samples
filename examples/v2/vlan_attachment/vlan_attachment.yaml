@@ -19,4 +19,6 @@ resources:
     cr_asn: <CR_ASN>
     #ASN of your on premises router
     peer_asn: <PEER_ASN> 
+    #customer router link local IP address (should not be set during the first run)
+    #peer_ip_address: <CUSTOMER_LINK_LOCAL_IP>
  
