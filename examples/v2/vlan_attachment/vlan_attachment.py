@@ -1,6 +1,3 @@
-#def instanceGroupUrl(context, zone_name, instance_group_name):
-#	return 'https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instanceGroups/%s' % (context.env['project'], zone_name, instance_group_name)
-
 def networkUrl(project_id, name):
 	return 'https://www.googleapis.com/compute/v1/projects/%s/global/networks/%s' % (project_id, name)
 
@@ -72,23 +69,28 @@ def GenerateConfig(context):
 		}
 	})
 
-	#Add a BGP peer to the interface
-	#resources.append({
-	#	'name': bgp_peer_name,
-	#	'action': 'gcp-types/compute-v1:compute.routers.patch',
-	#	'properties': {
-	#		'router': router_name,
-	#		'region': context.properties['cr_region'],
-	#		'project': context.properties['vpc_project_id'],
-	#		'name': router_name,
-	#		'bgpPeers': [{
-	#			'interfaceName': router_interface_name,
-	#			'name': bgp_peer_name,
-	#			'peerAsn': context.properties['peer_asn'],
-	#			'peerIpAddress': 'extractIPAddressFromCIDR($(ref.' + vlan_attach_name + '.customerRouterIpAddress))'
-	#		}]
-	#	}
-	#}) 		
+	
+	if 'peer_ip_address' in  context.properties: 
+		# Add a BGP peer to the interface
+		resources.append({
+			'name': bgp_peer_name,
+			'action': 'gcp-types/compute-v1:compute.routers.patch',
+			'properties': {
+				'router': router_name,
+				'region': context.properties['cr_region'],
+				'project': context.properties['vpc_project_id'],
+				'name': router_name,
+				'bgpPeers': [{
+					'interfaceName': router_interface_name,
+					'name': bgp_peer_name,
+					'peerAsn': context.properties['peer_asn'],
+					'peerIpAddress': context.properties['peer_ip_address']
+				}]
+			},
+			'metadata': {
+        		'dependsOn': [router_interface_name]
+      },
+		}) 		
 
 
 	return {'resources': resources, 'outputs': outputs}
