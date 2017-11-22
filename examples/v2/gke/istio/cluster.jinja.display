@@ -1,17 +1,17 @@
 metadataVersion: v1test
 
 description:
-  title: Istio on GKE Deployment Manager
-  version: 0.0.1
+  title: Istio on GKE
+  version: 1.0.0 beta
   url: 'https://istio.io/'
   tagline: Running Istio on GKE
   descriptionHtml: 'GKE with Istio'
   logo: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   icon: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   architectureDiagram: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
-  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code'
+  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code. <li><b>Note: You must set your compute service account with "Container Engine Admin" IAM Role.</b></li> <li>For more information, see <a href="https://istio.io/docs/setup/kubernetes/quick-start-gke-dm.html">Quick Start with Google Kubernetes Engine</a></li>'
   author:
-    title: Google Deployment Manager 
+    title: Google Deployment Manager
   documentations:
     - title: GKE Documentation
       url: 'https://cloud.google.com/container-engine/'
@@ -29,7 +29,7 @@ description:
         - DESTINATION_POST_DEPLOY
   support:
     - title: Support
-      descriptionHtml: 'Google does not offer support for this solution. However, community support is available on <a href="http://stackoverflow.com/questions/tagged/mongodb/">Stack Overflow</a>.<p><p><a href="http://stackoverflow.com/questions/tagged/mongodb/">Go to Stack Overflow</a>'
+      descriptionHtml: 'Google does not offer support for this solution.'
   softwareGroups:
     - type: SOFTWARE_GROUP_OS
       software:
