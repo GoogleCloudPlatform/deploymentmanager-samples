@@ -9,7 +9,7 @@ description:
   logo: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   icon: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   architectureDiagram: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
-  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code. Note: once you click "Deploy",  please proceed to <a href="https://istio.io/docs/setup/kubernetes/quick-start-gke-dm.html#bootstrap-gcloud">Quick Start with Google Kubernetes Engine</a>'
+  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code. Note: once you click "Deploy",  please proceed to istio.io/docs/setup/kubernetes/quick-start-gke-dm.html#bootstrap-gcloud.'
   author:
     title: Google Deployment Manager
   documentations:
