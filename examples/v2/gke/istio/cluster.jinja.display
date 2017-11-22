@@ -9,7 +9,7 @@ description:
   logo: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   icon: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
   architectureDiagram: 'https://avatars3.githubusercontent.com/u/23534644?s=100&v=4'
-  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code. **Note**: you must set the compute service account with "Container Engine Admin" IAM role.
+  architectureDescription: 'Istio is an open platform that provides a uniform way to connect, manage, and secure microservices. Istio supports managing traffic flows between microservices, enforcing access policies, and aggregating telemetry data, all without requiring changes to the microservice code.
   author:
     title: Google Deployment Manager
   documentations:
