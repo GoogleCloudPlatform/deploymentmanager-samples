@@ -2,7 +2,7 @@ metadataVersion: v1test
 
 description:
   title: Istio on GKE
-  version: 0.0.1
+  version: 1.0.0 beta
   url: 'https://istio.io/'
   tagline: Running Istio on GKE
   descriptionHtml: 'GKE with Istio'
@@ -29,7 +29,7 @@ description:
         - DESTINATION_POST_DEPLOY
   support:
     - title: Support
-      descriptionHtml: 'Google does not offer support for this solution. However, community support is available on <a href="http://stackoverflow.com/questions/tagged/mongodb/">Stack Overflow</a>.<p><p><a href="http://stackoverflow.com/questions/tagged/mongodb/">Go to Stack Overflow</a>'
+      descriptionHtml: 'Google does not offer support for this solution.'
   softwareGroups:
     - type: SOFTWARE_GROUP_OS
       software:
