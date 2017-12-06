@@ -11,7 +11,9 @@ class Context:
 
 class ProjectTestCase(unittest.TestCase):
   """Tests for `project.py`."""
-  default_env = {'name': 'my-project', 'project_number': '1234'}
+  default_env = {'name': 'my-project',
+                 'project_number': '1234',
+                 'current_time': 0}
   default_properties = {
       'organization-id': "1234",
       'billing-account-name': 'foo',
