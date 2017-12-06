@@ -82,8 +82,11 @@ def GenerateConfig(context):
       }
   }]
   if context.properties.get('set-dm-service-account-as-owner'):
+      # The name needs to be different in every update
+      # due to a known issue in DM.
+      get_iam_policy_name = 'get-iam-policy-' + str(context.env['current_time'])
       resources.extend([{
-          'name': 'get-iam-policy',
+          'name': get_iam_policy_name,
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
           'properties': {
             'resource': project_id,
@@ -99,7 +102,7 @@ def GenerateConfig(context):
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',
           'properties': {
             'resource': project_id,
-            'policy': '$(ref.get-iam-policy)',
+            'policy': '$(ref.' + get_iam_policy_name + ')',
             'gcpIamPolicyPatch': {
                'add': [{
                  'role': 'roles/owner',
