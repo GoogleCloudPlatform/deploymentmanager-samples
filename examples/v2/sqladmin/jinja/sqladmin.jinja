@@ -1,25 +1,50 @@
+
+{% set deployment_name = env['deployment']  %}
+{% set instance_name = deployment_name + '-instance'  %}
+{% set replica_name = deployment_name + '-replica'  %}
+{% set database_name = deployment_name + '-db'  %}
+
 resources:
-- name: {{ env['deployment'] }}-instance
+- name: {{ instance_name }}
   type: gcp-types/sqladmin-v1beta4:instances
   properties:
+    region: {{ properties['region'] }}  
     settings:
       tier: {{ properties['tier'] }}
-- name: {{ env['deployment'] }}-db
+      backupConfiguration:
+        binaryLogEnabled: true
+        enabled: true
+
+- name: {{ database_name }}
   type: gcp-types/sqladmin-v1beta4:databases
+  properties:
+    name: {{ database_name }}
+    instance: $(ref.{{ instance_name }}.name)
+    charset: utf8
+
+{% for n in range(properties['readReplicas']) %}
+- name: {{ replica_name }}-{{n}}
+  type: gcp-types/sqladmin-v1beta4:instances
   metadata:
     dependsOn:
-    - {{ env['deployment'] }}-instance
+    - {{ database_name }}
   properties:
-    name: {{ env['deployment'] }}-db
-    instance: $(ref.{{ env['deployment'] }}-instance.name)
-    charset: utf8
-- name: delete-root
+    region: {{ properties['region'] }}  
+    masterInstanceName: $(ref.{{ instance_name }}.name)
+    settings:
+      tier: {{ properties['tier'] }}
+      replicationType: {{ properties['replicationType'] }}
+{% endfor %}
+
+- name: delete-user-root
   action: gcp-types/sqladmin-v1beta4:sql.users.delete
   metadata:
     runtimePolicy:
     - CREATE
+    dependsOn:
+    - {{ database_name }}
   properties:
     project: {{ env['project'] }}
     instance: $(ref.{{ env['deployment'] }}-instance.name)
-    host: localhost
     name: root
+    host: "%"

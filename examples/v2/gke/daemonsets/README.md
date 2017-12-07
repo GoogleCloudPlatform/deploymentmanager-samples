@@ -1,4 +1,4 @@
-# Daemonsets on Google Container Engine using Deployment Manager
+# Daemonsets on Google Kubernetes Engine using Deployment Manager
 
 #### Step 1. Deploying a cluster and cluster-type
 
@@ -20,7 +20,7 @@ To create and deploy the cluster and cluster-type, run the following command
     gcloud deployment-manager deployments create cluster --config cluster.yaml
 
 
-This will create a Google Container Engine (GKE) cluster and cluster-type
+This will create a Google Kubernetes Engine (GKE) cluster and cluster-type
 deployment. The GKE cluster will be managed by GCP with username/password
 as the auth.
 

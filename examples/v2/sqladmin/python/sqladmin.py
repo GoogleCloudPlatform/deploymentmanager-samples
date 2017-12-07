@@ -20,6 +20,7 @@ def GenerateConfig(context):
   """Generate YAML resource configuration."""
   deployment_name = context.env['deployment']
   instance_name = deployment_name + '-instance'
+  replica_name = deployment_name + '-replica'  
   database_name = deployment_name + '-db'
 
   resources = [{
@@ -27,31 +28,49 @@ def GenerateConfig(context):
       'type': 'gcp-types/sqladmin-v1beta4:instances',
       'properties': {
           'settings': {
-              'tier': context.properties['tier']
+              'tier': context.properties['tier'],
+              'backupConfiguration' : {
+                 'binaryLogEnabled': True,
+                 'enabled': True
+              }
           }
       }
   }, {
       'name': database_name,
       'type': 'gcp-types/sqladmin-v1beta4:databases',
-      'metadata': {
-          'dependsOn': [instance_name]
-      },
       'properties': {
           'name': database_name,
-          'instance': instance_name,
+          'instance': ''.join(['$(ref.', instance_name,'.name)']),
           'charset': 'utf8'
       }
   }, {
-      'name': 'delete-root',
+      'name': 'delete-user-root',
       'action': 'gcp-types/sqladmin-v1beta4:sql.users.delete',
       'metadata': {
-          'runtimePolicy': ['CREATE']
+          'runtimePolicy': ['CREATE'],
+          'dependsOn': [ database_name ]          
       },
       'properties': {
           'project': context.env['project'],
-          'instance': '$(ref.' + context.env['deployment'] + '-instance.name)',
+          'instance': ''.join(['$(ref.', instance_name,'.name)']),
           'name': 'root',
-          'host': 'localhost'
-      }
+          'host': '%'
+      }     
   }]
+
+  for n in range(0,context.properties['readReplicas']):
+    resources.append({'name': ''.join([replica_name,'-',str(n)]),
+                      'type': 'gcp-types/sqladmin-v1beta4:instances',
+                      'metadata': {
+                         'dependsOn': [ database_name ]
+                      },                      
+                      'properties': {
+                          'region': context.properties['region'],
+                          'masterInstanceName': ''.join(['$(ref.', instance_name,'.name)']),
+                          'settings': {
+                              'tier': context.properties['tier'],
+                              'replicationType': context.properties['replicationType']
+                           }
+                       } 
+                    }) 
   return { 'resources': resources }
