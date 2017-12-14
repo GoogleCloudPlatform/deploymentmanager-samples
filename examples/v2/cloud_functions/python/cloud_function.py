@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""CloudFunction instance-type DM template.
-
-Provisions (or, creates) a pubsub topic.
-"""
+"""Cloud Function (nicely deployed in deployment) DM template."""
 
 import base64
 import json
