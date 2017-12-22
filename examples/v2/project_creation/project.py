@@ -81,6 +81,7 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
+<<<<<<< HEAD
   if context.properties.get('iam-policy-patch'):
     iam_policy_patch = context.properties['iam-policy-patch']
     if iam_policy_patch.get('add'):
@@ -126,7 +127,7 @@ def GenerateConfig(context):
           'gcpIamPolicyPatch': {
              'add': policies_to_add,
              'remove': policies_to_remove
-          }
+         }
         }
     }])
   if context.properties.get('bucket-export-settings'):
