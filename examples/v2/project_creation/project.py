@@ -84,7 +84,7 @@ def GenerateConfig(context):
   if context.properties.get('set-dm-service-account-as-owner'):
       # The name needs to be different in every update
       # due to a known issue in DM.
-      get_iam_policy_name = 'get-iam-policy-' + str(context.env['current_time'])
+      get_iam_policy_name = 'get-iam-policy'
       resources.extend([{
           'name': get_iam_policy_name,
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
@@ -93,7 +93,8 @@ def GenerateConfig(context):
           },
           'metadata': {
             'dependsOn': [ApiResourceName(
-                project_id, 'deploymentmanager.googleapis.com')]
+                project_id, 'deploymentmanager.googleapis.com')],
+            'runtimePolicy': ['UPDATE_ALWAYS']
           }
       }, {
        # Add the service account that deployment manager will use in this project
