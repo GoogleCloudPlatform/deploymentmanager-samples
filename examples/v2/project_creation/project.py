@@ -89,6 +89,7 @@ def GenerateConfig(context):
   if context.properties.get('set-dm-service-account-as-owner'):
       # The name needs to be different in every update
       # due to a known issue in DM.
+      get_iam_policy_name = 'get-iam-policy'
       resources.extend([{
           'name': 'get-iam-policy-' + project_id,
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
