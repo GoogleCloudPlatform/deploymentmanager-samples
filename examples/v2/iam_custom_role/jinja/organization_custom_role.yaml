@@ -13,13 +13,14 @@
 # limitations under the License.
 
 imports:
-- path: project_custom_role.jinja
+- path: organization_custom_role.jinja
 
 resources:
 - name: custom-role
-  type: project_custom_role.jinja
+  type: organization_custom_role.jinja
   properties:
-    roleId: aCustomRole
+    organizationId:
+    roleId: myCustomRole
     title: My Title
     description: My description.
     includedPermissions:
