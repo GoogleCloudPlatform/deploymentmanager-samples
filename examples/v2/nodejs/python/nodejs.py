@@ -38,6 +38,7 @@ def GenerateConfig(context):
       'properties': {
           'zone': context.properties['zone'],
           'dockerImage': 'gcr.io/deployment-manager-examples/nodejsservice',
+          'containerImage': 'container-vm-v20160217',
           'port': application_port,
           # Define the variables that are exposed to container as env variables.
           'dockerEnv': {
