@@ -1,0 +1,9 @@
+resources:
+ - name: {{ env["name"] }}
+   type: compute.v1.route
+   properties:
+     network: projects/{{ env["project"] }}/global/networks/default
+     destRange: "0.0.0.0/0"
+     tags: ["no-ip"]
+     priority: 800
+     nextHopIp: {{ properties['internalIP'] }}

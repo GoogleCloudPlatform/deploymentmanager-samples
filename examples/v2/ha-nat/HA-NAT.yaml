@@ -1,0 +1,25 @@
+imports:
+- path: templates/HA-NAT.jinja
+  name: HA-NAT.jinja
+- path: templates/instanceTemplate.jinja
+  name: instanceTemplate.jinja
+- path: startup.sh
+  name: startup-script.sh
+- path: templates/instanceGroup.jinja
+  name: instanceGroup.jinja
+- path: templates/route.jinja
+  name: route.jinja
+
+resources:
+- name: HA-NAT
+  type: HA-NAT.jinja
+  properties:
+    # settings to adjust
+    region: europe-west1
+    zone_1: europe-west1-b
+    zone_2: europe-west1-c
+    zone_3: europe-west1-d
+    # CIDR range 10.132.0.0/20 of europe-west1
+    internalIP_1: 10.132.0.2
+    internalIP_2: 10.132.0.3
+    internalIP_3: 10.132.0.4
