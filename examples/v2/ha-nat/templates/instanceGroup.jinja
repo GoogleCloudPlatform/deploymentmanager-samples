@@ -1,0 +1,10 @@
+resources:
+ - name: {{ env["name"] }}
+   type: compute.beta.instanceGroupManager
+   properties:
+     instanceTemplate: $(ref.{{ properties['instanceTemplate'] }}.selfLink)
+     zone: {{ properties['zone'] }}
+     targetSize: 1
+     autoHealingPolicies:
+     - healthCheck: $(ref.nat-health-check.selfLink)
+       initialDelaySec: 120

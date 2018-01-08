@@ -1,0 +1,33 @@
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.instanceTemplate
+  properties:
+    properties:
+      project: {{ env["project"] }}
+      machineType: n1-standard-2
+      canIpForward: true
+      properties:
+        zone: {{ properties["zone"] }}
+      disks:
+      - deviceName: boot
+        type: PERSISTENT
+        boot: true
+        autoDelete: true
+        initializeParams:
+          sourceImage: projects/debian-cloud/global/images/family/debian-8
+      networkInterfaces:
+      - network: projects/{{ env["project"] }}/global/networks/default
+        networkIP: {{ properties["internalIP"] }} 
+        # Access Config required to give the instance a public IP address
+        accessConfigs:
+        - natIP: {{ properties["ip"] }}
+          type: ONE_TO_ONE_NAT
+      tags:
+        items: ["natgw"]
+      metadata:
+        items:
+        {% for key, value in properties['metadata-from-file'].iteritems() %}
+        - key: {{ key }}
+          value: |
+            {{ imports[value]|indent(12) }}
+      {% endfor %}

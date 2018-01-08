@@ -1,0 +1,85 @@
+resources:
+# IPs
+- name: nat-1-ip
+  type: compute.v1.address
+  properties:
+    region: {{ properties["region"] }}
+- name: nat-2-ip
+  type: compute.v1.address
+  properties:
+    region: {{ properties["region"] }}
+- name: nat-3-ip
+  type: compute.v1.address
+  properties:
+    region: {{ properties["region"] }}
+# instanste templates
+- name: nat-1-it
+  type: instanceTemplate.jinja
+  properties:
+    ip: $(ref.nat-1-ip.address)
+    internalIP: {{ properties["internalIP_1"] }}
+    zone: {{ properties["zone_1"] }}
+    metadata-from-file:
+      startup-script: startup-script.sh
+- name: nat-2-it
+  type: instanceTemplate.jinja
+  properties:
+    ip: $(ref.nat-2-ip.address)
+    internalIP: {{ properties["internalIP_2"] }}
+    zone: {{ properties["zone_2"] }}
+    metadata-from-file:
+      startup-script: startup-script.sh
+- name: nat-3-it
+  type: instanceTemplate.jinja
+  properties:
+    ip: $(ref.nat-3-ip.address)
+    internalIP: {{ properties["internalIP_3"] }}
+    zone: {{ properties["zone_3"] }}
+    metadata-from-file:
+      startup-script: startup-script.sh
+# health checks
+- name: nat-health-check
+  type: compute.v1.httpHealthCheck
+  properties:
+    checkIntervalSec: 30
+    healthyThreshold: 1
+    unhealthyThreshold: 5
+    requestPath: /health-check
+# firewall
+- name: natfirewall
+  type: compute.v1.firewall
+  properties:
+    allowed:
+    - IPProtocol: tcp
+      ports: [80]
+    targetTags: ["natgw"]
+    sourceRanges: ["209.85.152.0/22","209.85.204.0/22","35.191.0.0/16"]
+# instanste groups
+- name: nat-1-ig
+  type: instanceGroup.jinja
+  properties:
+    zone: {{ properties["zone_1"] }}
+    instanceTemplate: nat-1-it
+- name: nat-2-ig
+  type: instanceGroup.jinja
+  properties:
+    zone: {{ properties["zone_2"] }}
+    instanceTemplate: nat-2-it
+- name: nat-3-ig
+  type: instanceGroup.jinja
+  properties:
+    zone: {{ properties["zone_3"] }}
+    instanceTemplate: nat-3-it
+# routes
+- name: nat-1-route
+  type: route.jinja
+  properties:
+    internalIP: $(ref.nat-1-it.properties.networkInterfaces[0].networkIP)
+- name: nat-2-route
+  type: route.jinja
+  properties:
+    internalIP: $(ref.nat-2-it.properties.networkInterfaces[0].networkIP)
+- name: nat-3-route
+  type: route.jinja
+  properties:
+    internalIP: $(ref.nat-3-it.properties.networkInterfaces[0].networkIP)
