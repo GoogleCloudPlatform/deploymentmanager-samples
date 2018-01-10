@@ -12,11 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# Put all your resources under `resources:`. For each resource, you need:
+# - The type of resource. In this example, the type is a Compute VM instance.
+# - An internal name for the resource.
+# - The properties for the resource. In this example, for VM instances, you add
+#   the machine type, a boot disk, network information, and so on.
+#
+# For a list of supported resources,
+# see https://cloud.google.com/deployment-manager/docs/configuration/supported-resource-types.
 resources:
 - type: compute.v1.instance
-  name: vm-my-first-deployment
+  name: quickstart-deployment-vm
   properties:
+    # The properties of the resource depend on the type of resource. For a list
+    # of properties, see the API reference for the resource.
     zone: us-central1-f
+    # Replace [MY_PROJECT] with your project ID
     machineType: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/zones/us-central1-f/machineTypes/f1-micro
     disks:
     - deviceName: boot
@@ -24,7 +36,10 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
+        # Replace [FAMILY_NAME] with the image family name.
+        # See a full list of image families at https://cloud.google.com/compute/docs/images#os-compute-support
         sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/[FAMILY_NAME]
+    # Replace [MY_PROJECT] with your project ID
     networkInterfaces:
     - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default
       # Access Config required to give the instance a public IP address
