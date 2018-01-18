@@ -10,3 +10,6 @@ with image family name, like "debian-8". Then run
 
     gcloud deployment-manager deployments create quick-start-deployment
     --config vm.yaml
+
+For a quick introduction to Deployment Manager, see the [Quickstart
+tutorial](https://cloud.google.com/deployment-manager/docs/quickstart).
