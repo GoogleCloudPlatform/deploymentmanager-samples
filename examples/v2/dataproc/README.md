@@ -11,7 +11,7 @@ deploys a dataproc cluster.
 Use `dataproc.yaml` to deploy this example template after changing
 REGION_TO_RUN and ZONE_TO_RUN.
 
-When ready, deploy with the following command:
+When ready, deploy with following command:
 
     gcloud deployment-manager deployments create DEPLOYMENT_NAME --config dataproc.yaml
 
