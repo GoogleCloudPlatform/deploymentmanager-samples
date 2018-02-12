@@ -11,8 +11,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 resources:
-- name: {{ env['name'] }}
-  type: compute.v1.instance
+- name: frontend-{{ env['name'] }}
+  type: gcp-types/compute-v1:instances
+  properties:
+    zone: {{ properties['zone'] }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/{{ properties['imageProject'] }}/global/images/{{ properties['imageName'] }}
+    machineType: zones/{{ properties['zone'] }}/machineTypes/{{ properties['machineType'] }}
+    networkInterfaces:
+    - network: global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+  metadata:
+    dependsOn:
+    - backend-{{ env['name'] }}
+- name: backend-{{ env['name'] }}
+  type: gcp-types/compute-v1:instances
   properties:
     zone: {{ properties['zone'] }}
     disks:
