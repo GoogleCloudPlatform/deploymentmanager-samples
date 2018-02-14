@@ -8,10 +8,15 @@ deploys a custom role.
 
 ## Deploy the template
 
-Use `project_custom_role.yaml` to deploy this example template.
-
-When ready, deploy with the following command:
+When ready, deploy a project custom role with the following command:
 
     gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME --config project_custom_role.yaml
+
+or deploy an organization custom role with the following command:
+
+    gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME --config organization_custom_role.yaml
+
+When using `organization_custom_role.yaml`, the organizationId field needs to
+be populated with the organization id where the custom role will be created under.
 
 See more documentation at [IAM Roles](https://cloud.google.com/iam/reference/rest/v1/projects.roles/create)

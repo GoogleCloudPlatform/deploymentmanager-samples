@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2017 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
 # limitations under the License.
 
 imports:
-- path: vm-instance.jinja
+- path: organization_custom_role.jinja
 
 resources:
-- name: instance
-  type: vm-instance.jinja
+- name: custom-role
+  type: organization_custom_role.jinja
   properties:
-    imageProject: debian-cloud
-    imageName: family/debian-8
-    zone: us-central1-a
-    machineType: f1-micro
+    organizationId:
+    roleId: myCustomRole
+    title: My Title
+    description: My description.
+    includedPermissions:
+    - iam.roles.get
+    - iam.roles.list

@@ -23,5 +23,5 @@ resources:
     title: My Title
     description: My description.
     includedPermissions:
-    - bigquery.config.get
-    - bigquery.datasets.get
+    - iam.roles.get
+    - iam.roles.list
