@@ -1,0 +1,11 @@
+imports:
+- path: custom_type_provider.jinja
+
+resources:
+- name: dm-custom
+  type: custom_type_provider.jinja
+  properties:
+    swagger_url: https://dmapi-dot-YOUR-PROJECT.appspot.com/swagger.json
+    task: "some task"
+    id: 1135
+    API_KEY: "foo"

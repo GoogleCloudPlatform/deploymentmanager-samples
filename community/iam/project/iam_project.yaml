@@ -1,0 +1,12 @@
+imports:
+- path: iam_project.jinja
+
+resources:
+- name: iam_project
+  type: iam_project.jinja
+  properties:
+    entities:
+    - name: "user:alice@acme.com"
+      role: roles/viewer
+    - name: "user:bob@acme.com"
+      role: roles/viewer

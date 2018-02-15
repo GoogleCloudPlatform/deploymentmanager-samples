@@ -1,0 +1,44 @@
+
+resources:
+
+- name: get-iam-policy
+  action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy
+  metadata:
+    runtimePolicy:
+    - CREATE
+    - DELETE
+  properties:
+    resource: {{ env["project"] }}
+
+- name: set-iam-policy-add
+  action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy
+  metadata:
+    runtimePolicy:
+    - CREATE
+  properties:
+    resource: {{ env['project'] }}
+    policy: $(ref.get-iam-policy)
+    gcpIamPolicyPatch:
+      add:
+      {% for u in properties['entities'] %}
+      - role: {{u['role']}}
+        members:
+        - {{u['name']}}
+      {% endfor %}
+
+
+- name: set-iam-policy-delete
+  action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy
+  metadata:
+    runtimePolicy:
+    - DELETE
+  properties:
+    resource: {{ env['project'] }}
+    policy: $(ref.get-iam-policy)
+    gcpIamPolicyPatch:
+      remove:
+      {% for u in properties['entities'] %}
+      - role: {{u['role']}}
+        members:
+        - {{u['name']}}
+      {% endfor %}
