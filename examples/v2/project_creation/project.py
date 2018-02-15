@@ -84,9 +84,8 @@ def GenerateConfig(context):
   if context.properties.get('set-dm-service-account-as-owner'):
       # The name needs to be different in every update
       # due to a known issue in DM.
-      get_iam_policy_name = 'get-iam-policy'
       resources.extend([{
-          'name': get_iam_policy_name,
+          'name': 'get-iam-policy-' + project_id,
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
           'properties': {
             'resource': project_id,
@@ -99,11 +98,11 @@ def GenerateConfig(context):
       }, {
        # Add the service account that deployment manager will use in this project
        # as owner so it can set IAM policies on resources
-          'name': 'patch-iam-policy',
+          'name': 'patch-iam-policy-' + project_id,
           'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',
           'properties': {
             'resource': project_id,
-            'policy': '$(ref.' + get_iam_policy_name + ')',
+            'policy': '$(ref.get-iam-policy-' + project_id + ')',
             'gcpIamPolicyPatch': {
                'add': [{
                  'role': 'roles/owner',
@@ -147,6 +146,44 @@ def GenerateConfig(context):
             'dependsOn': action_dependency
         }
     })
+  if context.properties.get('shared_vpc_host'):
+     resources.append({
+        'name': project_id + '-xpn-host',
+        'type': 'compute.beta.xpnHost',
+        'properties': {
+            'organization-id': context.properties['organization-id'],
+            'billing-account-name': context.properties['billing-account-name'],
+            'project': project_id,
+        },
+        'metadata': {
+            'dependsOn': [
+                ApiResourceName(project_id, 'compute.googleapis.com'),
+                project_id,
+            ],
+        }
+     })
+  if context.properties.get('shared_vpc_service_of'):
+      resources.append({
+        'name': project_id + '-xpn-service-' +
+            context.properties['shared_vpc_service_of'],
+        'type': 'compute.beta.xpnResource',
+        'properties': {
+            'organization-id': context.properties['organization-id'],
+            'billing-account-name': context.properties['billing-account-name'],
+            'project': [context.properties['shared_vpc_service_of']],
+            'xpnResource': {
+                'id': project_id,
+                'type': 'PROJECT',
+            },
+        },
+        'metadata': {
+            'dependsOn': [
+                ApiResourceName(project_id, 'compute.googleapis.com'),
+                project_id,
+                context.properties['shared_vpc_service_of'] + '-xpn-host',
+            ],
+        }
+      })
 
   return {'resources': resources}
 
