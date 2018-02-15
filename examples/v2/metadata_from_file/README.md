@@ -25,4 +25,4 @@ This template takes the following input properties:
 **NOTE**: Replace ZONE_TO_RUN in 'config.yaml' with a specific zone.
 
 For more details on properties of this template, see the [template
-schema](instance.py.schema).
+schema](python/instance.py.schema).
