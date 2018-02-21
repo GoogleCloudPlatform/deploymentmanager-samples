@@ -12,11 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: pubsub.jinja
+{% set topic = 'configurable-pubsub-topic-' + env['deployment'] %}
+{% set subscription = env['deployment'] + '-' + env['name'] + '-subscription' %}
 
 resources:
-- name: pubsub
-  type: pubsub.jinja
+- name: my-topic
+  #type: pubsub.v1.topic
+  type: gcp-types/pubsub-v1:projects.topics
   properties:
-    ackDeadlineSeconds: 4
+    topic: {{ topic }}
+- name: my-subscription
+  #type: pubsub.v1.subscription
+  type: gcp-types/pubsub-v1:projects.subscriptions
+  properties:
+    subscription: {{ subscription }}
+    topic: $(ref.my-topic.name)
