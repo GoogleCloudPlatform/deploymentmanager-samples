@@ -17,7 +17,7 @@ resources:
   type: gcp-types/spanner-v1:projects.instances
   properties:
     parent: projects/{{ env["project"] }}
-    instanceId: anitalavalatina
+    instanceId: anitalavalatina-{{ env['deployment'] }}
     instance:
       config: projects/{{ env["project"] }}/instanceConfigs/regional-us-central1
       displayName: Anita Lava La Tina
