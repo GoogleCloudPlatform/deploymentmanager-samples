@@ -2,7 +2,9 @@ imports:
 - path: project.py
 
 resources:
-# The "name" property below will be the name of the new project
+# The "name" property below will be the ID of the new project
+# If you want your project to have a different name, use the "project-name"
+# property.
 - name: dm-proj-test-2017-15-04-02
   type: project.py
   properties:
