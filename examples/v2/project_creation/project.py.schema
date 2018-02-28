@@ -27,6 +27,11 @@ required:
 - billing-account-name
 
 properties:
+  project-name:
+    description: >
+      If provided, configures the project to have a human-readable name that
+      is different from the project ID.
+    type: string
   organization-id:
     description: >
       The ID of the organization that the projects will be under. Typically a

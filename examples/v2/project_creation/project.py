@@ -37,11 +37,16 @@ def GenerateConfig(context):
     parent_type = 'folder'
     parent_id = context.properties['parent-folder-id']
 
+  if 'project-name' in context.properties:
+    project_name = context.properties['project-name']
+  else:
+    project_name = project_id
+
   resources = [{
       'name': project_id,
       'type': 'cloudresourcemanager.v1.project',
       'properties': {
-          'name': project_id,
+          'name': project_name,
           'projectId': project_id,
           'parent': {
               'type': parent_type,
