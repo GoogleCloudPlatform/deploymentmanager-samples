@@ -1,0 +1,75 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set LOGBUCKET = "log-bucket-" + env["deployment"]  %}
+
+resources:
+#- type: storage.v1.bucket
+- type: gcp-types/storage-v1:buckets
+  name: {{ LOGBUCKET }}
+  properties:
+    predefinedAcl: projectPrivate
+    projection: full
+    location: US
+    storageClass: STANDARD
+#- type: storage.v1.bucket
+- type: gcp-types/storage-v1:buckets
+  name: bucket-{{ env["deployment"] }}
+  properties:
+    predefinedAcl: projectPrivate
+    projection: full
+    location: US
+    storageClass: STANDARD
+    defaultObjectAcl:
+      - bucket: bucket-{{ env["deployment"] }}
+        domain: www.google.com
+        email: scoobydoo@google.com
+        # 657686986194 is the number for project ccit-testing
+        entity: project-editors-657686986194
+        role: READER
+        projectTeam:
+          team: editors
+          projectNumber: 657686986194
+    cors:
+      - maxAgeSeconds: 10
+        method:
+          - GET
+          - POST
+          - OPTIONS
+        origin:
+          - '*'
+        responseHeader:
+          - Content-Type
+          - Last-Modified
+          - Expires
+    lifecycle:
+      rule:
+        - action:
+            type: Delete
+          condition:
+            age: 30
+            isLive: true
+        - action:
+            type: Delete
+          condition:
+            isLive: false
+            numNewerVersions: 3
+    logging:
+      logBucket: $(ref.{{ LOGBUCKET }}.name)
+      logObjectPrefix: log-prefix
+    versioning:
+      enabled: true
+    website:
+      mainPageSuffix: http://www.google.com/
+      notFoundpage: http://www.google.com/not-found
