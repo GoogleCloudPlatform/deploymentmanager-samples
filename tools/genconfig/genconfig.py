@@ -99,7 +99,7 @@ def get_resource_config(pstr, project, urls):
       url = "https://www.googleapis.com/compute/v1/" + url
     m = SELF_LINK_PATTERN.match(url)
     name = m.group(5)
-    ref = "$(ref."+ name + ".selfLink)"
+    ref = "$(ref." + name + ".selfLink)"
     pstr = pstr.replace(url, ref)
   pstr = pstr.replace(project, "{{env['project']}}")
   props = yaml.load(pstr)
@@ -115,7 +115,7 @@ def get_resource_config_from_dict(props):
 
   resources = [{
       'name': props['name'],
-      'type': get_type(props['kind'],props),
+      'type': get_type(props['kind'], props),
       'properties': scrub_properties(props)
   }]
 
