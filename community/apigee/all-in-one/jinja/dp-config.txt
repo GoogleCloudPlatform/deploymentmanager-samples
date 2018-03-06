@@ -1,0 +1,79 @@
+IP1=$(hostname -i)
+# Must resolve to IP address or DNS name of host - not to 127.0.0.1 or localhost.
+HOSTIP=$(hostname -i)
+# Specify the name of the portal database in Postgres. 
+PG_NAME=devportal 
+# Specify the Postgres admin credentials. 
+# The portal connects to Postgres by using the 'apigee' user. 
+# If you changed the Postgres password from the default of 'postgres' 
+# then set PG_PWD accordingly. 
+# If connecting to a Postgres node installed with Edge, 
+# contact the Edge sys admin to get these credentials. 
+PG_USER=apigee 
+PG_PWD=postgres 
+# The IP address of the Postgres server. 
+# If it is installed on the same node as the portal, specify that IP. 
+# If connecting to a remote Postgres server,specify its IP address. 
+PG_HOST=$IP1 
+# The Postgres user credentials used by the portal 
+# to access the Postgres database, 
+# This account is created if it does not already exist. 
+DRUPAL_PG_USER=drupaladmin 
+DRUPAL_PG_PASS=portalSecret 
+# Specify 'postgres' as the database. 
+DEFAULT_DB=postgres 
+# Specify the Drupal admin account details. 
+# DO NOT set DEVPORTAL_ADMIN_USERNAME=admin. 
+# If omitted, you can set them in the portal UI. 
+# The installer creates this user on the portal. 
+DEVPORTAL_ADMIN_FIRSTNAME=portal
+DEVPORTAL_ADMIN_LASTNAME=admin 
+DEVPORTAL_ADMIN_USERNAME=opdk@apigee.com 
+DEVPORTAL_ADMIN_PWD=Secret123
+DEVPORTAL_ADMIN_EMAIL=opdk@apigee.com 
+
+# Edge connection details. 
+# If omitted, you can set them in the portal UI. 
+# Specify the Edge organization associated with the portal. 
+EDGE_ORG=
+
+# Specify the URL of the Edge management API. 
+# For a Cloud based installation of Edge, the URL is: 
+# http://api.enterprise.apigee.com/v1 
+# For a Private Cloud installation, it is in the form: 
+# http://<ms_ip_or_DNS>:8080/v1 or 
+# https://<ms_ip_or_DNS>:TLSport/v1 
+MGMT_URL=http://$IP1:8080/v1
+
+# The org admin credentials for the Edge organization in the form
+# of Edge emailAddress:pword. 
+# The portal uses this information to connect to Edge. 
+DEVADMIN_USER=
+DEVADMIN_PWD=
+
+# The PHP port. 
+# If omitted, it defaults to 8888. 
+PHP_FPM_PORT=8888 
+
+# Optionally configure the SMTP server used by the portal. 
+# If you do, the properties SMTPHOST and SMTPPORT are required. 
+# The others are optional with a default value as notated below. 
+# SMTP hostname. For example, for the Gmail server, use smtp.gmail.com. 
+SMTPHOST=smtp.gmail.com 
+
+# Set the SMTP protocol as "standard", "ssl", or "tls",
+# where "standard" corresponds to HTTP.
+# Note that in previous releases, this setting was controlled by the 
+# SMTPSSL property. That property has been deprecated. 
+SMTP_PROTOCOL="standard" 
+
+# SMTP port (usually 25). 
+# The value can be different based on the selected encryption protocol. 
+# For example, for Gmail, the port is 465 when using SSL and 587 for TLS. 
+SMTPPORT=25 
+
+# Username used for SMTP authentication, defaults is blank. 
+SMTPUSER=your@email.com 
+
+# Password used for SMTP authentication, default is blank. 
+SMTPPASSWORD=yourEmailPassword
