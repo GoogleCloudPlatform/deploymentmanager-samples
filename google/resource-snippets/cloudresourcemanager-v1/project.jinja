@@ -1,0 +1,28 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set PROJECT_ID = "dm-integ-test-" + env["deployment"] %}
+
+resources:
+# Note that the name of the resource has no bearing on the created project, rather the property
+# 'projectId' is the important value. It is being kept the same in this test so that it is easier to
+# read the logs, which contain the resource name more often than its properties.
+- name: {{ PROJECT_ID }}
+# type: cloudresourcemanager.v1.project
+  type: gcp-types/cloudresourcemanager-v1:projects
+  properties:
+    projectId: {{ PROJECT_ID }}
+    parent:
+      type: organization
+      id: {{ properties["orgnizationId"] }}

@@ -1,0 +1,49 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set CONFIG_NAME = 'config-' + env['deployment'] %}
+{% set VARIABLE_PREFIX = properties['variablePath'] %}
+
+resources:
+#- type: runtimeconfig.v1beta1.config
+- type: gcp-types/runtimeconfig-v1beta1:projects.configs
+  name: {{ CONFIG_NAME }}
+  properties:
+    config: {{ CONFIG_NAME }}
+    description: {{ properties['description'] }}
+#- type: runtimeconfig.v1beta1.variable
+- type: gcp-types/runtimeconfig-v1beta1:projects.configs.variables
+  name: my-variable1
+  properties:
+    parent: $(ref.{{ CONFIG_NAME }}.name)
+    variable: {{ VARIABLE_PREFIX }}/{{ properties['variable1'] }}
+    value: {{ properties['value1'] }}
+#- type: runtimeconfig.v1beta1.variable
+- type: gcp-types/runtimeconfig-v1beta1:projects.configs.variables
+  name: my-variable2
+  properties:
+    parent: $(ref.{{ CONFIG_NAME }}.name)
+    variable: {{ VARIABLE_PREFIX }}/{{ properties['variable2'] }}
+    value: {{ properties['value2'] }}
+#- type: runtimeconfig.v1beta1.waiter
+- type: gcp-types/runtimeconfig-v1beta1:projects.configs.waiters
+  name: my-waiter
+  properties:
+    parent: $(ref.{{ CONFIG_NAME }}.name)
+    waiter: test-waiter
+    timeout: {{ properties['timeout'] }}
+    success:
+      cardinality:
+        path: {{ VARIABLE_PREFIX }}
+        number: {{ properties['number'] }}
