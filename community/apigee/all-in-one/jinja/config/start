@@ -1,0 +1,1 @@
+exec tail -f /dev/null & wait ${!}

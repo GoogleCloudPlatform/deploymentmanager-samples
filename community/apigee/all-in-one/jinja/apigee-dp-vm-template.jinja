@@ -1,0 +1,93 @@
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+{% set COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/' %}
+{% set BASE_NAME = env['deployment'] %}
+
+resources:
+- name: {{ BASE_NAME }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties['zone'] }}
+    machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/{{ properties["machineType"] }}
+    sizeGb: 40
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          export MSIP="{{ properties['msip'] }}"
+          {{ imports[properties['dp-config']]|indent(10) }}
+          set >> /tmp/dp-config.txt
+          sed -i s/BASH.*=.*//g /tmp/dp-config.txt
+          sed -i s/_VERSION.*=.*//g /tmp/dp-config.txt
+          sed -i s/_VERSINFO=.*=.*//g /tmp/dp-config.txt
+          sed -i s/LS_COLORS=.*=.*//g /tmp/dp-config.txt
+          sed -i s/EUID=.*//g /tmp/dp-config.txt
+          sed -i s/DIRSTACK=.*//g /tmp/dp-config.txt
+          sed -i s/IFS=.*//g /tmp/dp-config.txt
+          sed -i s/PPID=.*//g /tmp/dp-config.txt
+          sed -i s/PIPESTATUS=.*//g /tmp/dp-config.txt
+          sed -i s/GROUPS=.*//g /tmp/dp-config.txt
+          sed -i s/LESSOPEN=.*//g /tmp/dp-config.txt
+          sed -i s/PS4=.*//g /tmp/dp-config.txt
+          sed -i s/PATH=.*//g /tmp/dp-config.txt
+          sed -i s/UID=.*//g /tmp/dp-config.txt
+          sed -i s/SHELLOPTS=.*//g /tmp/dp-config.txt
+          sed -i s/_=.*//g /tmp/dp-config.txt
+          sed -i s/HOME=.*//g /tmp/dp-config.txt
+          sed -i s/OPTERR=.*//g /tmp/dp-config.txt
+          sed -i s/OPTIND=.*//g /tmp/dp-config.txt
+          sed -i.bak s/MGMT_URL=/MGMT_URL="http://${MSIP}:8080/v1"/g dp-config.txt
+          export RESOURCE_NAME=$(echo {{ env["name"] }})
+          export VERSION=$(echo "{{ properties["version"] }}")
+          export REPO_HOST="{{ properties['repo'].host }}"
+          export REPO_PROTOCOL="{{ properties['repo'].protocol }}"
+          export REPO_USER=$(echo "{{ properties["repo"].user }}")
+          export REPO_PASSWORD=$(echo "{{ properties["repo"].password }}")
+          export REPO_STAGE=$(echo "{{ properties["repo"].stage }}")
+
+          curl -o /tmp/epel-release-latest-7.noarch.rpm  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+          rpm -ivh /tmp/epel-release-latest-7.noarch.rpm
+
+          cd /etc
+          sed -i s/::1/#::1/g hosts
+          cd -
+
+          sudo curl ${REPO_PROTOCOL}://${REPO_USER}:${REPO_PASSWORD}@${REPO_HOST}/bootstrap_${VERSION}.sh -o /tmp/bootstrap_${VERSION}.sh
+          sudo chmod 777 /tmp/bootstrap_${VERSION}.sh
+          sudo setenforce 0 >> /tmp/setenforce.out
+          sudo cat /etc/selinux/config > /tmp/beforeSelinux.out
+          sudo sed -i 's^SELINUX=enforcing^SELINUX=disabled^g' /etc/selinux/config || true
+          sudo cat /etc/selinux/config > /tmp/afterSeLinux.out
+          sudo /tmp/bootstrap_${VERSION}.sh apigeeuser=$REPO_USER  apigeepassword=$REPO_PASSWORD apigeereleasever=${VERSION} JAVA_FIX=I apigeerepohost=$REPO_HOST repoprotocol=$REPO_PROTOCOL apigeestage=$REPO_STAGE
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-setup install
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-provision install
+          sudo /opt/apigee/apigee-setup/bin/setup.sh -p pdb -f /tmp/dp-config.txt
+          sudo /opt/apigee/apigee-setup/bin/setup.sh -p dp -f /tmp/dp-config.txt
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        diskName: {{ BASE_NAME }}-disk
+        diskSizeGb: 40
+        sourceImage: {{ COMPUTE_URL_BASE }}projects/rhel-cloud/global/images/family/rhel-7
+    networkInterfaces:
+    - network: $(ref.{{ properties["network"] }}.selfLink)
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+
