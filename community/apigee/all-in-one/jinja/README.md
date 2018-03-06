@@ -7,16 +7,17 @@ This is will install aio instance of edge along with dashboard monitoring and a 
 ### gcloud
 - Install gcloud sdk from https://cloud.google.com/sdk/downloads
 - Initialize your account
+- Get Apigee Software access credentials and License file.
 
 ## Before you start
-- Edit the aio/jinja/apigee-edge.yaml and update the properies
+- Edit the aio/jinja/apigee-edge.yaml and update properies with machine type,zone and apigee software repo credentials.Paste the contents of license file.
 
     ```sh
         aio-config: aio-config.txt
         machineType: [ machine type  e.g: n1-highcpu-8]
         zone: [ zone e.g : us-central1-b]
         softwareRepo: https://software.apigee.com
-        version: '4.17.01'
+        version: '4.18.01'
         repo:
            host: software.apigee.com
            protocol: https
@@ -26,6 +27,7 @@ This is will install aio instance of edge along with dashboard monitoring and a 
         license: "[your license]" #Paste the contents of license file.
     ```
 - Change the silent config file entries present in aio/jinja/aio-config.txt
+- Change the developer portal silent config file entries present in aio/jinja/dp-config.txt
 
 ## Deploy AIO profile
 ```sh
