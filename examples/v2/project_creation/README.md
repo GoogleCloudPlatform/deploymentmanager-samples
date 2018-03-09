@@ -86,8 +86,28 @@ project creation exclusively.**
     in your yaml config.
 3.  Create the project. If using the CLI:
 
-    gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME
-    --config config.yaml
+
+    gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME \
+        --config config.yaml
 
 **Note: Project names are globally unique, and cannot be reused. Make sure you
 have a good naming scheme before stamping out projects.**
+
+## Shared VPC
+
+This templates also allows you to configure the
+[Shared VPC](https://cloud.google.com/vpc/docs/shared-vpc) feature.
+
+For that, you need to add the following permission to the DM Service Account on
+the Organization node:
+
+*   'roles/compute.xpnAdmin'
+ *   Visible in the Cloud Console's IAM permissions in Compute Engine -> Compute Shared VPC Admin.
+
+You can then create 2 projects with the `config_shared_vpc.yaml` file. One of
+the projects will be the host of the Shared VPC, and the other one will be a
+service project. Edit the `config_shared_vpc.yaml` file with your own values
+and create the deployment:
+
+    gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME \
+        --config config_shared_vpc.yaml

@@ -2,14 +2,16 @@ imports:
 - path: project.py
 
 resources:
-# The "name" property below will be the name of the new project
-- name: dm-proj-test-2017-15-04-02
+# The "name" property below will be the ID of the new project
+# If you want your project to have a different name, use the "project-name"
+# property.
+- name: DM_TEST_PROJECT
   type: project.py
   properties:
     # Change this to your organization ID.
-    organization-id: "128653134652"
+    organization-id: "ORG_ID"
     # Change the following to your organization's billing account
-    billing-account-name: billingAccounts/001504-B51098-F3D254
+    billing-account-name: billingAccounts/BILLING_ACCOUNT_ID
     # The apis to enable in the new project.
     # To see the possible APIs, use gcloud CLI: gcloud service-management list
     apis:

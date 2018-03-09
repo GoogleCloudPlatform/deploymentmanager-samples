@@ -1,0 +1,80 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: {{ env["deployment"] }}
+#  type: container.v1.cluster
+  type: gcp-types/container-v1:projects.zones.clusters
+  properties:
+    zone: {{ properties["zone"] }}
+    cluster:
+      {% if properties["monitoringService"] %}
+      monitoringService: {{ properties["monitoringService"] }}
+      {% endif %}
+      {% if properties["httpLoadBalancing"] is defined %}
+      addonsConfig:
+        httpLoadBalancing:
+          disabled: {{ not properties["httpLoadBalancing"] }}
+      {% endif %}
+      {% if properties["locations"] %}
+      locations: {{ properties["locations"].split(",") }}
+      {% endif %}
+      {% if properties["currentMasterVersion"] %}
+      currentMasterVersion: {{ properties["currentMasterVersion"] }}
+      {% endif %}
+      nodePools:
+      - name: {{ env["deployment"] }}np
+        config:
+          machineType: g1-small
+          diskSizeGb: 10
+          oauthScopes:
+          - https://www.googleapis.com/auth/devstorage.read_only
+          imageType: {{ properties["imageType"] }}
+        {% if properties["nodeVersion"] %}
+        version: {{ properties["nodeVersion"] }}
+        {% endif %}
+        initialNodeCount: 1
+        autoscaling:
+          enabled: {{ properties["autoscaling"] }}
+          {% if properties["autoscaling"] %}
+          minNodeCount: 3
+          maxNodeCount: 4
+          {% endif %}
+        management:
+          autoUpgrade: {{ properties["autoUpgrade"] }}
+          autoRepair: {{ properties["autoRepair"] }}
+- name: {{ env["deployment"] }}-gke-type
+  type: deploymentmanager.local.typeProvider
+  properties:
+    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/swaggerapi/api/v1
+    options:
+      validationOptions:
+        schemaValidation: IGNORE_WITH_WARNINGS
+      inputMappings:
+      - fieldName: Authorization
+        location: HEADER
+        value: >
+          $.concat("Bearer ", $.googleOauth2AccessToken())
+- name: {{ env["deployment"] }}-gke-type-extensions
+  type: deploymentmanager.local.typeProvider
+  properties:
+    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/swaggerapi/apis/extensions/v1beta1
+    options:
+      validationOptions:
+        schemaValidation: IGNORE_WITH_WARNINGS
+      inputMappings:
+      - fieldName: Authorization
+        location: HEADER
+        value: >
+          $.concat("Bearer ", $.googleOauth2AccessToken())
