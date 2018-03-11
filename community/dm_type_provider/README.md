@@ -26,7 +26,7 @@ Finally, the output of of the 'add-task' operation is shown in the output so you
 
 
 The sample API server is the basic ["Flask-RestPlus"](https://flask-restplus.readthedocs.io/en/stable/) API server which automatically creates a 
-swagger file DM can consume 
+swagger file DM can consume
 
 So, the first step is to deploy the application to GAE (assuming you set a Google Cloud Account and installed the [gcloud SDK](https://cloud.google.com/sdk/downloads):
 
@@ -47,7 +47,7 @@ Test the APP is available (ofcourse substitute YOUR-PROJECT everywhere below for
 
 via curl:
 
-- List Tasks:  
+- List Tasks:
 ```bash
 $  curl  -X GET "https://dmapi-dot-YOUR_PROJECT.appspot.com/todos" -H 'X-API-KEY: foo'
 {
