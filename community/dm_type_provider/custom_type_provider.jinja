@@ -1,0 +1,47 @@
+
+{% set RC_TYPE_PROVIDER = env['project'] + '/tasks-type-provider:/todos/{id}' %}
+
+resources:
+- name: tasks-type-provider
+  type: deploymentmanager.v2beta.typeProvider
+  properties:
+    descriptorUrl: {{ properties["swagger_url"] }}
+    options:
+      inputMappings:
+      - fieldName: id
+        location: PATH
+        methodMatch: ^(GET|DELETE|PUT|POST)$
+        value: $.resource.properties.id
+
+      - fieldName: X-API-KEY
+        location: HEADER
+        value: >
+          $.concat("{{ properties["API_KEY"] }}")
+
+- name: add-task
+  action: {{ RC_TYPE_PROVIDER }}
+  metadata:
+    runtimePolicy:
+    - CREATE
+    dependsOn:
+    - tasks-type-provider
+  properties:
+    task: {{ properties["task"] }}
+    id: {{ properties["id"] }}
+
+- name: delete-task
+  action: {{ RC_TYPE_PROVIDER }}
+  metadata:
+    runtimePolicy:
+    - DELETE
+    dependsOn:
+    - tasks-type-provider
+  properties:
+    id: {{ properties["id"] }}
+
+
+outputs:
+- name: taskID
+  value: $(ref.add-task.id)
+- name: task
+  value: $(ref.add-task.task)
