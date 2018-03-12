@@ -1,0 +1,203 @@
+{#
+Copyright 2016 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+{% set COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/' %}
+{% set BASE_NAME = env['deployment'] %}
+
+resources:
+- name: {{ BASE_NAME }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties['zone'] }}
+    machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/{{ properties["machineType"] }}
+    SCRIPT_BASEPATH: {{ properties['SCRIPT_BASEPATH'] }}
+    sizeGb: 40
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          {{ imports[properties['aio-config']]|indent(10) }}
+          set >> /tmp/aio-config.txt
+          sed -i s/BASH.*=.*//g /tmp/aio-config.txt
+          sed -i s/_VERSION.*=.*//g /tmp/aio-config.txt
+          sed -i s/_VERSINFO=.*=.*//g /tmp/aio-config.txt
+          sed -i s/LS_COLORS=.*=.*//g /tmp/aio-config.txt
+          sed -i s/EUID=.*//g /tmp/aio-config.txt
+          sed -i s/DIRSTACK=.*//g /tmp/aio-config.txt
+          sed -i s/IFS=.*//g /tmp/aio-config.txt
+          sed -i s/PPID=.*//g /tmp/aio-config.txt
+          sed -i s/PIPESTATUS=.*//g /tmp/aio-config.txt
+          sed -i s/GROUPS=.*//g /tmp/aio-config.txt
+          sed -i s/LESSOPEN=.*//g /tmp/aio-config.txt
+          sed -i s/PS4=.*//g /tmp/aio-config.txt
+          sed -i s/PATH=.*//g /tmp/aio-config.txt
+          sed -i s/UID=.*//g /tmp/aio-config.txt
+          sed -i s/SHELLOPTS=.*//g /tmp/aio-config.txt
+          sed -i s/_=.*//g /tmp/aio-config.txt
+          sed -i s/HOME=.*//g /tmp/aio-config.txt
+          sed -i s/OPTERR=.*//g /tmp/aio-config.txt
+          sed -i s/OPTIND=.*//g /tmp/aio-config.txt
+          echo {{ properties["license"] }} | tr " " "\n" >> /tmp/license.txt
+          export RESOURCE_NAME=$(echo {{ env["name"] }})
+          export VERSION=$(echo "{{ properties["version"] }}")
+          export REPO_HOST="{{ properties['repo'].host }}"
+          export REPO_PROTOCOL="{{ properties['repo'].protocol }}"
+          export REPO_USER=$(echo "{{ properties["repo"].user }}")
+          export REPO_PASSWORD=$(echo "{{ properties["repo"].password }}")
+          export REPO_STAGE=$(echo "{{ properties["repo"].stage }}")
+          SCRIPT_BASEPATH="{{ properties['SCRIPT_BASEPATH'] }}"
+
+          ADMIN_EMAIL=$(cat /tmp/aio-config.txt | grep ADMIN_EMAIL | cut -d'=' -f2)
+          APIGEE_ADMINPW=$(cat /tmp/aio-config.txt | grep APIGEE_ADMINPW | cut -d'=' -f2)
+          ORG_NAME=$(cat /tmp/aio-config.txt | grep ORG_NAME | cut -d'=' -f2)
+          MSIP=$(cat /tmp/aio-config.txt | grep MSIP | cut -d'=' -f2)
+
+
+          {{ imports[properties['dp-config']]|indent(10) }}
+          set >> /tmp/dp-config.txt
+          sed -i s/BASH.*=.*//g /tmp/dp-config.txt
+          sed -i s/_VERSION.*=.*//g /tmp/dp-config.txt
+          sed -i s/_VERSINFO=.*=.*//g /tmp/dp-config.txt
+          sed -i s/LS_COLORS=.*=.*//g /tmp/dp-config.txt
+          sed -i s/EUID=.*//g /tmp/dp-config.txt
+          sed -i s/DIRSTACK=.*//g /tmp/dp-config.txt
+          sed -i s/IFS=.*//g /tmp/dp-config.txt
+          sed -i s/PPID=.*//g /tmp/dp-config.txt
+          sed -i s/PIPESTATUS=.*//g /tmp/dp-config.txt
+          sed -i s/GROUPS=.*//g /tmp/dp-config.txt
+          sed -i s/LESSOPEN=.*//g /tmp/dp-config.txt
+          sed -i s/PS4=.*//g /tmp/dp-config.txt
+          sed -i s/PATH=.*//g /tmp/dp-config.txt
+          sed -i s/UID=.*//g /tmp/dp-config.txt
+          sed -i s/SHELLOPTS=.*//g /tmp/dp-config.txt
+          sed -i s/_=.*//g /tmp/dp-config.txt
+          sed -i s/HOME=.*//g /tmp/dp-config.txt
+          sed -i s/OPTERR=.*//g /tmp/dp-config.txt
+          sed -i s/OPTIND=.*//g /tmp/dp-config.txt
+          sed -i s/SCRIPT_BASE.*//g /tmp/dp-config.txt
+          sed -i.bak s/EDGE_ORG=/EDGE_ORG="${ORG_NAME}"/g /tmp/dp-config.txt
+          sed -i.bak s/DEVADMIN_USER=/DEVADMIN_USER="${ADMIN_EMAIL}"/g /tmp/dp-config.txt
+          sed -i.bak s/DEVADMIN_PWD=/DEVADMIN_PWD="${APIGEE_ADMINPW}"/g /tmp/dp-config.txt
+
+
+          curl -o /tmp/epel-release-latest-7.noarch.rpm  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+          rpm -ivh /tmp/epel-release-latest-7.noarch.rpm
+
+          cd /etc
+          sed -i s/::1/#::1/g hosts
+          cd -
+
+          sudo curl ${REPO_PROTOCOL}://${REPO_USER}:${REPO_PASSWORD}@${REPO_HOST}/bootstrap_${VERSION}.sh -o /tmp/bootstrap_${VERSION}.sh
+          sudo chmod 777 /tmp/bootstrap_${VERSION}.sh
+          sudo setenforce 0 >> /tmp/setenforce.out
+          sudo cat /etc/selinux/config > /tmp/beforeSelinux.out
+          sudo sed -i 's^SELINUX=enforcing^SELINUX=disabled^g' /etc/selinux/config || true
+          sudo cat /etc/selinux/config > /tmp/afterSeLinux.out
+          sudo /tmp/bootstrap_${VERSION}.sh apigeeuser=$REPO_USER  apigeepassword=$REPO_PASSWORD apigeereleasever=${VERSION} JAVA_FIX=I apigeerepohost=$REPO_HOST repoprotocol=$REPO_PROTOCOL apigeestage=$REPO_STAGE
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-setup install
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-provision install
+
+          #Redhat 7.4 related changes
+          yum install yum-utils -y
+          yum install yum-plugin-priorities -y
+
+          sudo /opt/apigee/apigee-setup/bin/setup.sh -p aio -f /tmp/aio-config.txt
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-provision setup-org -f /tmp/aio-config.txt
+
+          sed -i.bak s/VHOST_PORT=9001/VHOST_PORT=9002/g /tmp/aio-config.txt
+          sed -i.bak s/ENV_NAME=test/ENV_NAME=prod/g /tmp/aio-config.txt
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-provision setup-org -f /tmp/aio-config.txt
+          
+          echo "conf_system_jsse.enableSNIExtension=true" >> /opt/apigee/customer/application/message-processor.properties
+          chown apigee:apigee /opt/apigee/customer/application/message-processor.properties
+          sudo /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart
+
+          sudo /opt/apigee/apigee-service/bin/apigee-service edge-router stop
+          sudo /opt/apigee/apigee-service/bin/apigee-service edge-ui stop
+
+          sudo /opt/apigee/apigee-setup/bin/setup.sh -p pdb -f /tmp/dp-config.txt
+          sudo /opt/apigee/apigee-setup/bin/setup.sh -p dp -f /tmp/dp-config.txt
+
+          echo  $SCRIPT_BASEPATH >> /tmp/script.txt
+
+          curl -o /opt/nginx/conf/nginx.conf  $SCRIPT_BASEPATH/config/nginx.conf
+          curl -o /opt/apigee/data/apigee-lb/conf.d/apigee-drupal-devportal-nginx.conf $SCRIPT_BASEPATH/config/apigee-drupal-devportal-nginx.conf
+          curl -o /opt/apigee/apigee-lb/bin/start $SCRIPT_BASEPATH/config/start
+
+          chown apigee:apigee /opt/nginx/conf/nginx.conf
+          chmod 666 /opt/nginx/conf/nginx.conf
+          chown apigee:apigee /opt/apigee/data/apigee-lb/conf.d/apigee-drupal-devportal-nginx.conf
+          chmod 666 /opt/apigee/data/apigee-lb/conf.d/apigee-drupal-devportal-nginx.conf
+          rm -fr /opt/apigee/data/apigee-lb/conf.d/0-*
+          rm -fr /opt/apigee/apigee-lb/source/conf.d/*
+          rm -fr /opt/apigee/apigee-lb/conf.d/*
+          chown apigee:apigee /opt/apigee/apigee-lb/bin/start
+          chmod 777 /opt/apigee/apigee-lb/bin/start
+          
+          {{ imports[properties['monitoring-config']]|indent(10) }}
+          set >> /tmp/monitoring-config.txt
+          sed -i s/BASH.*=.*//g /tmp/monitoring-config.txt
+          sed -i s/_VERSION.*=.*//g /tmp/monitoring-config.txt
+          sed -i s/_VERSINFO=.*=.*//g /tmp/monitoring-config.txt
+          sed -i s/LS_COLORS=.*=.*//g /tmp/monitoring-config.txt
+          sed -i s/EUID=.*//g /tmp/monitoring-config.txt
+          sed -i s/DIRSTACK=.*//g /tmp/monitoring-config.txt
+          sed -i s/IFS=.*//g /tmp/monitoring-config.txt
+          sed -i s/PPID=.*//g /tmp/monitoring-config.txt
+          sed -i s/PIPESTATUS=.*//g /tmp/monitoring-config.txt
+          sed -i s/GROUPS=.*//g /tmp/monitoring-config.txt
+          sed -i s/LESSOPEN=.*//g /tmp/monitoring-config.txt
+          sed -i s/PS4=.*//g /tmp/monitoring-config.txt
+          sed -i s/PATH=.*//g /tmp/monitoring-config.txt
+          sed -i s/UID=.*//g /tmp/monitoring-config.txt
+          sed -i s/SHELLOPTS=.*//g /tmp/monitoring-config.txt
+          sed -i s/_=.*//g /tmp/monitoring-config.txt
+          sed -i s/HOME=.*//g /tmp/monitoring-config.txt
+          sed -i s/OPTERR=.*//g /tmp/monitoring-config.txt
+          sed -i s/OPTIND=.*//g /tmp/monitoring-config.txt
+          sed -i s/SCRIPT_BASE.*//g /tmp/monitoring-config.txt
+
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-influxdb install
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-influxdb setup -f /tmp/monitoring-config.txt
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-influxdb restart
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-grafana install
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-grafana setup -f /tmp/monitoring-config.txt
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-grafana restart
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf install
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf setup -f /tmp/monitoring-config.txt
+          sudo /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf restart
+          sudo /opt/apigee/apigee-service/bin/apigee-all restart
+
+
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        diskName: {{ BASE_NAME }}-disk
+        diskSizeGb: 40
+        sourceImage: {{ COMPUTE_URL_BASE }}projects/rhel-cloud/global/images/family/rhel-7
+    networkInterfaces:
+    - network: $(ref.{{ properties["network"] }}.selfLink)
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+outputs:
+- name: myIp
+  value: $(ref.{{ BASE_NAME }}.networkInterfaces[0].networkIP)
+- name: selfLink
+  value: $(ref.{{ BASE_NAME }}.selfLink)
+
