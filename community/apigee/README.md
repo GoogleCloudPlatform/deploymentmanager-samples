@@ -14,7 +14,7 @@ Initialize your account
 ## Apigee Edge Profiles
 ### all-in-one
 This profile helps to create a AIO profile in Google cloud platform. The details are present 
-[here](../../tree/master/all-in-one/jinja)
+[here](./all-in-one/jinja)
 
 
 ## License
