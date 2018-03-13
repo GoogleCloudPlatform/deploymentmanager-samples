@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: dataproc.jinja
-
 resources:
-- name: dataproc
-  type: dataproc.jinja
+#- type: cloudfunctions.v1beta2.function
+- type: gcp-types/cloudfunctions-v1beta2:projects.locations.functions
+  name: {{ env['deployment'] }}-my-function
   properties:
-    # Don't change "initialWorkerSize" after dataproc cluster get created 
-    # since dataproc doesn't support UPDATE request on exsiting cluster.
-    initialWorkerSize: 3
-    # Change "updateWorkerSize" to resize cluster by updating the deployment.
-    updatedWorkerSize: 3
-    region: REGION_TO_RUN
-    zone: ZONE_TO_RUN
+    location: {{ properties['region'] }}
+    function: my-{{ env['deployment'] }}
+    sourceArchiveUrl: gs://cloud-function-sample/function.zip
+    entryPoint: {{ properties['entryPoint'] }}
+    eventTrigger:
+      resource: $(ref.my-topic.name)
+      eventType: providers/cloud.pubsub/eventTypes/topic.publish
+#- type: pubsub.v1.topic
+- type: gcp-types/pubsub-v1:projects.topics
+  name: my-topic
+  properties:
+    topic: {{ env['deployment'] }}-topic

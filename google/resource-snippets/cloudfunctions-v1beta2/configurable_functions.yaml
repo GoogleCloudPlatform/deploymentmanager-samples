@@ -13,16 +13,11 @@
 # limitations under the License.
 
 imports:
-- path: dataproc.jinja
+- path: configurable_functions.jinja
 
 resources:
-- name: dataproc
-  type: dataproc.jinja
+- name: function
+  type: configurable_functions.jinja
   properties:
-    # Don't change "initialWorkerSize" after dataproc cluster get created 
-    # since dataproc doesn't support UPDATE request on exsiting cluster.
-    initialWorkerSize: 3
-    # Change "updateWorkerSize" to resize cluster by updating the deployment.
-    updatedWorkerSize: 3
-    region: REGION_TO_RUN
-    zone: ZONE_TO_RUN
+     region: REGION_TO_RUN
+     entryPoint: handler

@@ -66,13 +66,14 @@ def get_config(urls, project):
     if not cmd:
       continue
 
-    props = check_output(cmd.split())
-    resources.extend(get_resource_config(props, project))
+    useShell = sys.platform == 'win32'
+    props = check_output(cmd.split(), shell=useShell)
+    resources.extend(get_resource_config(props, project, urls))
 
   return {'resources': resources}
 
 
-def get_resource_config(pstr, project):
+def get_resource_config(pstr, project, urls):
   """Returns a list of DM resource configurations.
 
   The algorithm for this is:
@@ -93,6 +94,13 @@ def get_resource_config(pstr, project):
     resources.
   """
 
+  for url in urls:
+    if url.startswith('projects'):
+      url = "https://www.googleapis.com/compute/v1/" + url
+    m = SELF_LINK_PATTERN.match(url)
+    name = m.group(5)
+    ref = "$(ref." + name + ".selfLink)"
+    pstr = pstr.replace(url, ref)
   pstr = pstr.replace(project, "{{env['project']}}")
   props = yaml.load(pstr)
 
@@ -107,7 +115,7 @@ def get_resource_config_from_dict(props):
 
   resources = [{
       'name': props['name'],
-      'type': get_type(props['kind']),
+      'type': get_type(props['kind'], props),
       'properties': scrub_properties(props)
   }]
 
@@ -205,7 +213,7 @@ def scrub_sub_properties(props):
       scrub_sub_properties(p)
 
 
-def get_type(kind):
+def get_type(kind, props):
   """Converts API resource 'kind' to a DM type.
 
   Only supports compute right now.
@@ -231,6 +239,9 @@ def get_type(kind):
 
   if service is None:
     raise Exception('Unsupported resource kind: ' + kind)
+
+  if parts[1] == 'instanceGroupManager' and 'region' in props:
+    return service + '.' + 'regionInstanceGroupManager'
 
   return service + '.' + parts[1]
 
@@ -305,7 +316,7 @@ def get_describe_cmd(url, project):
                    get_gcloud_command_group(collection),
                    'describe',
                    name,
-                   get_location_flag(location, url),
+                   get_location_flag(location, url, collection),
                    '--format yaml',
                    '--project', project])
 
@@ -325,6 +336,7 @@ def get_gcloud_command_group(collection):
 
   return {
       'backendServices': 'backend-services',
+      'backendBuckets': 'backend-buckets',
       'firewalls': 'firewall-rules',
       'forwardingRules': 'forwarding-rules',
       'httpHealthChecks': 'http-health-checks',
@@ -334,11 +346,13 @@ def get_gcloud_command_group(collection):
       'targetHttpProxies': 'target-http-proxies',
       'targetHttpsProxies': 'target-https-proxies',
       'targetPools': 'target-pools',
-      'urlMaps': 'url-maps'
+      'urlMaps': 'url-maps',
+	  'healthChecks': 'health-checks',
+      'instanceGroups': 'instance-groups'
   }.get(collection, collection)
 
 
-def get_location_flag(location, url):
+def get_location_flag(location, url, collection):
   """Location flag for gcloud command based on location in URL."""
 
   # Location will typically be 'global', 'zones/<zone>', or regions/<region>.
@@ -352,6 +366,8 @@ def get_location_flag(location, url):
 
     raise Exception('Invalid location "' + location + '" in URL: ' + url)
 
+  if collection in ['backendServices','forwardingRules']:
+    return ' --global'
   # No slash, assume global and so no location flag is needed.
   return ''
 
