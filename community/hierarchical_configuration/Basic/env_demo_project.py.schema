@@ -1,0 +1,28 @@
+# All the files has to be listed here which will be referenced at any point during the execution of the deployment
+# Workaround: Composite Types can be directly referenced without importing them here.
+
+imports:
+- path: templates/simple_frontend.py
+  name: simple_frontend.py
+
+# Helper classes
+- path: helper/config_merger.py
+
+# Organization level config
+- path: configs/master_config.py
+
+# Project level config
+- path: configs/project_config.py
+
+# Environment level global configs
+- path: configs/envs/dev.py
+- path: configs/envs/test.py
+- path: configs/envs/prod.py
+
+# Module level global configs
+- path: configs/modules/frontend.py
+
+# Environment and Module level configs
+- path: configs/dev/frontend.py
+- path: configs/test/frontend.py
+- path: configs/prod/frontend.py
