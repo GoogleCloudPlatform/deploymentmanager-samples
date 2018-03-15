@@ -1,0 +1,52 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+IP1=$(hostname -i)
+LB=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip" -H "Metadata-Flavor: Google")
+HOSTIP=$(hostname -i)
+ADMIN_EMAIL=opdk@apigee.com
+APIGEE_ADMINPW=Secret123
+LICENSE_FILE=/tmp/license.txt
+MSIP=$IP1
+USE_LDAP_REMOTE_HOST=n
+#LDAP_HOST=$IP1
+#LDAP_PORT=10389
+LDAP_TYPE=1
+#LDAP_SID=1
+APIGEE_LDAPPW=Secret123
+BIND_ON_ALL_INTERFACES=y
+MP_POD=gateway
+REGION=dc-1
+ZK_HOSTS="$IP1"
+ZK_CLIENT_HOSTS="$IP1"
+CASS_CLUSTERNAME=Apigee
+CASS_HOSTS="$IP1"
+SKIP_SMTP=n
+SMTPHOST=smtp.example.com
+SMTPUSER=smtp@example.com
+# 0 for no username
+SMTPPASSWORD=smtppwd
+# 0 for no password
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM=noreply@apigee.com
+ORG_NAME=myorg
+NEW_USER="n"
+ORG_ADMIN=$ADMIN_EMAIL
+ENV_NAME=test
+VHOST_PORT=9001
+VHOST_NAME=default
+# If you have a DNS entry for the virtual host.
+VHOST_ALIAS=$LB
+AXGROUP=axgroup001
+# Specify the analytics group.

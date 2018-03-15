@@ -6,6 +6,11 @@ This is a [Google Cloud Deployment
 Manager](https://cloud.google.com/deployment-manager/overview) template which
 deploys a custom role.
 
+Be aware that to successfully use these templates, you may need to grant
+additional roles to the default Google APIs service account. See [Best
+Practices](https://cloud.google.com/deployment-manager/docs/best-practices/#permissions)
+for more information.
+
 ## Deploy the template
 
 When ready, deploy a project custom role with the following command:

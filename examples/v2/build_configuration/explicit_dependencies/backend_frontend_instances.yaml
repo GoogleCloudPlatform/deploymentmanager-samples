@@ -16,20 +16,10 @@ imports:
 - path: vm-instance.jinja
 
 resources:
-- name: frontend-instance
+- name: instance
   type: vm-instance.jinja
   properties:
     imageProject: debian-cloud
     imageName: family/debian-8
     zone: us-central1-a
     machineType: f1-micro
-  metadata:
-    dependsOn:
-    - backend-instance
-- name: backend-instance
-  type: vm-instance.jinja
-  properties:
-    imageProject: debian-cloud
-    imageName: family/debian-8
-    zone: us-central1-a
-    machineType: n1-standard-1
