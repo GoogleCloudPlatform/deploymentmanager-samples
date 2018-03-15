@@ -1,0 +1,56 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+required:
+- zone
+
+properties:
+  zone:
+    type: string
+    description: GCP zone in which to deploy the cluster.
+  imageType:
+    type: string
+    description: Image type of the cluster's node pool (cos or container-vm)
+    default: cos
+    enum:
+    - cos
+    - container_vm
+  autoscaling:
+    type: boolean
+    description: True if node pool should autoscale.
+    default: false
+  autoUpgrade:
+    type: boolean
+    description: True if node pool should auto upgrade.
+    default: false
+  autoRepair:
+    type: boolean
+    description: True if node pool should auto repair.
+    default: false
+  monitoringService:
+    type: string
+    description: What monitoring service to use. Can be
+      monitoring.googleapis.com (API default) or none.
+  httpLoadBalancing:
+    type: boolean
+    description: If false, httpLoadBalancing is disabled. If not set, no
+      addonsConfig field is set on the cluster.
+  locations:
+    type: string
+    description: Comma-delimited string with all zones to run nodes in.
+  currentMasterVersion:
+    description: The Kubernetes version running on the cluster master.
+  nodeVersion:
+    type: string
+    description: The Kubernetes version running on the cluster nodes.

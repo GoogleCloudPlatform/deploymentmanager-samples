@@ -1,0 +1,48 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set instanceName = env['deployment'] + '-instance' %}
+# DB cannot have things like dashes, so must be simple. It is unique to the
+# instance so is fine in this form.
+{% set dbName = env['deployment'] + 'mydb' %}
+{% set certName = env['deployment'] + '-sslcert' %}
+
+resources:
+- name: {{ instanceName }}
+#  type: sqladmin.v1beta4.instance
+  type: gcp-types/sqladmin-v1beta4:instances
+  properties:
+    settings:
+      tier: {{ properties['tier'] }}
+- name: {{ dbName }}
+#  type: sqladmin.v1beta4.database
+  type: gcp-types/sqladmin-v1beta4:databases
+  properties:
+    name: {{ dbName }}
+    instance: $(ref.{{ instanceName }}.name)
+  {% if properties['charset'] == 'utf8' %}
+    charset: utf8
+    collation: utf8_general_ci
+  {% else %}
+    charset: latin1
+    collation: latin1_swedish_ci
+  {% endif %}
+- name: {{ certName }}
+#  type: sqladmin.v1beta4.sslCert
+  type: gcp-types/sqladmin-v1beta4:sslCerts
+  metadata:
+    dependsOn:
+    - {{ dbName }}
+  properties:
+    instance: $(ref.{{ instanceName }}.name)

@@ -4,7 +4,15 @@ Google Cloud Deployment Manager is an infrastructure management service that mak
 
 This repository contains example templates for use with Deployment Manager.
 
-See https://cloud.google.com/deployment-manager/overview for more information.
+For an overview of Deployment Manager, see https://cloud.google.com/deployment-manager/docs.
+
+## Try the samples
+
+Clone this repostory into [Cloud Shell](https://cloud.google.com/shell/), edit the samples, and deploy them from within Cloud Shell, without installing anything.
+
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https%3A%2F%2Fgithub.com%2FGoogleCloudPlatform%2Fdeploymentmanager-samples&page=editor)
+
+To try a basic deployment in Cloud Shell, open the [quickstart tutorial](https://console.cloud.google.com/cloudshell/open?git_repo=https%3A%2F%2Fgithub.com%2FGoogleCloudPlatform%2Fdeploymentmanager-samples&page=editor&tutorial=quickstart.md).
 
 ## Contributing
 
