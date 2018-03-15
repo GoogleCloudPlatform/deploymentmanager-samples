@@ -38,7 +38,7 @@ The goal is to create a framework for configuration variable management for mid/
 
 # These 5 commands will get you up and running! This will deploy Dev,Test, Prod env as specified in the CLI argument
 $ git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
-$ cd deploymentmanager-samples/examples/v2/hierarchical_configuration
+$ cd deploymentmanager-samples/community/hierarchical_configuration/Basic
 # set project_id <your-personal-project-id> # (or add it to next gcloud commands)
 # Deploy Dev example
 $ gcloud deployment-manager deployments create hierarchy-example-dev --template env_demo_project.py --properties=envName:dev

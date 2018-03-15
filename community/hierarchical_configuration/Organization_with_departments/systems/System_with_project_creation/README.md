@@ -1,31 +1,28 @@
-# Extended Hierarchical structure for Deployment Manager configuration
+# Loading external templates without modification
 
 ## Summary
-This example is an extension of the "basic" Hierarchical structure.
-
-Compare to the "basic" version, this example handles a more complex Organization hierarchy where Org and Department level configs,
- helper functions and templates can be shared. It also supports the concept of muliple Systems (IT Projects).
+Creating Symbolic links for external folders, maybe from other repositories, makes it possible to integrate external 
+templates easily to your deployment. This avoids to duplicate the codebase of the external template as well to hardcode the path
+where the template is located at your filesystem in the schema file. ( Instead of this, it's hardcoded in the initialization 
+command which creates the Symbolic Link.)
  
  
  ### System setup
  
- Note: In this example we define 'System': as a logical unit of Cloud environment, like an e-commerce platform. 
- (Trying to avoid using the word 'Project' to avoid confusion with GCP projects)
- 
  The following Symbolic links are putting the appropriate global configurations to the right path:
  
  ```bash
- ln -sf ../../../global/helper/config_merger.py helper/config_merger.py
- ln -sf ../../../global/configs/org_config.py configs/org_config.py
+ln -s ../../../../../../examples/v2/project_creation templates/project_creation
 
 ```
- 
- # Select the appropriate department from the Global list:
- ```bash
- ln -sf ../../../global/configs/Department_Data_config.py configs/department_config.py
-```
 
-## WORKING EXAMPLE
+
+
+
+
+
+
+## WORKING EXAMPLE TODO FIX
 
 ```bash
 
