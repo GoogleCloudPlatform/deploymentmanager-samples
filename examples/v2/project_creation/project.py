@@ -81,7 +81,6 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
-<<<<<<< HEAD
   if context.properties.get('iam-policy-patch'):
     iam_policy_patch = context.properties['iam-policy-patch']
     if iam_policy_patch.get('add'):
@@ -130,7 +129,7 @@ def GenerateConfig(context):
          }
         }
     }])
-  if context.properties.get('bucket-export-settings'):
+ if context.properties.get('bucket-export-settings'):
     bucket_name = None
     action_dependency = [project_id,
                          ApiResourceName(project_id, 'compute.googleapis.com')]
