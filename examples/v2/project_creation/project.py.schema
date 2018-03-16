@@ -26,6 +26,7 @@ imports:
 required:
 - billing-account-name
 
+additionalProperties: false
 properties:
   project-name:
     description: >
@@ -49,19 +50,41 @@ properties:
       The ID of the billing account to attach to the projects.
     type: string
     pattern: ^billingAccounts/[a-zA-Z0-9]([-a-zA-Z0-9]+[-a-zA-Z0-9]$)?
-  iam-policy:
+  iam-policy-patch:
     description: >
-      The IAM policy to apply to the project. This is optional. The template
-      will automatically add/merge in the service account making the project
-      as an owner.
+      The IAM policy patch toapply to the project. This is optional. The
+      template will automatically add/merge in the service account making the
+      project as an owner.
     type: object
     items:
-      required:
-      - bindings
       properties:
-        bindings:
+        add:
           description: >
-            Bindings of members to roles.
+            Bindings to add to the existing project IAM policy.
+          type: array
+          item:
+            description: >
+              A set of members bound to a particular role.
+            type: object
+            item:
+              required:
+              - role
+              - members
+              role:
+                description: >
+                  The role that all the members will receive.
+                type: string
+                pattern: ^roles/
+              members:
+                decription: >
+                  The members that will be given the permissions in role.
+                type: array
+                item:
+                  type: string
+                  pattern: "^(user|group|domain|serviceAccount):"
+        remove:
+          description: >
+            Bindings to remove from the existing project IAM policy.
           type: array
           item:
             description: >

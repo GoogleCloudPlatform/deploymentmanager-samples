@@ -32,7 +32,7 @@ the user not having permissions.
         Creation Project should not be used for any purpose other than creating
         other projects.
 
-2.  Activate the following APIs on the DM Creation Project.
+1.  Activate the following APIs on the DM Creation Project.
 
     *   Google Cloud Deployment Manager V2 API
     *   Google Cloud Resource Manager API
@@ -40,31 +40,35 @@ the user not having permissions.
     *   Google Identity and Access Management (IAM) API
     *   Google Service Management API
 
-3.  Find the Cloud Services service account associated with the DM Creation
+1.  Find the Cloud Services service account associated with the DM Creation
     Project. It will be in the form
     &lt;project_number&gt;@cloudservices.gserviceaccount.com. This will be
     called the "DM Service Account" for the rest of these instructions.
 
     *   See https://cloud.google.com/resource-manager/docs/access-control-proj
 
-4.  If you don't already have an Organization node under which you will create
+1.  If you don't already have an Organization node under which you will create
     projects, then create one following [these
     instructions](https://cloud.google.com/resource-manager/docs/creating-managing-organization).
 
-5.  Give the DM Service Account the following permissions on the organization
+1.  Give the DM Service Account the following permissions on the organization
     node:
 
     *   'roles/resourcemanager.projectCreator'
         *   Visible in Cloud Console's IAM permissions in Resource Manager ->
             Project Creator.
+    *   See https://cloud.google.com/resource-manager/docs/access-control-proj
+
+1.  Create/find a billing account associated with the organization.
+
+    *   See: https://cloud.google.com/support/billing/
+
+1.  Give the DM Service Account the following permissions on the Billing account:
+
     *   'roles/billing.user'
         *   Visible in Cloud Console's IAM permissions in Billing -> Billing
             Account User.
-    *   See https://cloud.google.com/resource-manager/docs/access-control-proj
 
-6.  Create/find a billing account associated with the organization.
-
-    *   See: https://cloud.google.com/support/billing/
 
 ## Using the templates.
 
@@ -82,9 +86,7 @@ project creation exclusively.**
     *   Set the APIs to turn on.
     *   Set the service accounts to create.
     *   Set the desired IAM policy for the project.
-2.  Ensure you include the creating DM Service Account under "roles/owner"
-    in your yaml config.
-3.  Create the project. If using the CLI:
+1.  Create the project. If using the CLI:
 
 
     gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME \
