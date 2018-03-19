@@ -1,0 +1,81 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+imports:
+- path: ha-nat-gateway.py
+
+resources:
+- name: ha-nat-gateway
+  type: ha-nat-gateway.py
+  properties:
+    projectId: PROJECT_ID 
+    network: NETWORK
+    subnetwork: SUBNETWORK
+    region: GCP_REGION
+    zones:
+    - ZONE1
+    - ZONE2
+    nat-gw-tag: natgw
+    nated-vm-tag: no-ip
+    startupScript: |
+      #!/bin/bash
+      echo 1 > /proc/sys/net/ipv4/ip_forward
+      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+      cat <<EOF > /usr/local/sbin/health-check-server.py
+      #!/usr/bin/python
+      from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+      import subprocess
+
+      PORT_NUMBER = 80
+      PING_HOST = "www.google.com"
+
+      def connectivityCheck():
+        try:
+          subprocess.check_call(["ping", "-c", "1", PING_HOST])
+          return True
+        except subprocess.CalledProcessError as e:
+          return False
+
+      #This class will handle any incoming request
+      class myHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+          if self.path == '/health-check':
+            if connectivityCheck():
+              self.send_response(200)
+            else:
+              self.send_response(503)
+          else:
+            self.send_response(404)
+
+
+      try:
+        server = HTTPServer(("", PORT_NUMBER), myHandler)
+        print "Started httpserver on port " , PORT_NUMBER
+        #Wait forever for incoming http requests
+        server.serve_forever()
+
+      except KeyboardInterrupt:
+        print "^C received, shutting down the web server"
+        server.socket.close()
+      EOF
+
+      nohup python /usr/local/sbin/health-check-server.py >/dev/null 2>&1 &
+
+      #register a runtime config variable for a waiter to complete
+      CONFIG_NAME=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/runtime-config -H "Metadata-Flavor: Google")
+      VARIABLE_NAME=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/runtime-variable -H "Metadata-Flavor: Google")
+      
+      gcloud beta runtime-config configs variables set $VARIABLE_NAME 1 --config-name $CONFIG_NAME 
+
