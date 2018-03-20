@@ -1,0 +1,72 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#% description: Creates an Instance Group Manager and an Instance Template
+#% parameters:
+#% - name: zone
+#%   type: string
+#%   description: Zone in which this IGM will run
+#%   required: false
+#% - name: region
+#%   type: string
+#%   description: Region in which this IGM will run
+#%   required: false
+#% - name: targetSize
+#%   type: int
+#%   description: Size of this IGM
+#%   required: true
+#% - name: apiVersion
+#%   type: string
+#%   description: API version for all resources except IGM
+#%   required: true
+#% - name: apiVersionForIgm
+#%   type: string
+#%   description: API version for IGM
+#%   required: true
+
+resources:
+
+- name: {{ env["deployment"] }}-it
+  type: gcp-types/compute-{{ properties["apiVersion"] }}:instanceTemplates
+  properties:
+    properties:
+      machineType: f1-micro
+      disks:
+      - deviceName: boot
+        boot: true
+        type: PERSISTENT
+        autoDelete: true
+        mode: READ_WRITE
+        initializeParams:
+          diskName: {{ env["deployment"] }}-disk
+          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+      networkInterfaces:
+        - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+
+- name: {{ env["deployment"] }}-igm
+{% if "region" in properties %}
+  type: gcp-types/compute-{{ properties["apiVersionForIgm"] }}:regionInstanceGroupManagers
+{% else %}
+  type: gcp-types/compute-{{ properties["apiVersionForIgm"] }}:instanceGroupManagers
+{% endif %}
+  properties:
+{% if "region" in properties %}
+    region: {{ properties["region"] }}
+    failoverAction: NO_FAILOVER
+{% else %}
+    zone: {{ properties["zone"] }}
+{% endif %}
+    targetSize: {{ properties["targetSize"] }}
+    baseInstanceName: {{ env["deployment"] }}-instance
+    instanceTemplate: $(ref.{{ env["deployment"] }}-it.selfLink)

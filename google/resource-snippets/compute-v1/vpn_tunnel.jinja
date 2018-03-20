@@ -1,0 +1,70 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set VPN_GATEWAY = "vpn-gateway-" + env["deployment"] %}
+{% set VPN_TUNNEL = "vpn-tunnel-" + env["deployment"] %}
+{% set IP = "vpn-ip-" + env["deployment"] %}
+{% set NETWORK = "https://www.googleapis.com/compute/v1/projects/" + env["project"] + "/global/networks/" + properties["network"] %}
+{% set ESP_RULE = "vpn-esp-rule-" + env["deployment"] %}
+
+resources:
+- name: {{ VPN_GATEWAY }}
+  type: gcp-types/compute-v1:targetVpnGateways
+  properties:
+    network: {{ NETWORK }}
+    region: {{ properties["region"] }}
+- name: {{ IP }}
+  type: gcp-types/compute-v1:addresses
+  properties:
+    region: {{ properties["region"] }}
+- name: {{ ESP_RULE }}
+  type: gcp-types/compute-v1:forwardingRules
+  properties:
+    IPProtocol: ESP
+    IPAddress: $(ref.{{ IP }}.address)
+    region: {{ properties["region"] }}
+    target: $(ref.{{ VPN_GATEWAY }}.selfLink)
+- name: vpn-udp500-rule-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:forwardingRules
+  properties:
+    IPProtocol: UDP
+    IPAddress: $(ref.{{ IP }}.address)
+    portRange: 500
+    region: {{ properties["region"] }}
+    target: $(ref.{{ VPN_GATEWAY }}.selfLink)
+- name: vpn-udp4500-rule-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:forwardingRules
+  properties:
+    IPProtocol: UDP
+    IPAddress: $(ref.{{ IP }}.address)
+    portRange: 4500
+    region: {{ properties["region"] }}
+    target: $(ref.{{ VPN_GATEWAY }}.selfLink)
+- name: {{ VPN_TUNNEL }}
+  type: gcp-types/compute-v1:vpnTunnels
+  properties:
+    region: {{ properties["region"] }}
+    ikeVersion: 2
+    sharedSecret: {{ properties["sharedSecret"] }}
+    peerIp: {{ properties["peerIp"] }}
+    targetVpnGateway: $(ref.{{ VPN_GATEWAY }}.selfLink)
+    description: Must be deployed after $(ref.{{ ESP_RULE }}.selfLink).
+- name: vpn-route-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:routes
+  properties:
+    destRange: {{ properties["destRange"] }}
+    nextHopVpnTunnel: $(ref.{{ VPN_TUNNEL }}.selfLink)
+    network: {{ NETWORK }}
+    priority: {{ properties["priority"] }}
+    tags: []
