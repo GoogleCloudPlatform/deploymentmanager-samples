@@ -1,8 +1,9 @@
 imports:
-- path: gke_provider_cluster_beta.jinja
+- path: ../container-v1/gke_provider_cluster_beta.jinja
 
 resources:
 - name: cluster
-  type: gke_provider_cluster_beta.jinja
+  type: ../container-v1/gke_provider_cluster_beta.jinja
   properties:
+    apiVersion: v1beta1
     location: REGION_TO_RUN
