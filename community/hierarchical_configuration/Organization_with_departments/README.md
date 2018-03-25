@@ -16,6 +16,7 @@ Compare to the "basic" version, this example handles a more complex Organization
  
  ```bash
  ln -sf ../../../global/helper/config_merger.py helper/config_merger.py
+ ln -sf ../../../global/helper/naming_helper.py helper/naming_helper.py
  ln -sf ../../../global/configs/org_config.py configs/org_config.py
 
 ```

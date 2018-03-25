@@ -16,9 +16,29 @@ ln -s ../../../../../../examples/v2/project_creation templates/project_creation
 
 ```
 
+### What is the difference?
 
+ 
+ ```bash
+git diff --name-status --no-index ../my_ecom_system/ ./
 
+The real modifications:
 
+# Storing the project related configurations.
+R100    ../my_ecom_system/configs/dev/backend.py        ./configs/dev/project.py
+
+A       ./configs/modules/project.py
+R100    ../my_ecom_system/configs/prod/backend.py       ./configs/prod/project.py
+M       ../my_ecom_system/configs/system_config.py
+R100    ../my_ecom_system/configs/test/backend.py       ./configs/test/project.py
+D       ../my_ecom_system/env_demo_project.py
+A       ./project_creation.py
+R065    ../my_ecom_system/env_demo_project.py.schema    ./project_creation.py.schema
+A       ./templates/project_creation
+
+git diff --no-index ../my_ecom_system/ ./
+
+```
 
 
 
@@ -26,14 +46,6 @@ ln -s ../../../../../../examples/v2/project_creation templates/project_creation
 
 ```bash
 
-# These 5 commands will get you up and running! This will deploy Dev,Test, Prod env as specified in the CLI argument
-$ git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
-$ cd deploymentmanager-samples/community/hierarchical_configuration/Organization_with_departments/systems/my_ecom_system
-# set project_id <your-personal-project-id> # (or add it to next gcloud commands)
 # Deploy Dev example
-$ gcloud deployment-manager deployments create hierarchy-org-example-dev --template env_demo_project.py --properties=envName:dev
-# Deploy Test example
-$ gcloud deployment-manager deployments create hierarchy-org-example-test --template env_demo_project.py --properties=envName:test
-# Deploy Prod example
-$ gcloud deployment-manager deployments create hierarchy-org-example-prod --template env_demo_project.py --properties=envName:prod
+$ gcloud deployment-manager deployments create hierarchy-org-project-creation-dev --template project_creation.py --properties=envName:dev
 ```
