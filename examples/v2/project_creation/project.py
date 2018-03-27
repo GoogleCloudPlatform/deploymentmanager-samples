@@ -52,6 +52,11 @@ def GenerateConfig(context):
               'type': parent_type,
               'id': parent_id
           }
+      },
+      'accessControl': {
+          'gcpIamPolicy':
+              MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
+                  context.env, context.properties)
       }
   }, {
       'name': billing_name,
@@ -81,52 +86,38 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
-  if context.properties.get('iam-policy-patch'):
-    iam_policy_patch = context.properties['iam-policy-patch']
-    if iam_policy_patch.get('add'):
-      policies_to_add = iam_policy_patch['add']
-    else:
-      policies_to_add = []
-    if iam_policy_patch.get('remove'):
-      policies_to_remove = iam_policy_patch['remove']
-    else:
-      policies_to_remove = []
-
-    if context.properties.get('set-dm-service-account-as-owner'):
-      policies_to_add.append({
-        'role': 'roles/owner',
-        'member': [
-          'serviceAccount:${ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
-        ]
-      })
-
-    resources.extend([{
-        # Get the IAM policy first so that we do not remove any existing bindings.
-        'name': 'get-iam-policy-' + project_id,
-        'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
-        'properties': {
-          'resource': project_id,
-        },
-        'metadata': {
-          'dependsOn': [ApiResourceName(
-              project_id, 'deploymentmanager.googleapis.com')],
-              # DO NOT SUBMIT - Use all the APIs, not just DM.
-          'runtimePolicy': ['UPDATE_ALWAYS']
-        }
-    }, {
-        # Set the IAM policy patching the existing policy with what ever is currently in the
-        # config.
-        'name': 'patch-iam-policy-' + project_id,
-        'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',
-        'properties': {
-          'resource': project_id,
-          'policy': '$(ref.get-iam-policy-' + project_id + ')',
-          'gcpIamPolicyPatch': {
-             'add': policies_to_add,
-             'remove': policies_to_remove
+  if context.properties.get('set-dm-service-account-as-owner'):
+      # The name needs to be different in every update
+      # due to a known issue in DM.
+      resources.extend([{
+          'name': 'get-iam-policy-' + project_id,
+          'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',
+          'properties': {
+            'resource': project_id,
+          },
+          'metadata': {
+            'dependsOn': [ApiResourceName(
+                project_id, 'deploymentmanager.googleapis.com')],
+            'runtimePolicy': ['UPDATE_ALWAYS']
           }
-        }
-    }])
+      }, {
+       # Add the service account that deployment manager will use in this project
+       # as owner so it can set IAM policies on resources
+          'name': 'patch-iam-policy-' + project_id,
+          'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',
+          'properties': {
+            'resource': project_id,
+            'policy': '$(ref.get-iam-policy-' + project_id + ')',
+            'gcpIamPolicyPatch': {
+               'add': [{
+                 'role': 'roles/owner',
+                 'members': [
+                   'serviceAccount:$(ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
+                 ]
+               }]
+             }
+          }
+      }])
   if context.properties.get('bucket-export-settings'):
     bucket_name = None
     action_dependency = [project_id,
@@ -200,6 +191,45 @@ def GenerateConfig(context):
       })
 
   return {'resources': resources}
+
+def MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(env, properties):
+  """ A helper function that merges the acting service account of the project
+      creator as an owner of the project being created
+  """
+  service_account = ('serviceAccount:{0}@cloudservices.gserviceaccount.com'
+                     .format(env['project_number']))
+  set_creator_sa_as_owner = {
+      'role': 'roles/owner',
+      'members': [
+          service_account,
+      ]
+  }
+  if 'iam-policy' not in properties:
+    return {
+        'bindings': [
+            set_creator_sa_as_owner,
+        ]
+    }
+
+  iam_policy = copy.deepcopy(properties['iam-policy'])
+  bindings = []
+  if 'bindings' in iam_policy:
+    bindings = iam_policy['bindings']
+  else:
+    iam_policy['bindings'] = bindings
+
+  merged = False
+  for binding in bindings:
+    if binding['role'] == 'roles/owner':
+      merged = True
+      if service_account not in binding['members']:
+        binding['members'].append(service_account)
+      break
+
+  if not merged:
+    bindings.append(set_creator_sa_as_owner)
+
+  return iam_policy
 
 def IsProjectParentValid(properties):
   """ A helper function to validate that the project is either under a folder
