@@ -52,7 +52,7 @@ properties:
     pattern: ^billingAccounts/[a-zA-Z0-9]([-a-zA-Z0-9]+[-a-zA-Z0-9]$)?
   iam-policy-patch:
     description: >
-      The IAM policy patch toapply to the project. This is optional. The
+      The IAM policy patch to apply to the project. This is optional. The
       template will automatically add/merge in the service account making the
       project as an owner.
     type: object
@@ -88,7 +88,7 @@ properties:
           type: array
           item:
             description: >
-              A set of members bound to a particular role.
+              A set of members unbound from a particular role.
             type: object
             item:
               required:
@@ -96,12 +96,12 @@ properties:
               - members
               role:
                 description: >
-                  The role that all the members will receive.
+                  The role that all the members will be removed from.
                 type: string
                 pattern: ^roles/
               members:
                 decription: >
-                  The members that will be given the permissions in role.
+                  The members that whose permission will be removed.
                 type: array
                 item:
                   type: string
