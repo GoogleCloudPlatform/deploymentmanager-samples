@@ -100,6 +100,10 @@ def GenerateConfig(context):
         ]
       })
 
+    get_iam_policy_dependencies = [ project_id ]
+    for api in context.properties['apis']:
+      get_iam_policy_dependencies.append(ApiResourceName(project_id, api))
+
     resources.extend([{
         # Get the IAM policy first so that we do not remove any existing bindings.
         'name': 'get-iam-policy-' + project_id,
@@ -108,9 +112,7 @@ def GenerateConfig(context):
           'resource': project_id,
         },
         'metadata': {
-          'dependsOn': [ApiResourceName(
-              project_id, 'deploymentmanager.googleapis.com')],
-              # DO NOT SUBMIT - Use all the APIs, not just DM.
+          'dependsOn': get_iam_policy_dependencies,
           'runtimePolicy': ['UPDATE_ALWAYS']
         }
     }, {
