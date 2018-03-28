@@ -1,0 +1,67 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set HEALTHCHECK = "health-check-" + env["deployment"] %}
+{% set BS1 = "bs1-" + env["deployment"] %}
+{% set BS2 = "bs2-" + env["deployment"] %}
+{% set URLMAP = "url-map-" + env["deployment"] %}
+
+resources:
+- type: gcp-types/compute-v1:httpHealthChecks
+  name: {{ HEALTHCHECK }}
+  properties:
+    host: localhost
+    port: 8080
+    requestPath: /path/to/my/service
+    timeoutSec: 3
+    description: integration test http health check
+    checkIntervalSec: 3
+    unhealthyThreshold: 5
+    healthyThreshold: 2
+
+- type: gcp-types/compute-v1:backendServices
+  name: {{ BS1 }}
+  properties:
+    description: backend service for integration tests
+    healthChecks:
+      - $(ref.{{ HEALTHCHECK }}.selfLink)
+    port: 80
+    portName: http
+    protocol: HTTP
+    timeoutSec: 30
+
+- type: gcp-types/compute-v1:backendServices
+  name: {{ BS2 }}
+  properties:
+    description: backend service for integration tests
+    healthChecks:
+      - $(ref.{{ HEALTHCHECK }}.selfLink)
+    port: 80
+    portName: http
+    protocol: HTTP
+    timeoutSec: 30
+
+- type: gcp-types/compute-v1:urlMaps
+  name: {{ URLMAP }}
+  properties:
+    pathMatchers:
+      - defaultService: $(ref.{{ BS1 }}.selfLink)
+        description: ''
+        name: url-set-1-{{ env["deployment"] }}
+    defaultService: $(ref.{{ BS2 }}.selfLink)
+    hostRules:
+      - description: 'test host rule'
+        hosts:
+          - '*'
+        pathMatcher: url-set-1-{{ env["deployment"] }}

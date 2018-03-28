@@ -40,10 +40,20 @@ the user not having permissions.
     *   Google Identity and Access Management (IAM) API
     *   Google Service Management API
 
+    You may use `gcloud services enable` command to do this:
+
+        gcloud services enable deploymentmanager.googleapis.com
+        gcloud services enable cloudresourcemanager.googleapis.com
+        gcloud services enable cloudbilling.googleapis.com
+        gcloud services enable iam.googleapis.com
+        gcloud services enable servicemanagement.googleapis.com
+
 1.  Find the Cloud Services service account associated with the DM Creation
     Project. It will be in the form
-    &lt;project_number&gt;@cloudservices.gserviceaccount.com. This will be
-    called the "DM Service Account" for the rest of these instructions.
+    &lt;project_number&gt;@cloudservices.gserviceaccount.com
+    and listed under [IAM & admin](https://console.cloud.google.com/iam-admin/iam)
+    in Google Cloud Console . This will be called the "DM Service Account" for
+    the rest of these instructions.
 
     *   See https://cloud.google.com/resource-manager/docs/access-control-proj
 

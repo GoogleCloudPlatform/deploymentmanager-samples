@@ -1,0 +1,61 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- type: gcp-types/compute-v1:routes
+  name: route1-{{ env["deployment"] }}
+  properties:
+    description: route with default internet gateway
+    tags:
+      - tag1
+    {% if properties and properties["use_custom_network"]==true %}
+    network: $(ref.network-{{ env["deployment"] }}.selfLink)
+    {% else %}
+    network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+    {% endif %}
+    priority: 1
+    destRange: 10.0.0.0/16
+    nextHopGateway: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/gateways/default-internet-gateway
+- type: gcp-types/compute-v1:routes
+  name: route2-{{ env["deployment"] }}
+  properties:
+    description: route with next hop instance
+    tags:
+      - tag2
+    {% if properties and properties["use_custom_network"]==true %}
+    network: $(ref.network-{{ env["deployment"] }}.selfLink)
+    {% else %}
+    network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+    {% endif %}
+    priority: 2
+    destRange: 10.0.0.0/16
+    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/instance-404
+- type: gcp-types/compute-v1:routes
+  name: route3-{{ env["deployment"] }}
+  properties:
+    description: route with next hop IP
+    tags:
+      - tag3
+    {% if properties and properties["use_custom_network"]==true %}
+    network: $(ref.network-{{ env["deployment"] }}.selfLink)
+    {% else %}
+    network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+    {% endif %}
+    priority: 3
+    destRange: 10.0.0.0/16
+    {% if properties and properties["next_hop_ip"] %}
+    nextHopIp: {{ properties["next_hop_ip"] }}
+    {% else %}
+    nextHopIp: 10.128.0.123
+    {% endif %}

@@ -1,0 +1,11 @@
+imports:
+- path: ../compute-v1/instance_group_manager.jinja
+
+resources:
+- name: instance_group_manager
+  type: ../compute-v1/instance_group_manager.jinja
+  properties:
+    zone: ZONE_TO_RUN
+    targetSize: 1
+    apiVersion: v1
+    apiVersionForIgm: beta

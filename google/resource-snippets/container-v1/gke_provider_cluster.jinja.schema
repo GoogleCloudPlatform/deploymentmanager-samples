@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-required:
-- zone
-
 properties:
   zone:
     type: string
-    description: GCP zone in which to deploy the cluster.
+    description: GCP zone in which to deploy a v1 cluster.
+  location:
+    type: string
+    description: GCP zone or region in which to deploy a v1beta1 cluster.
+  apiVersion:
+    type: string
+    description: GKE API version.
+    default: v1
+    enum:
+    - v1
+    - v1beta1
   imageType:
     type: string
     description: Image type of the cluster's node pool (cos or container-vm)

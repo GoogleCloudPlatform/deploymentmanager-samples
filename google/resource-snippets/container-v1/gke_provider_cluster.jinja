@@ -14,10 +14,17 @@
 
 resources:
 - name: {{ env["deployment"] }}
-#  type: container.v1.cluster
+  {% if properties["apiVersion"] == "v1beta1" %}
+  type: gcp-types/container-v1beta1:projects.locations.clusters
+  {% else %}
   type: gcp-types/container-v1:projects.zones.clusters
+  {% endif %}
   properties:
+    {% if properties["apiVersion"] == "v1beta1" %}
+    parent: projects/{{ env["project"] }}/locations/{{ properties["location"] }}
+    {% else %}
     zone: {{ properties["zone"] }}
+    {% endif %}
     cluster:
       {% if properties["monitoringService"] %}
       monitoringService: {{ properties["monitoringService"] }}
