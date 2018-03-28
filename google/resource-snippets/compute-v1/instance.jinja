@@ -25,4 +25,6 @@ resources:
         sourceImage: projects/debian-cloud/global/images/family/debian-8
     networkInterfaces:
     - network: global/networks/default
-
+    labels:
+      somelabel: {{ properties["somelabel"] or "macano" }}
+      fixedlabel: chanapulana

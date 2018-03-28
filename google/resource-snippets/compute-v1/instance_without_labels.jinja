@@ -12,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: instance_with_labels.jinja
-
 resources:
-- name: instance
-  type: instance_with_labels.jinja
+- type: gcp-types/compute-v1:instances
+  name: instance-{{ env["deployment"] }}
   properties:
-    zone: ZONE_TO_RUN
+    zone: {{ properties["zone"] }}
+    machineType: zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    disks:
+    - boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/debian-cloud/global/images/family/debian-8
+    networkInterfaces:
+    - network: global/networks/default
+
