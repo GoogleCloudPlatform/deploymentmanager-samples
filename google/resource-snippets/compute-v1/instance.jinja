@@ -17,17 +17,14 @@ resources:
   name: instance-{{ env["deployment"] }}
   properties:
     zone: {{ properties["zone"] }}
-    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    machineType: zones/{{ properties["zone"] }}/machineTypes/f1-micro
     disks:
-    - deviceName: boot
-      type: PERSISTENT
-      boot: true
+    - boot: true
       autoDelete: true
       initializeParams:
-        diskName: disk-{{ env["deployment"] }}
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140619
+        sourceImage: projects/debian-cloud/global/images/family/debian-8
     networkInterfaces:
-    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+    - network: global/networks/default
     labels:
       somelabel: {{ properties["somelabel"] or "macano" }}
       fixedlabel: chanapulana
