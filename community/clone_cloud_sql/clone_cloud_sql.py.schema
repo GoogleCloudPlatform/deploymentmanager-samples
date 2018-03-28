@@ -39,12 +39,12 @@ properties:
             The binary log coordinates to use when cloning. See the
             documentation for Instances.Clone() for semantics:
             https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/clone.
-    acquireClonedDb:
+    acquireClonedInstance:
         type: boolean
         default: false
         description: >
-            After cloning the DB, attempt to acquire it into the deployment. If
-            set to True, then acquireProperties must also be set.
+            After cloning the instance, attempt to acquire it into the
+            deployment. If set to True, then acquireProperties must also be set.
     acquireProperties:
         type: object
         description: >
@@ -55,16 +55,16 @@ properties:
             deployment updates. See the Instances.Insert() documentation for
             semantics:
             https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/insert.
-	additionalProperties: true
+        required:
+          - settings
+        additionalProperties: true
         properties:
-            required:
-              - settings
             settings:
                 type: object
-		additionalProperties: true
+                required:
+                  - tier
+                additionalProperties: true
                 properties:
-                    required:
-                      - tier
                     tier:
                         type: string
 

@@ -22,29 +22,35 @@ def GenerateConfig(ctx):
 
   # If a project is specified, then use it. Otherwise act in the project that
   # the deployment is in.
+  clone_resource_name = 'clone-to-%s' % ctx.env['name']
   if 'project' in ctx.properties:
     clone_properties['project'] = ctx.properties['project']
   else:
     clone_properties['project'] = ctx.env['project']
   clone_properties['instance'] = ctx.properties['instanceToClone']
-  clone_properties['destinationInstanceName'] = ctx.env['name']
+  clone_properties['cloneContext'] = {}
+  clone_properties['cloneContext']['destinationInstanceName'] = ctx.env['name']
   if 'binLogCoordinates' in ctx.properties:
-    clone_properties['binLogCoordinates'] = ctx.properties['binLogCoordinates']
+    clone_properties['cloneContext']['binLogCoordinates'] = (
+        ctx.properties['binLogCoordinates'])
   resources.append({
-      'name': 'clone-to-%s' % ctx.env['name'],
+      'name': clone_resource_name,
       'action': 'gcp-types/sqladmin-v1beta4:sql.instances.clone',
       'properties': clone_properties,
       'metadata': {
-          'runtimePolicy': 'CREATE'
-      }
+          'runtimePolicy': ['CREATE'],
+      },
   })
 
   # Optionally, 'acquire' the cloned DB.
-  if ctx.properties['acquireClonedDb']:
+  if ctx.properties['acquireClonedInstance']:
     resources.append({
         'name': ctx.env['name'],
         'type': 'gcp-types/sqladmin-v1beta4:instances',
-        'properties': ctx.properties['acquireProperties']
+        'properties': ctx.properties['acquireProperties'],
+        'metadata': {
+            'dependsOn': [ clone_resource_name ],
+        },
     })
 
   return { 'resources': resources }
