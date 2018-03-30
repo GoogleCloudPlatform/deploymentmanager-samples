@@ -1,0 +1,70 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+    title: Clone Cloud SQL
+    author: Google, Inc.
+    description: >
+        Clones and optionally acquires a Cloud SQL DB.
+
+required:
+  - instanceToClone
+
+additionalProperties: false
+
+properties:
+    project:
+        type: string
+        description: >
+            The project that the original and cloned Cloud SQL DB is in.
+            Defaults to the project the deployment is in if not specified.
+    instanceToClone:
+        type: string
+        description: >
+            The name of the instance to clone.
+    binLogCoordinates:
+        type: object
+        description: >
+            The binary log coordinates to use when cloning. See the
+            documentation for Instances.Clone() for semantics:
+            https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/clone.
+    acquireClonedInstance:
+        type: boolean
+        default: false
+        description: >
+            After cloning the instance, attempt to acquire it into the
+            deployment. If set to True, then acquireProperties must also be set.
+    acquireProperties:
+        type: object
+        description: >
+            The properties to use when acquiring the cloned DB. Note that these
+            are only used if acquireClonedDb is set to True. These should match
+            the real properties of the original DB as close as possible. Any
+            deviations may make it hard to update the cloned DB on subsequent
+            deployment updates. See the Instances.Insert() documentation for
+            semantics:
+            https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/insert.
+        required:
+          - settings
+        additionalProperties: true
+        properties:
+            settings:
+                type: object
+                required:
+                  - tier
+                additionalProperties: true
+                properties:
+                    tier:
+                        type: string
+
