@@ -1,0 +1,7 @@
+# A YAML map of global properties.
+
+env: PROD
+experiments:
+    EnableGcpTypes: true
+    EnableExternalIp: false
+
