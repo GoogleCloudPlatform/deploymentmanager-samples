@@ -56,56 +56,58 @@ properties:
       template will automatically add/merge in the service account making the
       project as an owner.
     type: object
-    items:
-      properties:
-        add:
+    additionalProperties: false
+    properties:
+      add:
+        description: >
+          Bindings to add to the existing project IAM policy.
+        type: array
+        items:
           description: >
-            Bindings to add to the existing project IAM policy.
-          type: array
-          item:
-            description: >
-              A set of members bound to a particular role.
-            type: object
-            item:
-              required:
-              - role
-              - members
-              role:
-                description: >
-                  The role that all the members will receive.
+            A set of members bound to a particular role.
+          type: object
+          additionalProperties: false
+          required:
+          - role
+          - members
+          properties:
+            role:
+              description: >
+                The role that all the members will receive.
+              type: string
+              pattern: ^roles/
+            members:
+              decription: >
+                The members that will be given the permissions in role.
+              type: array
+              items:
                 type: string
-                pattern: ^roles/
-              members:
-                decription: >
-                  The members that will be given the permissions in role.
-                type: array
-                item:
-                  type: string
-                  pattern: "^(user|group|domain|serviceAccount):"
-        remove:
+                pattern: "^(user|group|domain|serviceAccount):"
+      remove:
+        description: >
+          Bindings to remove from the existing project IAM policy.
+        type: array
+        items:
           description: >
-            Bindings to remove from the existing project IAM policy.
-          type: array
-          item:
-            description: >
-              A set of members unbound from a particular role.
-            type: object
-            item:
-              required:
-              - role
-              - members
-              role:
-                description: >
-                  The role that all the members will be removed from.
+            A set of members unbound from a particular role.
+          type: object
+          additionalProperties: false
+          required:
+          - role
+          - members
+          properties:
+            role:
+              description: >
+                The role that all the members will be removed from.
+              type: string
+              pattern: ^roles/
+            members:
+              decription: >
+                The members that whose permission will be removed.
+              type: array
+              items:
                 type: string
-                pattern: ^roles/
-              members:
-                decription: >
-                  The members that whose permission will be removed.
-                type: array
-                item:
-                  type: string
-                  pattern: "^(user|group|domain|serviceAccount):"
+                pattern: "^(user|group|domain|serviceAccount):"
   set-dm-service-account-as-owner:
     description: >
       If set to true, the service account that Deployment Manager will use in
