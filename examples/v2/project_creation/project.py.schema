@@ -55,34 +55,30 @@ properties:
       will automatically add/merge in the service account making the project
       as an owner.
     type: object
-    items:
-      required:
-      - bindings
-      properties:
-        bindings:
-          description: >
-            Bindings of members to roles.
-          type: array
-          item:
-            description: >
-              A set of members bound to a particular role.
-            type: object
-            item:
-              required:
-              - role
-              - members
-              role:
-                description: >
-                  The role that all the members will receive.
+    required:
+    - bindings
+    properties:
+      bindings:
+        description: Bindings of members to roles.
+        type: array
+        items:
+          description: A set of members bound to a particular role.
+          type: object
+          required:
+          - role
+          - members
+          properties:
+            role:
+              description: The role that all the members will receive.
+              type: string
+              pattern: ^roles/
+            members:
+              decription: >
+                The members that will be given the permissions in role.
+              type: array
+              items:
                 type: string
-                pattern: ^roles/
-              members:
-                decription: >
-                  The members that will be given the permissions in role.
-                type: array
-                item:
-                  type: string
-                  pattern: "^(user|group|domain|serviceAccount):"
+                pattern: "^(user|group|domain|serviceAccount):"
   set-dm-service-account-as-owner:
     description: >
       If set to true, the service account that Deployment Manager will use in
