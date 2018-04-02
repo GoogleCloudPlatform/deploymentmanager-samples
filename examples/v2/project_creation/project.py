@@ -126,10 +126,10 @@ def GenerateConfig(context):
           'gcpIamPolicyPatch': {
              'add': policies_to_add,
              'remove': policies_to_remove
-         }
+          }
         }
     }])
- if context.properties.get('bucket-export-settings'):
+  if context.properties.get('bucket-export-settings'):
     bucket_name = None
     action_dependency = [project_id,
                          ApiResourceName(project_id, 'compute.googleapis.com')]
