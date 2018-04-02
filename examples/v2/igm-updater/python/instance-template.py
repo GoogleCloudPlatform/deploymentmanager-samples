@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,11 +35,21 @@ def GenerateConfig(context):
                   }
               }],
               'networkInterfaces': [{
-                  'network': 'global/networks/default'
-              }]
+                  'accessConfigs': [{
+                      'name': 'external-nat',
+                      'type': 'ONE_TO_ONE_NAT'
+                  }],
+                  'network': 'global/networks/default',
+              }],
+              'metadata': {
+                  'items': [{
+                      'key': 'startup-script',
+                      'value': ''.join(['#!/bin/bash\n',
+                                        'python -m SimpleHTTPServer 8080'])
+                  }]
+              }
           }
       }
   }]
 
   return {'resources': resources}
-
