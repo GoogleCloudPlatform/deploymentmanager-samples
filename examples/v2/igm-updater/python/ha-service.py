@@ -36,9 +36,6 @@ def GenerateConfig(context):
         'zone': zone_name
     }
 
-    if 'prev' in deploy_zone:
-      properties['prevVersion'] = deploy_zone['prev']
-
     service = {
         'name': context.env['deployment'] + '-service-' + zone_name,
         'type': 'service.py',
@@ -52,7 +49,7 @@ def GenerateConfig(context):
       'name': lb_name,
       'type': 'lb-l3.py',
       'properties': {
-          'port': 80,
+          'port': 8080,
           'region': region
       }
   }

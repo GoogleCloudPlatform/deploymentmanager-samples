@@ -23,30 +23,18 @@ resources:
     zone: {{ ZONE }}
     itName: {{ CURR_IT_NAME }}
     image: {{ properties['currVersion']['image'] }}
-{% if properties['prevVersion'] %}
-{% set PREV_IT_NAME = env['name'] + '-it-' + properties['prevVersion']['name'] %}
-- name: {{ PREV_IT_NAME }}
-  type: instance-template.jinja
-  properties:
-    machineType: {{ properties['machineType'] }}
-    zone: {{ ZONE }}
-    itName: {{ PREV_IT_NAME }}
-    image: {{ properties['prevVersion']['image'] }}
-- name: {{ CURR_IT_NAME }}-igupdater
-  type: replicapoolupdater.v1beta1.rollingUpdate
-  properties:
-    zone: {{ ZONE }}
-    instanceGroupManager: $(ref.{{ IGM_NAME }}.selfLink)
-    actionType: RECREATE
-    instanceTemplate: $(ref.{{ CURR_IT_NAME }}.selfLink)
-{% endif %}
 - name: {{ IGM_NAME }}
-  type: compute.v1.instanceGroupManager
+  type: compute.beta.instanceGroupManager
   properties:
     baseInstanceName: {{ IGM_NAME }}-instance
     instanceTemplate: $(ref.{{ CURR_IT_NAME }}.selfLink)
     zone: {{ ZONE }}
     targetSize: 1
+    targetPools:
+    - $(ref.{{ properties['targetPool'] }}.selfLink)
+    updatePolicy:
+      minimalAction: REPLACE
+      type: PROACTIVE
 - name: {{ NAME }}-as
   type: compute.v1.autoscaler
   properties:
