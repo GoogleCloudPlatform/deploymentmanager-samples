@@ -109,11 +109,11 @@ def GenerateConfig(context):
           ]
         })
       else:
-          # Append the default DM service account to the owner role members
-          policies_to_add[idx]['members'].append(
-            'serviceAccount:$(ref.' + project_id + '.projectNumber)@'
-            'cloudservices.gserviceaccount.com'
-          )
+        # Append the default DM service account to the owner role members
+        policies_to_add[idx]['members'].append(
+          'serviceAccount:$(ref.' + project_id + '.projectNumber)@'
+          'cloudservices.gserviceaccount.com'
+        )
 
     get_iam_policy_dependencies = [ project_id ]
     for api in context.properties['apis']:
