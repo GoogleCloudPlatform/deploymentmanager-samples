@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ info:
 imports:
 - path: service.jinja
 - path: instance-template.jinja
-- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/ha-service/jinja/lb-l3.jinja
-  name: lb-l3.jinja
+- path: lb-l3.jinja
 
 
 properties:
@@ -41,16 +40,6 @@ properties:
           type: string
           description: zone name (eg. asia-east1-a). NOTE All zones must be in the same region for level 3 Load Balancer
         curr:
-          type: object
-          description: a zone object - contains an version name and the image for that version
-          properties:
-            name:
-              type: string
-              description: an identifier for the version (e.g. 17, 26a, March22)
-            image:
-              type: string
-              description: a fully qualified url to the vm image to use
-        prev:
           type: object
           description: a zone object - contains an version name and the image for that version
           properties:
