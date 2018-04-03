@@ -1,0 +1,11 @@
+imports:
+  - path: cloudsql.jinja
+  - path: id_rsa_gce.pub
+
+resources:
+  - name: cloudsql
+    type: cloudsql.jinja
+    properties:
+      databaseName: test
+      dbRootPassword: test123
+
