@@ -96,7 +96,7 @@ def GenerateConfig(context):
       policies_to_add.append({
         'role': 'roles/owner',
         'member': [
-          'serviceAccount:${ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
+          'serviceAccount:$(ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
         ]
       })
 
