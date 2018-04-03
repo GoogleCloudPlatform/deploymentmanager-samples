@@ -81,8 +81,9 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
-  if context.properties.get('iam-policy-patch'):
-    iam_policy_patch = context.properties['iam-policy-patch']
+  if (context.properties.get('iam-policy-patch') or
+      context.properties.get('set-dm-service-account-as-owner')):
+    iam_policy_patch = context.properties.get('iam-policy-patch', {})
     if iam_policy_patch.get('add'):
       policies_to_add = iam_policy_patch['add']
     else:
@@ -95,7 +96,7 @@ def GenerateConfig(context):
     if context.properties.get('set-dm-service-account-as-owner'):
       policies_to_add.append({
         'role': 'roles/owner',
-        'member': [
+        'members': [
           'serviceAccount:$(ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
         ]
       })
