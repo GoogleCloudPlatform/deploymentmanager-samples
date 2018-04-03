@@ -105,6 +105,118 @@ class ProjectTestCase(unittest.TestCase):
         if resource['name'] == 'set-dm-service-account-as-owner']
     self.assertEquals([], patch_action)
 
+  def test_patch_iam_policy_with_default_dm_and_adding_owner(self):
+    """Test IAM patching correctly adds and removes service accounts and merges
+    in the default DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+  def test_patch_iam_policy_with_default_dm(self):
+    """Test IAM patching correctly adds and removes service accounts and adds
+    in the default DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/viewer',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/viewer',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }, {
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+  def test_patch_iam_policy_without_default_dm(self):
+    """Test IAM patching correctly adds and removes service accounts without
+    merging in the DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    del properties['set-dm-service-account-as-owner']
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }],
+        'remove': [{
+          'role': 'roles/editor',
+          'members': [
+            'serviceAccount:horribly-invalid-service-account@twitter.ru',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }],
+        'remove': [{
+          'role': 'roles/editor',
+          'members': [
+            'serviceAccount:horribly-invalid-service-account@twitter.ru',
+          ]
+        }]
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
   def test_generateconfig_fails_if_both_folder_and_org_present(self):
     """Test that we sys.exit() if both the parents are present"""
     env = copy.deepcopy(self.default_env)
