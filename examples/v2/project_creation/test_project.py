@@ -88,11 +88,12 @@ class ProjectTestCase(unittest.TestCase):
             'serviceAccount:$(ref.my-project.projectNumber)'
             '@cloudservices.gserviceaccount.com'
           ]
-        }]
+        }],
+        'remove': []
     }
     patch_action = [
         resource for resource in resources
-        if resource['name'] == 'patch-iam-policy']
+        if resource['name'] == 'patch-iam-policy-my-project']
     self.assertEquals(
         expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
 
