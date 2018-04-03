@@ -1,0 +1,12 @@
+resources:
+- name: {{ properties["basename"] }}-as
+  type: compute.v1.regionAutoscalers
+  properties:
+    autoscalingPolicy:
+      coolDownPeriodSec: 60
+      loadBalancingUtilization:
+        utilizationTarget: 0.8
+      maxNumReplicas: 10
+      minNumReplicas: 2
+    region: {{ properties["region"] }}
+    target: https://www.googleapis.com/compute/v1/projects/{{ properties["project"] }}/regions/{{ properties["region"] }}/instanceGroupManagers/{{ properties["basename"] }}-ig

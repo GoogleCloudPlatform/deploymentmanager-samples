@@ -1,0 +1,10 @@
+resources:
+- name: {{ properties["basename"] }}-lb-fe
+  type: compute.v1.globalForwardingRules
+  properties:
+    IPProtocol: TCP
+    ipVersion: IPV4
+    loadBalancingScheme: EXTERNAL
+    portRange: 80-80
+    region: {{ properties["region"] }}
+    target: global/targetHttpProxies/{{ properties["basename"] }}-web-proxy

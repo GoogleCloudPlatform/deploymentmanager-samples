@@ -1,0 +1,14 @@
+resources:
+- name: {{ properties["basename"] }}-fw
+  type: compute.v1.firewall
+  properties:
+    direction: INGRESS
+    network: global/networks/{{ properties["network"] }}
+    sourceTags:
+      - {{ properties["source"] }}
+    allowed:
+      - IPProtocol: tcp
+        ports:
+        - '{{ properties["port"] }}'
+    targetTags:
+      - {{ properties["target"] }}
