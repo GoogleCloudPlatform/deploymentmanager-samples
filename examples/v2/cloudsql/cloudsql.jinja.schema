@@ -2,70 +2,64 @@ info:
   title: CloudSQL
   author: mwallman@google.com
   description: |
-    Creates an HA CloudSQL deployment
+    Creates a CloudSQL deployment
   version: 0.1
 
 imports:
   - path: cloudsql.jinja
-  - path: id_rsa_gce.pub
-  - path: startup-script.sh
-
-required:
-  - databaseName
-  - dbRootPassword
 
 properties:
-  region:
-    type: string
-    description: i.e. us-central1
-    default: us-central1
-  
   failover:
     type: boolean
     description: enable failover replica
     default: true
-  
-  readreplicas:
+
+  readReplicas:
     type: integer
     description: number of read replicas
     minimum: 0
     maximum: 5
     default: 0
-  
-  zone:
-    type: string
-    description: i.e. us-east1-d
-    default: us-central1-b
 
-  network:
-    type: string
-    description: Network URL i.e. projects/project/global/networks/network
-    default: global/networks/default
-
-  subnet:
-    type: string
-    description: Subnet Name i.e regions/region/subnetworks/subnetwork
-    default: default
-
-  sourceImage:
-    type: string
-    description: Image uri
-    default: projects/centos-cloud/global/images/family/centos-7
-
-  machineType:
-    type: string
-    description: https://cloud.google.com/compute/docs/machine-types
-    default: n1-standard-4
-
-  tier:
-    type: string 
-    description: https://cloud.google.com/sql/pricing#2nd-gen-pricing
-    default: db-n1-highmem-4
-
-  serviceAccount:
-    type: string
-    description: Service account or NAT and MySQL client instances
-    default: default
+  cloudsql:
+    type: object
+    default:
+      properties: 
+    properties:
+      databaseVersion:
+        type: string
+        description: MYSQL_5_7 or MYSQL_5_6
+        default: MYSQL_5_7
+      dataDiskSizeGb:
+        type: integer
+        minimum: 10
+        maximum: 10000
+        default: 200
+      dataDiskType:
+        type: string
+        decription: PD_SSD or PD_HDD
+        default: PD_SSD
+      backupStartTime:
+        type: string
+        description: HH:MM in 24 hour format
+        default: 00:00
+      tier:
+        type: string
+        description: https://cloud.google.com/sql/pricing#2nd-gen-pricing
+        default: db-n1-highmem-4
+      region:
+        type: string
+        description: i.e. us-central1
+        default: us-central1
+      zone:
+        type: string
+        description: i.e. us-central1-a
+        default: us-central1-a
+      authorizedNetworks:
+        type: array
+        description: An array of allowed CIDR blocks
+        items:
+          type: string
 
   databaseFlags: 
     type: array
@@ -83,35 +77,29 @@ properties:
             - integer
             - string
   
-  databaseName:
-    type: string
-    description: Database to create
+  dbUser:
+    type: object
+    required:
+      - password
+    properties:
+      name:
+        type: string
+        default: root
+      host:
+        type: string
+        default: '%'
+      password:
+        type: string
+  
+  database: 
+    type: object
+    required:
+      - name
+    properties:
+      name: 
+        type: string
+      charset:
+        type: string
+        description: https://dev.mysql.com/doc/refman/5.7/en/charset.html
+        default: utf8
 
-  databaseVersion:
-    type: string 
-    description: MYSQL_5_7 or MYSQL_5_6
-    default: MYSQL_5_7
- 
-  dataDiskSizeGb:
-    type: integer
-    minimum: 10
-    maximum: 10000
-    default: 1000
-
-  dataDiskType: 
-    type: string 
-    decription: PD_SSD or PD_HDD
-    default: PD_SSD
-
-  charset:
-    type: string 
-    description: https://dev.mysql.com/doc/refman/5.7/en/charset.html
-    default: utf8
-
-  backupStartTime:
-    type: string
-    description: HH:MM in 24 hour format 
-    default: 00:00
-
-  dbRootPassword:
-    type: string

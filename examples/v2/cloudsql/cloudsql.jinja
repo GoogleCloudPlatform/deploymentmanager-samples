@@ -1,5 +1,5 @@
 {#
-Copyright 2017 Google Inc. All rights reserved.
+Copyright 2018 Google Inc. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -13,92 +13,46 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% set COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/' %}
 {% set ID = env['deployment'] + '-' + env['name'] %}
-{% set DBFLAGS = true if properties['databaseFlags'] else false %}
+
+{%- macro dbDependencyList(failover='', readReplicas='') -%}
+  {% if failover %}
+    - {{ ID }}-failover
+  {% endif %}
+  {% for i in range(readReplicas) %}
+    - {{ ID }}-rr-{{ i }}
+  {% endfor %}
+{%- endmacro %}
+
+{% set dbDeps = dbDependencyList(properties['failover'], 
+  properties['readReplicas']) %}
 
 resources:
-- name: {{ ID }}-allow-ssh
-  type: compute.v1.firewall
-  properties:
-    targetTags:
-      - {{ ID }}-ssh
-    allowed:
-    - IPProtocol: tcp
-      ports: 
-        - 22
-
-- name: {{ ID }}-mysqlclient-address
-  type: compute.v1.address
-  properties:
-    region: {{ properties["region"] }}
-
-- name: {{ ID }}-mysqlclient
-  type: compute.v1.instance
-  properties:
-    machineType: zones/{{ properties['zone'] }}/machineTypes/{{ properties['machineType'] }}
-    zone: {{ properties['zone'] }}
-    metadata:
-      items:
-        - key: startup-script
-          value: |
-            {{ imports['startup-script.sh']|indent(12) }}
-        - key: ssh-keys
-          value: | 
-            {{ imports['id_rsa_gce.pub']|indent(12) }}
-        - key: block-project-ssh-keys
-          value: 'FLASE'
-    disks:
-      - deviceName: boot
-        boot: true
-        autoDelete: true
-        mode: READ_WRITE
-        type: PERSISTENT
-        initializeParams:
-          diskSizeGb: {{ properties['dataDiskSizeGb'] }}
-          sourceImage: {{ properties["sourceImage" ] }}
-    networkInterfaces:
-      - name: {{ ID }}-eth0
-        network: {{ properties['network'] }}
-        subnetwork: regions/{{ properties['region'] }}/subnetworks/{{ properties['subnet'] }}
-        accessConfigs:
-          - name: eth0
-            type: ONE_TO_ONE_NAT
-            natIP: $(ref.{{ ID }}-mysqlclient-address.address)
-    serviceAccounts:
-      - email: {{ properties['serviceAccount'] }}
-        scopes:
-          - 'https://www.googleapis.com/auth/cloud-platform'
-    tags:
-      items:
-        - {{ ID }}-ssh
-
 - name: {{ ID }}-master
   type: sqladmin.v1beta4.instance
   properties:
     backendType: SECOND_GEN
     instanceType: CLOUD_SQL_INSTANCE
-    databaseVersion: {{ properties['databaseVersion'] }}
-    region: {{ properties['region'] }}
+    databaseVersion: {{ properties['cloudsql']['databaseVersion'] }}
+    region: {{ properties['cloudsql']['region'] }}
     settings:
-      tier: {{ properties['tier'] }}
-      dataDiskSizeGb: {{ properties['dataDiskSizeGb'] }}
-      dataDiskType: {{ properties['dataDiskType'] }}
+      tier: {{ properties['cloudsql']['tier'] }}
+      dataDiskSizeGb: {{ properties['cloudsql']['dataDiskSizeGb'] }}
+      dataDiskType: {{ properties['cloudsql']['dataDiskType'] }}
       storageAutoResize: true
       replicationType: SYNCHRONOUS
       locationPreference:
-        zone: {{ properties['zone'] }}
-      {% if DBFLAGS %}
+        zone: {{ properties['cloudsql']['zone'] }}
+      {% if properties['databaseFlags'] %}
       databaseFlags: {{ properties['databaseFlags'] }}
       {% endif %}
       activationPolicy: ALWAYS
       backupConfiguration:
         enabled: true
         binaryLogEnabled: true
-        startTime: {{ properties['backupStartTime'] }}
+        startTime: {{ properties['cloudsql']['backupStartTime'] }}
       ipConfiguration:
-        authorizedNetworks:
-          - value: $(ref.{{ ID }}-mysqlclient-address.address)
+        authorizedNetworks: {{ properties['cloudsql']['authorizedNetworks'] }}
 
 {% if properties['failover'] %}
 - name: {{ ID }}-failover
@@ -106,47 +60,72 @@ resources:
   properties:
     backendType: SECOND_GEN
     instanceType: READ_REPLICA_INSTANCE
-    databaseVersion: {{ properties['databaseVersion'] }}
-    region: {{ properties['region'] }}
+    databaseVersion: {{ properties['cloudsql']['databaseVersion'] }}
+    region: {{ properties['cloudsql']['region'] }}
     masterInstanceName: $(ref.{{ ID }}-master.name)
     replicaConfiguration:
       failoverTarget: true
     settings:
-      tier: {{ properties['tier'] }}
+      tier: {{ properties['cloudsql']['tier'] }}
 {% endif %}
 
-{% for i in range(properties['readreplicas']) %}
+{% for i in range(properties['readReplicas']) %}
 - name: {{ ID }}-rr-{{ i }}
   type: sqladmin.v1beta4.instance
   properties:
     backendType: SECOND_GEN
     instanceType: READ_REPLICA_INSTANCE
-    databaseVersion: {{ properties['databaseVersion'] }}
-    region: {{ properties['region'] }}
+    databaseVersion: {{ properties['cloudsql']['databaseVersion'] }}
+    region: {{ properties['cloudsql']['region'] }}
     masterInstanceName: $(ref.{{ ID }}-master.name)
     replicaConfiguration:
       failoverTarget: false
     settings:
-      tier: {{ properties['tier'] }}
+      tier: {{ properties['cloudsql']['tier'] }}
+  {% if properties['failover'] %}
+  metadata:
+    dependsOn:
+      - {{ ID }}-failover
+  {% endif %}
 {% endfor %}
 
+{% if properties['database'] %}
 - name: {{ ID }}-db
   type: sqladmin.v1beta4.database
   properties:
-    name: {{ properties['databaseName'] }}
+    name: {{ properties['database']['name'] }}
     instance: $(ref.{{ ID }}-master.name)
-    charset: {{ properties['charset'] }}
+    charset: {{ properties['database']['charset'] }}
+  metadata:
+    dependsOn: 
+      {{ dbDeps }}
+{% endif %}
 
+{% if properties['dbUser'] %}
 - name: {{ ID }}-db-root
   type: sqladmin.v1beta4.user
   properties:
-    name: root
-    host: '%'
+    name: {{ properties['dbUser']['name'] }}
+    host:  "{{ properties['dbUser']['host'] }}"
     instance: $(ref.{{ ID }}-master.name)
-    password: {{ properties['dbRootPassword'] }}
+    password: {{ properties['dbUser']['password'] }}
+  metadata:
+    dependsOn:
+    {% if properties['database'] %}
+      - {{ ID }}-db
+    {% else %}
+      {{ dbDeps }}  
+    {% endif %}
+{% endif %}
 
 outputs:
-  - name: mysqlclient
-    value: $(ref.{{ ID }}-mysqlclient.networkInterfaces[0].networkIP)
-  - name: cloudsql-ip
+  - name: {{ ID }}-master-ip
     value: $(ref.{{ ID }}-master.ipAddresses[0].ipAddress)
+  {% if properties['failover'] %} 
+  - name: {{ ID }}-failover-ip
+    value: $(ref.{{ ID }}-failover.ipAddresses[0].ipAddress)
+  {% endif %}
+  {% for i in range(properties['readReplicas']) %}
+  - name: {{ ID }}-rr-{{ i }} 
+    value: $(ref.{{ ID }}-rr-{{ i }}.ipAddresses[0].ipAddress)
+  {% endfor %}
