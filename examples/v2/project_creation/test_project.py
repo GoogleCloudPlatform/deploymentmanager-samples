@@ -138,6 +138,39 @@ class ProjectTestCase(unittest.TestCase):
     self.assertEquals(
         expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
 
+  def test_patch_iam_policy_containing_default_dm_as_owner_already(self):
+    """Test IAM patching correctly merges in the default DM service account to
+    the owner role only once"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
   def test_patch_iam_policy_with_default_dm(self):
     """Test IAM patching correctly adds and removes service accounts and adds
     in the default DM service account to the owner role"""
