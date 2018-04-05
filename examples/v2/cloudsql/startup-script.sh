@@ -27,3 +27,9 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable cloud-sql-proxy
+systemctl start cloud-sql-proxy
+
+##
+## Install mysql client
+##
+yum -y install mysql
