@@ -23,8 +23,7 @@ info:
 imports:
 - path: service.py
 - path: instance-template.py
-- path: https://raw.githubusercontent.com/GoogleCloudPlatform/deploymentmanager-samples/master/examples/v2/ha-service/python/lb-l3.py
-  name: lb-l3.py
+- path: lb-l3.py
 
 
 properties:
@@ -41,16 +40,6 @@ properties:
           type: string
           description: zone name (eg. asia-east1-a). NOTE All zones must be in the same region for level 3 Load Balancer
         curr:
-          type: object
-          description: a zone object - contains an version name and the image for that version
-          properties:
-            name:
-              type: string
-              description: an identifier for the version (e.g. 17, 26a, March22)
-            image:
-              type: string
-              description: a fully qualified url to the vm image to use
-        prev:
           type: object
           description: a zone object - contains an version name and the image for that version
           properties:

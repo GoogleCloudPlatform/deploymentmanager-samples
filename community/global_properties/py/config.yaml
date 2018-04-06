@@ -1,0 +1,12 @@
+imports:
+  - path: vm.py
+  # Note that the global_properties.yaml file is imported. The python template
+  # will read this import.
+  - path: global_properties.yaml
+
+resources:
+  - name: vm
+    type: vm.py
+    properties:
+        zone: us-central1-a
+

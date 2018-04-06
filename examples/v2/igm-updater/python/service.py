@@ -42,43 +42,22 @@ def GenerateConfig(context):
   }
   config['resources'].append(current_it)
 
-  if 'prevVersion' in context.properties:
-    # If performing an instance group update we a need instance template and an
-    # updater resource.
-    prev_it_name = name + '-it-' + context.properties['prevVersion']['name']
-    new_it = {
-        'name': prev_it_name,
-        'type': 'instance-template.py',
-        'properties': {
-            'machineType': machine_type,
-            'zone': zone,
-            'itName': prev_it_name,
-            'image': context.properties['prevVersion']['image']
-        }
-    }
-    config['resources'].append(new_it)
-
-    updater = {
-        'name': curr_it_name + '-igupdater',
-        'type': 'replicapoolupdater.v1beta1.rollingUpdate',
-        'properties': {
-            'zone': zone,
-            'instanceGroupManager': '$(ref.' +  igm_name + '.selfLink)',
-            'actionType': 'RECREATE',
-            'instanceTemplate': '$(ref.' + curr_it_name + '.selfLink)'
-        }
-    }
-    config['resources'].append(updater)
-
   # The instance group manager.
   igm = {
       'name': igm_name,
-      'type': 'compute.v1.instanceGroupManager',
+      'type': 'compute.beta.instanceGroupManager',
       'properties': {
           'baseInstanceName': igm_name + '-instance',
           'instanceTemplate': '$(ref.' + curr_it_name + '.selfLink)',
           'zone': zone,
-          'targetSize': 1
+          'targetSize': 1,
+          'targetPools': [
+              '$(ref.' + context.properties['targetPool'] + '.selfLink)',
+          ],
+          'updatePolicy': {
+              'minimalAction': 'REPLACE',
+              'type': 'PROACTIVE',
+          }
       }
   }
   config['resources'].append(igm)
