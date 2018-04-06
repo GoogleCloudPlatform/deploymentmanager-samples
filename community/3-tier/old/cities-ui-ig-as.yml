@@ -1,0 +1,12 @@
+resources:
+- name: cities-ui-ig-as
+  type: compute.v1.regionAutoscalers
+  properties:
+    autoscalingPolicy:
+      coolDownPeriodSec: 60
+      loadBalancingUtilization:
+        utilizationTarget: 0.8
+      maxNumReplicas: 10
+      minNumReplicas: 2
+    region: REGION
+    target: https://www.googleapis.com/compute/v1/projects/springboot-cities/regions/REGION/instanceGroupManagers/cities-ui-ig

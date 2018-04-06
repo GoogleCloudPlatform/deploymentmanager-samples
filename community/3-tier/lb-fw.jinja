@@ -1,0 +1,15 @@
+resources:
+- name: {{ properties["basename"] }}-lb-fw
+  type: compute.v1.firewall
+  properties:
+    direction: INGRESS
+    network: global/networks/{{ properties["network"] }}
+    sourceRanges:
+      - 130.211.0.0/22
+      - 35.191.0.0/16
+    allowed:
+      - IPProtocol: tcp
+        ports:
+        - '{{ properties["port"] }}'
+    targetTags:
+      - {{ properties["target"] }}
