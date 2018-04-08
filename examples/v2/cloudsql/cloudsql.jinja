@@ -121,11 +121,17 @@ resources:
 outputs:
   - name: {{ ID }}-master-ip
     value: $(ref.{{ ID }}-master.ipAddresses[0].ipAddress)
+  - name: {{ ID }}-master-connectionName
+    value: $(ref.{{ ID }}-master.connectionName)
   {% if properties['failover'] %} 
   - name: {{ ID }}-failover-ip
     value: $(ref.{{ ID }}-failover.ipAddresses[0].ipAddress)
+  - name: {{ ID }}-failover-connectionName
+    value: $(ref.{{ ID }}-failover.connectionName)
   {% endif %}
   {% for i in range(properties['readReplicas']) %}
-  - name: {{ ID }}-rr-{{ i }} 
+  - name: {{ ID }}-rr-{{ i }}-ip
     value: $(ref.{{ ID }}-rr-{{ i }}.ipAddresses[0].ipAddress)
+  - name: {{ ID }}-rr-{{ i }}-connectionName
+    value: $(ref.{{ ID }}-rr-{{ i }}.connectionName)
   {% endfor %}

@@ -1,0 +1,13 @@
+imports:
+  - path: cloudsql.jinja
+resources:
+  - name: cloudsql
+    type: cloudsql.jinja
+    properties:
+      database:
+        name: test
+      dbUser:
+        user: root
+        password: test123_
+      failover: true
+      readReplicas: 1

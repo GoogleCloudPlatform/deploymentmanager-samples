@@ -3,13 +3,17 @@
 PROXY_SRC=https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
 
 ##
-## Install and Configure CloudProxy
+## Install and Configure CloudProxy for CentOS 7
 ##
 curl -LSso /usr/local/bin/cloud_sql_proxy $PROXY_SRC
 chmod +x /usr/local/bin/cloud_sql_proxy
 adduser -r -s /sbin/nologin -d /var/cloudsql -m cloudsql
+chmod 755 /var/cloudsql
 
-cat <<EOF | tee /usr/lib/systemd/system/cloud-sql-proxy.service
+rel=$(rpm -q --qf '%{VERSION}' centos-release)
+
+if [ "$rel" == "7" ]; then
+    cat <<EOF | tee /usr/lib/systemd/system/cloud-sql-proxy.service
 [Unit]
 Description=Google Cloud Compute Engine SQL Proxy
 After=network.target google-instance-setup.service google-network-setup.service
@@ -17,6 +21,7 @@ After=networking.service
 
 [Service]
 Type=simple
+UMask=022
 WorkingDirectory=/var/cloudsql
 ExecStart=/usr/local/bin/cloud_sql_proxy -dir=/var/cloudsql -verbose -instances_metadata=instance/attributes/cloud-sql-instances
 Restart=always
@@ -26,8 +31,9 @@ User=cloudsql
 WantedBy=multi-user.target
 EOF
 
-systemctl enable cloud-sql-proxy
-systemctl start cloud-sql-proxy
+    systemctl enable cloud-sql-proxy
+    systemctl start cloud-sql-proxy
+fi
 
 ##
 ## Install mysql client
