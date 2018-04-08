@@ -1,0 +1,61 @@
+info:
+  title: CloudSQL Client Instances
+  author: mwallman@google.com
+  description: |
+    Creates an array of CloudSQL Proxies
+  version: 0.1
+
+properties:
+  cloud-sql-instances:
+    type: string 
+    description: Comma separated list of CloudSQL connection strings for cloud_sql_proxy. See https://cloud.google.com/sql/docs/mysql/sql-proxy
+
+  clientCount:
+    type: integer
+    description: number of Cloud Proxies
+    minimum: 0
+    maximum: 5
+    default: 1
+
+  diskSizeGb:
+    type: integer
+    description: number of Cloud Proxies
+    minimum: 10
+    maximum: 1000
+    default: 200
+  
+  region:
+    type: string
+    description: i.e. us-central1
+    default: us-central1
+
+  zone:
+    type: string
+    description: i.e. us-central1-b
+    default: us-central1-b
+
+  network:
+    type: string
+    description: Network URL i.e. projects/project/global/networks/network
+    default: global/networks/default
+
+  subnet:
+    type: string
+    description: Subnet Name i.e regions/region/subnetworks/<subnet>
+    default: default
+
+  sourceImage:
+    type: string
+    description: Image uri
+    default: projects/centos-cloud/global/images/family/centos-7
+
+  machineType:
+    type: string
+    description: https://cloud.google.com/compute/docs/machine-types
+    default: n1-standard-4
+
+  serviceAccount:
+    type: string
+    description: Service account for client instances
+    default: default
+
