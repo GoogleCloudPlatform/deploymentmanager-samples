@@ -29,8 +29,8 @@ def GenerateConfig(ctx):
   source_archive_url = ctx.properties['sourceArchiveUrl']
   zip_file = zipfile.ZipFile(inMemoryOutputFile, mode = 'w', compression = zipfile.ZIP_DEFLATED)
   for imp in ctx.imports:
-    if imp.startswith('function/'):
-      zip_file.writestr(imp[len('function/'):], ctx.imports[imp])
+    if imp.startswith(ctx.properties['codeLocation']):
+      zip_file.writestr(imp[len(ctx.properties['codeLocation']):], ctx.imports[imp])
   zip_file.close()
   content = base64.b64encode(inMemoryOutputFile.getvalue())
   m = hashlib.md5()
