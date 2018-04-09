@@ -1,0 +1,36 @@
+resources:
+- name: cities-ui
+  type: compute.v1.instance
+  properties:
+    zone: europe-west3-b
+    machineType: zones/europe-west3-b/machineTypes/g1-small
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - network: global/networks/custom-network
+      subnetwork: regions/europe-west3/subnetworks/subnet3
+      accessConfigs:
+          - name: external-nat
+            type: ONE_TO_ONE_NAT
+    tags:
+      items:
+        - web
+    metadata:
+      items:
+        - key: serial-port-enable
+          value: '1'
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt-get -y install default-jdk
+            sudo apt-get -y install git-core
+            git clone https://github.com/Sufyaan-Kazi/spring-boot-cities-ui.git
+            cd spring-boot-cities-ui/
+            export SPRING_CITIES_WS_URL=http://cities-service:8080/cities
+            ./gradlew bootRun

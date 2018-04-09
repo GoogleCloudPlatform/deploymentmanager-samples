@@ -1,0 +1,8 @@
+resources:
+- name: {{ properties["basename"] }}-ig
+  type: compute.v1.regionInstanceGroupManager
+  properties:
+    baseInstanceName: {{ properties["basename"] }}-ig
+    instanceTemplate: global/instanceTemplates/{{ properties["basename"] }}-template
+    region: {{ properties["region"] }}
+    targetSize: 1

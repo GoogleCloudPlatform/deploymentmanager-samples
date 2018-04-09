@@ -1,0 +1,9 @@
+resources:
+- name: {{ properties["network"] }}
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+    routingConfig:
+      routingMode: REGIONAL
+    x_gcloud_bgp_routing_mode: REGIONAL
+    x_gcloud_subnet_mode: CUSTOM

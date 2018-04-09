@@ -1,0 +1,25 @@
+resources:
+- name: cities-service-hc
+  type: compute.v1.httpHealthCheck
+  properties:
+    host: ''
+    port: 8080
+    proxyHeader: NONE
+    requestPath: /cities
+    checkIntervalSec: 10
+    timeoutSec: 10
+    healthyThreshold: 3
+    unhealthyThreshold: 3
+- name: cities-service-hc-lb
+  type: compute.v1.healthCheck
+  properties:
+    checkIntervalSec: 5
+    healthyThreshold: 2
+    httpHealthCheck:
+      host: ''
+      port: 8080
+      proxyHeader: NONE
+      requestPath: /cities
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2

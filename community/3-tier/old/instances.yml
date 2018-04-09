@@ -1,0 +1,33 @@
+resources:
+- name: cities-ui
+  type: compute.v1.instance
+  properties:
+    zone: europe-west2-b
+    machineType: zones/europe-west2-b/machineTypes/g1-small
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - network: global/networks/custom-network
+      subnetwork: regions/europe-west2/subnetworks/subnet2
+      accessConfigs:
+          - name: external-nat
+            type: ONE_TO_ONE_NAT
+    tags:
+      items:
+      - web
+    metadata:
+      items:
+      - key: serial-port-enable
+        value: '1'
+      - key: startup-script-url
+        value: gs://suf-spring-boot-cities/startup-scripts/cities-ui.sh
+    serviceAccounts:
+      - email: default
+        scopes:
+        - https://www.googleapis.com/auth/devstorage.read_only
+        - https://www.googleapis.com/auth/service.management.readonly

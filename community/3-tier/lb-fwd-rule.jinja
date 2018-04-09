@@ -1,0 +1,12 @@
+resources:
+- name: {{ properties["basename"] }}-lb-fwd-rule
+  type: compute.v1.forwardingRules
+  properties:
+    IPProtocol: TCP
+    backendService: https://www.googleapis.com/compute/v1/projects/{{ properties["project"] }}/regions/{{ properties["region"] }}/backendServices/{{ properties["lb"] }}
+    loadBalancingScheme: INTERNAL
+    network: global/networks/{{ properties["network"] }}
+    ports:
+    - '{{ properties["port"] }}'
+    region: {{ properties["region"] }}
+    subnetwork: regions/{{ properties["region"] }}/subnetworks/{{ properties["subnet"] }}

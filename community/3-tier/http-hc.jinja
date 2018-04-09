@@ -1,0 +1,12 @@
+resources:
+- name: {{ properties["basename"] }}-hc
+  type: compute.v1.httpHealthCheck
+  properties:
+    host: ''
+    port: {{ properties["port"] }}
+    proxyHeader: NONE
+    requestPath: {{ properties["requestPath"] }}
+    checkIntervalSec: 5
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3

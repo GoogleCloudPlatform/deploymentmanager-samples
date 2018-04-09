@@ -1,0 +1,5 @@
+imports:
+  - path: lb-fwd-rule.jinja
+resources:
+- name: cities-service-lb-fwd-rule
+  type: lb-fwd-rule.jinja
