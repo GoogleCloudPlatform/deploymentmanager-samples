@@ -1,0 +1,11 @@
+imports:
+  - path: cloudsql_client.jinja
+  - path: scripts/cloud-sql-proxy.sh
+    name: startup-script
+
+resources:
+  - name: client
+    type: cloudsql_client.jinja
+    properties:
+      cloud-sql-instances: example-cloudsql:us-central1:db01-cloudsql-master
+      clientCount: 2
