@@ -23,187 +23,6 @@ class ProjectTestCase(unittest.TestCase):
       'service-accounts': []
   }
 
-  def test_merge_no_iam_policies(self):
-    """Test output of the function when there are no IAM policies in the
-      properties"""
-    env = {'project_number': '123'}
-    properties = {}
-    expected = {
-        'bindings': [
-            {
-                'role': 'roles/owner',
-                'members':
-                    ['serviceAccount:123@cloudservices.gserviceaccount.com']
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
-  def test_merge_with_existing_non_owner_policy(self):
-    """Test output of the function when there are existing non owner IAM
-      policies in the properties"""
-    env = {'project_number': '123'}
-    properties = {
-        'iam-policy': {
-            'bindings': [
-                {
-                    'role': 'roles/viewer',
-                    'members': ['user:foobar@barbaz.com']
-                }
-            ]
-        }
-    }
-    expected = {
-        'bindings': [
-            {
-                'role': 'roles/viewer',
-                'members': ['user:foobar@barbaz.com']
-            },
-            {
-                'role': 'roles/owner',
-                'members':
-                    ['serviceAccount:123@cloudservices.gserviceaccount.com']
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
-  def test_merge_with_different_owner_policy(self):
-    """Test output of the function when there is an existing but different
-      owner IAM policy in the properties"""
-    env = {'project_number': '123'}
-    properties = {
-        'iam-policy': {
-            'bindings': [
-                {
-                    'role': 'roles/owner',
-                    'members': ['user:foobar@barbaz.com']
-                }
-            ]
-        }
-    }
-    expected = {
-        'bindings': [
-            {
-                'role': 'roles/owner',
-                'members': ['user:foobar@barbaz.com',
-                            ('serviceAccount:123@cloudservices'
-                             '.gserviceaccount.com')]
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
-  def test_merge_with_same_owner_policy(self):
-    """Test output of the function when the exact same policy already exists"""
-    env = {'project_number': '123'}
-    properties = {
-        'iam-policy': {
-            'bindings': [
-                {
-                    'role': 'roles/viewer',
-                    'members': ['user:foobar@barbaz.com']
-                },
-                {
-                    'role': 'roles/owner',
-                    'members': ['user:foobar@barbaz.com',
-                                ('serviceAccount:123@cloudservices'
-                                 '.gserviceaccount.com')]
-                }
-            ]
-        }
-    }
-    expected = {
-        'bindings': [
-            {
-                'role': 'roles/viewer',
-                'members': ['user:foobar@barbaz.com']
-            },
-            {
-                'role': 'roles/owner',
-                'members': ['user:foobar@barbaz.com',
-                            ('serviceAccount:123@cloudservices'
-                             '.gserviceaccount.com')]
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
-  def test_merge_with_missing_bindings_but_other_key_present(self):
-    """"Test the function when there are no bindings in the iam policy block
-        but some other unknown key exists"""
-    env = {'project_number': '123'}
-    properties = {
-        'iam-policy': {
-            'foobar': {
-                'strangekey': 1
-            }
-        }
-    }
-    expected = {
-        'foobar': {
-            'strangekey': 1
-        },
-        'bindings': [
-            {
-                'role': 'roles/owner',
-                'members': [('serviceAccount:123@cloudservices'
-                             '.gserviceaccount.com')]
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
-  def test_merge_with_different_owner_policy_and_other_key(self):
-    """Test output of the function when there is an existing but different
-      owner IAM policy in the properties and some unknown key that exists"""
-    env = {'project_number': '123'}
-    properties = {
-        'iam-policy': {
-            'foobar': {
-                'strangekey': 1
-            },
-            'bindings': [
-                {
-                    'role': 'roles/owner',
-                    'members': ['user:foobar@barbaz.com']
-                }
-            ]
-        }
-    }
-    expected = {
-        'foobar': {
-            'strangekey': 1
-        },
-        'bindings': [
-            {
-                'role': 'roles/owner',
-                'members': ['user:foobar@barbaz.com',
-                            ('serviceAccount:123@cloudservices'
-                             '.gserviceaccount.com')]
-            }
-        ]
-    }
-    actual_iam_policies = (
-        p.MergeCallingServiceAccountWithOwnerPermissinsIntoBindings(
-            env, properties))
-    self.assertEqual(expected, actual_iam_policies)
-
   def test_only_one_of_organizationid_or_parentfolderid(self):
     """Test that we validate that there can be exactly one of organization-id
       or parent-folder-id specified"""
@@ -269,11 +88,12 @@ class ProjectTestCase(unittest.TestCase):
             'serviceAccount:$(ref.my-project.projectNumber)'
             '@cloudservices.gserviceaccount.com'
           ]
-        }]
+        }],
+        'remove': []
     }
     patch_action = [
         resource for resource in resources
-        if resource['name'] == 'patch-iam-policy']
+        if resource['name'] == 'patch-iam-policy-my-project']
     self.assertEquals(
         expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
 
@@ -284,6 +104,151 @@ class ProjectTestCase(unittest.TestCase):
         resource for resource in resources
         if resource['name'] == 'set-dm-service-account-as-owner']
     self.assertEquals([], patch_action)
+
+  def test_patch_iam_policy_with_default_dm_and_adding_owner(self):
+    """Test IAM patching correctly adds and removes service accounts and merges
+    in the default DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+  def test_patch_iam_policy_containing_default_dm_as_owner_already(self):
+    """Test IAM patching correctly merges in the default DM service account to
+    the owner role only once"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+  def test_patch_iam_policy_with_default_dm(self):
+    """Test IAM patching correctly adds and removes service accounts and adds
+    in the default DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/viewer',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+
+    expected_patch = {
+        'add': [{
+          'role': 'roles/viewer',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }, {
+          'role': 'roles/owner',
+          'members': [
+            'serviceAccount:$(ref.my-project.projectNumber)'
+            '@cloudservices.gserviceaccount.com'
+          ]
+        }],
+        'remove': []
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
+
+  def test_patch_iam_policy_without_default_dm(self):
+    """Test IAM patching correctly adds and removes service accounts without
+    merging in the DM service account to the owner role"""
+    env = copy.deepcopy(self.default_env)
+    properties = copy.deepcopy(self.default_properties)
+    del properties['set-dm-service-account-as-owner']
+    properties['iam-policy-patch'] = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }],
+        'remove': [{
+          'role': 'roles/editor',
+          'members': [
+            'serviceAccount:horribly-invalid-service-account@twitter.ru',
+          ]
+        }]
+    }
+    context = Context(env, properties)
+    resources = p.GenerateConfig(context)['resources']
+    expected_patch = {
+        'add': [{
+          'role': 'roles/owner',
+          'members': [
+            'user:me@domain.com',
+          ]
+        }],
+        'remove': [{
+          'role': 'roles/editor',
+          'members': [
+            'serviceAccount:horribly-invalid-service-account@twitter.ru',
+          ]
+        }]
+    }
+    patch_action = [
+        resource for resource in resources
+        if resource['name'] == 'patch-iam-policy-my-project']
+    self.assertEquals(
+        expected_patch, patch_action[0]['properties']['gcpIamPolicyPatch'])
 
   def test_generateconfig_fails_if_both_folder_and_org_present(self):
     """Test that we sys.exit() if both the parents are present"""
