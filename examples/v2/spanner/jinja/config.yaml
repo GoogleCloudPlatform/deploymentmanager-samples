@@ -1,0 +1,10 @@
+imports:
+- path: spanner-template.jinja
+
+resources:
+- name: demo-spanner
+  type: spanner-template.jinja
+  properties:
+    instanceId: demo-spanner
+    instanceConfig: regional-us-central1
+    nodeCount: 3
