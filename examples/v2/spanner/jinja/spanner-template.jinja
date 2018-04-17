@@ -5,6 +5,6 @@ resources:
     instanceId: {{ properties["instanceId"] }}
     parent: projects/{{ env["project"] }}
     instance:
-      displayName: Demo Spanner Instance
+      displayName: {{ properties["displayName"] }}
       config: projects/{{ env["project"] }}/instanceConfigs/{{ properties["instanceConfig"] }}
       nodeCount: {{ properties["nodeCount"] }}
