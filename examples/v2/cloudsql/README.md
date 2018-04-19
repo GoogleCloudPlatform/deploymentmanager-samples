@@ -38,11 +38,11 @@ One can reference the templates [schema files](https://cloud.google.com/deployme
 	## Get Outputs
 	$ gcloud deployment-manager manifests describe --deployment db01 | sed -n 's@^.*finalValue: @@p'1 
 	35.193.165.42
-	marketo-ph1-pod:us-central1:db01-cloudsql-master
+	go-bears:us-central1:db01-cloudsql-master
 	35.202.14.154
-	marketo-ph1-pod:us-central1:db01-cloudsql-failover
+	go-bears:us-central1:db01-cloudsql-failover
 	35.224.104.137
-	marketo-ph1-pod:us-central1:db01-cloudsql-rr-0
+	go-bears:us-central1:db01-cloudsql-rr-0
 
 	## Use the connection string(s) accordingly (See https://cloud.google.com/sql/docs/mysql/sql-proxy](). CloudSQL Proxy will use this string accordinly. 
 	$ cat client.yaml
@@ -55,14 +55,14 @@ One can reference the templates [schema files](https://cloud.google.com/deployme
 	  - name: client
 	    type: cloudsql_client.jinja
 	    properties:
-	      cloud-sql-instances: marketo-ph1-pod:us-central1:db01-cloudsql-master
+	      cloud-sql-instances: go-bears:us-central1:db01-cloudsql-master
 	      clientCount: 2
 
 	$ gcloud deployment-manager deployments create client01 --config client.yaml
 	... 
 
 	## Ssh into an instance and test mysql 
-	[mwallman@client01-client-0 ~]$ mysql -uroot -S /var/cloudsql/marketo-ph1-pod\:us-central1\:db01-cloudsql-master -ptest123_ test
+	[mwallman@client01-client-0 ~]$ mysql -uroot -S /var/cloudsql/go-bears\:us-central1\:db01-cloudsql-master -ptest123_ test
 	...
 	MySQL [test]>
 
