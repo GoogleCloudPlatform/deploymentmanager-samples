@@ -1,0 +1,5 @@
+resources: 
+- name: {{ properties["basename"] }}-web-proxy
+  type: compute.v1.targetHttpProxy
+  properties:
+    urlMap: global/urlMaps/{{ properties["basename"] }}-lb

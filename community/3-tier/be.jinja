@@ -1,0 +1,21 @@
+resources: 
+- name: {{ properties["basename"] }}-lb-be
+  type: compute.v1.backendService
+  properties:
+    affinityCookieTtlSec: 0
+    backends:
+    - balancingMode: UTILIZATION
+      capacityScaler: 1.0
+      group: regions/{{ properties["region"] }}/instanceGroups/{{ properties["basename"] }}-ig
+    maxUtilization: 0.8
+    connectionDraining:
+      drainingTimeoutSec: 300
+    enableCDN: false
+    healthChecks:
+    - global/httpHealthChecks/{{ properties["basename"] }}-hc
+    loadBalancingScheme: EXTERNAL
+    port: {{ properties["port"] }} 
+    portName: http
+    protocol: HTTP
+    sessionAffinity: NONE
+    timeoutSec: 30

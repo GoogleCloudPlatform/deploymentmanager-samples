@@ -1,0 +1,8 @@
+resources:
+- name: cities-service-ig
+  type: compute.v1.regionInstanceGroupManager
+  properties:
+    baseInstanceName: cities-service-ig
+    instanceTemplate: global/instanceTemplates/cities-service-template
+    region: europe-west2
+    targetSize: 1

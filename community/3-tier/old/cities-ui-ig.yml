@@ -1,0 +1,8 @@
+resources:
+- name: cities-ui-ig
+  type: compute.v1.regionInstanceGroupManager
+  properties:
+    baseInstanceName: cities-ui-ig
+    instanceTemplate: global/instanceTemplates/cities-ui-template
+    region: europe-west2
+    targetSize: 1

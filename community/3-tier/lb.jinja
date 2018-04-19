@@ -1,0 +1,8 @@
+resources:
+- name: {{ properties["basename"] }}-lb
+  type: compute.v1.regionBackendService
+  properties:
+    region: {{ properties["region"] }}
+    loadBalancingScheme: INTERNAL
+    healthChecks:
+    - global/healthChecks/{{ properties["basename"] }}-lb-hc

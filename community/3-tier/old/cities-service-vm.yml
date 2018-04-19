@@ -1,0 +1,35 @@
+resources:
+- name: cities-service
+  type: compute.v1.instance
+  properties:
+    zone: europe-west2-b
+    machineType: zones/europe-west2-b/machineTypes/g1-small
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - network: global/networks/custom-network
+      subnetwork: regions/europe-west2/subnetworks/subnet2
+      accessConfigs:
+          - name: external-nat
+            type: ONE_TO_ONE_NAT
+    tags:
+      items:
+        - service
+    metadata:
+      items:
+        - key: serial-port-enable
+          value: '1'
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt-get -y install default-jdk
+            sudo apt-get -y install git-core
+            git clone https://github.com/Sufyaan-Kazi/spring-boot-cities-service.git
+            cd spring-boot-cities-service/
+            ./gradlew bootRun

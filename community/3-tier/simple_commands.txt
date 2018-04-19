@@ -1,0 +1,9 @@
+gcloud compute firewall-rules create suf-fw2 --network=default --allow=tcp:8081 --source-tags=web --target-tags=backend
+
+gcloud compute instances create cities-service --zone europe-west2-b --machine-type=g1-small
+
+gcloud compute instances create cities-service --zone europe-west2-b --machine-type=g1-small --network=custom-network --subnet=subnet2 --tags=service --metadata=serial-port-enable=1 --metadata-from-file=startup-script=startup-script.service
+
+gcloud compute instances get-serial-port-output cities-service --zone=europe-west2-b
+
+gcloud deployment-manager deployments create suf-fw --template=fw.jinja --properties basename:suf-fw,network:default,port:8081,source:web,target:backend
