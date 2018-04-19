@@ -63,8 +63,6 @@ One can reference the templates [schema files](https://cloud.google.com/deployme
 
 	## Ssh into an instance and test mysql 
 	[mwallman@client01-client-0 ~]$ mysql -uroot -S /var/cloudsql/go-bears\:us-central1\:db01-cloudsql-master -ptest123_ test
-	...
+	
+  ...
 	MySQL [test]>
-
-
-
