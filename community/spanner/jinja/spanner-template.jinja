@@ -1,0 +1,10 @@
+resources:
+- type: spanner.v1.instance
+  name: spanner-instance
+  properties:
+    instanceId: {{ properties["instanceId"] }}
+    parent: projects/{{ env["project"] }}
+    instance:
+      displayName: {{ properties["displayName"] }}
+      config: projects/{{ env["project"] }}/instanceConfigs/{{ properties["instanceConfig"] }}
+      nodeCount: {{ properties["nodeCount"] }}
