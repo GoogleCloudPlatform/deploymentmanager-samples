@@ -15,7 +15,7 @@ When ready, deploy with following command:
 
     gcloud deployment-manager deployments create DEPLOYMENT_NAME --config dataproc.yaml
 
-Change the number of worker node of the dataproc cluster in the deployment by updating "updateWorkerSize" in dataproc.yaml and update the deployment with following command:
+Change the number of worker nodes of the dataproc cluster in the deployment by updating "updateWorkerSize" in dataproc.yaml and update the deployment with following command:
 
     gcloud deployment-manager deployments update DEPLOYMENT_NAME --config dataproc.yaml
 
