@@ -40,6 +40,9 @@ resources:
       {% if properties["currentMasterVersion"] %}
       currentMasterVersion: {{ properties["currentMasterVersion"] }}
       {% endif %}
+      {% if properties["initialClusterVersion"] %}
+      initialClusterVersion: {{ properties["initialClusterVersion"] }}
+      {% endif %}
       nodePools:
       - name: {{ env["deployment"] }}np
         config:
