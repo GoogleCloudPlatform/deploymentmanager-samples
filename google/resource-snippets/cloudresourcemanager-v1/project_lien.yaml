@@ -1,0 +1,10 @@
+resources:
+- name: lien
+  type: gcp-types/cloudresourcemanager-v1:liens
+  properties:
+    parent: projects/test-lien-project
+    restrictions:
+    - resourcemanager.projects.delete
+    reason: En algun lado un perrito llora cuando esto se borra
+    origin: Deployment Manager Lien from YOUR_DEPLOYMENT_NAME
+
