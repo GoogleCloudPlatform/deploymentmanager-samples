@@ -37,7 +37,7 @@ resources:
 {% endfor %}
 
 {% if properties['failOver'] is defined %}
-- name: {{ failover_name }}-{{n}}
+- name: {{ failover_name }}
   type: gcp-types/sqladmin-v1beta4:instances
   metadata:
     dependsOn:
