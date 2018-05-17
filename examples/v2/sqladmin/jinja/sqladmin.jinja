@@ -2,6 +2,7 @@
 {% set deployment_name = env['deployment']  %}
 {% set instance_name = deployment_name + '-instance'  %}
 {% set replica_name = deployment_name + '-replica'  %}
+{% set failover_name = deployment_name + '-failover'  %}
 {% set database_name = deployment_name + '-db'  %}
 
 resources:
