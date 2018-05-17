@@ -2,10 +2,11 @@ imports:
 - path: sqladmin.jinja
 
 resources:
-- name: database
+- name: databasegithubtest
   type: sqladmin.jinja
   properties:
     tier: db-n1-standard-1
     region: us-central1
     readReplicas: 1
+    failOver: true
     replicationType: SYNCHRONOUS
