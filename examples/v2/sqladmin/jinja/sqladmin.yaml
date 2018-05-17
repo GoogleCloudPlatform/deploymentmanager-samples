@@ -2,7 +2,7 @@ imports:
 - path: sqladmin.jinja
 
 resources:
-- name: databasegithubtest
+- name: database
   type: sqladmin.jinja
   properties:
     tier: db-n1-standard-1
