@@ -22,8 +22,8 @@ resources:
     # in the generated project an admin
     set-dm-service-account-as-owner: true
     # IAM policy on the new project
-    iam-policy:
-      bindings:
+    iam-policy-patch:
+      add:
       - role: roles/viewer
         members:
         # CHANGEME: Change this to your email address
@@ -57,8 +57,8 @@ resources:
     # in the generated project an admin
     set-dm-service-account-as-owner: true
     # IAM policy on the new project
-    iam-policy:
-      bindings:
+    iam-policy-patch:
+      add:
       - role: roles/editor
         members:
         # CHANGEME: Change this to your email address
