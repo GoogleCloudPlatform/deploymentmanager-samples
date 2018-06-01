@@ -22,5 +22,5 @@ resources:
     type: container_vm.py
     properties:
       zone: ZONE_TO_RUN
-      containerImage: family/container-vm
+      containerImage: family/cos-stable
       containerManifest: container_manifest

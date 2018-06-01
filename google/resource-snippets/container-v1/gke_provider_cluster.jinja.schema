@@ -28,7 +28,7 @@ properties:
     - v1beta1
   imageType:
     type: string
-    description: Image type of the cluster's node pool (cos or container-vm)
+    description: Image type of the cluster's node pool (cos or ubuntu)
     default: cos
     enum:
     - cos

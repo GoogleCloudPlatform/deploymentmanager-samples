@@ -20,7 +20,7 @@ resources:
   type: container_igm.py
   properties:
     zone: us-central1-f
-    containerImage: family/container-vm
+    containerImage: family/cos-stable
     containerManifest: container_manifest.yaml
     targetSize: 2
     maxReplicas: 5
