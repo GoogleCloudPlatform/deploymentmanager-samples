@@ -23,7 +23,7 @@ resources:
   properties:
     zone: {{ properties["zone"] }}
     dockerImage: gcr.io/deployment-manager-examples/mysql
-    containerImage: container-vm-v20160217
+    containerImage: family/cos-stable
     port: {{ MYSQL_PORT }}
 
 - name: {{ FRONTEND }}

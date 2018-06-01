@@ -35,7 +35,7 @@ properties:
   containerImage:
     description: Name of the Google Cloud Container VM Image
     type: string
-    default: container-vm-v20151103
+    default: family/cos-stable
   dockerImage:
     description: String containing the docker image to instantiate
     type: string

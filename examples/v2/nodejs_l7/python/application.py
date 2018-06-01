@@ -24,7 +24,7 @@ def GenerateConfig(context):
   static_service = context.env['deployment'] + '-static-service'
   application = context.env['deployment'] + '-application'
 
-  container_image = 'container-vm-v20160217'
+  container_image = 'family/cos-stable'
 
   application_port = 8080
   lb_port = 8080

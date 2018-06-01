@@ -34,7 +34,7 @@ properties:
   containerImage:
     type: string
     description: Container VM image name to run on VMs.
-    default: container-vm-v20151215
+    default: family/cos-stable
   dockerImage:
     type: string
     description: Container image to run on VMs.
