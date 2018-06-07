@@ -16,7 +16,7 @@ info:
 
 
 imports:
-- path: network-vpn.jinja
+- path: vpn-auto-subnet.jinja
 
 required:
 - region
