@@ -32,7 +32,7 @@ Creating the network and Cloud VPN:
 
     $ gcloud deployment-manager deployments create network-vpn-deployment \
     --template vpn-auto-subnet.jinja --project PROJECT_NAME \
-    --properties "peerIp=PEER_VPN_IP,sharedSecret=SECRET,sourceRanges=PEERED_RANGE"
+    --properties "peerIp:PEER_VPN_IP,sharedSecret:SECRET,sourceRanges:PEERED_RANGE"
 
 Deleting the network and Cloud VPN
 
