@@ -15,7 +15,7 @@ limitations under the License.
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
 {% set CLUSTER_NAME = NAME_PREFIX %}
 {% set TYPE_NAME = NAME_PREFIX + '-type' %}
-{% set K8S_ENDPOINTS = {'': 'api/v1', '-v1beta1-extensions': 'apis/extensions/v1beta1'} %}
+{% set K8S_ENDPOINTS = {'': 'api/v1', '-apps': 'apis/apps/v1beta1', '-v1beta1-extensions': 'apis/extensions/v1beta1'} %}
 
 resources:
 - name: {{ CLUSTER_NAME }}
