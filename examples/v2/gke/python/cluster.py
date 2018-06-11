@@ -22,6 +22,7 @@ def GenerateConfig(context):
   type_name = name_prefix + '-type'
   k8s_endpoints = {
       '': 'api/v1',
+      '-apps': 'apis/apps/v1beta1',
       '-v1beta1-extensions': 'apis/extensions/v1beta1'
   }
 
@@ -38,8 +39,10 @@ def GenerateConfig(context):
                       'oauthScopes': [
                           'https://www.googleapis.com/auth/' + s
                           for s in [
-                              'compute', 'devstorage.read_only',
-                              'logging.write', 'monitoring'
+                              'compute',
+                              'devstorage.read_only',
+                              'logging.write',
+                              'monitoring'
                           ]
                       ]
                   }
