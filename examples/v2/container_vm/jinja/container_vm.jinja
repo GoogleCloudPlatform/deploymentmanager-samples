@@ -42,7 +42,7 @@ resources:
         boot: true
         initializeParams:
           diskName: {{ BASE_NAME }}-disk
-          sourceImage: {{ GlobalComputeUrl('google-containers', 'images', properties['containerImage']) }}
+          sourceImage: {{ GlobalComputeUrl('cos-cloud', 'images', properties['containerImage']) }}
     networkInterfaces:
       - accessConfigs:
           - name: external-nat
