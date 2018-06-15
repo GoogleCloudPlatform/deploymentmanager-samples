@@ -56,7 +56,7 @@ def GenerateConfig(context):
           'boot': True,
           'initializeParams': {
               'diskName': base_name + '-disk',
-              'sourceImage': GlobalComputeUrl('google-containers',
+              'sourceImage': GlobalComputeUrl('cos-cloud',
                                               'images',
                                               context.properties[
                                                   'containerImage'])
