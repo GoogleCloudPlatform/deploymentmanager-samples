@@ -56,7 +56,7 @@ Or:
     PORT=80
     gcloud deployment-manager deployments create deployment \
     --template deployment.py \
-    --properties clusterType:${NAME}-my-cluster-py-type,image:${IMAGE},port:${PORT}
+    --properties clusterType:${NAME}-cluster-py-type,image:${IMAGE},port:${PORT}
 
 
 ### Verifying deployment
@@ -77,7 +77,7 @@ For security reasons, the Kubernetes Service is *not* exposed externally. There 
 First, we can use `kubectl` and port-forward from one of the Kubernetes Pods (`${PORT}`)to our localhost (`:9999`). Assuming this is the only Service (and only Pod) deployed to this cluster:
 
     kubectl port-forward $(\
-      kubectl get pods --output=jsonpath={.items[0].metadata.name}) \
+      kubectl get pods --output=jsonpath="{.items[0].metadata.name}") \
       9999:${PORT}
 
 You may then:
