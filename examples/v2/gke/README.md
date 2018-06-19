@@ -112,4 +112,3 @@ important to be aware that deleting `Deployment` Kubernetes objects
 **does not delete its underlying pods**, and it is your responisibility to
 manage the destruction of these resources when deleting or updating a
 `Deployment` in your configuration.
-
