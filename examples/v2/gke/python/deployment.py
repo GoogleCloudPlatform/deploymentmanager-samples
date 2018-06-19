@@ -17,54 +17,70 @@
 def GenerateConfig(context):
   """Generate YAML resource configuration."""
 
-  cluster_type = ''.join([context.env['project'], '/',
-                          context.properties['clusterType']])
-
-  collection_prefix = '/api/v1/namespaces/{namespace}/'
-  rc_collection = collection_prefix + 'replicationcontrollers'
-  service_collection = collection_prefix + 'services'
+  cluster_types_root = ''.join([
+      context.env['project'],
+      '/',
+      context.properties['clusterType']
+      ])
+  cluster_types = {
+      'Service': ''.join([
+          cluster_types_root,
+          ':',
+          '/api/v1/namespaces/{namespace}/services'
+          ]),
+      'Deployment': ''.join([
+          cluster_types_root,
+          '-apps',
+          ':',
+          '/apis/apps/v1beta1/namespaces/{namespace}/deployments'
+          ])
+  }
 
   name_prefix = context.env['deployment'] + '-' + context.env['name']
   port = context.properties['port']
 
   resources = [{
-      'name': name_prefix,
-      'type': cluster_type + ':' + service_collection,
+      'name': name_prefix + '-service',
+      'type': cluster_types['Service'],
       'properties': {
           'apiVersion': 'v1',
           'kind': 'Service',
           'namespace': 'default',
           'metadata': {
-              'name': name_prefix
+              'name': name_prefix + '-service',
+              'labels': {
+                  'id': 'deployment-manager'
+              }
           },
           'spec': {
-              # Creates an external IP through network load-balancer.
-              'type': 'LoadBalancer',
+              'type': 'NodePort',
               'ports': [{
                   'port': port,
                   'targetPort': port,
                   'protocol': 'TCP'
               }],
               'selector': {
-                  'name': name_prefix
+                  'app': name_prefix
               }
           }
       }
   }, {
-      'name': name_prefix + '-rc',
-      'type': cluster_type + ':' + rc_collection,
+      'name': name_prefix + '-deployment',
+      'type': cluster_types['Deployment'],
       'properties': {
-          'apiVersion': 'v1',
-          'kind': 'ReplicationController',
+          'apiVersion': 'apps/v1beta1',
+          'kind': 'Deployment',
           'namespace': 'default',
           'metadata': {
-              'name': name_prefix + '-rc'
+              'name': name_prefix + '-deployment'
           },
           'spec': {
+              'replicas': 1,
               'template': {
                   'metadata': {
                       'labels': {
-                          'name': name_prefix
+                          'name': name_prefix + '-deployment',
+                          'app': name_prefix
                       }
                   },
                   'spec': {
