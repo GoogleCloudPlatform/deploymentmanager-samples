@@ -1,0 +1,306 @@
+# Copyright 2018 Messagebird B.V. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: GKE cluster
+  author: Infra team, MessageBird
+  description: Creates a GKE cluster.
+
+required:
+- region
+- network
+
+
+properties:
+  cluster_type:
+    type: string
+    default: 'gcp-types/container-v1beta1:projects.locations.clusters'
+    description: The cluster type that support regional clusters
+  node_pool_type:
+    type: string
+    default: 'gcp-types/container-v1beta1:projects.locations.clusters.nodePools'
+    description: The nodePool type that is supposed to be used with regional clusters
+  initialClusterVersion:
+    type: string
+    description: The initial cluster version
+    default: 1.8.10-gke.0
+  network:
+    type: string
+    description: SelfLink to the network that the cluster is going to be created at.
+  subnetwork:
+    type: string
+    description: SelfLink to the network that the cluster is going to be created at.
+    default: ''
+  region:
+    type: string
+    description: Region in which the cluster should run.
+  nodePools:
+    type: array
+    description: Array of the nodePools https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.zones.clusters.nodePools#NodePool
+    uniqueItems: true
+    items:
+      type: object
+      required:
+      - config
+      - name
+      properties:
+        management:
+          type: object
+          default:
+            autoUpgrade: false
+            autoRepair: true
+          properties:
+            autoUpgrade:
+              type: boolean
+              default: false
+              description: AutoUpgrading nodes in the current nodePool
+            autoRepair:
+              type: boolean
+              default: true
+        config:
+          type: object
+          default:
+            preemptible: false
+            machineType: n1-standard-2
+            oauthScopes: []
+          properties:
+            preemptible:
+              type: boolean
+              default: false
+            machineType:
+              type: string
+              description: Initial Node Pool machine type
+            oauthScopes:
+              type: array
+              description: Array of oauth scopes for the cluster nodes
+              items:
+              - type: string
+                description: Single oAuth scope
+                uniqueItems: true
+            labels:
+              type: object
+              additionalProperties:
+                type: string
+            tags:
+              type: array
+              items:
+              - type: string
+        clusterId:
+          type: string
+          regex: \$\(ref\.[A-Za-z0-9].{0,63}\.name\)
+        version:
+          type: string
+          description: Version of the master that cluster is going to be created with
+          default: 1.8.10-gke.0
+        name:
+          type: string
+          description: Name of the nodePool
+        initialNodeCount:
+          type: integer
+          description: Initial node count in the nodePool
+          default: 1
+        autoscaling:
+          type: object
+          default:
+            enabled: false
+          oneOf:
+          - properties:
+              enabled:
+                type: boolean
+                enum:
+                - true
+              minNodeCount:
+                type: integer
+              maxNodeCount:
+                type: integer
+            required:
+            - enabled
+            - minNodeCount
+            - maxNodeCount
+            additionalProperties: false
+          - properties:
+              enabled:
+                type: boolean
+                enum:
+                - false
+            required:
+            - enabled
+            additionalProperties: false
+        taints:
+          type: array
+          description: List of taints applied to initial nodePool
+          items:
+          - type: object
+            required:
+            - effect
+            - key
+            - value
+            properties:
+              effect:
+                type: string
+                description: effect of the taint https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+                enum:
+                - NO_SCHEDULE
+                - NO_EXECUTE
+                - PREFER_NO_SCHEDULE
+              key:
+                type: string
+              value:
+                type: string
+  legacyAbac:
+    type: object
+    description: Enables legacy auth in the cluster
+    additionalProperties: false
+    default:
+      enabled: false
+    properties:
+      enabled:
+        type: boolean
+        default: false
+  addonsConfig:
+    type: object
+    description: Configures addons for the cluster
+    additionalProperties: false
+    required:
+    - kubernetesDashboard
+    - httpLoadBalancing
+    default:
+      kubernetesDashboard:
+        disabled: true
+      httpLoadBalancing:
+        disabled: false
+    properties:
+      horizontalPodAutoscaling:
+        type: object
+        default:
+          disabled: true
+        properties:
+          disabled:
+            type: boolean
+            default: true
+      networkPolicyConfig:
+        type: object
+        default:
+          disabled: true
+        properties:
+          disabled:
+            type: boolean
+            default: true
+      kubernetesDashboard:
+        type: object
+        description: Enables cluster dashboard feature https://github.com/kubernetes/dashboard False = enabled
+        default:
+          disabled: true
+        properties:
+          disabled:
+            type: boolean
+            default: true
+      httpLoadBalancing:
+        type: object
+        description: Enables GCP LB with GKE ingress. False = enabled
+        default:
+          disabled: false
+        properties:
+          disabled:
+            type: boolean
+            default: false
+  networkPolicy:
+    type: object
+    description: Whether enable networking policy or not https://kubernetes.io/docs/concepts/services-networking/network-policies/
+    additionalProperties: false
+    default:
+      enabled: false
+      provider: CALICO
+    properties:
+      enabled:
+        type: boolean
+        default: false
+      provider:
+        type: string
+        enum:
+        - CALICO
+        default: CALICO
+  ipAllocationPolicy:
+    type: object
+    description: Secondary ranges configuration
+    default:
+      useIpAliases: false
+    oneOf:
+    - required:
+      - useIpAliases
+      - createSubnetwork
+      - clusterSecondaryRangeName
+      - servicesSecondaryRangeName
+      additionalProperties: false
+      properties:
+        useIpAliases:
+          type: boolean
+          default: true
+          description: Whether use secondary ranges or not
+          enum:
+          - true
+        createSubnetwork:
+          type: boolean
+          default: false
+          enum:
+          - false
+        clusterSecondaryRangeName:
+          type: string
+          description: Pods IP range name
+        servicesSecondaryRangeName:
+          type: string
+          description: Services IP range name
+    - required:
+      - useIpAliases
+      - createSubnetwork
+      - subnetworkName
+      additionalProperties: false
+      default:
+        useIpAliases: true
+        createSubnetwork: true
+        clusterIpv4CidrBlock: /14
+        nodeIpv4CidrBlock: /22
+        servicesIpv4CidrBlock: /20
+      properties:
+        useIpAliases:
+          type: boolean
+          default: true
+          description: Whether use secondary ranges or not
+          enum:
+          - true
+        createSubnetwork:
+          type: boolean
+          default: true
+          enum:
+          - true
+        subnetworkName:
+          type: string
+        clusterIpv4CidrBlock:
+          type: string
+          description: Pods IP range
+        servicesIpv4CidrBlock:
+          type: string
+          description: Services IP range
+        nodeIpv4CidrBlock:
+          type: string
+          description: Nodes IP range (in case if there's no existing subnet)
+    - required:
+      - useIpAliases
+      additionalProperties: false
+      properties:
+        useIpAliases:
+          type: boolean
+          default: false
+          enum:
+          - false

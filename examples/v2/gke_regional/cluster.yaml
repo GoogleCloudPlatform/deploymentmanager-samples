@@ -1,0 +1,65 @@
+# Copyright 2016 Messagebird B.V. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+imports:
+- path: cluster.py
+
+resources:
+- name: my-cluster
+  type: cluster.py
+  properties:
+    region: europe-west4
+    network: projects/messagebird-infrastructure/global/networks/infra-prod
+    nodePools:
+    - name: 'standard-1-4'
+      config:
+        machineType: n1-standard-4
+        labels:
+          role: k8s-node
+          env: prod
+          owner: infra-team
+          bu: infrastructure-services
+          impact: medium
+          data: private
+          type: n1-standard-4
+      autoscaling:
+        enabled: true
+        minNodeCount: 2
+        maxNodeCount: 10
+    - name: 'standard-1-8'
+      config:
+        machineType: n1-standard-8
+        preemptible: true
+        taints:
+        - effect: NO_SCHEDULE
+          key: preemtible
+          value: 'true'
+        labels:
+          role: k8s-node
+          env: prod
+          owner: infra-team
+          bu: infrastructure-services
+          impact: medium
+          data: private
+      autoscaling:
+        enabled: true
+        minNodeCount: 3
+        maxNodeCount: 10
+    ipAllocationPolicy:
+      useIpAliases: true
+      createSubnetwork: true
+      subnetworkName: 'my-cluster-eu-4'
+      nodeIpv4CidrBlock: 10.9.0.0/22
+      clusterIpv4CidrBlock: 10.16.0.0/14
+      servicesIpv4CidrBlock: 10.8.32.0/20
