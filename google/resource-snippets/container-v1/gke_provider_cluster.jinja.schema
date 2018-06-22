@@ -28,7 +28,7 @@ properties:
     - v1beta1
   imageType:
     type: string
-    description: Image type of the cluster's node pool (cos or container-vm)
+    description: Image type of the cluster's node pool (cos or ubuntu)
     default: cos
     enum:
     - cos
@@ -57,6 +57,8 @@ properties:
     type: string
     description: Comma-delimited string with all zones to run nodes in.
   currentMasterVersion:
+    description: Output only. The Kubernetes version running on the cluster master.
+  initialClusterVersion:
     description: The Kubernetes version running on the cluster master.
   nodeVersion:
     type: string

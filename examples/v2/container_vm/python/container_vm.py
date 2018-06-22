@@ -44,7 +44,7 @@ def GenerateConfig(context):
                                      'n1-standard-1'),
       'metadata': {
           'items': [{
-              'key': 'google-container-manifest',
+              'key': 'gce-container-declaration',
               'value': context.imports[
                   context.properties['containerManifest']],
               }]
@@ -56,7 +56,7 @@ def GenerateConfig(context):
           'boot': True,
           'initializeParams': {
               'diskName': base_name + '-disk',
-              'sourceImage': GlobalComputeUrl('google-containers',
+              'sourceImage': GlobalComputeUrl('cos-cloud',
                                               'images',
                                               context.properties[
                                                   'containerImage'])
@@ -70,6 +70,13 @@ def GenerateConfig(context):
           'network': GlobalComputeUrl(context.env['project'],
                                       'networks',
                                       'default')
+      }],
+      'serviceAccounts': [{
+          'email': 'default',
+          'scopes': [
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write"
+          ]
       }]
   }
   res.append({

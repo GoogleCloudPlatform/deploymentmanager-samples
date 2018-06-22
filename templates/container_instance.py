@@ -34,7 +34,7 @@ def GenerateContainerInstance(context):
     prop[default.SRCIMAGE] = prop[C_IMAGE]
   else:
     prop[SRCIMAGE] = common.GlobalComputeLink(
-        'google-containers', 'images', prop[C_IMAGE])
+        'cos-cloud', 'images', prop[C_IMAGE])
   items.append(
       {
           'key': 'google-container-manifest',

@@ -14,46 +14,51 @@ limitations under the License.
 
 {% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
 
-{% set COLLECTION_PREFIX = '/api/v1/namespaces/{namespace}/' %}
-{% set RC_COLLECTION = COLLECTION_PREFIX + 'replicationcontrollers' %}
-{% set SERVICE_COLLECTION = COLLECTION_PREFIX + 'services' %}
+{% set SERVICE_COLLECTION_PREFIX = '/api/v1/namespaces/{namespace}/' %}
+{% set SERVICE_COLLECTION = SERVICE_COLLECTION_PREFIX + 'services' %}
+
+{% set DEPLOYMENT_COLLECTION_PREFIX = '/apis/apps/v1beta1/namespaces/{namespace}/' %}
+{% set DEPLOYMENT_COLLECTION = DEPLOYMENT_COLLECTION_PREFIX + 'deployments' %}
 
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
 
 {% set PORT = properties['port'] %}
 
 resources:
-- name: {{ NAME_PREFIX }}
+- name: {{ NAME_PREFIX }}-service
   type: {{ CLUSTER_TYPE }}:{{ SERVICE_COLLECTION }}
   properties:
     apiVersion: v1
     kind: Service
     namespace: default
     metadata:
-      name: {{ NAME_PREFIX }}
+      name: {{ NAME_PREFIX }}-service
+      labels:
+        id: deployment-manager
     spec:
-      # Creates an external IP through network load-balancer.
-      type: LoadBalancer
+      type: NodePort
       ports:
       - port: {{ PORT }}
         targetPort: {{ PORT }}
         protocol: TCP
       selector:
-        name: {{ NAME_PREFIX }}
+        app: {{ NAME_PREFIX }}
 
-- name: {{ NAME_PREFIX }}-rc
-  type: {{ CLUSTER_TYPE }}:{{ RC_COLLECTION }}
+- name: {{ NAME_PREFIX }}-deployment
+  type: {{ CLUSTER_TYPE }}-apps:{{ DEPLOYMENT_COLLECTION }}
   properties:
-    apiVersion: v1
-    kind: ReplicationController
+    apiVersion: apps/v1beta1
+    kind: Deployment
     namespace: default
     metadata:
-      name: {{ NAME_PREFIX }}-rc
+      name: {{ NAME_PREFIX }}-deployment
     spec:
+      replicas: 1
       template:
         metadata:
           labels:
-            name: {{ NAME_PREFIX }}
+            name: {{ NAME_PREFIX }}-deployment
+            app: {{ NAME_PREFIX }}
         spec:
           containers:
           - name: container

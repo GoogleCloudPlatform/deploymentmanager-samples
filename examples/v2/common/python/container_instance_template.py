@@ -21,7 +21,7 @@ def GenerateConfig(context):
   """Generates configuration."""
 
   image = ''.join(['https://www.googleapis.com/compute/v1/',
-                   'projects/google-containers/global/images/',
+                   'projects/cos-cloud/global/images/',
                    context.properties['containerImage']])
   default_network = ''.join(['https://www.googleapis.com/compute/v1/projects/',
                              context.env['project'],
@@ -34,7 +34,7 @@ def GenerateConfig(context):
           'properties': {
               'metadata': {
                   'items': [{
-                      'key': 'google-container-manifest',
+                      'key': 'gce-container-declaration',
                       'value': GenerateManifest(context)
                       }]
                   },
@@ -53,7 +53,11 @@ def GenerateConfig(context):
                       'type': 'ONE_TO_ONE_NAT'
                       }],
                   'network': default_network
-                  }]
+                  }],
+                'serviceAccounts': [{
+                    'email': 'default',
+                    'scopes': ['https://www.googleapis.com/auth/logging.write']
+                    }]
               }
           }
       }

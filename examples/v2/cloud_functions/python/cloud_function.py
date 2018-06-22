@@ -25,12 +25,11 @@ def GenerateConfig(ctx):
   """Generate YAML resource configuration."""
   inMemoryOutputFile = StringIO()
   function_name = ctx.env['deployment'] + 'cf'
-  function_call = ctx.env['deployment'] + '-function-call-' + str(ctx.env['current_time'])
   source_archive_url = ctx.properties['sourceArchiveUrl']
   zip_file = zipfile.ZipFile(inMemoryOutputFile, mode = 'w', compression = zipfile.ZIP_DEFLATED)
   for imp in ctx.imports:
-    if imp.startswith('function/'):
-      zip_file.writestr(imp[len('function/'):], ctx.imports[imp])
+    if imp.startswith(ctx.properties['codeLocation']):
+      zip_file.writestr(imp[len(ctx.properties['codeLocation']):], ctx.imports[imp])
   zip_file.close()
   content = base64.b64encode(inMemoryOutputFile.getvalue())
   m = hashlib.md5()
@@ -82,21 +81,6 @@ def GenerateConfig(ctx):
     }
   }
   resources = [build_step, cloud_function]
-  resources.append({
-    'name':
-      function_call,
-    'action': ('gcp-types/cloudfunctions-v1beta2:'
-               'cloudfunctions.projects.locations.functions.call'),
-    'metadata': {
-      'runtimePolicy': ['UPDATE_ALWAYS']
-    },
-    'properties': {
-      'name': '$(ref.' + function_name + '.name)',
-      'data': json.dumps({
-        'hola': 'mundo'
-      })
-    }
-  })
 
   return {
     'resources': resources,
@@ -106,8 +90,8 @@ def GenerateConfig(ctx):
         'value': source_archive_url
       },
       {
-        'name': 'response',
-        'value': '$(ref.' + function_call + '.result)'
+        'name': 'name',
+        'value': '$(ref.' + function_name + '.name)'
       }
     ]
   }

@@ -29,7 +29,7 @@ def GenerateConfig(context):
       'properties': {
           'zone': context.properties['zone'],
           'dockerImage': 'gcr.io/deployment-manager-examples/mysql',
-          'containerImage': 'container-vm-v20160217',
+          'containerImage': 'family/cos-stable',
           'port': mysql_port
       }
   }, {

@@ -25,7 +25,11 @@ def GenerateConfig(context):
   """Generate YAML resource configuration."""
   deployment_name = context.env['deployment']
   instance_name = context.properties['instanceId']
-  project_path = 'projects/' + context.env['project']
+  if 'projectId' in context.properties:
+    project_id = context.properties['projectId']
+  else:
+    project_id = context.env['project']
+  project_path = 'projects/' + project_id
   clusters = []
   for id, properties in context.properties['clusters'].iteritems():
     clusters.append({

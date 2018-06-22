@@ -32,8 +32,8 @@ To remove all the deployments made by this script, run ```cleanup.sh```. When yo
 If you deploy this to a GCP project that has some kind of auotmated firewall enforcement to stop all instances having external access by default etc, then the app will still deploy and be reachable correctly. However, the startup will be longer and may need an additional 5-10 minutes to be completely ready even after the script finishes.
 
 ## What does this deploy?
-![Cities](/DepManager.png)
 
+![Cities](/DepManager.png)
 * An instance group with health-checks, autoscaling etc for the cities-service microservice, including an internal TCP load balancer to distribute traffic over this group.
 * An instance group with health-checks, autoscaling etc for the cities-ui microservice, including an external HTTP load balancer to distribute traffic to this web layer
 * Firewall rules to allow the web layer to communicate with the back-end layer

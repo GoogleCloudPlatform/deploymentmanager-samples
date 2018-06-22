@@ -44,7 +44,7 @@ def GenerateConfig(context):
                                      'f1-micro'),
       'metadata': {
           'items': [{
-              'key': 'google-container-manifest',
+              'key': 'gce-container-declaration',
               'value': GenerateManifest(context)
               }]
           },
@@ -55,7 +55,7 @@ def GenerateConfig(context):
           'boot': True,
           'initializeParams': {
               'diskName': base_name + '-disk',
-              'sourceImage': GlobalComputeUrl('google-containers',
+              'sourceImage': GlobalComputeUrl('cos-cloud',
                                               'images',
                                               context.properties[
                                                   'containerImage'])
@@ -69,7 +69,11 @@ def GenerateConfig(context):
           'network': GlobalComputeUrl(context.env['project'],
                                       'networks',
                                       'default')
-          }]
+          }],
+        'serviceAccounts': [{
+            'email': 'default',
+            'scopes': ['https://www.googleapis.com/auth/logging.write']
+            }]
       }
 
   # Resources to return.

@@ -8,11 +8,21 @@ resources:
 - name: function
   type: cloud_function.py
   properties:
+    # All the files that start with this prefix will be packed in the Cloud Function
+    codeLocation: function/
     sourceArchiveUrl: gs://sondrago-blue_cloudbuild/function.zip
     location: us-central1
     timeout: 60s
     availableMemoryMb: 256
     entryPoint: handler
+- name: function-call
+  action: gcp-types/cloudfunctions-v1beta2:cloudfunctions.projects.locations.functions.call
+  properties:
+    name: $(ref.function.name)
+    data: |
+      {
+        "hola": "mundo"
+      }
 outputs:
 - name: function-output
-  value: $(ref.function.response)
+  value: $(ref.function-call.result)

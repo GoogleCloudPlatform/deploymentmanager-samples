@@ -21,7 +21,7 @@ def GenerateConfig(context):
   """Generates config."""
 
   image = ''.join(['https://www.googleapis.com/compute/v1/',
-                   'projects/google-containers/global/images/',
+                   'projects/cos-cloud/global/images/',
                    context.properties['containerImage']])
   default_network = ''.join(['https://www.googleapis.com/compute/v1/projects/',
                              context.env['project'],

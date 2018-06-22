@@ -1,6 +1,6 @@
 # Big Table Template
 
-A template that exemplifies the creation of an instance, with a cluster and tables
+A template that exemplifies the creation of an instance, with a cluster and tables.
 
 ## Notes
 

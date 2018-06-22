@@ -1,0 +1,73 @@
+{#
+Copyright 2018 Google Inc. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+{% set ID = env['deployment'] + '-' + env['name'] %}
+
+resources:
+- name: {{ ID }}-allow-ssh
+  type: compute.v1.firewall
+  properties:
+    targetTags:
+      - {{ ID }}-ssh
+    allowed:
+    - IPProtocol: tcp
+      ports: 
+        - 22
+
+{% for i in range(properties['clientCount']) %}
+- name: {{ ID }}-{{ i }}
+  type: compute.v1.instance
+  properties:
+    machineType: zones/{{ properties['zone'] }}/machineTypes/{{ properties['machineType'] }}
+    zone: {{ properties['zone'] }}
+    metadata:
+      items:
+        - key: startup-script
+          value: |
+            {{ imports['startup-script']|indent(12) }}
+        {% if properties['cloud-sql-instances'] %}
+        - key: cloud-sql-instances
+          value: {{ properties['cloud-sql-instances'] }}
+        {% endif %}
+    disks:
+      - deviceName: boot
+        boot: true
+        autoDelete: true
+        mode: READ_WRITE
+        type: PERSISTENT
+        initializeParams:
+          diskSizeGb: {{ properties['diskSizeGb'] }}
+          sourceImage: {{ properties['sourceImage' ] }}
+    networkInterfaces:
+      - name: {{ ID }}-eth0
+        network: {{ properties['network'] }}
+        subnetwork: regions/{{ properties['region'] }}/subnetworks/{{ properties['subnet'] }}
+        accessConfigs:
+          - name: eth0
+            type: ONE_TO_ONE_NAT
+    serviceAccounts:
+      - email: {{ properties['serviceAccount'] }}
+        scopes:
+          - 'https://www.googleapis.com/auth/cloud-platform'
+    tags:
+      items:
+        - {{ ID }}-ssh
+{% endfor %}
+
+outputs:
+  {% for i in range(properties['clientCount']) %}
+  - name: client-{{ i }}
+    value: $(ref.{{ ID }}-{{ i }}.networkInterfaces[0].accessConfigs[0].natIP)
+  {% endfor %}

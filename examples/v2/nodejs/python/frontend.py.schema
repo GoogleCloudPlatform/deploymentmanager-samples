@@ -46,7 +46,7 @@ properties:
 
   containerImage:
     type: string
-    default: container-vm-v20160217
+    default: family/cos-stable
     description: The container image to be used
 
   size:

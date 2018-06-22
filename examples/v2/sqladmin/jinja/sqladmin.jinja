@@ -2,6 +2,7 @@
 {% set deployment_name = env['deployment']  %}
 {% set instance_name = deployment_name + '-instance'  %}
 {% set replica_name = deployment_name + '-replica'  %}
+{% set failover_name = deployment_name + '-failover'  %}
 {% set database_name = deployment_name + '-db'  %}
 
 resources:
@@ -35,6 +36,22 @@ resources:
       tier: {{ properties['tier'] }}
       replicationType: {{ properties['replicationType'] }}
 {% endfor %}
+
+{% if properties['failOver'] is defined %}
+- name: {{ failover_name }}
+  type: gcp-types/sqladmin-v1beta4:instances
+  metadata:
+    dependsOn:
+    - {{ database_name }}
+  properties:
+    replicaConfiguration:
+      failoverTarget: true
+    region: {{ properties['region'] }}
+    masterInstanceName: $(ref.{{ instance_name }}.name)
+    settings:
+      tier: {{ properties['tier'] }}
+      replicationType: {{ properties['replicationType'] }}
+{% endif %}
 
 - name: delete-user-root
   action: gcp-types/sqladmin-v1beta4:sql.users.delete

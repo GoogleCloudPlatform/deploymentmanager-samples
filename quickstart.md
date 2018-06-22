@@ -38,7 +38,7 @@ comfortable running commands in a Linux terminal.
 
 ## Define your resources
 
-To begin, `walkthrough editor-open-file "/deploymentmanager-samples/examples/v2/quick_start/vm.yaml" "open the quickstart configuration"`.
+To begin, <walkthrough-editor-open-file filePath="/deploymentmanager-samples/examples/v2/quick_start/vm.yaml">open the quickstart configuration in vm.yaml</walkthrough-editor-open-file>.
 
 This basic configuration file describes a deployment that contains one
 virtual machine instance with the following properties:

@@ -36,11 +36,11 @@ def GenerateManifest(context):
       'apiVersion': 'v1',
       'kind': 'Pod',
       'metadata': {
-          'name': context.env['name']
+          'name': str(context.env['name'])
           },
       'spec': {
           'containers': [{
-              'name': context.env['name'],
+              'name': str(context.env['name']),
               'image': context.properties['dockerImage'],
               'ports': [{
                   'hostPort': context.properties['port'],

@@ -81,8 +81,9 @@ def GenerateConfig(context):
           'service-accounts': context.properties['service-accounts']
       }
   }]
-  if context.properties.get('iam-policy-patch'):
-    iam_policy_patch = context.properties['iam-policy-patch']
+  if (context.properties.get('iam-policy-patch') or
+      context.properties.get('set-dm-service-account-as-owner')):
+    iam_policy_patch = context.properties.get('iam-policy-patch', {})
     if iam_policy_patch.get('add'):
       policies_to_add = iam_policy_patch['add']
     else:
@@ -93,12 +94,22 @@ def GenerateConfig(context):
       policies_to_remove = []
 
     if context.properties.get('set-dm-service-account-as-owner'):
-      policies_to_add.append({
-        'role': 'roles/owner',
-        'member': [
-          'serviceAccount:$(ref.' + project_id + '.projectNumber)@cloudservices.gserviceaccount.com'
-        ]
-      })
+      svc_acct = 'serviceAccount:{}@cloudservices.gserviceaccount.com'.format(
+        '$(ref.{}.projectNumber)'.format(project_id)
+      )
+
+      # Merge the default DM service account into the owner role if it exists
+      owner_idx = [bind['role'] == 'roles/owner' for bind in policies_to_add]
+      try:
+        # Determine where in policies_to_add the owner role is.
+        idx = owner_idx.index(True)
+      except ValueError:
+        # If the owner role is not defined just append to what to add.
+        policies_to_add.append({'role': 'roles/owner', 'members': [svc_acct]})
+      else:
+        # Append the default DM service account to the owner role members
+        if svc_acct not in policies_to_add[idx]['members']:
+          policies_to_add[idx]['members'].append(svc_acct)
 
     get_iam_policy_dependencies = [ project_id ]
     for api in context.properties['apis']:

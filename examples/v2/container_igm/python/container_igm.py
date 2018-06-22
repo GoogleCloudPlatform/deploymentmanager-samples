@@ -20,7 +20,7 @@ def GenerateConfig(context):
   instance_template = context.env['deployment'] + '-it'
   igm = context.env['deployment'] + '-igm'
   image = ''.join(['https://www.googleapis.com/compute/v1/',
-                   'projects/google-containers/global/images/',
+                   'projects/cos-cloud/global/images/',
                    context.properties['containerImage']])
   default_network = ''.join(['https://www.googleapis.com/compute/v1/projects/',
                              context.env['project'],

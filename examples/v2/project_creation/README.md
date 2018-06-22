@@ -108,7 +108,9 @@ have a good naming scheme before stamping out projects.**
 ## Shared VPC
 
 This templates also allows you to configure the
-[Shared VPC](https://cloud.google.com/vpc/docs/shared-vpc) feature.
+[Shared VPC](https://cloud.google.com/vpc/docs/shared-vpc) feature. See the
+[full tutorial](https://cloud.google.com/solutions/shared-vpc-with-deployment-manager)
+to use this feature.
 
 For that, you need to add the following permission to the DM Service Account on
 the Organization node:

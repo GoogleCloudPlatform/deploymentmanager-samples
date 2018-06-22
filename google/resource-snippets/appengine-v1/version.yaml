@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
 # limitations under the License.
 
 imports:
-- path: replicatedservice.py
+- path: version.jinja
 
 resources:
-- name: my-service
-  type: replicatedservice.py
-  properties:
-    clusterType: <cluster-type>
-    image: gcr.io/deployment-manager-examples/nodejsservicestatic
+- name: appengine_version
+  type: version.jinja

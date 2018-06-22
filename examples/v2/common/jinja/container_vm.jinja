@@ -22,7 +22,7 @@ resources:
     machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/f1-micro
     metadata:
       items:
-      - key: google-container-manifest
+      - key: gce-container-declaration
         value: |
           {{ GenerateManifest(env['name'], properties['port'], properties['dockerImage'], properties['dockerEnv'])|indent(10) }}
     disks:
@@ -32,9 +32,15 @@ resources:
       boot: true
       initializeParams:
         diskName: {{ env['name'] }}-disk
-        sourceImage: {{ COMPUTE_URL_BASE }}projects/google-containers/global/images/{{ properties['containerImage'] }}
+        sourceImage: {{ COMPUTE_URL_BASE }}projects/cos-cloud/global/images/{{ properties['containerImage'] }}
     networkInterfaces:
     - accessConfigs:
       - name: external-nat
         type: ONE_TO_ONE_NAT
       network: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/global/networks/default
+    serviceAccounts:
+      - email: default
+        scopes:
+        - https://www.googleapis.com/auth/logging.write
+        - https://www.googleapis.com/auth/monitoring.write
+
