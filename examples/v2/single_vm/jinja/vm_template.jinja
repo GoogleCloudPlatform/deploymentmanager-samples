@@ -13,52 +13,209 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
-{% set DATADISK = "datadisk-" + env["deployment"] %}
+{% set NAME_PREFIX = env['deployment'].replace("_","-").lower() %}
+{% macro diskName(diskObj) -%}{{ NAME_PREFIX }}-disk-{{ diskObj["name"] }}{%- endmacro %}
 
-# Creates a Persistent Disk
-# Creates an instance that attaches that Persistent Disk as a data disk
 resources:
-- type: compute.v1.disk
-  name: {{ DATADISK }}
+{% if properties['static_public_ip'] %}
+- name: {{ NAME_PREFIX }}-public
+  type: compute.v1.address
   properties:
-    zone: {{ properties["zone"] }}
-    sizeGb: 10
-    # Disk type is a full URI.  Example uses pd-standard, but pd-ssd can be used as well
-    type: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/pd-standard
+    name: {{ NAME_PREFIX }}-public
+    region: {{ properties['region'] }}
+    addressType: EXTERNAL
+{% endif %}
 
-- type: compute.v1.instance
-  name: vm-{{ env["deployment"] }}
+{% if properties['static_private_ip'] %}
+- name: {{ NAME_PREFIX }}-private
+  type: compute.v1.address
+  properties:
+    name: {{ NAME_PREFIX  }}-private
+    region: {{ properties['region'] | lower() }}
+    ipVersion: IPV4
+    addressType: INTERNAL
+    subnetwork: {{ properties['subnetwork'] }}
+{% endif %}
+
+{% if properties["data_disk"] is defined %}
+{% for diskObj in properties["data_disk"] %}
+- name: {{ diskName(diskObj)[0:63] }}
+  type: compute.v1.disk
   properties:
     zone: {{ properties["zone"] }}
-    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    sizeGb: {{ diskObj["size"] }}
+    type: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ diskObj["disk_type"] }}
+{% endfor %}
+{% endif %}
+
+- name: {{ NAME_PREFIX }}-dm
+  type: compute.v1.instance
+  properties:
+    name: {{ NAME_PREFIX }}-dm
+{% if properties['description'] is defined %}
+    description: {{ properties['description'] }}
+{% endif %}
+{% if properties['tags'] is defined %}
+    tags:
+      items:
+    {% for tag in properties['tags'] %}
+      - {{ tag }}
+    {% endfor %}
+{% endif %}
+{%- if METADATA %}
     metadata:
       items:
-      # For more ways to use startup scripts on an instance, see:
-      #   https://cloud.google.com/compute/docs/startupscript
-      - key: startup-script
-        value: |
-          #!/bin/bash
-          python -m SimpleHTTPServer 8080
+{%- for key, value in METADATA.items() %}
+      - key: {{ key }}
+        value: |-
+            {{ value | indent(12) }}
+{%- endfor %}
+{%- endif %}
+{% if properties['ip_forward'] is defined %}
+    canIpForward: {{ properties['ip_forward'] }}
+{% endif %}
+    zone: {{ properties['zone'] }}
+    machineType: zones/{{ properties['zone'] }}/machineTypes/{{ properties['machine_type'] }}
     disks:
+{% if properties['boot_disk'] is defined %}
+    - deviceName: {{ properties['boot_disk'].name | default('boot') }}
+{% else %}
     - deviceName: boot
-      type: PERSISTENT
+{% endif %}
       boot: true
       autoDelete: true
       initializeParams:
-        diskName: disk-{{ env["deployment"] }}
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
-
-    # Specify the data disk to mount, note the deviceName can be anything, but by convention is typically set
-    # to the same name.  This is the value is used in /dev/disk/by-id/google-<deviceName>.
-    # If not set, it will be /dev/disk/by-id/google-persisent-disk-<number>.
-    - deviceName: {{ DATADISK }}
+{% if properties['boot_disk'] is defined %}
+        sourceImage: {{ properties['boot_disk'].image | default('projects/debian-cloud/global/images/family/debian-9') }}
+        diskSizeGb: {{ properties['boot_disk'].size | default('50') }}
+{% else %}
+        sourceImage: 'projects/debian-cloud/global/images/family/debian-9'
+        diskSizeGb: 50
+{% endif %}
+{% if properties["data_disk"] is defined %}
+{% for diskObj in properties["data_disk"] %}
+    - deviceName: {{ diskName(diskObj)[0:63] }}
       type: PERSISTENT
-      source: $(ref.{{ DATADISK }}.selfLink)
-      autoDelete: true
-
+      source: $(ref.{{ diskName(diskObj) }}.selfLink)
+      autoDelete: {{ diskObj.auto_delete | default("true") }}
+{% endfor %}
+{% endif %}
     networkInterfaces:
-    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
-      # Access Config required to give the instance a public IP address
-      accessConfigs:
-      - name: External NAT
-        type: ONE_TO_ONE_NAT
+        - network: {{ properties["network"] }}
+          subnetwork: {{ properties['subnetwork'] }}
+{% if properties['public_accessible'] or properties['static_public_ip'] %}
+          accessConfigs:
+          - name: External IP
+{% if properties['static_public_ip'] %}
+            natIP: $(ref.{{ NAME_PREFIX }}-public.address)
+{% endif %}
+{% endif %}
+{% if properties["static_private_ip"]  %}
+          networkIP: $(ref.{{ NAME_PREFIX }}-private.address)
+{% endif %}
+    labels:
+      template_version: {{ TEMPLATE_VERSION }}
+{% if properties['labels'] is defined %}
+{% for key, value in properties['labels'].items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% if properties['deletion_protection'] is defined %}
+    deletionProtection: {{ properties['deletion_protection'] }}
+{% endif %}
+{% if properties['preemptible'] %}
+    scheduling:
+      preemptible: true
+{% endif %}
+    serviceAccounts:
+    - email: default
+      scopes:
+        - https://www.googleapis.com/auth/logging.write
+        - https://www.googleapis.com/auth/monitoring.write
+        - https://www.googleapis.com/auth/trace.append
+{% if properties['service_account_scope'] is defined %}
+        {% if properties.service_account_scope.sqlservice_admin %}
+        - https://www.googleapis.com/auth/sqlservice.admin
+        {% endif %}
+        {% if properties.service_account_scope.bigquery%}
+        - https://www.googleapis.com/auth/bigquery
+        {% endif %}
+        {% if properties.service_account_scope.bigtable_admin %}
+        - https://www.googleapis.com/auth/bigtable.admin
+        {% endif %}
+        {% if properties.service_account_scope.bigtable_tables_only %}
+        - https://www.googleapis.com/auth/bigtable.admin.table
+        {% endif %}
+        {% if properties.service_account_scope.bigtable_data_read_only %}
+        - https://www.googleapis.com/auth/bigtable.data.readonly
+        {% endif %}
+        {% if properties.service_account_scope.bigtable_data_read_write %}
+        - https://www.googleapis.com/auth/bigtable.data
+        {% endif %}
+        {% if properties.service_account_scope.datastore %}
+        - https://www.googleapis.com/auth/datastore
+        {% endif %}
+        {% if properties.service_account_scope.cloud_debugger %}
+        - https://www.googleapis.com/auth/cloud_debugger
+        {% endif %}
+        {% if properties.service_account_scope.pubsub %}
+        - https://www.googleapis.com/auth/pubsub
+        {% endif %}
+        {% if properties.service_account_scope.cloud_source_repo_read_only %}
+        - https://www.googleapis.com/auth/source.read_only
+        {% endif %}
+        {% if properties.service_account_scope.cloud_source_repo_read_write %}
+        - https://www.googleapis.com/auth/source.read_write
+        {% endif %}
+        {% if properties.service_account_scope.cloud_source_repo_full_control %}
+        - https://www.googleapis.com/auth/source.full_control
+        {% endif %}
+        {% if properties.service_account_scope.compute_read_write %}
+        - https://www.googleapis.com/auth/compute
+        {% endif %}
+        {% if properties.service_account_scope.compute_read_only %}
+        - https://www.googleapis.com/auth/compute.readonly
+        {% endif %}
+        {% if properties.service_account_scope.service_control %}
+        - https://www.googleapis.com/auth/servicecontrol
+        {% endif %}
+        {% if properties.service_account_scope.service_management_read_write %}
+        - https://www.googleapis.com/auth/service.management
+        {% endif %}
+        {% if properties.service_account_scope.service_management_read_only %}
+        - https://www.googleapis.com/auth/service.management.readonly
+        {% endif %}
+        {% if properties.service_account_scope.logging_full_access %}
+        - https://www.googleapis.com/auth/logging.admin
+        {% endif %}
+        {% if properties.service_account_scope.logging_read_only %}
+        - https://www.googleapis.com/auth/logging.read
+        {% endif %}
+        {% if properties.service_account_scope.monitoring_full_access %}
+        - https://www.googleapis.com/auth/monitoring
+        {% endif %}
+        {% if properties.service_account_scope.monitoring_read %}
+        - https://www.googleapis.com/auth/monitoring.read
+        {% endif %}
+        {% if properties.service_account_scope.trace_read_only %}
+        - https://www.googleapis.com/auth/trace.readonly
+        {% endif %}
+        {% if properties.service_account_scope.cloud_storage_read_only %}
+        - https://www.googleapis.com/auth/devstorage.read_only
+        {% endif %}
+        {% if properties.service_account_scope.cloud_storage_read_write %}
+        - https://www.googleapis.com/auth/devstorage.read_write
+        {% endif %}
+        {% if properties.service_account_scope.cloud_storage_write_only %}
+        - https://www.googleapis.com/auth/devstorage.write_only
+        {% endif %}
+        {% if properties.service_account_scope.cloud_storage_full_control %}
+        - https://www.googleapis.com/auth/devstorage.full_control
+        {% endif %}
+        {% if properties.service_account_scope.taskqueue %}
+        - https://www.googleapis.com/auth/taskqueue
+        {% endif %}
+        {% if properties.service_account_scope.user_info_email %}
+        - https://www.googleapis.com/auth/userinfo.email
+        {% endif %}
+{% endif %}
