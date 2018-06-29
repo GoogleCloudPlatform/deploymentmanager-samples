@@ -1,0 +1,21 @@
+
+
+
+{% set NAME_PREFIX = env['name'].replace("_","-").lower() %}
+resources:
+
+- name: {{ NAME_PREFIX }}-network
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+    routingConfig:
+      routingMode: {{ properties["routing_mode"] | default("REGIONAL")}}
+
+- name: {{ NAME_PREFIX }}-subnetwork
+  type: compute.v1.subnetwork
+  properties:
+    network: $(ref.{{ NAME_PREFIX }}-network.selfLink)
+{% if properties["range"] is defined %}
+    ipCidrRange: {{ properties["range"] }}
+{% endif %}
+    region: {{ properties["region"] }}

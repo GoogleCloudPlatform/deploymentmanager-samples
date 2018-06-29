@@ -1,0 +1,2 @@
+imports:
+- path: compute.nework-template.yaml.jinja
