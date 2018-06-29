@@ -13,7 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 
+{#
+Adding template version for history tracking :)
+#}
 {% set NAME_PREFIX = env['deployment'].replace("_","-").lower() %}
+{% set TEMPLATE_VERSION = 2 %}
 {% macro diskName(diskObj) -%}{{ NAME_PREFIX }}-disk-{{ diskObj["name"] }}{%- endmacro %}
 
 resources:
