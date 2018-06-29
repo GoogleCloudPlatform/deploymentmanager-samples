@@ -16,7 +16,23 @@ imports:
 - path: vm_template.jinja
 
 resources:
-- name: vm_template
+- name: test-vm
   type: vm_template.jinja
   properties:
-    zone: ZONE_TO_RUN
+    region: europe-west4
+    zone: europe-west4-a
+    network: default
+    static_public_ip: true
+    static_private_ip: true
+    metadata:
+        startup-script: |-
+            #!/bin/bash
+            echo "Hello, world"
+    machine_type: n1-standard-2
+    data_disk:
+    - name: storage-test
+      size: 20
+      disk_type: pd-ssd
+      auto_delete: true
+    service_account_scope:
+        sqlservice_admin: true
