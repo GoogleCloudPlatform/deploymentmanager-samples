@@ -1,0 +1,7 @@
+- name: network-{{ env["deployment"] }}
+  type: compute.nework-template.yaml.jinja
+  properties:
+    range: 10.10.6.0/24
+    region: europe-west3
+
+
