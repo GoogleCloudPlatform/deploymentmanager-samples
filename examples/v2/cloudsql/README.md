@@ -8,7 +8,7 @@ This package contains Google Cloud DeploymentManager templates to automate the d
 
 One can reference the templates [schema files](https://cloud.google.com/deployment-manager/docs/configuration/templates/using-schemas) for a description of availble options.
 
-	**NOTE:** This procedure assumes gcloud is installed
+**NOTE:** This procedure assumes gcloud is installed
 
 	## Copy example config files. 
 	$ cp db.example.yaml db.yaml
@@ -64,5 +64,5 @@ One can reference the templates [schema files](https://cloud.google.com/deployme
 	## Ssh into an instance and test mysql 
 	[mwallman@client01-client-0 ~]$ mysql -uroot -S /var/cloudsql/go-bears\:us-central1\:db01-cloudsql-master -ptest123_ test
 	
-  ...
+	...
 	MySQL [test]>
