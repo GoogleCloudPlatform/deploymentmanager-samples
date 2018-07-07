@@ -22,37 +22,6 @@ resources:
     name: {{ database_name }}
     instance: $(ref.{{ instance_name }}.name)
     charset: utf8
-
-{% for n in range(properties['readReplicas']) %}
-- name: {{ replica_name }}-{{n}}
-  type: gcp-types/sqladmin-v1beta4:instances
-  metadata:
-    dependsOn:
-    - {{ database_name }}
-  properties:
-    region: {{ properties['region'] }}  
-    masterInstanceName: $(ref.{{ instance_name }}.name)
-    settings:
-      tier: {{ properties['tier'] }}
-      replicationType: {{ properties['replicationType'] }}
-{% endfor %}
-
-{% if properties['failOver'] is defined %}
-- name: {{ failover_name }}
-  type: gcp-types/sqladmin-v1beta4:instances
-  metadata:
-    dependsOn:
-    - {{ database_name }}
-  properties:
-    replicaConfiguration:
-      failoverTarget: true
-    region: {{ properties['region'] }}
-    masterInstanceName: $(ref.{{ instance_name }}.name)
-    settings:
-      tier: {{ properties['tier'] }}
-      replicationType: {{ properties['replicationType'] }}
-{% endif %}
-
 - name: delete-user-root
   action: gcp-types/sqladmin-v1beta4:sql.users.delete
   metadata:
@@ -65,3 +34,36 @@ resources:
     instance: $(ref.{{ env['deployment'] }}-instance.name)
     name: root
     host: "%"
+{% set dependency = 'delete-user-root' %}
+
+{% for n in range(properties['readReplicas']) %}
+- name: {{ replica_name }}-{{n}}
+  type: gcp-types/sqladmin-v1beta4:instances
+  metadata:
+    dependsOn:
+    - {{ dependency }}
+  properties:
+    region: {{ properties['region'] }}  
+    masterInstanceName: $(ref.{{ instance_name }}.name)
+    settings:
+      tier: {{ properties['tier'] }}
+      replicationType: {{ properties['replicationType'] }}
+{% set dependency = replica_name + '-' + n|string %}
+{% endfor %}
+
+{% if properties['failOver'] is defined %}
+- name: {{ failover_name }}
+  type: gcp-types/sqladmin-v1beta4:instances
+  metadata:
+    dependsOn:
+    - {{ dependency }}
+  properties:
+    replicaConfiguration:
+      failoverTarget: true
+    region: {{ properties['region'] }}
+    masterInstanceName: $(ref.{{ instance_name }}.name)
+    settings:
+      tier: {{ properties['tier'] }}
+      replicationType: {{ properties['replicationType'] }}
+{% set dependency = failover_name %}
+{% endif %}
