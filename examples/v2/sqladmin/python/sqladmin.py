@@ -22,6 +22,7 @@ def GenerateConfig(context):
   instance_name = deployment_name + '-instance'
   replica_name = deployment_name + '-replica'
   database_name = deployment_name + '-db'
+  failover_name = deployment_name + '-failover'
 
   resources = [{
       'name': instance_name,
@@ -75,4 +76,21 @@ def GenerateConfig(context):
                        } 
                     }) 
     dependency=replica_name
+  if context.properties['failOver']:
+    resources.append({'name': failover_name ,
+                      'type': 'gcp-types/sqladmin-v1beta4:instances',
+                      'metadata': {
+                         'dependsOn': [ dependency ]
+                      },
+                      'properties': {
+                          'replicaConfiguration':{'failoverTarget': True},
+                          'region': context.properties['region'],
+                          'masterInstanceName': ''.join(['$(ref.', instance_name,'.name)']),
+                          'settings': {
+                              'tier': context.properties['tier'],
+                              'replicationType': context.properties['replicationType']
+                           }
+                       }
+                    })
+    dependency=failover_name
   return { 'resources': resources }

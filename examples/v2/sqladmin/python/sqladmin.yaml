@@ -8,4 +8,5 @@ resources:
     tier: db-n1-standard-1
     region: us-central1
     readReplicas: 1
+    failOver: true
     replicationType: SYNCHRONOUS
