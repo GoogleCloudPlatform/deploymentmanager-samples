@@ -60,8 +60,8 @@ def GenerateConfig(context):
   }]
   dependency='delete-user-root'
   for n in range(0,context.properties['readReplicas']):
-    replica_name=''.join([replica_name,'-',str(n)])
-    resources.append({'name':replica_name,
+    name = ''.join([replica_name,'-',str(n)])
+    resources.append({'name': name,
                       'type': 'gcp-types/sqladmin-v1beta4:instances',
                       'metadata': {
                          'dependsOn': [ dependency ]
@@ -73,9 +73,9 @@ def GenerateConfig(context):
                               'tier': context.properties['tier'],
                               'replicationType': context.properties['replicationType']
                            }
-                       } 
-                    }) 
-    dependency=replica_name
+                       }
+                    })
+    dependency=name
   if context.properties['failOver']:
     resources.append({'name': failover_name ,
                       'type': 'gcp-types/sqladmin-v1beta4:instances',
