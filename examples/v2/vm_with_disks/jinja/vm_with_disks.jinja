@@ -43,7 +43,7 @@ resources:
       autoDelete: true
       initializeParams:
         diskName: {{ env["deployment"] }}-boot
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     {% for diskObj in properties["disks"] %}
     - deviceName: {{ diskName(diskObj) }}
       type: PERSISTENT

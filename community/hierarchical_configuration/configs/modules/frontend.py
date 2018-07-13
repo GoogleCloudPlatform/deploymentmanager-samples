@@ -5,7 +5,7 @@ config ={
 	'BackupBucket' 	: 'gs://backupbucket1',
 	'Instance'		: {
 		'OSFamily'		: 'debian-cloud',
-		'OSVersion'		: 'debian-8',
+		'OSVersion'		: 'debian-9',
 		'InstanceType'	: 'f1-micro'
 	}
 }

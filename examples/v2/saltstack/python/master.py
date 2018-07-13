@@ -60,7 +60,7 @@ def GenerateConfig(context):
               'autoDelete': True,
               'initializeParams': {
                   'sourceImage': GlobalComputeUrl('debian-cloud', 'images',
-                                                  'family/debian-8'),
+                                                  'family/debian-9'),
               }
           }],
           'networkInterfaces': [{

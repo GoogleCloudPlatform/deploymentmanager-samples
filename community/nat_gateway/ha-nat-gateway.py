@@ -64,7 +64,7 @@ def GenerateConfig(context):
   network = GlobalComputeUrl(network_project_id, 'networks', context.properties['network'])
   subnetwork = RegionalComputeUrl(network_project_id, region, 'subnetworks', 
     context.properties['subnetwork'])
-  sourceImage =  GlobalComputeUrl('debian-cloud', 'images', 'family/debian-8')
+  sourceImage =  GlobalComputeUrl('debian-cloud', 'images', 'family/debian-9')
 
   config = {'resources': []}
 

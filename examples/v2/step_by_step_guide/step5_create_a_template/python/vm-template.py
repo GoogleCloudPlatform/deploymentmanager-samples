@@ -36,7 +36,7 @@ def GenerateConfig(unused_context):
               'initializeParams': {
                   'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
                                           'debian-cloud/global/',
-                                          'images/family/debian-8'])
+                                          'images/family/debian-9'])
               }
           }],
           'networkInterfaces': [{

@@ -46,7 +46,7 @@ resources:
       autoDelete: true
       initializeParams:
         diskName: disk-{{ env["deployment"] }}
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
 
     # Specify the data disk to mount, note the deviceName can be anything, but by convention is typically set
     # to the same name.  This is the value is used in /dev/disk/by-id/google-<deviceName>.

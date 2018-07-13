@@ -45,7 +45,7 @@ def GenerateConfig(context):
                   'initializeParams': {
                       'sourceImage': ''.join([URL_BASE,
                                               'debian-cloud/global/images/',
-                                              'family/debian-8'])
+                                              'family/debian-9'])
                   }
               }]
           }

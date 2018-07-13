@@ -24,6 +24,6 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: projects/debian-cloud/global/images/family/debian-8
+        sourceImage: projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
     - network: global/networks/default

@@ -20,6 +20,6 @@ resources:
   type: vm-instance.jinja
   properties:
     imageProject: debian-cloud
-    imageName: family/debian-8
+    imageName: family/debian-9
     zone: us-central1-a
     machineType: f1-micro

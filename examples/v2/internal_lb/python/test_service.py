@@ -50,7 +50,7 @@ def ComputeInstance(igm_name, instance_name, zone, machine_type, properties):
               'initializeParams': {
                   'sourceImage': (
                       'https://www.googleapis.com/compute/v1/'
-                      'projects/debian-cloud/global/images/family/debian-8'),
+                      'projects/debian-cloud/global/images/family/debian-9'),
               }
           }],
           'metadata': {
