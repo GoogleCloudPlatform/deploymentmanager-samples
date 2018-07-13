@@ -29,8 +29,8 @@ resources:
     - zone: asia-east1-a
       curr:
         name: 1a-debian
-        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8"
+        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9"
     - zone: asia-east1-b
       curr:
         name: 1a-debian
-        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-8"
+        image: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9"

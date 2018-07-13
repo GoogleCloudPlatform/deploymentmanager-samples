@@ -45,7 +45,7 @@ def GenerateConfig(context):
                   'autoDelete': True,
                   'initializeParams': {
                       'sourceImage':
-                          'projects/debian-cloud/global/images/family/debian-8'
+                          'projects/debian-cloud/global/images/family/debian-9'
                   }
               }]
           }

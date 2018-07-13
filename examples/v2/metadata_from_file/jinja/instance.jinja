@@ -36,7 +36,7 @@ resources:
       autoDelete: true
       initializeParams:
         diskName: {{ BASE_NAME }}-disk
-        sourceImage: {{ COMPUTE_URL_BASE }}projects/debian-cloud/global/images/family/debian-8
+        sourceImage: {{ COMPUTE_URL_BASE }}projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
     - network: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/global/networks/default
       accessConfigs:

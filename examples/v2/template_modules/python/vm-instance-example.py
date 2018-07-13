@@ -34,7 +34,7 @@ def GenerateConfig(context):
               'autoDelete': True,
               'initializeParams': {
                   'sourceImage': COMPUTE_URL_BASE + 'projects/'
-                                 'debian-cloud/global/images/family/debian-8'}
+                                 'debian-cloud/global/images/family/debian-9'}
           }],
           'networkInterfaces': [{
               'network': COMPUTE_URL_BASE + 'projects/' + context.env['project']

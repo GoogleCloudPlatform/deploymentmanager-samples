@@ -24,7 +24,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160606
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
     - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default
       accessConfigs:
@@ -60,7 +60,7 @@ resources:
         boot: true
         autoDelete: true
         initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20160606
+          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
       networkInterfaces:
       - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default
         accessConfigs:
