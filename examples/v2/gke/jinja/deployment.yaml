@@ -13,11 +13,12 @@
 # limitations under the License.
 
 imports:
-- path: replicatedservice.py
+- path: deployment.jinja
 
 resources:
 - name: my-service
-  type: replicatedservice.py
+  type: deployment.jinja
   properties:
-    clusterType: <cluster-type>
-    image: gcr.io/deployment-manager-examples/nodejsservicestatic
+    clusterType: m-my-cluster-type #<cluster-type>
+    image: nginx #gcr.io/deployment-manager-examples/nodejsservicestatic
+    port: 80

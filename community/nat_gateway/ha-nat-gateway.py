@@ -82,13 +82,14 @@ def GenerateConfig(context):
   }
   config['resources'].append(healthCheck)
 
-  # firewall rule that allows the health check to work
+  # Firewall rule that allows the health check to work. See
+  # https://cloud.google.com/compute/docs/load-balancing/health-checks#health_check_source_ips_and_firewall_rules.
   fwRule = {
       'name': fw_name,
       'type': 'compute.v1.firewall',
       'properties': {
           'network': network,
-          'sourceRanges': ['209.85.152.0/22', '209.85.204.0/22', '35.191.0.0/16'],
+          'sourceRanges': ['209.85.152.0/22', '209.85.204.0/22', '35.191.0.0/16', '130.211.0.0/22'],
           'targetTags': [nat_gw_tag],
           'allowed': [{
               'IPProtocol': 'TCP',
