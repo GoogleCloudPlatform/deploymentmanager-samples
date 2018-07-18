@@ -1,0 +1,4 @@
+# Please change the values for these variables to match your organization's GCP setup
+export FAAS_ORGANIZATION_ID="111111111111"
+export FAAS_BILLING_ACCOUNT_NAME="billingAccounts/AAAAAA-111111-222222"
+export FAAS_PROJECT_NAME="my-project"
