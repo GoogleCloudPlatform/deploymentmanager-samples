@@ -1,0 +1,4 @@
+# Please change the values for these variables to match your organization's GCP setup
+export ORGANIZATION_ID="111111111111"
+export BILLING_ACCOUNT_NAME="billingAccounts/AAAAAA-111111-222222"
+export PROJECT_NAME="my-project"
