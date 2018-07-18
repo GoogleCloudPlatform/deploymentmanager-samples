@@ -1,0 +1,6 @@
+[style]
+based_on_style = google
+dedent_closing_brackets = True
+indent_dictionary_value = True
+split_before_expression_after_opening_paren=True
+split_all_comma_separated_values=True
