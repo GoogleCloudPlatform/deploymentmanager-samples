@@ -1,0 +1,14 @@
+resources:
+- name: filestore
+  type: gcp-types/file-v1beta1:projects.locations.instances
+  properties:
+    parent: projects/isolated-project/locations/us-west1-b
+    # Any name of the instance would do
+    instanceId: YOUR_DEPLOYMENT_NAME
+    tier: STANDARD
+    description: my description
+    networks:
+    - network: newer
+    fileShares:
+    - name: my_share
+      capacityGb: 1024
