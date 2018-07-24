@@ -64,7 +64,7 @@ class ConfigContext:
         return self.loadConfig(self.configs["envName"], 'envs')
 
     def getOrgSpecificConfig(self): 
-      return self.loadConfig('master_config', '')  
+        return self.loadConfig('master_config', '')  
   
     def getProjectpecificConfig(self): 
         return self.loadConfig('project_config', '')    
@@ -77,3 +77,4 @@ class ConfigContext:
         
     def get_conf(self):
         return str(self.configs)
+
