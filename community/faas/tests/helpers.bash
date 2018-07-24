@@ -13,7 +13,7 @@
 
 FAAS_CONF=${FAAS_CONF-~/.faas-tests.conf}
 
-if [[ -z "${FAAS_ORGANIZATION_ID}" || -z "${FAAS_BILLING_ACCOUNT_NAME}" || -z "${FAAS_PROJECT_NAME}" ]]; then
+if [[ -z "${FAAS_ORGANIZATION_ID}" || -z "${FAAS_BILLING_ACCOUNT_ID}" || -z "${FAAS_PROJECT_ID}" ]]; then
     if [[ ! -e ${FAAS_CONF} ]]; then
         echo "Please setup your environment variables or faas config file"
         echo "Default location for config: ~/.faas-tests.conf. Example:"

@@ -72,13 +72,13 @@ are often created, and deleted via *teardown()* function.
 Due to the fact that a DM config file needs to be located relative to the
 templates it uses, these configs are usually created in the root of the
 project, for example, in the network template mentioned, the config
-`.${PROJECT_NAME}-network.yaml` will be temporarily created (and deleted at the
-end of the execution).
+`.${FAAS_PROJECT_ID}-network.yaml` will be temporarily created (and deleted
+at the end of the execution).
 
 Other temporary files are created under `/tmp`, for example:
 ```
-/tmp/${ORGANIZATION_ID}-network.txt
-/tmp/${ORGANIZATION_ID}-project.txt
+/tmp/${FAAS_ORGANIZATION_ID}-network.txt
+/tmp/${FAAS_ORGANIZATION_ID}-project.txt
 ```
 
 These names could change later. But if weirdness is observed during test

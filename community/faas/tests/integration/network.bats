@@ -13,7 +13,7 @@ fi
 # envsubst requires all variables used in the example/config to be exported
 if [[ -e "${RANDOM_FILE}" ]]; then
     export RAND=$(cat "${RANDOM_FILE}")
-    DEPLOYMENT_NAME="${FAAS_PROJECT_NAME}-network"
+    DEPLOYMENT_NAME="${FAAS_PROJECT_ID}-network-${RAND}"
     CONFIG=".${DEPLOYMENT_NAME}.yaml"
 fi
 
@@ -50,27 +50,27 @@ function teardown() {
 
 
 @test "Creating deployment ${DEPLOYMENT_NAME} from ${CONFIG}" {
-    gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" --config "${CONFIG}" --project "${FAAS_PROJECT_NAME}"
+    gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" --config "${CONFIG}" --project "${FAAS_PROJECT_ID}"
 }
 
 @test "Verifying resources were created in deployment ${DEPLOYMENT_NAME}" {
-    run gcloud compute networks list --filter="name:test-network-${RAND}" --project "${FAAS_PROJECT_NAME}"
+    run gcloud compute networks list --filter="name:test-network-${RAND}" --project "${FAAS_PROJECT_ID}"
     [[ "$output" =~ "test-network-${RAND}" ]]
 }
 
 @test "Verifying subnets were created in deployment ${DEPLOYMENT_NAME}" {
-    run gcloud compute networks subnets list --project "${FAAS_PROJECT_NAME}"
+    run gcloud compute networks subnets list --project "${FAAS_PROJECT_ID}"
     [[ "$output" =~ "test-subnetwork-${RAND}-1" ]]
     [[ "$output" =~ "test-subnetwork-${RAND}-2" ]]
 }
 
 @test "Deployment Delete" {
-    gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" -q --project "${FAAS_PROJECT_NAME}"
+    gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" -q --project "${FAAS_PROJECT_ID}"
 
-    run gcloud compute networks list --filter="name:test-network-${RAND}" --project "${FAAS_PROJECT_NAME}"
+    run gcloud compute networks list --filter="name:test-network-${RAND}" --project "${FAAS_PROJECT_ID}"
     [[ ! "$output" =~ "test-network-${RAND}" ]]
 
-    run gcloud compute networks subnets list --project "${FAAS_PROJECT_NAME}"
+    run gcloud compute networks subnets list --project "${FAAS_PROJECT_ID}"
     [[ ! "$output" =~ "test-subnetwork-${RAND}-1" ]]
     [[ ! "$output" =~ "test-subnetwork-${RAND}-2" ]]
 }
