@@ -57,14 +57,14 @@ class ConfigContext:
             path = 'configs'
         else:
             path = 'configs.' + path
-        env_context = __import__(path, globals(), locals(), fileName, -1)  
-        return env_context.__dict__[fileName].config
+        env_context = __import__(path + '.' + fileName, globals(), locals(), fileName, -1)  
+        return env_context.config
     
     def getEnvSpecificConfig(self): 
         return self.loadConfig(self.configs["envName"], 'envs')
 
     def getOrgSpecificConfig(self): 
-        return self.loadConfig('master_config', '')  
+      return self.loadConfig('master_config', '')  
   
     def getProjectpecificConfig(self): 
         return self.loadConfig('project_config', '')    
