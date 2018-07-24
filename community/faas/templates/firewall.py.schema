@@ -1,0 +1,72 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Firewall
+  author: Sourced Group Inc.
+  description: Deploys firewall rules
+
+required:
+  - rules
+
+properties:
+  network:
+    type: string
+    description: |
+      The network name. Defaults to 'global/networks/default'
+  rules:
+    type: array
+    description: |
+      An array of firewall rules as defined in the documentation:
+      https://cloud.google.com/compute/docs/reference/rest/beta/firewalls
+
+      If the priority field is specified in the rule, it's always used as is.
+      If the 'priority' field for the rule is not set, the template will set
+      the priority to the same value as index of the rule in the array +1000.
+      For example, if not set in rule, priority for the first rule in the array
+      is '1000', for the second rule '1001', and so on. What this means is that
+      if the 'priority' field isn't specified in any of the rules in the array,
+      the ruleset will be automatically sorted by priority, so consistency when
+      specifying (or not specifying) the 'priority' field is strongly advised.
+
+      Example:
+        - name: allow-proxy-from-inside
+          allowed:
+            - IPProtocol: tcp
+              ports:
+                - "80"
+                - "443"
+          description: This rule allows connectivity to the HTTP proxies
+          direction: INGRESS
+          sourceRanges:
+            - 10.0.0.0/8
+        - name: allow-dns-from-inside
+          allowed:
+            - IPProtocol: udp
+              ports:
+                - "53"
+            - IPProtocol: tcp
+              ports:
+                - "53"
+          description: this rule allows DNS queries to google's 8.8.8.8
+          direction: EGRESS
+          destinationRanges:
+            - 8.8.8.8/32
+
+documentation:
+  - docs/templates/firewall.md
+
+examples:
+  - examples/firewall.yaml
+
