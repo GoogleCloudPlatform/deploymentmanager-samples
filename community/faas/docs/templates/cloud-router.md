@@ -1,6 +1,6 @@
 # Cloud Router
 
-Templated Cloud router deployment
+Templated Cloud Router deployment
 
 ## Prerequisites
 - Install [gcloud](https://cloud.google.com/sdk)
