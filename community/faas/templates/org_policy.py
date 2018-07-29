@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-This template will set the org policy to allow VMs to have public IPs
-once the project has been created, billing has been attached to the project,
-and all the APIs have been enabled.
+This template will set the Organization Policy to allow VMs to have public 
+IPs once the project has been created, billing has been attached to the 
+project, and all the APIs have been enabled.
 """
 
 
