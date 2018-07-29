@@ -15,7 +15,7 @@
 info:
   title: Org Policies
   author: Sourced Group Inc.
-  description: Deploys organizational policies
+  description: Deploys Organizational Policies
 
 imports:
   - path: org_policy.py
