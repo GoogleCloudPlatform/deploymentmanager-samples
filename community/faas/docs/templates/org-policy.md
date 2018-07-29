@@ -1,6 +1,6 @@
 # Org Policy
 
-Templated organizational policies
+Templated Organization Policies
 
 ## Prerequisites
 
