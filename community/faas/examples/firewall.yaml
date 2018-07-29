@@ -1,7 +1,7 @@
 # Example on how to use the firewall template
 #
 # In this example, an array of firewall rules are applied to the
-# 'network-test' vpc.
+# 'network-test' VPC.
 #
 
 imports:
