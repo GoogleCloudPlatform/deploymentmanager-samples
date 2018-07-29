@@ -31,7 +31,7 @@ properties:
       An array of firewall rules as defined in the documentation:
       https://cloud.google.com/compute/docs/reference/rest/beta/firewalls
 
-      If the priority field is specified in the rule, it's always used as is.
+      If the 'priority' field is specified in the rule, it's always used as is.
       If the 'priority' field for the rule is not set, the template will set
       the priority to the same value as index of the rule in the array +1000.
       For example, if not set in rule, priority for the first rule in the array
