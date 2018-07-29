@@ -1,6 +1,6 @@
 # Firewalls
 
-Templated firewall rules
+Templated Firewall rules
 
 ## Prerequisites
 
@@ -13,6 +13,7 @@ Templated firewall rules
 ### Resources
 
 - [compute.beta.firewall](https://cloud.google.com/compute/docs/reference/rest/beta/firewalls)
+  - The beta API is used to support the firewall logs feature.
 
 
 ### Properties
