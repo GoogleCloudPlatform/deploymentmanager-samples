@@ -1,4 +1,4 @@
-# Example on how to use the iam custom role templates
+# Example on how to use the IAM Custom Role templates
 #
 # In this example, two custom roles are created:
 #   1- a custom organizational role (test-custom-org-role)
