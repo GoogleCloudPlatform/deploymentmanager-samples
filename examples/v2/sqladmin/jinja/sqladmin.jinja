@@ -41,22 +41,29 @@ resources:
   type: gcp-types/sqladmin-v1beta4:instances
   metadata:
     dependsOn:
-    - {{ dependency }}
+    {% if n == 0 %}
+    - delete-user-root
+    {% else %}
+    - {{ replica_name + '-' + (n-1)|string }}
+    {% endif %}
   properties:
     region: {{ properties['region'] }}  
     masterInstanceName: $(ref.{{ instance_name }}.name)
     settings:
       tier: {{ properties['tier'] }}
       replicationType: {{ properties['replicationType'] }}
-{% set dependency = replica_name + '-' + n|string %}
 {% endfor %}
 
-{% if properties['failOver'] is defined %}
+{% if properties['failOver'] is true %}
 - name: {{ failover_name }}
   type: gcp-types/sqladmin-v1beta4:instances
   metadata:
     dependsOn:
-    - {{ dependency }}
+    {% if range(properties['readReplicas']) > 0 %}
+    - {{ replica_name + '-' + (properties['readReplicas']-1)|string }}
+    {% else %}
+    - delete-user-root
+    {% endif %}
   properties:
     replicaConfiguration:
       failoverTarget: true
