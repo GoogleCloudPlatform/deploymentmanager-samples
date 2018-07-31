@@ -54,12 +54,12 @@ resources:
       replicationType: {{ properties['replicationType'] }}
 {% endfor %}
 
-{% if properties['failOver'] is true %}
+{% if properties['failOver']  %}
 - name: {{ failover_name }}
   type: gcp-types/sqladmin-v1beta4:instances
   metadata:
     dependsOn:
-    {% if range(properties['readReplicas']) > 0 %}
+    {% if properties['readReplicas'] > 0 %}
     - {{ replica_name + '-' + (properties['readReplicas']-1)|string }}
     {% else %}
     - delete-user-root
