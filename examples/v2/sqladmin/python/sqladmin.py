@@ -20,8 +20,9 @@ def GenerateConfig(context):
   """Generate YAML resource configuration."""
   deployment_name = context.env['deployment']
   instance_name = deployment_name + '-instance'
-  replica_name = deployment_name + '-replica'  
+  replica_name = deployment_name + '-replica'
   database_name = deployment_name + '-db'
+  failover_name = deployment_name + '-failover'
 
   resources = [{
       'name': instance_name,
@@ -48,22 +49,23 @@ def GenerateConfig(context):
       'action': 'gcp-types/sqladmin-v1beta4:sql.users.delete',
       'metadata': {
           'runtimePolicy': ['CREATE'],
-          'dependsOn': [ database_name ]          
+          'dependsOn': [ database_name ]
       },
       'properties': {
           'project': context.env['project'],
           'instance': ''.join(['$(ref.', instance_name,'.name)']),
           'name': 'root',
           'host': '%'
-      }     
+      }
   }]
-
+  dependency='delete-user-root'
   for n in range(0,context.properties['readReplicas']):
-    resources.append({'name': ''.join([replica_name,'-',str(n)]),
+    name = ''.join([replica_name,'-',str(n)])
+    resources.append({'name': name,
                       'type': 'gcp-types/sqladmin-v1beta4:instances',
                       'metadata': {
-                         'dependsOn': [ database_name ]
-                      },                      
+                         'dependsOn': [ dependency ]
+                      },
                       'properties': {
                           'region': context.properties['region'],
                           'masterInstanceName': ''.join(['$(ref.', instance_name,'.name)']),
@@ -71,6 +73,24 @@ def GenerateConfig(context):
                               'tier': context.properties['tier'],
                               'replicationType': context.properties['replicationType']
                            }
-                       } 
-                    }) 
+                       }
+                    })
+    dependency=name
+  if context.properties['failOver']:
+    resources.append({'name': failover_name ,
+                      'type': 'gcp-types/sqladmin-v1beta4:instances',
+                      'metadata': {
+                         'dependsOn': [ dependency ]
+                      },
+                      'properties': {
+                          'replicaConfiguration':{'failoverTarget': True},
+                          'region': context.properties['region'],
+                          'masterInstanceName': ''.join(['$(ref.', instance_name,'.name)']),
+                          'settings': {
+                              'tier': context.properties['tier'],
+                              'replicationType': context.properties['replicationType']
+                           }
+                       }
+                    })
+    dependency=failover_name
   return { 'resources': resources }
