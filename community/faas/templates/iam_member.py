@@ -33,7 +33,7 @@ def generate_config(context):
 
     resources = [
         {
-            # Get the IAM policy first so that we do not remove any existing
+            # Get the IAM policy first to avoid to remove any existing
             # bindings.
             'name': policy_get_name,
             'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',  # pylint: disable=line-too-long
@@ -43,7 +43,7 @@ def generate_config(context):
         },
         {
             # Set the IAM policy patching the existing policy with what is
-            # is in the config.
+            # in the config.
             'name': policy_add_name,
             'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',  # pylint: disable=line-too-long
             'properties':
@@ -69,7 +69,7 @@ def generate_config(context):
                     'policy': '$(ref.' + policy_add_name + ')',
                     'gcpIamPolicyPatch':
                         {
-                            # Removing roles that were previous set
+                            # Removing roles that were previously set
                             'remove': policies_to_add
                         }
                 }
