@@ -9,7 +9,7 @@
 #
 # The 'routeType' property determines the destination traffic handler which
 # will require the relevant destination property to be set.
-#   -If the routeType is 'ipaddress', the 'netxHopIp' property must be set. Replace
+#   -If the routeType is 'ipaddress', the 'nextHopIp' property must be set. Replace
 #    the temporary IP placeholder with your static IP address.
 #   -If the routeType is 'instance', the 'instanceName' property must be set.
 #    Replace the temporary instance placeholder with your instance name.
