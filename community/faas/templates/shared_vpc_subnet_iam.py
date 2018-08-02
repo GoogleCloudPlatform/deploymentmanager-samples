@@ -17,15 +17,15 @@
 def generate_config(context):
     """ Entry point for the deployment resources """
 
-    project_id = context.env['project']
-
     resources = []
-    for i, subnet in enumerate(context.properties['subnets'], 1):
-        policy_name = 'iam-subnet-policy-{}'.format(i)
+    outputs = []
+    for subnet in context.properties['subnets']:
+        subnet_id = subnet['subnetId']
+        policy_name = 'iam-subnet-policy-{}'.format(subnet_id)
 
         policies_to_add = [
             {
-                'role': 'roles/compute.networkUser',
+                'role': subnet['role'],
                 'members': subnet['members']
             }
         ]
@@ -36,7 +36,7 @@ def generate_config(context):
                 'type': 'gcp-types/compute-beta:compute.subnetworks.setIamPolicy',  # pylint: disable=line-too-long
                 'properties':
                     {
-                        'name': subnet['subnetId'],
+                        'name': subnet_id,
                         'project': context.env['project'],
                         'region': subnet['region'],
                         'bindings': policies_to_add
@@ -44,4 +44,11 @@ def generate_config(context):
             }
         )
 
-    return {"resources": resources}
+        outputs.append(
+            {
+                'name': 'policy_name',
+                'value': policy_name
+            }
+        )
+
+    return {'resources': resources, 'outputs': outputs}

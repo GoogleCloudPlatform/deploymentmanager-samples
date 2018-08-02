@@ -15,9 +15,11 @@ resources:
       subnets:
         - subnetId: subnet-${RAND}-1
           region: us-east1
+          role: roles/compute.networkUser
           members:
             - serviceAccount:${TEST_SERVICE_ACCOUNT}@${FAAS_PROJECT_ID}.iam.gserviceaccount.com
         - subnetId: subnet-${RAND}-2
           region: us-east1
+          role: roles/compute.networkUser
           members:
             - serviceAccount:${TEST_SERVICE_ACCOUNT}@${FAAS_PROJECT_ID}.iam.gserviceaccount.com
