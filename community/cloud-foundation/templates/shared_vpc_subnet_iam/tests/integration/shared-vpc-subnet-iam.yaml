@@ -1,0 +1,25 @@
+# Example on how to use the network and subnetwork templates
+#
+# Variables:
+#   RAND: Just a random string used mostly by the testing suite.
+#
+
+imports:
+  - path: templates/shared_vpc_subnet_iam/shared_vpc_subnet_iam.py
+    name: shared_vpc_subnet_iam.py
+
+resources:
+  - name: test-shared-vpc-subnet-iam-${RAND}
+    type: shared_vpc_subnet_iam.py
+    properties:
+      subnets:
+        - subnetId: subnet-${RAND}-1
+          region: us-east1
+          role: roles/compute.networkUser
+          members:
+            - serviceAccount:${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com
+        - subnetId: subnet-${RAND}-2
+          region: us-east1
+          role: roles/compute.networkUser
+          members:
+            - serviceAccount:${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com
