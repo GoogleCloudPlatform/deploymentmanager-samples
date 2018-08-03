@@ -1,0 +1,27 @@
+resources:
+- name: alert_policy
+  type: gcp-types/monitoring-v3:projects.alertPolicies
+  properties:
+    combiner: OR
+    conditions:
+    - conditionThreshold:
+        aggregations:
+        - alignmentPeriod: 60s
+          crossSeriesReducer: REDUCE_MEAN
+          groupByFields:
+            - metric.label.device
+            - project
+            - resource.label.instance_id
+            - resource.label.zone
+          perSeriesAligner: ALIGN_MEAN
+        comparison: COMPARISON_GT
+        duration: 1800s
+        filter: resource.type="gce_instance" AND metric.label.state="used"
+          AND metric.type="agent.googleapis.com/disk/percent_used"
+        thresholdValue: 60.0
+        trigger:
+          count: 1
+      displayName: Disk usage metric threshold on any instance
+    displayName: My alert policy
+    enabled: true
+

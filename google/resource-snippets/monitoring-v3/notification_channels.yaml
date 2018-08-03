@@ -1,0 +1,10 @@
+resources:
+- name: notification_channel
+  type: gcp-types/monitoring-v3:projects.notificationChannels
+  properties:
+    displayName: My notification channel
+    enabled: true
+    labels:
+      email_address: nobody+gcptypes@google.com
+    type: email
+
