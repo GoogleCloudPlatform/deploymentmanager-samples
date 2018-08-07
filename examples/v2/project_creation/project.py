@@ -13,7 +13,6 @@
 # limitations under the License.
 """Creates a single project with specified service accounts and APIs enabled."""
 
-import base64
 import copy
 import random
 import sys
@@ -23,9 +22,8 @@ def GenerateConfig(context):
   """Generates config."""
 
   project_name = context.env['name']
-  random_postfix = base64.b32encode(str(random.randint(0,999999))) \
-    .lower().replace('=', '')
-  project_id = project_name + "-" + random_postfix
+  random_postfix = hex(random.randint(0,2**64-1))[2:].replace('L', '')
+  project_id = (project_name + "-" + random_postfix)[:30]
 
   billing_name = 'billing_' + project_id
 
