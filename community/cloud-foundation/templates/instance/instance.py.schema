@@ -1,0 +1,108 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Instance template
+  author: Sourced Group Inc.
+  description: |
+    Deploys compute instance attached to a custom (or default) network
+
+required:
+  - zone
+  - machineType
+  - diskImage
+  - network
+
+properties:
+  name:
+    type: string
+    description: A name of an instance resource
+  network:
+    type: string
+    description: A network name, e.g. 'my-custom-network' or 'default'
+  zone:
+    type: string
+    description: Availability zone. E.g. us-central1-a
+  machineType:
+    type: string
+    description: |
+      Compute instance type. E.g. n1-standard-1
+      See https://cloud.google.com/compute/docs/machine-types for more details
+  canIpForward:
+    type: boolean
+    description: |
+      Allows this instance to send and receive packets with non-matching destination
+      or source IPs.
+  diskType:
+    type: string
+    description: Boot disk type
+    enum:
+      - pd-ssd
+      - pd-standard
+      - local-ssd
+  diskImage:
+    type: string
+    description: |
+      The source image to create this disk. To create a disk with one of the
+      public operating system images, specify the image by its family name.
+      For example, specify family/debian-9 to use the latest Debian 9 image:
+      projects/debian-cloud/global/images/family/debian-9
+      To create a disk with a custom image that you created, specify the image
+      name in the following format: global/images/my-custom-image
+      See https://cloud.google.com/compute/docs/images for more details
+  diskSizeGb:
+    type: integer
+    minimum: 10
+  metadata:
+    type: object
+    description: |
+      Instance metadata.
+      For example:
+      metadata:
+        items:
+          - key: startup-script
+          - value: sudo apt-get update
+    properties:
+      items:
+        type: array
+        description: A collection of metadata key-value pairs. 
+        item:
+          type: object
+          properties:
+            key:
+              type: string
+            value:
+              type: string
+              
+outputs:
+  properties:
+    - externalIp:
+      type: string
+      description: Reference to external ip address of new instance
+    - internalIp:
+      type: string
+      description: Reference to internal ip address of new instance
+    - name:
+      type: string
+      description: A name of an instance resource
+    - selfLink:
+      type: string
+      description: A link to an instance resource
+
+documentation:
+  - templates/instance/README.md
+
+examples:
+  - templates/instance/examples/instance.yaml
+
