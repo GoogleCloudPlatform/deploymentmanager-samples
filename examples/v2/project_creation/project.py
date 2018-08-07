@@ -18,6 +18,56 @@ import random
 import sys
 from apis import ApiResourceName
 
+def UpdateSharedVPCSettings(context, resources, project_id):
+  if context.properties.get('shared_vpc_host'):
+     resources.append({
+        'name': project_id + '-xpn-host',
+        'type': 'compute.beta.xpnHost',
+        'properties': {
+            'organization-id': context.properties['organization-id'],
+            'billing-account-name': context.properties['billing-account-name'],
+            'project': project_id,
+        },
+        'metadata': {
+            'dependsOn': [
+                ApiResourceName(project_id, 'compute.googleapis.com'),
+                project_id,
+            ],
+        }
+     })
+  if context.properties.get('shared_vpc_service_of'):
+      resources.append({
+        'name': project_id + '-xpn-service-' +
+            context.properties['shared_vpc_service_of'],
+        'type': 'compute.beta.xpnResource',
+        'properties': {
+            'organization-id': context.properties['organization-id'],
+            'billing-account-name': context.properties['billing-account-name'],
+            'project': [context.properties['shared_vpc_service_of']],
+            'xpnResource': {
+                'id': project_id,
+                'type': 'PROJECT',
+            },
+        },
+        'metadata': {
+            'dependsOn': [
+                ApiResourceName(project_id, 'compute.googleapis.com'),
+                project_id,
+                context.properties['shared_vpc_service_of'] + '-xpn-host',
+            ],
+        }
+      })
+
+def AutoCompleteServiceAccount(policies, project_id):
+  pm = re.compile(r'serviceAccount:([a-zA-Z0-9_-]+)$')
+  for p in policies:
+    for i, m in enumerate(p['members']):
+      if pm.match(m):
+        groups = pm.match(m).groups()
+        sa_name = groups[0] + "@" + project_id + ".iam.gserviceaccount.com"
+        print(sa_name) 
+        p['members'][i] = "serviceAccount:" + sa_name
+
 def UpdateIAMPolicy(context, resources, project_id):
   if (context.properties.get('iam-policy-patch') or
       context.properties.get('set-dm-service-account-as-owner')):
@@ -144,44 +194,7 @@ def GenerateConfig(context):
 
   UpdateIAMPolicy(context, resources, project_id)
 
-  if context.properties.get('shared_vpc_host'):
-     resources.append({
-        'name': project_id + '-xpn-host',
-        'type': 'compute.beta.xpnHost',
-        'properties': {
-            'organization-id': context.properties['organization-id'],
-            'billing-account-name': context.properties['billing-account-name'],
-            'project': project_id,
-        },
-        'metadata': {
-            'dependsOn': [
-                ApiResourceName(project_id, 'compute.googleapis.com'),
-                project_id,
-            ],
-        }
-     })
-  if context.properties.get('shared_vpc_service_of'):
-      resources.append({
-        'name': project_id + '-xpn-service-' +
-            context.properties['shared_vpc_service_of'],
-        'type': 'compute.beta.xpnResource',
-        'properties': {
-            'organization-id': context.properties['organization-id'],
-            'billing-account-name': context.properties['billing-account-name'],
-            'project': [context.properties['shared_vpc_service_of']],
-            'xpnResource': {
-                'id': project_id,
-                'type': 'PROJECT',
-            },
-        },
-        'metadata': {
-            'dependsOn': [
-                ApiResourceName(project_id, 'compute.googleapis.com'),
-                project_id,
-                context.properties['shared_vpc_service_of'] + '-xpn-host',
-            ],
-        }
-      })
+  UpdateSharedVPCSettings(context, resources, project_id)
 
   return {'resources': resources}
 
