@@ -15,6 +15,7 @@
 
 import copy
 import random
+import re
 import sys
 from apis import ApiResourceName
 
@@ -103,6 +104,9 @@ def UpdateIAMPolicy(context, resources, project_id):
     for api in context.properties['apis']:
       get_iam_policy_dependencies.append(ApiResourceName(project_id, api))
  
+    AutoCompleteServiceAccount(policies_to_add, project_id)
+    AutoCompleteServiceAccount(policies_to_remove, project_id)
+
     resources.extend([{
         # Get the IAM policy first so that we do not remove any existing bindings.
         'name': 'get-iam-policy-' + project_id,
@@ -126,6 +130,9 @@ def UpdateIAMPolicy(context, resources, project_id):
              'add': policies_to_add,
              'remove': policies_to_remove
           }
+        },
+        'metadata': {
+          'dependsOn': [project_id]
         }
     }])
 
