@@ -8,8 +8,8 @@ resources:
   - name: DM_TEST_PROJECT
     type: project.py
     properties:
-        # Change this to your organization ID.
-        organization-id: "ORG_ID"
+        # Change this to the folder ID under which the project should go
+        parent-folder-id: FOLDER_ID
 
         # Change the following to your organization's billing account
         billing-account-name: billingAccounts/BILLING_ACCOUNT_ID
@@ -26,13 +26,8 @@ resources:
 
         # The service accounts you want to create in the project
         service-accounts:
-          - my-service-account-1
-          - my-service-account-2
-
-        bucket-export-settings:
-            create-bucket: true
-            # If using an already existing bucket, specify this
-            # bucket: <my bucket name>
+          - service-account-1
+          - service-account-2
 
         # Makes the service account that Deployment Manager would use in the
         # generated project when making deployments in this new project a
@@ -56,6 +51,7 @@ resources:
               - role: roles/viewer
                 members:
                   - user:iamtester@deployment-manager.net
+                  - serviceAccount:service-account-1
             # The bindings to remove. Note that these are idempotent, in the sense
             # that any binding here that is not actually on the project is considered
             # to have been removed successfully.
