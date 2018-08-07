@@ -13,14 +13,20 @@
 # limitations under the License.
 """Creates a single project with specified service accounts and APIs enabled."""
 
+import base64
 import copy
+import random
 import sys
 from apis import ApiResourceName
 
 def GenerateConfig(context):
   """Generates config."""
 
-  project_id = context.env['name']
+  project_name = context.env['name']
+  random_postfix = base64.b32encode(str(random.randint(0,999999))) \
+    .lower().replace('=', '')
+  project_id = project_name + "-" + random_postfix
+
   billing_name = 'billing_' + project_id
 
   if not IsProjectParentValid(context.properties):
@@ -36,11 +42,6 @@ def GenerateConfig(context):
   else:
     parent_type = 'folder'
     parent_id = context.properties['parent-folder-id']
-
-  if 'project-name' in context.properties:
-    project_name = context.properties['project-name']
-  else:
-    project_name = project_id
 
   resources = [{
       'name': project_id,
