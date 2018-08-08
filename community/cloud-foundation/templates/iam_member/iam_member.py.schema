@@ -54,4 +54,4 @@ documentation:
   - templates/iam_member/README.md
 
 examples:
-  - templates/iam_member/examples/iam-member.yaml
+  - templates/iam_member/examples/iam_member.yaml

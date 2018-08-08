@@ -57,4 +57,4 @@ documentation:
   - templates/cloud_router/README.md
 
 examples:
-  - templates/cloud_router/examples/cloud-router.yaml
+  - templates/cloud_router/examples/cloud_router.yaml

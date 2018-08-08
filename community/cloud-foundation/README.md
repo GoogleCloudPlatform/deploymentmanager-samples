@@ -13,8 +13,8 @@ multiple unrelated templates together in order to deploy the foundation as a who
 
 ### Deploying infrastructure with individual templates via gcloud
 
-Each individual template has it's own usage documentation
-[here](docs/templates/).
+Each individual template has it's own usage documentation in their respective folders.
+For example, `templates/cloud_router/README.md`
 
 The specific configuration for each template is different, but in general
 deployments via `gcloud` should be done by creating a *DM config file*
@@ -29,7 +29,7 @@ As an example, to create a simple network with the `network.py` template, create
 a deployment config file:
 
 ```
-# This is my-network.yaml file
+# This is my_network.yaml file
 imports:
   - path: templates/network.py
 
@@ -52,7 +52,7 @@ as arguments:
 
 ```
 gcloud deployment-manager deployments create my-network-deployment \
-    --config my-network.yaml
+    --config my_network.yaml
 ```
 
 

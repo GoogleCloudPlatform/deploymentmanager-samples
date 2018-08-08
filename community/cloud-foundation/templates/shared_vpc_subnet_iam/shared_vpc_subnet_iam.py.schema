@@ -65,4 +65,4 @@ documentation:
   - templates/shared_vpc_subnet_iam/README.md
 
 examples:
-  - templates/shared_vpc_subnet_iam/examples/shared-vpc-subnet-iam.yaml
+  - templates/shared_vpc_subnet_iam/examples/shared_vpc_subnet_iam.yaml

@@ -46,4 +46,4 @@ documentation:
   - templates/org_policy/README.md
 
 examples:
-  - templates/org_policy/examples/org-policy.yaml
+  - templates/org_policy/examples/org_policy.yaml

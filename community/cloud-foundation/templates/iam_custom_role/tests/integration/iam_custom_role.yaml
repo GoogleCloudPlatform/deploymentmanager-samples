@@ -1,4 +1,4 @@
-# Example on how to use the iam-custom-role template
+# Example on how to use the IAM custom role template
 #
 # Variables:
 #   CLOUD_FOUNDATION_ORGANIZATION_ID: The organization ID of your organization.

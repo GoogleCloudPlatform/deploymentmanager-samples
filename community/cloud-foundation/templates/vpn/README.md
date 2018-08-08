@@ -44,17 +44,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp examples/vpn.yaml my-vpn.yaml
-vim my-vpn.yaml  # <== change values to match your GCP setup
+cp examples/vpn.yaml my_vpn.yaml
+vim my_vpn.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-vpn.yaml
+    --config my_vpn.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-vpn.yaml
+    --config my_vpn.yaml
 ```
 
 

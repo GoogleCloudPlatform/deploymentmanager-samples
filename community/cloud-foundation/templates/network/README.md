@@ -20,8 +20,8 @@ Templated network and subnet deployment
 
 See `properties` section in the schema files
 
--  [network](network.py.schema)
--  [subnetwork](subnetwork.py.schema)
+-  [Network](network.py.schema)
+-  [Subnetwork](subnetwork.py.schema)
 
 
 ### Deployment
@@ -42,17 +42,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/network/examples/network.yaml my-network.yaml
-vim my-network.yaml  # <== change values to match your GCP setup
+cp templates/network/examples/network.yaml my_network.yaml
+vim my_network.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-network.yaml
+    --config my_network.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-network.yaml
+    --config my_network.yaml
 ```
 
 

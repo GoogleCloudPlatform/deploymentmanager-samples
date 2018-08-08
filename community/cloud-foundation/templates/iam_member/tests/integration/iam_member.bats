@@ -4,6 +4,8 @@ source tests/helpers.bash
 
 TEST_NAME=$(basename "${BATS_TEST_FILENAME}" | cut -d '.' -f 1)
 
+export TEST_SERVICE_ACCOUNT="test-sa-${RAND}"
+
 # Create and save a random 10 char string in a file
 RANDOM_FILE="/tmp/${CLOUD_FOUNDATION_ORGANIZATION_ID}-${TEST_NAME}.txt"
 if [[ ! -e "${RANDOM_FILE}" ]]; then
@@ -25,7 +27,7 @@ fi
 
 function create_config() {
     echo "Creating ${CONFIG}"
-    envsubst < "templates/firewall/tests/integration/${TEST_NAME}.yaml" > "${CONFIG}"
+    envsubst < "templates/iam_member/tests/integration/${TEST_NAME}.yaml" > "${CONFIG}"
 }
 
 function delete_config() {
@@ -37,10 +39,8 @@ function setup() {
     # Global setup - this gets executed only once per test file
     if [ ${BATS_TEST_NUMBER} -eq 1 ]; then
         create_config
-        gcloud compute networks create network-test-${RAND} \
-            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-            --description "integration test ${RAND}" \
-            --subnet-mode custom
+        gcloud iam service-accounts create "${TEST_SERVICE_ACCOUNT}" \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     fi
 
     # Per-test setup steps here
@@ -49,9 +49,9 @@ function setup() {
 function teardown() {
     # Global teardown - this gets executed only once per test file
     if [[ "$BATS_TEST_NUMBER" -eq "${#BATS_TEST_NAMES[@]}" ]]; then
+        gcloud iam service-accounts delete "${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com" \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}"
         delete_config
-        gcloud compute networks delete network-test-${RAND} \
-            --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
         rm -f "${RANDOM_FILE}"
     fi
 
@@ -60,21 +60,28 @@ function teardown() {
 
 
 @test "Creating deployment ${DEPLOYMENT_NAME} from ${CONFIG}" {
-    gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" --config "${CONFIG}" \
+    gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" \
+        --config "${CONFIG}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
 }
 
-@test "Verifying resources were created in deployment ${DEPLOYMENT_NAME}" {
-    run gcloud compute firewall-rules list --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$output" =~ "allow-proxy-from-inside" ]]
-    [[ "$output" =~ "allow-dns-from-inside" ]]
+@test "Verifying roles were added in deployment ${DEPLOYMENT_NAME}" {
+    run gcloud projects get-iam-policy "${CLOUD_FOUNDATION_PROJECT_ID}" \
+        --flatten="bindings[].members" \
+        --format='table(bindings.role)' \
+        --filter="bindings.members:${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com"
+    [[ "$output" =~ "roles/editor" ]]
+    [[ "$output" =~ "roles/viewer" ]]
 }
 
 @test "Deployment Delete" {
     gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
 
-    run gcloud compute firewall-rules list --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ ! "$output" =~ "allow-proxy-from-inside" ]]
-    [[ ! "$output" =~ "allow-dns-from-inside" ]]
+    run gcloud projects get-iam-policy "${CLOUD_FOUNDATION_PROJECT_ID}" \
+        --flatten="bindings[].members" \
+        --format='table(bindings.role)' \
+        --filter="bindings.members:${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com"
+    [[ ! "$output" =~ "roles/editor" ]]
+    [[ ! "$output" =~ "roles/viewer" ]]
 }

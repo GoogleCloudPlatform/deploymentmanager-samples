@@ -20,7 +20,7 @@ Templated Firewall rules
 
 See `properties` section in the schema files
 
--  [firewall](firewall.py.schema)
+-  [Firewall](firewall.py.schema)
 
 
 ### Deployment
@@ -41,17 +41,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/firewall/examples/firewall.yaml my-firewall.yaml
-vim my-firewall.yaml  # <== change values to match your GCP setup
+cp templates/firewall/examples/firewall.yaml my_firewall.yaml
+vim my_firewall.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-firewall.yaml
+    --config my_firewall.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-firewall.yaml
+    --config my_firewall.yaml
 ```
 
 

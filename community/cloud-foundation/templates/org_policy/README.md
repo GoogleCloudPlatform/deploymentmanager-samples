@@ -19,7 +19,7 @@ Templated Organization Policies
 
 See `properties` section in the schema files
 
--  [org-policy](org_policy.py.schema)
+-  [Org Policy](org_policy.py.schema)
 
 
 ### Deployment
@@ -28,7 +28,7 @@ See `properties` section in the schema files
 
 1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-sample)
 2. Go to the [community/cloud-foundation](community/cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/org-policy.yaml](examples/org-policy.yaml)
+3. Copy the example DM config to be used as a model for the deployment, in this case [examples/org_policy.yaml](examples/org_policy.yaml)
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
@@ -40,17 +40,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/org_policy/exampples/org-policy.yaml my-org-policy.yaml
-vim my-org-policy.yaml  # <== change values to match your GCP setup
+cp templates/org_policy/exampples/org_policy.yaml my_org_policy.yaml
+vim my_org_policy.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-org-policy.yaml
+    --config my_org_policy.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-org-policy.yaml
+    --config my_org_policy.yaml
 ```
 
 
@@ -63,4 +63,4 @@ gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 
 ## Examples
 
-- [org-policy](examples/org-policy.yaml)
+- [Org Policy](examples/org_policy.yaml)

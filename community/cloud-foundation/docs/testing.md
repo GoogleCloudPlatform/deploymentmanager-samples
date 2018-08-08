@@ -58,10 +58,9 @@ Paths are important. Always run the test from the root of the `cloud-foundation`
  ✓ Verifying subnets were deleted in deployment my-gcp-project-network
 ```
 
-It's Important to notice that the test files attempt to use as much as possible the
-*example configs* available under each of the `examples/` directory. This will keep
-examples consistent with the tests. For example, the `network.bats`
-test file uses the `templates/network/examples/network.yaml` config.
+It's important to notice that the test files attempt to remain similar much as possible
+to the *example configs* available under each of the respective template `examples/` directory.
+This will keep examples consistent with the tests.
 
 
 ## Temporary files and fixtures

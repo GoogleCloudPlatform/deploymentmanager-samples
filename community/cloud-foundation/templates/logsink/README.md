@@ -23,7 +23,7 @@ Templated logsink deployment
 
 See `properties` section in the schema files
 
--  [logsink](logsink.py.schema)
+-  [Logsink](logsink.py.schema)
 
 
 ### Deployment
@@ -44,10 +44,10 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/logsink/examples/logsink.yaml my-logsink.yaml
-vim my-logsink.yaml  # <== change values to match your GCP setup
+cp templates/logsink/examples/logsink.yaml my_logsink.yaml
+vim my_logsink.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-logsink.yaml
+    --config my_logsink.yaml
 ```
 
 #### Create

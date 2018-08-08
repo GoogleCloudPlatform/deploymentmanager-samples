@@ -23,7 +23,7 @@ Templated route deployment
 
 See `properties` section in the schema files
 
--  [route](route.py.schema)
+-  [Route](route.py.schema)
 
 ### Deployment
 
@@ -43,17 +43,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/route/examples/route.yaml my-route.yaml
-vim my-route.yaml  # <== change values to match your GCP setup
+cp templates/route/examples/route.yaml my_route.yaml
+vim my_route.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-route.yaml
+    --config my_route.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-route.yaml
+    --config my_route.yaml
 ```
 
 

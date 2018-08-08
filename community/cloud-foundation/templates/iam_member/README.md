@@ -19,7 +19,7 @@ IAM Member deployment
 
 See `properties` section in the schema files
 
--  [iam_member](iam_member.py.schema)
+-  [IAM Member](iam_member.py.schema)
 
 
 ### Deployment
@@ -28,7 +28,7 @@ See `properties` section in the schema files
 
 1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-sample)
 2. Go to the [community/cloud-foundation](community/cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/iam-member.yaml](examples/iam-member.yaml)
+3. Copy the example DM config to be used as a model for the deployment, in this case [examples/iam_member.yaml](examples/iam_member.yaml)
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
@@ -40,17 +40,17 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
 cd community/cloud-foundation
-cp templates/iam_member/examples/iam-member.yaml my-iammember.yaml
-vim my-iammember.yaml  # <== change values to match your GCP setup
+cp templates/iam_member/examples/iam_member.yaml my_iammember.yaml
+vim my_iammember.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-iammember.yaml
+    --config my_iammember.yaml
 ```
 
 #### Create
 
 ```
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my-iammember.yaml
+    --config my_iammember.yaml
 ```
 
 
@@ -63,4 +63,4 @@ gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 
 ## Examples
 
-- [Adding Roles to a member](examples/iam-member.yaml)
+- [Adding Roles to a member](examples/iam_member.yaml)

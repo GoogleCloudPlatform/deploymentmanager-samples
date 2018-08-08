@@ -68,4 +68,4 @@ documentation:
   - templates/iam_custom_role/README.md
 
 examples:
-  - templates/iam_custom_role/examples/iam-custom-role.yaml
+  - templates/iam_custom_role/examples/iam_custom_role.yaml
