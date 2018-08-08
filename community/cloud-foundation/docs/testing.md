@@ -59,9 +59,9 @@ Paths are important. Always run the test from the root of the `cloud-foundation`
 ```
 
 It's Important to notice that the test files attempt to use as much as possible the
-*example configs* available under the `examples/` directory. This will keep
+*example configs* available under each of the `examples/` directory. This will keep
 examples consistent with the tests. For example, the `network.bats`
-test file uses the `examples/network.yaml` config.
+test file uses the `templates/network/examples/network.yaml` config.
 
 
 ## Temporary files and fixtures
