@@ -32,7 +32,7 @@ def GenerateConfig(context):
           'autoDelete': True,
           'boot': True,
           'initializeParams': {
-              'diskName': name_prefix.lower() + '-disk',
+              'diskName': name_prefix.replace(' ', '-').lower() + '-disk',
               'sourceImage': GlobalComputeUrl(
                   cc.configs['Instance']['OSFamily'], 'images/family', cc.configs['Instance']['OSVersion']
                   )
@@ -51,7 +51,7 @@ def GenerateConfig(context):
   # Resources to return.
   resources = {
       'resources': [{
-          'name': i_name_prefix.lower() + '-i',
+          'name': i_name_prefix.replace(' ', '-').lower() + '-i',
           'type': 'compute.v1.instance',
           'properties': instance
           }]
