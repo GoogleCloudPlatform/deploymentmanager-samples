@@ -1,0 +1,19 @@
+imports:
+  - path: templates/project/project.py
+    name: project.py
+
+resources:
+  - name: ${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}
+    type: project.py
+    properties:
+      parent:
+        id: ${CLOUD_FOUNDATION_ORGANIZATION_ID}
+      billingAccountId: ${CLOUD_FOUNDATION_BILLING_ACCOUNT_ID}
+      activateApis:
+        - compute.googleapis.com
+        - deploymentmanager.googleapis.com
+        - pubsub.googleapis.com
+      serviceAccounts:
+        - sa-${RAND}
+      usageExportBucket: true
+      sharedVPCHost: true
