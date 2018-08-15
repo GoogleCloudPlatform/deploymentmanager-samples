@@ -15,6 +15,7 @@ fi
 # envsubst requires all variables used in the example/config to be exported
 if [[ -e "${RANDOM_FILE}" ]]; then
     export RAND=$(cat "${RANDOM_FILE}")
+    export CLOUD_FOUNDATION_PROJECT_ID=$(echo ${CLOUD_FOUNDATION_PROJECT_ID} | cut -c 1-10)
     DEPLOYMENT_NAME="${CLOUD_FOUNDATION_PROJECT_ID}-${TEST_NAME}-${RAND}"
     # Deployment names cannot have underscores. Replace with dashes.
     DEPLOYMENT_NAME=${DEPLOYMENT_NAME//_/-}
