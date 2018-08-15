@@ -1,9 +1,5 @@
 #!/bin/bash
-apt-get update && apt-get install -y wget curl net-tools vim
-echo "deb http://research.cs.wisc.edu/htcondor/debian/stable/ jessie contrib" >> /etc/apt/sources.list
-wget -qO - http://research.cs.wisc.edu/htcondor/debian/HTCondor-Release.gpg.key | apt-key add -
-apt-get update && apt-get install -y condor
-if  dpkg -s condor >& /dev/null  ; then echo "yes"; else sleep 10; apt-get install -y condor; fi;
+apt-get update &&  export DEBIAN_FRONTEND=noninteractive; apt-get install -y curl net-tools vim htcondor
 cat <<EOF > /etc/condor/config.d/condor_config.local
 DISCARD_SESSION_KEYRING_ON_STARTUP=False
 DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR
