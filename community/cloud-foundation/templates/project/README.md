@@ -5,15 +5,15 @@ Templated project creation. This templates will:
 1. Create a new project.
 2. Set the billing account on the new project.
 3. Set IAM permissions on the new project.
-4. Turn on a set of apis in the new project.
+4. Turn on a set of APIs in the new project.
 5. Create service accounts in the new project.
-6. Create an usage export Storage bucket in the new project
+6. Create an usage export Cloud Storage bucket in the new project
 
 
 ## Prerequisites
 
 The prerequisites to create a project via DM. You can perform some of these
-steps via the cloud console at https://console.cloud.google.com/
+steps via the Cloud Console at https://console.cloud.google.com/
 
 The `gcloud` command line tool is used for the deployment of the configs.
 
@@ -52,7 +52,7 @@ receive errors about the user not having permissions.
 
 1.  **Find the *Cloud Services* service account associated with the *DM Creation Project***
 
-    It will be in the form `&lt;project_number&gt;@cloudservices.gserviceaccount.com`
+    It will be in the form `<project_number>@cloudservices.gserviceaccount.com`
     and listed under [IAM & admin](https://console.cloud.google.com/iam-admin/iam)
     in Google Cloud Console. This will be called the *"DM Service Account"* for
     the rest of these instructions.
@@ -71,12 +71,12 @@ receive errors about the user not having permissions.
         ->  Project Creator.*
     * See https://cloud.google.com/resource-manager/docs/access-control-proj
 
-1.  **Create/find a *Billing account* associated with the organization**
+1.  **Create/find a *Billing Account* associated with the organization**
 
     * See: https://cloud.google.com/support/billing/
-    * Take note if the billing account ID that looks like `00E12A-0AB8B2-078CE8`
+    * Take note if the Billing Account ID that looks like `00E12A-0AB8B2-078CE8`
 
-1.  **Give the *DM Service Account* the following permissions on the Billing account:**
+1.  **Give the *DM Service Account* the following permissions on the Billing Account:**
     * `roles/billing.user`
         * This is visible in Cloud Console's IAM permissions in
           *Billing -> Billing Account User*.
@@ -112,7 +112,7 @@ See `properties` section in the schema files
 
 #### Usage
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
+1. Clone the [DM Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 2. Go to the [community/cloud-foundation](../../../cloud-foundation) directory
 3. Copy the example DM config to be used as a model for the deployment, in this case [examples/project.yaml](examples/project.yaml)
 4. Change the values in the config file to match your specific GCP setup.
@@ -126,7 +126,7 @@ For example:
 ```
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 cd community/cloud-foundation
-cp examples/project.yaml my_project.yaml
+cp templates/project/examples/project.yaml my_project.yaml
 vim my_project.yaml  # <== change values to match your GCP setup
 gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_project.yaml
