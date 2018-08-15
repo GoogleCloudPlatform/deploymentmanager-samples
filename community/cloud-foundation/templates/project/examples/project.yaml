@@ -1,0 +1,33 @@
+# Example on how to use the project template
+#
+# In this example, a project is created, along with some of the most used
+# resources that an enterprise needs for regular operation
+#
+# Notice that the `setDMServiceAccountAsOwner` property already defaults to
+# true, so it's doesn't need to be specified in the config. Same for
+# `parent.type` (it defaults to "organization"), they're specified here for
+# informational purposes
+#
+# See `templates/project.py.schema` for detailed information on these
+# properties
+
+imports:
+  - path: templates/project/project.py
+    name: project.py
+
+resources:
+  - name: <FIXME:UniqueProjectName>
+    type: project.py
+    properties:
+      parent:
+        type: organization
+        id: <FIXME:OrgID>
+      billingAccountId: <FIXME:BillingAccount:ID>
+      activateApis:
+        - compute.googleapis.com
+        - deploymentmanager.googleapis.com
+        - pubsub.googleapis.com
+      serviceAccounts:
+        - test-sa
+      usageExportBucket: true
+      sharedVPCHost: true

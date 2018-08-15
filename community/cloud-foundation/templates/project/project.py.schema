@@ -1,0 +1,183 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Project
+  author: Sourced Group Inc.
+  description: |
+    Deploys a single project. The project is created, has a billing account
+    attached, permissions altered, APIs activated, and service accounts created.
+
+required:
+  - billingAccountId
+
+additionalProperties: false
+properties:
+  name:
+    type: string
+    description: |
+      The project name. If provided, configures the project to have a
+      human-readable name that is different from the project ID.
+  parent:
+    type: object
+    description: The parent of the project
+    properties:
+      type:
+        type: string
+        decription: The parent type (organization or folder)
+        enum:
+          - organization
+          - folder
+        default: organization
+      id:
+        type: [integer, string]
+        description: |
+          The ID of the parent that the projects will be under.
+  billingAccountId:
+    type: string
+    description: |
+      The ID of the billing account to attach to the projects.
+      For example, 00E12A-0AB8B2-078CE8
+  iamPolicyPatch:
+    type: object
+    additionalProperties: false
+    description: |
+      The IAM policy patch to apply to the project. This is optional. The
+      template will automatically add/merge in the service account making the
+      project as an owner.
+    properties:
+      add:
+        type: array
+        description: Bindings to add to the existing project IAM policy.
+        items:
+          type: object
+          description: A set of members bound to a particular role.
+          additionalProperties: false
+          required:
+            - role
+            - members
+          properties:
+            role:
+              type: string
+              pattern: ^roles/
+              description: The role that all the members will receive.
+            members:
+              type: array
+              items:
+                type: string
+                pattern: "^(user|group|domain|serviceAccount):"
+              decription: The members that will be given the permissions in role.
+      remove:
+        type: array
+        description: Bindings to remove from the existing project IAM policy.
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - role
+            - members
+          description: A set of members unbound from a particular role.
+          properties:
+            role:
+              type: string
+              pattern: ^roles/
+              description: The role that all the members will be removed from.
+            members:
+              type: array
+              items:
+                type: string
+                pattern: "^(user|group|domain|serviceAccount):"
+              decription: The members that whose permission will be removed.
+  setDMServiceAccountAsOwner:
+    type: boolean
+    default: False
+    description: |
+      If set to true, the service account that Deployment Manager will use in
+      the newly created project will be made Owner. This would allow
+      Deployment Manager to set IAM policies within this project.
+  activateApis:
+    type: array
+    items:
+      type: string
+    description: The list of APIs to enable for each project.
+  usageExportBucket:
+    type: boolean
+    description: |
+      Whether an usage export bucket should be created.
+      This option is not true by default, so it doesn't inadvertently incur
+      costs to the user, but it's strongly suggested to be enabled.
+  serviceAccounts:
+    type: array
+    default: []
+    items:
+      type: string
+      pattern: ^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$
+    description: The list of service accounts to create for each project.
+  concurrentApiActivation:
+    type: boolean
+    default: False
+    description: |
+      Boolean flag if set to True activates all the requested APIs
+      concurrently. When set to False, the apis are activated serially.
+      Concurrent activation makes for faster deployment but could potentially
+      fail the deployment exceeding the quota limits, make sure to request for
+      adequate quota before using this option. Serial activation tends to be a
+      lot slower.
+  sharedVPC:
+    type: string
+    description: |
+      Name of the Shared VPC network that this project will participate in.
+      The `sharedVPCHost` property cannot bet set if this property is set.
+  sharedVPCSubnets:
+    type: string
+    description: |
+      The IDs of specific shared VPC subnets to share into the new project.
+  sharedVPCHost:
+    type: boolean
+    description: |
+      Boolean flag if set to True indicates that this project to be used as a
+      host project for Shared VPC networks.
+      The `sharedVPCService` property cannot bet set if this property is set.
+  removeDefaultVPC:
+    type: boolean
+    default: True
+    description: |
+      Boolean flag if set to True will remove the default VPC that is
+      provisioned when a project is created.
+  removeDefaultSA:
+    type: boolean
+    default: True
+    description: |
+      Boolean flag if set to True will remove the default service account. This
+      SA is in the form <projectID>@cloudservices.gserviceaccount.com.
+
+outputs:
+  properties:
+    - projectId:
+      type: string
+      description: The unique, user-assigned ID of the Project.
+    - usageExportBucketName:
+        type: string
+        description: The usage export bucket name.
+    - serviceAccountDisplayName:
+        type: string
+        description: Name of the default service account for the project.
+
+documentation:
+  - docs/templates/project.md
+
+examples:
+  - examples/project.yaml
+
+
