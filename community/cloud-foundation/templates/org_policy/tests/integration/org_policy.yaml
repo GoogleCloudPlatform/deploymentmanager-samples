@@ -1,0 +1,23 @@
+# Example on how to use the Organization Policy template
+#
+# Variables:
+#   CLOUD_FOUNDATION_PROJECT_ID: The project ID, normally set at ~/.cloud-foundation-tests.conf
+#   RAND: Just a random string used mostly by the testing suite.
+
+imports:
+  - path: templates/org_policy/org_policy.py
+    name: org_policy.py
+
+resources:
+  - name: test-org-policy-${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}
+    type: org_policy.py
+    properties:
+      projectId: ${CLOUD_FOUNDATION_PROJECT_ID}
+      policies:
+        - constraint: constraints/compute.vmExternalIpAccess
+          listPolicy:
+            allValues: ALLOW
+        - constraint: constraints/compute.disableNestedVirtualization
+          booleanPolicy:
+            enforced: true
+

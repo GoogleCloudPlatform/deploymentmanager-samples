@@ -1,0 +1,27 @@
+# Example on how to use the shared vpc subnet iam template
+#
+# The `members` property is a list of members which will be
+# granted IAM roles for on a shared VPC subnet.
+# Members can be a user, service account, group or domain.
+
+imports:
+  - path: templates/shared_vpc_subnet_iam/shared_vpc_subnet_iam.py
+    name: shared_vpc_subnet_iam.py
+
+resources:
+  - name: test-shared-vpc-subnet-iam
+    type: shared_vpc_subnet_iam.py
+    properties:
+      subnets:
+        - subnetId: test-subnet-1
+          region: us-east1
+          role: roles/compute.networkUser
+          members:
+            - user:name@example.com
+            - serviceAccount:example@myprojectname.gserviceaccount.com
+        - subnetId: test-subnet-2
+          region: us-east1
+          role: roles/compute.networkUser
+          members:
+            - group:admins@example.com
+            - domain:google.com
