@@ -16,13 +16,13 @@ imports:
     name: project.py
 
 resources:
-  - name: test-project
+  - name: <FIXME:UniqueProjectName>
     type: project.py
     properties:
       parent:
         type: organization
-        id: 616800120078
-      billingAccountId: 00E11A-0AB9A2-077BE7
+        id: <FIXME:OrgID>
+      billingAccountId: <FIXME:BillingAccount:ID>
       activateApis:
         - compute.googleapis.com
         - deploymentmanager.googleapis.com
