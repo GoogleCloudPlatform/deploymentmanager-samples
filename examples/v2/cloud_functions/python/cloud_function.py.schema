@@ -19,14 +19,19 @@ info:
 
 required:
 - codeLocation
-- sourceArchiveUrl
+- codeBucket
+- codeBucketObject
 
 properties:
   codeLocation:
     type: string
     description: Prefix from the imports that will be packed in the cloud function
 
-  sourceArchiveUrl:
+  codeBucket:
+    type: string
+    description: Where the function code will be stored
+
+  codeBucketObject:
     type: string
     description: Where the function code will be stored
 
