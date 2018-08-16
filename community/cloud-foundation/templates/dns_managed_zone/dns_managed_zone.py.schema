@@ -1,0 +1,58 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Cloud DNS Managed Zone
+  author: Sourced Group Inc.
+  description: |
+    Managed Zone in Google Cloud DNS
+
+    For more information on this resource:
+      - https://cloud.google.com/dns/api/v1/managedZones
+
+imports:
+  - path: dns_managed_zone.py
+
+properties:
+  zoneName:
+    type: string
+    default: my-dns-managed-zone
+    description: |
+      user assigned name for this resource. Must be unique within the project
+  dnsName:
+    type: string
+    description: |
+      The DNS name of this managed zone, for instance "example.com"
+  description:
+    type: string
+    default: My Cloud DNS managed zone
+    description: |
+      A mutable string of at most 1024 characters associated with this resource
+      for user convenience. Has no effect on the managed zone function
+
+outputs:
+  properties:
+    - name:
+        type: string
+        description: dns managed zone resource name
+    - dnsName:
+        type: string
+        description: selfLink URL for this managed zone resource
+
+documentation:
+  - templates/dns_managed_zone/README.md
+
+examples:
+  - templates/dns_managed_zone/examples/dns_managed_zone.yaml
+

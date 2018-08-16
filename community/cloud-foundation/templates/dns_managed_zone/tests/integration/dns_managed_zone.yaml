@@ -1,0 +1,20 @@
+# Example on how to use the dns managed zone template
+#
+# In this example, a dns managed zone is created
+# via the `subnetworks` property of the `dns_managed_zone.py` template 
+#
+# Notice the `name` property for the `templates/dns_managed_zone.py` resource type is
+# optional. If omitted in the properties, the DM resource name is used. If 
+# defined in the properties, it takes precedence.
+
+imports:
+  - path: templates/dns_managed_zone/dns_managed_zone.py
+
+resources:
+  - name: my-managed-zone
+    type: dns_managed_zone.py
+    properties:
+	   zoneName: 'my-managed-zone'
+       dnsName: 'managed.example.com'
+       description: "My CloudFoundation DNS Managed Zone" 
+
