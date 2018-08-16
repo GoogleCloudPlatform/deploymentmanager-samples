@@ -1,0 +1,40 @@
+# Example on how to use the cloud storage bucket template
+#
+# In this example, a storage bucket is created in location us-east1
+# with name test-bucket. Cloud storage bucket names should be unique globally
+# refer https://cloud.google.com/storage/docs/naming for bucket and object 
+# naming guidelines. To ensure bucket name is unique you may chose to 
+# set the `autoGenerateName` property to True - this will append a 10
+# digit random alphanumeric string to the `name` like {name}-{randomstring}
+#
+# IAM Policies can be applied during bucket creation should you choose to 
+# apply them, add `bindings` section under properties
+# Please refer to `templates/gcs_bucket.py.schema` for more details
+
+imports:
+  - path: templates/gcs_bucket/gcs_bucket.py
+    name: gcs_bucket.py
+
+resources:
+  - name: test-bucket
+    type: gcs_bucket.py
+    properties:
+      name: test-bucket
+      location: us-east1
+      autoGenerateName: True
+      versioning:
+        enabled: True
+      lifecycle:
+        rule:
+          - action:
+              type: SetStorageClass
+              storageClass: NEARLINE
+            condition:
+              age: 36500
+              createdBefore: "2018-08-16"
+              isLive: false
+              matchesStorageClass:
+                - REGIONAL
+                - STANDARD
+                - COLDLINE
+              numNewerVersions: 5
