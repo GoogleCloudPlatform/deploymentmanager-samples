@@ -9,12 +9,12 @@
 
 imports:
   - path: templates/dns_managed_zone/dns_managed_zone.py
+    name: dns_managed_zone.py    
 
 resources:
   - name: my-managed-zone
     type: dns_managed_zone.py
     properties:
-	   zoneName: 'my-managed-zone'
-       dnsName: 'managed.example.com'
-       description: "My CloudFoundation DNS Managed Zone" 
-
+      zoneName: 'foo-managed-zone'
+      dnsName: 'foobar.local.'
+      description: "My foobar DNS Managed Zone" 

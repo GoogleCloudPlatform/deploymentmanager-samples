@@ -18,14 +18,12 @@ def generate_config(context):
 
     resources = []
 
-    name = context.env['name']
     managedzonename = context.properties.get('zoneName')
     dnsname = context.properties.get('dnsName')
-    dnsname = dnsname + "."
     description = context.properties.get('description')
 
     managed_zone = {
-        'name': name,
+        'name': context.env['name'],
         'type': 'dns.v1.managedZone',
         'properties': {
           'name': managedzonename,
@@ -36,20 +34,5 @@ def generate_config(context):
 
     resources.append(managed_zone)
 
-    return {
-        'resources':
-            resources,
-        'outputs':
-            [
-                {
-                    'name': 'name',
-                    'value': managedzonename
-                },
-                {
-                    'name': 'dnsName',
-                    'value': dnsname
-                }
-                
-            ]
-    }
+    return {'resources':resources}
 

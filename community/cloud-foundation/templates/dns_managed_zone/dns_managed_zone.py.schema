@@ -1,10 +1,10 @@
-# Copyright 2018 Google Inc. All rights reserved.
+# Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,41 +14,35 @@
 
 info:
   title: Cloud DNS Managed Zone
-  author: Sourced Group Inc.
+  author: Source Group Inc.,
   description: |
-    Managed Zone in Google Cloud DNS
+    Creates a cloud dns managed zone
 
     For more information on this resource:
       - https://cloud.google.com/dns/api/v1/managedZones
+      
+  version: 1.0
 
 imports:
-  - path: dns_managed_zone.py
+- path: dns_managed_zone.py
+
+required:
+- zoneName
+- dnsName
 
 properties:
   zoneName:
+    description: The description for the managed zone. This is required by Cloud DNS
     type: string
-    default: my-dns-managed-zone
-    description: |
-      user assigned name for this resource. Must be unique within the project
-  dnsName:
-    type: string
-    description: |
-      The DNS name of this managed zone, for instance "example.com"
-  description:
-    type: string
-    default: My Cloud DNS managed zone
-    description: |
-      A mutable string of at most 1024 characters associated with this resource
-      for user convenience. Has no effect on the managed zone function
+    pattern: ^.{0,1023}$
 
-outputs:
-  properties:
-    - name:
-        type: string
-        description: dns managed zone resource name
-    - dnsName:
-        type: string
-        description: selfLink URL for this managed zone resource
+  dnsName:
+    description: |
+      The dnsName parameter used in the ManagedZone. 'The DNS name of this
+      managed zone, for instance "example.com.".'
+    type: string
+    # Just assert that it ends in a dot, as that is the most common mistake.
+    pattern: \.$
 
 documentation:
   - templates/dns_managed_zone/README.md
