@@ -34,6 +34,8 @@ Compare to the "basic" version, this example handles a more complex Organization
 $ git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
 $ cd deploymentmanager-samples/community/hierarchical_configuration/Organization_with_departments/systems/my_ecom_system
 # set project_id <your-personal-project-id> # (or add it to next gcloud commands)
+# Allow bulk (glob style) imports
+$ gcloud config set deployment_manager/glob_imports True
 # Deploy Dev example
 $ gcloud deployment-manager deployments create hierarchy-org-example-dev --template env_demo_project.py --properties=envName:dev
 # Deploy Test example

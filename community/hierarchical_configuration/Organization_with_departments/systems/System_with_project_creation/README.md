@@ -45,7 +45,8 @@ git diff --no-index ../my_ecom_system/ ./
 ## WORKING EXAMPLE TODO FIX
 
 ```bash
-
+# Allow bulk (glob style) imports
+$ gcloud config set deployment_manager/glob_imports True
 # Deploy Dev example
 $ gcloud deployment-manager deployments create hierarchy-org-project-creation-dev --template project_creation.py --properties=envName:dev
 ```

@@ -40,6 +40,8 @@ The goal is to create a framework for configuration variable management for mid/
 $ git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
 $ cd deploymentmanager-samples/community/hierarchical_configuration/Basic
 # set project_id <your-personal-project-id> # (or add it to next gcloud commands)
+# Allow bulk (glob style) imports
+$ gcloud config set deployment_manager/glob_imports True
 # Deploy Dev example
 $ gcloud deployment-manager deployments create hierarchy-example-dev --template env_demo_project.py --properties=envName:dev
 # Deploy Test example
