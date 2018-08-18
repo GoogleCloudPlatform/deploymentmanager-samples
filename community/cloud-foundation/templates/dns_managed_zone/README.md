@@ -1,6 +1,6 @@
 # Cloud DNS Managed Zone
 
-Cloud DNS managed zone
+Cloud DNS Managed Zone
 
 ## Prerequisites
 
