@@ -1,0 +1,52 @@
+# Copyright 2016 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Cloud DNS Managed Zone
+  author: Source Group Inc.,
+  description: |
+    Creates a cloud dns managed zone
+
+    For more information on this resource:
+      - https://cloud.google.com/dns/api/v1/managedZones
+      
+  version: 1.0
+
+imports:
+- path: dns_managed_zone.py
+
+required:
+- zoneName
+- dnsName
+
+properties:
+  zoneName:
+    description: The description for the managed zone. This is required by Cloud DNS
+    type: string
+    pattern: ^.{0,1023}$
+
+  dnsName:
+    description: |
+      The dnsName parameter used in the ManagedZone. 'The DNS name of this
+      managed zone, for instance "example.com.".'
+    type: string
+    # Just assert that it ends in a dot, as that is the most common mistake.
+    pattern: \.$
+
+documentation:
+  - templates/dns_managed_zone/README.md
+
+examples:
+  - templates/dns_managed_zone/examples/dns_managed_zone.yaml
+
