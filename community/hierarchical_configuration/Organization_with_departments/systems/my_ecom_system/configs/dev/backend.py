@@ -1,3 +1,1 @@
-config ={
-	'CONTEXT' : 'We are in PROD context'
-}
+config = {'CONTEXT': 'We are in PROD context'}

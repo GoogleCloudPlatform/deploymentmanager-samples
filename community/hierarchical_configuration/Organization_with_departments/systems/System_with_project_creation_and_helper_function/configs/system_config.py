@@ -1,3 +1,3 @@
-config ={
-	'Systen description' : 'Sample system to demonstrate project creation',
+config = {
+    'Systen description': 'Sample system to demonstrate project creation',
 }
