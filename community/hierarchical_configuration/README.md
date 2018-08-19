@@ -1,6 +1,6 @@
-#Deployment Manager at Scale
+# Deployment Manager at Scale
 
-##A guide to Hierarchical Configuration
+## A guide to Hierarchical Configuration
 
 Infrastructure as code is great, but as your system grows above the “Hello World” example, 
 it can start to get messy. The code tends to become unstructured. Configurations become ad 
