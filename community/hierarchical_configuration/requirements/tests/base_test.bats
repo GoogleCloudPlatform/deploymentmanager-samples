@@ -69,12 +69,12 @@ function setup() {
     gcloud deployment-manager deployments create hierarchy-org-ecom-dev --template Organization_with_departments/systems/my_ecom_system/env_demo_project.py --properties=envName:dev
 }
 
-@test "Creating deployment hierarchy-org-proj-dev from Organization_with_departments/systems/System_with_project_creation/env_demo_project.py" {
-    gcloud deployment-manager deployments create hierarchy-org-proj-dev --template Organization_with_departments/systems/System_with_project_creation/env_demo_project.py --properties=envName:dev
+@test "Creating deployment hierarchy-org-proj-dev from Organization_with_departments/systems/System_with_project_creation/project_creation.py" {
+    gcloud deployment-manager deployments create hierarchy-org-proj-dev --template Organization_with_departments/systems/System_with_project_creation/project_creation.py --properties=envName:dev
 }
 
-@test "Creating deployment hierarchy-org-helper-dev from Organization_with_departments/systems/System_with_project_creation_and_helper_function/env_demo_project.py" {
-    gcloud deployment-manager deployments create hierarchy-org-helper-dev --template Organization_with_departments/systems/System_with_project_creation_and_helper_function/env_demo_project.py --properties=envName:dev
+@test "Creating deployment hierarchy-org-helper-dev from Organization_with_departments/systems/System_with_project_creation_and_helper_function/project_creation.py" {
+    gcloud deployment-manager deployments create hierarchy-org-helper-dev --template Organization_with_departments/systems/System_with_project_creation_and_helper_function/project_creation.py --properties=envName:dev
 }
 
 #@test "Verifying resources were created in deployment ${DEPLOYMENT_NAME}" {

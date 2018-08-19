@@ -58,8 +58,7 @@ class ConfigContext:
             path = 'configs'
         else:
             path = 'configs.' + path
-        env_context = __import__(path + '.' + fileName, globals(), locals(),
-                                 fileName, -1)
+        env_context = __import__(path + '.' + fileName, globals(), locals(), fileName, -1)  
         return env_context.config
 
     def getEnvSpecificConfig(self):
@@ -79,7 +78,3 @@ class ConfigContext:
 
     def get_conf(self):
         return str(self.configs)
-<<<<<<< HEAD:community/hierarchical_configuration/helper/config_merger.py
-
-=======
->>>>>>> 73d51b6b6957e847270a4cc5b62d78f6ca42326c:community/hierarchical_configuration/Basic/helper/config_merger.py
