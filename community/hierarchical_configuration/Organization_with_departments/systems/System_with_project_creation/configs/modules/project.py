@@ -2,10 +2,10 @@ config = {
     'project_module': {
         # Change this to your organization ID.
         'organization-id':
-        'CHANGE_ME',  #"746888459216",
+        'CHANGE_ME',  #"123456789016",
         # Change the following to your organization's billing account
         'billing-account-name':
-        'CHANGE_ME',  # 'billingAccounts/017513-155F91-FCCEC3',
+        'CHANGE_ME',  # 'billingAccounts/013456-789ABC-DEF123',
         # The apis to enable in the new project.
         # To see the possible APIs, use gcloud CLI: gcloud service-management list
         'apis': [
