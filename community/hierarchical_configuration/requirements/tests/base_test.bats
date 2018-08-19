@@ -65,8 +65,16 @@ function setup() {
     gcloud deployment-manager deployments create hierarchy-basic-dev --template Basic/env_demo_project.py --properties=envName:dev
 }
 
-@test "Creating deployment hierarchy-basic-dev from Organization_with_departments/systems/my_ecom_system/env_demo_project.py" {
+@test "Creating deployment hierarchy-org-ecom-dev from Organization_with_departments/systems/my_ecom_system/env_demo_project.py" {
     gcloud deployment-manager deployments create hierarchy-org-ecom-dev --template Organization_with_departments/systems/my_ecom_system/env_demo_project.py --properties=envName:dev
+}
+
+@test "Creating deployment hierarchy-org-proj-dev from Organization_with_departments/systems/System_with_project_creation/env_demo_project.py" {
+    gcloud deployment-manager deployments create hierarchy-org-proj-dev --template Organization_with_departments/systems/System_with_project_creation/env_demo_project.py --properties=envName:dev
+}
+
+@test "Creating deployment hierarchy-org-helper-dev from Organization_with_departments/systems/System_with_project_creation_and_helper_function/env_demo_project.py" {
+    gcloud deployment-manager deployments create hierarchy-org-helper-dev --template Organization_with_departments/systems/System_with_project_creation_and_helper_function/env_demo_project.py --properties=envName:dev
 }
 
 #@test "Verifying resources were created in deployment ${DEPLOYMENT_NAME}" {
@@ -78,6 +86,8 @@ function setup() {
 @test "Deployment Delete" {
     gcloud deployment-manager deployments delete hierarchy-basic-dev -q
     gcloud deployment-manager deployments delete hierarchy-org-ecom-dev -q
+    gcloud deployment-manager deployments delete hierarchy-org-proj-dev -q
+    gcloud deployment-manager deployments delete hierarchy-org-helper-dev -q
 
    # run gcloud compute firewall-rules list --project "${CLOUD_FOUNDATION_PROJECT_ID}"
    # [[ ! "$output" =~ "allow-proxy-from-inside" ]]

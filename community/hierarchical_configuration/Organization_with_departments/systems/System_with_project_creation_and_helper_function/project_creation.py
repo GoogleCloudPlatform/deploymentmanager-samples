@@ -13,11 +13,13 @@ def GenerateConfig(context):
     naming = naming_helper.NamingHelper(cc)
 
     return {
-        'resources': [{
-            'name': naming.getProjectName('example-tool'),
-            'type': 'project.py',
-            'properties': cc.configs['project_module']
-        }],
+        'resources': [
+            #{
+            #    'name': naming.getProjectName('example-tool'),
+            #    'type': 'project.py',
+            #    'properties': cc.configs['project_module']
+            #}
+        ],
         'outputs': [{
             'name':
             'outp_3',
