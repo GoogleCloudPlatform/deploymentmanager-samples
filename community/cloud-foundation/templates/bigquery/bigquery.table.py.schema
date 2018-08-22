@@ -1,0 +1,179 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: BigQuery Table
+  author: Sourced Group Inc.
+  description: |
+    Deploys a BigQuery Table.
+
+    For more information on this resource:
+    https://cloud.google.com/bigquery/docs/
+
+imports:
+  - path: bigquery_table.py
+
+required:
+  - name
+
+properties:
+  name:
+    type: string
+    description: The name of the resource.
+  datasetId:
+    type: string
+    description: |
+      The ID of the dataset this table belongs to.
+  friendlyName:
+    type: string
+    description: A descriptive name for this table.
+  expirationTime:
+    type: string
+    description: |
+      The time when this table expires, in milliseconds since the epoch. If
+      not present, the table will persist indefinitely. Expired tables will
+      be deleted and their storage reclaimed. The defaultTableExpirationMs
+      property of the encapsulating dataset can be used to set a default
+      expirationTime on newly created tables.
+  labels:
+    type: string
+    pattern: ^[0-9a-zA-Z][0-9a-zA-Z_-]{4,63}$
+    description: |
+      The labels associated with this table. You can use these to organize and
+      group your tables. Label keys and values can be no longer than 63
+      characters, can only contain lowercase letters, numeric characters,
+      underscores and dashes. International characters are allowed. Label
+      values are optional. Label keys must start with a letter and each label
+      in the list must have a different key.
+  timePartitioning:
+    type: object
+    description: Time-based partitioning specification for this table.
+    properties:
+      expirationMs:
+        type: string
+        description: |
+          Number of milliseconds for which to keep the storage for partitions
+          in the table. The storage in a partition will have an expiration
+          time of its partition time plus this value.
+      field:
+        type: string
+        description: |
+          If not set, the table is partitioned by pseudo column, referenced
+          via either '_PARTITIONTIME' as TIMESTAMP type, or '_PARTITIONDATE'
+          as DATE type. If field is specified, the table is instead partitioned
+          by this field. The field must be a top-level TIMESTAMP or DATE field.
+          Its mode must be NULLABLE or REQUIRED.
+      requirePartitionFilter:
+        type: boolean
+        description: |
+          If set to true, queries over this table require a partition filter
+          that can be used for partition elimination to be specified.
+      type:
+        type: string
+        description: |
+          The only type supported is DAY, which will generate one partition
+          per day.
+  view:
+    type: object
+    description: The view definintion.
+    properties:
+      query:
+        type: string
+        description: |
+          A query that BigQuery executes when the view is referenced.
+      useLegacySql:
+        type: boolean
+        description: |
+          Specifies whether to use BigQuery's legacy SQL for this view. The
+          default value is true. If set to false, the view will use BigQuery's
+          standard SQL: https://cloud.google.com/bigquery/sql-reference/
+          Queries and views that reference this view must use the same flag
+          value.
+      userDefinedFunctionResources:
+        type: array
+        description: |
+          Describes user-defined function resources used in the query.
+        items:
+          oneOf:
+            - inlineCode:
+              type: string
+              description: |
+                An inline resource that contains code for a user-defined
+                function (UDF). Providing a inline code resource is
+                equivalent to providing a URI for a file containing the same
+                code.
+            - resourceUri:
+              type: string
+              description: |
+                A code resource to load from a Google Cloud Storage URI
+                (gs://bucket/path).
+  schema:
+    type: object
+    description: |
+      The schema for the data. Schema is required for CSV and JSON formats.
+      Schema is disallowed for Google Cloud Bigtable, Cloud Datastore
+      backups, and Avro formats.
+    properties:
+      fields:
+        type: array
+        description: Describes the fields in a table.
+        items:
+          name:
+            type: string
+            pattern: ^[_a-zA-Z][0-9a-zA-Z_]{4,128}$
+            description: |
+              The field name. The name must contain only letters (a-z, A-Z),
+              numbers (0-9), or underscores (_), and must start with a letter
+              or underscore. The maximum length is 128 characters.
+          type:
+            type: string
+            description: |
+              The field data type. Possible values include STRING, BYTES,
+              INTEGER, INT64 (same as INTEGER), FLOAT, FLOAT64 (same as
+              FLOAT), BOOLEAN, BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME,
+              DATETIME, RECORD (where RECORD indicates that the field contains
+              a nested schema) or STRUCT (same as RECORD).
+          mode:
+            type: string
+            description:
+              The field mode. Possible values include NULLABLE, REQUIRED and
+              REPEATED. The default value is NULLABLE.
+          description:
+            type: string
+            description: |
+              The field description. The maximum length is 1,024 characters.
+outputs:
+  properties:
+    - selfLink:
+        type: string
+        description: The URI of the created resource.
+    - etag:
+        type: string
+        description: A hash of the resource.
+    - creationTime:
+        type: string
+        description: |
+          The time when this dataset was created, in milliseconds since
+          epoch.
+    - lastModifiedTime:
+        type: string
+        description: |
+          The date when this dataset or any of its tables was last modified,
+          in milliseconds since the epoch.
+
+documentation:
+  - templates/bigquery/README.md
+
+examples:
+  - templates/bigquery/examples/bigquery.yaml
