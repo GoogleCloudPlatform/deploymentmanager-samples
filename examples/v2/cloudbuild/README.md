@@ -7,7 +7,7 @@ Manager](https://cloud.google.com/deployment-manager/overview) template that
 creates a Cloud Container Builder build.
 
 This sample uses the undocumented DM Actions feature (estimated to come out
-in Q4 2017) to call the Cloud Container Builder projects.builds.create API.
+in Q2 2018) to call the Cloud Container Builder projects.builds.create API.
 This doesn't create a DM resource like you would normally see, it just calls
 the API as specified in the metadat.runtimePolicy section. This section may
 contain the values UPDATE\_ALWAYS (call the API for create or update changes
