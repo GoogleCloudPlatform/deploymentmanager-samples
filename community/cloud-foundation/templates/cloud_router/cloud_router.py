@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates a Cloud Router."""
+
+""" This template creates a Cloud Router. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     resources = [
         {
@@ -53,7 +54,7 @@ def generate_config(context):
 
 
 def generate_network_url(context, network):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
 
     return 'projects/{}/global/networks/{}'.format(
         context.env['project'],
