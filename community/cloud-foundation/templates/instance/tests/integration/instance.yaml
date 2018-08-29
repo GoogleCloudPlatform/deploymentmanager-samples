@@ -1,7 +1,7 @@
 # Example on how to use the instance template
 #
 # Variables:
-#   RAND: Just a random string used mostly by the testing suite.
+#   RAND: A random string used mostly by the testing suite.
 imports:
   - path: templates/instance/instance.py
     name: instance.py
