@@ -27,22 +27,23 @@ required:
 properties:
   name:
     type: string
-    description: A name of an instance resource
-  network:
+    description: The name of the instance resource
+  network
     type: string
-    description: A network name, e.g. 'my-custom-network' or 'default'
+    description: The network name where the instance will be placed
+    e.g. 'my-custom-network' or 'default'
   zone:
     type: string
-    description: Availability zone. E.g. us-central1-a
+    description: Availability zone. E.g. 'us-central1-a'
   machineType:
     type: string
     description: |
-      Compute instance type. E.g. n1-standard-1
+      Compute instance type. E.g. 'n1-standard-1'
       See https://cloud.google.com/compute/docs/machine-types for more details
   canIpForward:
     type: boolean
     description: |
-      Allows this instance to send and receive packets with non-matching destination
+      Allows the instance to send and receive packets with non-matching destination
       or source IPs.
   diskType:
     type: string
@@ -54,7 +55,7 @@ properties:
   diskImage:
     type: string
     description: |
-      The source image to create this disk. To create a disk with one of the
+      The source image to create the disk. To create a disk with one of the
       public operating system images, specify the image by its family name.
       For example, specify family/debian-9 to use the latest Debian 9 image:
       projects/debian-cloud/global/images/family/debian-9
@@ -89,16 +90,16 @@ outputs:
   properties:
     - externalIp:
       type: string
-      description: Reference to external ip address of new instance
+      description: Reference to the external ip address of the new instance
     - internalIp:
       type: string
-      description: Reference to internal ip address of new instance
+      description: Reference to tbe internal ip address of the new instance
     - name:
       type: string
-      description: A name of an instance resource
+      description: A name of the instance resource
     - selfLink:
       type: string
-      description: A link to an instance resource
+      description: A link to the instance resource
 
 documentation:
   - templates/instance/README.md
