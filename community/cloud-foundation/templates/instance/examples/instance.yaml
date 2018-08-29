@@ -1,6 +1,6 @@
 # Example on how to use the instance template
 #
-# In this example, a Ubuntu 18.04 with nginx instance is created.
+# In this example, a Ubuntu 18.04 instance with Nginx is created.
 imports:
   - path: templates/instance/instance.py
     name: instance.py
