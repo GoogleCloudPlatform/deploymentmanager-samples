@@ -1,6 +1,6 @@
 # Pubsub
 
-Templated pubsub deployment
+Templated Pub/Sub deployment
 
 ## Prerequisites
 
@@ -18,13 +18,13 @@ Templated pubsub deployment
 
 See `properties` section in the schema file
 
-- [PubSub](pubsub.py.schema)
+- [Pub/Sub](pubsub.py.schema)
 
 ### Outputs
 
 See `outputs` section in the schema file
 
-- [PubSub](pubsub.py.schema)
+- [Pub/Sub](pubsub.py.schema)
 
 ### Deployment
 
