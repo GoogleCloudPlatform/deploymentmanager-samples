@@ -22,7 +22,6 @@ info:
 required:
   - billingAccountId
 
-additionalProperties: false
 properties:
   name:
     type: string
@@ -49,63 +48,6 @@ properties:
     description: |
       The ID of the billing account to attach to the projects.
       For example, 00E12A-0AB8B2-078CE8
-  iamPolicyPatch:
-    type: object
-    additionalProperties: false
-    description: |
-      The IAM policy patch to apply to the project. This is optional. The
-      template will automatically add/merge in the service account making the
-      project as an owner.
-    properties:
-      add:
-        type: array
-        description: Bindings to add to the existing project IAM policy.
-        items:
-          type: object
-          description: A set of members bound to a particular role.
-          additionalProperties: false
-          required:
-            - role
-            - members
-          properties:
-            role:
-              type: string
-              pattern: ^roles/
-              description: The role that all the members will receive.
-            members:
-              type: array
-              items:
-                type: string
-                pattern: "^(user|group|domain|serviceAccount):"
-              decription: The members that will be given the permissions in role.
-      remove:
-        type: array
-        description: Bindings to remove from the existing project IAM policy.
-        items:
-          type: object
-          additionalProperties: false
-          required:
-            - role
-            - members
-          description: A set of members unbound from a particular role.
-          properties:
-            role:
-              type: string
-              pattern: ^roles/
-              description: The role that all the members will be removed from.
-            members:
-              type: array
-              items:
-                type: string
-                pattern: "^(user|group|domain|serviceAccount):"
-              decription: The members that whose permission will be removed.
-  setDMServiceAccountAsOwner:
-    type: boolean
-    default: False
-    description: |
-      If set to true, the service account that Deployment Manager will use in
-      the newly created project will be made Owner. This would allow
-      Deployment Manager to set IAM policies within this project.
   activateApis:
     type: array
     items:
@@ -121,9 +63,27 @@ properties:
     type: array
     default: []
     items:
-      type: string
-      pattern: ^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$
-    description: The list of service accounts to create for each project.
+      accountId:
+        type: string
+        pattern: ^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$
+        description: The name used to create the service account.
+      displayName:
+        type: string
+        description: |
+          The name to display for the service account. If not set the display
+          name will use the `accountId` as the display name.
+      roles:
+        type: array
+        items:
+          type: string
+          description: A list of roles to grant the service account.
+      networkAccess:
+        type: boolean
+        description: |
+          Boolean flag if set to True grants shared vpc subnet IAM permissions
+          to this service account for the subnet specified by the
+          `sharedVPCSubnets.subnetId` field.
+          This field should not be set if `sharedVPCHost` is set to True.
   concurrentApiActivation:
     type: boolean
     default: False
@@ -137,18 +97,27 @@ properties:
   sharedVPC:
     type: string
     description: |
-      Name of the Shared VPC network that this project will participate in.
-      The `sharedVPCHost` property cannot bet set if this property is set.
+      Name of the Shared VPC Host Project that this project will participate in.
+      The `sharedVPCHost` property cannot be set if this property is set.
   sharedVPCSubnets:
-    type: string
+    type: array
     description: |
       The IDs of specific shared VPC subnets to share into the new project.
+    items:
+      subnetId:
+        type: string
+        description: |
+          The ID of the subnet to set IAM policies on. For example,
+          `test-subnetwork-1`
+      region:
+        type: string
+        description: The region of the subnet.
   sharedVPCHost:
     type: boolean
     description: |
       Boolean flag if set to True indicates that this project to be used as a
       host project for Shared VPC networks.
-      The `sharedVPCService` property cannot bet set if this property is set.
+      The `sharedVPC` property cannot be set if this property is set.
   removeDefaultVPC:
     type: boolean
     default: True
@@ -165,8 +134,8 @@ properties:
 outputs:
   properties:
     - projectId:
-      type: string
-      description: The unique, user-assigned ID of the Project.
+        type: string
+        description: The unique, user-assigned ID of the Project.
     - usageExportBucketName:
         type: string
         description: The usage export bucket name.
@@ -175,9 +144,7 @@ outputs:
         description: Name of the default service account for the project.
 
 documentation:
-  - docs/templates/project.md
+  - templates/project/README.md
 
 examples:
-  - examples/project.yaml
-
-
+  - templates/project/examples/project.yaml
