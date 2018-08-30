@@ -91,9 +91,18 @@ function teardown() {
     [[ ! "$output" =~ "default" ]]
 }
 
-@test "Test if the default compute engine SA was removed for project" {
+@test "Test if the default compute engine SA was removed for project ${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}" {
     run gcloud iam service-accounts list --project "${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}"
     [[ ! "$output" =~ "Compute Engine default service account" ]]
+}
+
+@test "Test if the service accounts were granted project IAM permissions for project ${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}" {
+    run gcloud projects get-iam-policy "${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}" \
+        --flatten="bindings[].members" \
+        --format='table(bindings.role)' \
+        --filter="bindings.members:sa-${RAND}@${CLOUD_FOUNDATION_PROJECT_ID}-${RAND}.iam.gserviceaccount.com"
+    [[ "$output" =~ "roles/editor" ]]
+    [[ "$output" =~ "roles/viewer" ]]
 }
 
 @test "Deployment Delete" {

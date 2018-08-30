@@ -3,13 +3,16 @@
 # In this example, a project is created, along with some of the most used
 # resources that an enterprise needs for regular operation
 #
-# Notice that the `setDMServiceAccountAsOwner` property already defaults to
-# true, so it's doesn't need to be specified in the config. Same for
-# `parent.type` (it defaults to "organization"), they're specified here for
+# Notice that the `parent.type` property defaults to "organization" so it
+# doesn't need to be specified in the config. It is specified here for
 # informational purposes
 #
 # See `templates/project.py.schema` for detailed information on these
 # properties
+#
+# Replace the `parent.id` placeholder value with your organization ID.
+# Replace the `billingAccountId` placeholder value with your billing
+# account ID
 
 imports:
   - path: templates/project/project.py
@@ -28,6 +31,14 @@ resources:
         - deploymentmanager.googleapis.com
         - pubsub.googleapis.com
       serviceAccounts:
-        - test-sa
+        - accountId: test-sa-1
+          displayName: test service account 1
+          roles:
+            - roles/editor
+            - roles/viewer
+          networkAccess: true
       usageExportBucket: true
-      sharedVPCHost: true
+      sharedVPC: test-vpc-host-project
+      sharedVPCSubnets:
+        - subnetId: subnet-1
+          region: us-east1
