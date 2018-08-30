@@ -1,0 +1,73 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: IP Reservation
+  author: Sourced Group Inc.
+  description: Reservers internal, external, or global IP address.
+
+required:
+  - ips
+
+properties:
+  ips:
+    type: array
+    description: An array of IPs to create.
+    items:
+      type: object
+      required:
+        - name
+        - ipType
+      properties:
+        name:
+          type: string
+          description: |
+            Name of the reserved IP; unique
+            within the context of the project.
+        ipType:
+          type: string
+          enum:
+            - global
+            - regional
+            - internal
+          description: |
+            The IP types the user can reserve.
+            - Global - for global entities; the IPs can only be used with global forwarding rules (GLB)
+            - Regional - static external IPs that reside in a region
+            - Internal - static internal (RFC1918) IPs that reside in a region on a subnet
+        info:
+          type: string
+          description: |
+            Descriptive information for the reserved IP.
+        ipAddress:
+          type: string
+          description: |
+            [OPTIONAL] If the field value (IP address) is provided, Deployment Manager tries to reserve 
+            the specified IP address. If the field is not set, Deployment Manager reserves an internal 
+            IP address that is part of the subnet definition.
+        subnet:
+          type: string
+          description: |
+            [REQUIRED FOR INTERNAL ADDRESSES] The subnet from whose range the IP address is reserved.
+        region:
+          type: string
+          description: |
+            [REQUIRED FOR INTERNAL AND REGIONAL ADDRESSES] ??? Definition ???
+  
+
+documentation:
+  - templates/ip_reservation/README.md
+
+examples:
+  - templates/ip_reservation/examples/ip_reservation.yaml

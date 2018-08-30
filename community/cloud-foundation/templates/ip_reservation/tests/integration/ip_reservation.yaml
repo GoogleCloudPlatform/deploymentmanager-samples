@@ -1,0 +1,29 @@
+# Test of the IP reservation template.
+#
+# Variables:
+#   RAND: A random string used by the testing suite.
+#
+
+imports:
+- path: templates/ip_reservation/ip_reservation.py
+  name: ip_reservation.py
+
+resources:
+- name: allmyips-${RAND}
+  type: ip_reservation.py
+  properties:
+    ips:
+      - name: test-myglobal-${RAND}
+        ipType: global
+        info: 'my global ip'
+      - name: test-myregionalexternal-${RAND}
+        ipType: regional
+        region: us-central1
+        info: 'my us-central1 static external ip'
+      - name: test-myinternal-${RAND}
+        ipType: internal
+        ipAddress: 10.100.0.111
+        subnet: projects/${CLOUD_FOUNDATION_PROJECT_ID}/regions/us-central1/subnetworks/subnet-${RAND}
+        region: us-central1
+        info: 'my us-central1 internal ip'
+

@@ -1,0 +1,32 @@
+# Example of the IP reservation template usage.
+#
+# In this example, an array of reserved IPs is applied to the PROJECTID project.
+#
+# Replace PROJECTID with the ID of the project that created your network.
+# Replace REGION with your network's region.
+# Replace SUBNET with your subnetwork ID.
+
+imports:
+  - path: templates/ip_reservation/ip_reservation.py
+    name: ip_reservation.py
+
+resources:
+  - name: allmyips
+    type: ip_reservation.py
+    properties:
+      ips:
+        - name: myglobal
+          ipType: global
+          info: 'my global ip'
+        - name: myregionalexternal
+          ipType: regional
+          region: {REGION}
+          info: 'my {REGION} static external ip'
+        - name: myinternal
+          ipType: internal
+          # This IP address must be within the subnet range.
+          ipAddress: 10.128.1.111
+          subnet: projects/{PROJECTID}/regions/{REGION}/subnetworks/{SUBNETNAME}
+          region: {REGION}
+          info: 'my {REGION} internal ip'
+
