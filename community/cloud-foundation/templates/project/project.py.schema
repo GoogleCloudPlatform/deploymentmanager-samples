@@ -84,6 +84,18 @@ properties:
           to this service account for the subnet specified by the
           `sharedVPCSubnets.subnetId` field.
           This field should not be set if `sharedVPCHost` is set to True.
+  groups:
+    type: array
+    default: []
+    items:
+      name:
+        type: string
+        description: The name of the Google group.
+      roles:
+        type: array
+        items:
+          type: string
+          description: A list of roles to grant the Google group.
   concurrentApiActivation:
     type: boolean
     default: False

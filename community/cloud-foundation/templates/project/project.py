@@ -11,12 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates a single project with specified service accounts and APIs enabled."""
+"""
+Creates a single project with specified service accounts and APIs
+enabled.
+"""
 import copy
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     project_id = context.env['name']
     project_name = context.properties.get('name', project_id)
@@ -51,7 +54,7 @@ def generate_config(context):
 
     api_resources, api_names_list = activate_apis(context.properties)
     resources.extend(api_resources)
-    resources.extend(create_service_accounts(context))
+    resources.extend(create_service_accounts_and_set_project_iam(context))
     resources.extend(create_bucket(context.properties))
     resources.extend(create_shared_vpc(project_id, context.properties))
 
@@ -85,7 +88,7 @@ def generate_config(context):
 
 
 def activate_apis(properties):
-    """Resources for API activation"""
+    """ Resources for API activation. """
 
     concurrent_api_activation = properties.get('concurrentApiActivation')
     apis = properties.get('activateApis', [])
@@ -129,8 +132,8 @@ def activate_apis(properties):
     return resources, api_names_list
 
 
-def create_project_iam_for_service_accounts(dependencies, role_member_list):
-    """Grant shared project IAM permissions to Service Accounts"""
+def create_project_iam(dependencies, role_member_list):
+    """ Grant shared project IAM permissions. """
 
     policies_to_add = role_member_list
     resources = [
@@ -173,7 +176,7 @@ def create_shared_vpc_subnet_iam_for_service_accounts(
     dependencies,
     members_list
 ):
-    """Grant shared VPC subnet IAM permissions to Service Accounts"""
+    """ Grant shared VPC subnet IAM permissions to Service Accounts. """
 
     resources = []
 
@@ -207,8 +210,8 @@ def create_shared_vpc_subnet_iam_for_service_accounts(
     return resources
 
 
-def create_service_accounts(context):
-    """Create Service Accounts and grant IAM permissions"""
+def create_service_accounts_and_set_project_iam(context):
+    """ Create Service Accounts and grant project IAM permissions. """
 
     resources = []
     network_list = []
@@ -228,7 +231,7 @@ def create_service_accounts(context):
         if service_account.get('networkAccess'):
             network_list.append(sa_name)
 
-        # Build the bindings for project IAM permission
+        # Build the service account bindings for project IAM permissions
         for role in service_account['roles']:
             policies_to_add.append({'role': role, 'members': [sa_name]})
 
@@ -251,9 +254,20 @@ def create_service_accounts(context):
             }
         )
 
+    # Build the group bindings for project IAM permissions
+    for group in context.properties['groups']:
+        group_name = "group:{}".format(group['name'])
+        for role in group['roles']:
+            policies_to_add.append(
+                {
+                    'role': role,
+                    'members': [group_name]
+                }
+            )
+
     # Create the project IAM permissions
     resources.extend(
-        create_project_iam_for_service_accounts(
+        create_project_iam(
             service_account_dep,
             policies_to_add
         )
@@ -273,7 +287,7 @@ def create_service_accounts(context):
 
 
 def create_bucket(properties):
-    """Resources for usage export bucket"""
+    """ Resources for usage export bucket. """
 
     resources = []
     if properties.get('usageExportBucket'):
@@ -318,7 +332,7 @@ def create_bucket(properties):
 
 
 def create_shared_vpc(project_id, properties):
-    """ Configure project Shared VPC properties """
+    """ Configure project Shared VPC properties. """
 
     resources = []
 
@@ -360,7 +374,7 @@ def create_shared_vpc(project_id, properties):
 
 
 def delete_default_network(api_names_list):
-    """ Delete the default network """
+    """ Delete the default network. """
 
     icmp_name = 'delete-default-allow-icmp'
     internal_name = 'delete-default-allow-internal'
@@ -441,7 +455,7 @@ def delete_default_network(api_names_list):
 
 
 def delete_default_service_account(api_names_list):
-    """ Delete the default service account """
+    """ Delete the default service account. """
 
     resource = [
         {
