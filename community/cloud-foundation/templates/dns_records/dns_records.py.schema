@@ -13,11 +13,11 @@
 # limitations under the License.
 
 info:
-  title: Cloud DNS Create Resource RecordSets
+  title: Manage Cloud DNS Records via RecordSets
   author: Sourced Group Inc.
   description: |
     Template to control DNS from inside a DM Template.
-    Creates dns resource ResourceRecordSets
+    Creates DNS ResourceRecordSets
     For more information on this resource:
       - https://cloud.google.com/dns/records/
       - https://cloud.google.com/dns/api/v1/managedZones
@@ -42,7 +42,7 @@ properties:
     pattern: \.$
     description: |
       The DNS name of this managed zone, for instance "example.com.".
-      Assert that it ends in a dot, as that is the most common mistake.
+      Note: A fully qualified domain name (FQDN) always end with a dot.
   resourceRecordSets:
     type: array
     description: |
@@ -59,7 +59,7 @@ properties:
       properties:
         name:
           type: string
-          description: Name of the DNS record. Must end in dnsName.
+          description: Name of the DNS record. Must end with dnsName.
         type:
           type: string
           description: Type of the record.
@@ -77,7 +77,7 @@ properties:
             - TXT
         ttl:
           type: integer
-          description: The time-to-live cache seconds for this record.
+          description: The time-to-live cache in seconds.
           minimum: 0
         rrdatas:
           type: array
