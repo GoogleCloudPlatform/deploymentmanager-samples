@@ -13,11 +13,11 @@
 # limitations under the License.
 
 info:
-  title: Manage Cloud DNS Records via RecordSets
+  title: Create Cloud DNS records using recordsets
   author: Sourced Group Inc.
   description: |
-    Template to control DNS from inside a DM Template.
-    Creates DNS ResourceRecordSets
+    Controls DNS from inside a DM Template. ??? not sure what this means; please rephrase ???
+    Creates DNS resource recordsets.
     For more information on this resource:
       - https://cloud.google.com/dns/records/
       - https://cloud.google.com/dns/api/v1/managedZones
@@ -35,18 +35,18 @@ properties:
     type: string
     pattern: ^[(a-z)\d\-].{1,63}$
     description: |
-      User assigned name for the managed zone.
-      This is required by Cloud DNS
+      A user-assigned name for the managed zone.
+      This is required by the Cloud DNS.
   dnsName:
     type: string
     pattern: \.$
     description: |
-      The DNS name of this managed zone, for instance "example.com.".
-      Note: A fully qualified domain name (FQDN) always end with a dot.
+      The DNS name of the managed zone; for example, "example.com."
+      A fully qualified domain name (FQDN) must end with a period "."
   resourceRecordSets:
     type: array
     description: |
-      The ResourceRecordSets meant to be in the zone. See
+      A list of ResourceRecordSets meant to be in the zone. See
       https://cloud.google.com/dns/api/v1/resourceRecordSets.
     items:
       type: object
@@ -59,10 +59,10 @@ properties:
       properties:
         name:
           type: string
-          description: Name of the DNS record. Must end with dnsName.
+          description: The name of the DNS record. Must end with dnsName.
         type:
           type: string
-          description: Type of the record.
+          description: The type of the record.
           enum:
             - A
             - AAAA
@@ -77,11 +77,12 @@ properties:
             - TXT
         ttl:
           type: integer
-          description: The time-to-live cache in seconds.
+          description: The time-to-live cache, in seconds.
           minimum: 0
         rrdatas:
           type: array
           description: |
-            As defined in RFC 1035 (section 5) and RFC 1034 (section 3.6.1).
+            A list of resourceRecordSets as defined in 
+            RFC 1035 (section 5) and RFC 1034 (section 3.6.1).
           items:
             type: string

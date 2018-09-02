@@ -1,8 +1,5 @@
-# Example on how to use the DNS records template
+# Test of the DNS records template.
 #
-# This example creates DNS RecordSets to manage a sets of DNS records.
-# A, AAAA, MX, TXT records are created for a given managed zone 
-# defined via `zoneName` property and DNS name via `dnsName` property.
 
 imports:
   - path: templates/dns_records/dns_records.py
