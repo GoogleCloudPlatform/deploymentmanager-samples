@@ -28,10 +28,11 @@ properties:
   name:
     type: string
     description: The name of the instance resource
-  network
+  network:
     type: string
-    description: The network name where the instance will be placed
-    e.g. 'my-custom-network' or 'default'
+    description: |
+      The network name where the instance will be placed
+      e.g. 'my-custom-network' or 'default'
   zone:
     type: string
     description: Availability zone. E.g. 'us-central1-a'
