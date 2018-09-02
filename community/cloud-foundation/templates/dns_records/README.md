@@ -1,12 +1,12 @@
 # DNS Resource RecordSets
 
-This Template creates Cloud Dns resource record-sets
+This Template manages Cloud DNS records via record-sets
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
-- Grant [dns.admin](https://cloud.google.com/dns/access-control) role to a `user` or a `serviceAccount` to create DNS resource record-set resources
+- Grant [dns.admin](https://cloud.google.com/dns/access-control) role to the Deployment Manager `serviceAccount` 
 
 ## Deployment
 
