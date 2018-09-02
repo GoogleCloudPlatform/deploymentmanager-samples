@@ -51,7 +51,7 @@ outputs:
   properties:
     - dnsName:
         type: string
-        description: Dns Name for the managed zone
+        description: DNS Name for the managed zone
     - managedZoneDescription:
         type: string
         description: Description of the managed zone.
