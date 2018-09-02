@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create dns record-sets resources for a managed zone"""
+"""Create DNS record-sets resources for a managed zone"""
 import string
 import random
 
@@ -23,7 +23,7 @@ def generate_config(context):
     2. A Change to delete it.
 
     The name of the action should be unique so create a random
-    string to append to the name field
+    string to append to the name field.
     """
 
 
