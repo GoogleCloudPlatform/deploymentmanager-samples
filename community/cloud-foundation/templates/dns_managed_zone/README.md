@@ -6,7 +6,7 @@ Cloud DNS Managed Zone
 
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
-- Grant [/roles/dns.admin](https://cloud.google.com/dns/access-control)
+- Grant [dns.admin](https://cloud.google.com/dns/access-control) IAM role to the Deployment Manager service account
 
 ## Deployment Overview
 
@@ -24,7 +24,7 @@ See `properties` section in the schema files
 
 #### Usage
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
+1. Clone the [Deployment Manager Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 2. Go to the [community/cloud-foundation](../../../cloud-foundation) directory
 3. Copy the example DM config to be used as a model for the deployment, in this case [examples/dns_managed_zone.yaml](examples/dns_managed_zone.yaml)
 4. Change the values in the config file to match your specific GCP setup.
