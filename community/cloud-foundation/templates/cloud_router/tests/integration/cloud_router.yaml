@@ -1,7 +1,7 @@
-# Example on how to use the Cloud Router templates
+# Test of the Cloud Router template usage.
 #
 # Variables:
-#   RAND: Just a random string used mostly by the testing suite.
+#   RAND: a random string used by the testing suite.
 #
 
 imports:
