@@ -1,7 +1,7 @@
-# Example on how to use the iam member template
+# Example of the IAM member template usage.
 #
 # The `members` property is a list of members to which the
-# `role` will be applied.
+# `role` is applied.
 
 imports:
   - path: templates/iam_member/iam_member.py

@@ -13,9 +13,9 @@
 # limitations under the License.
 
 info:
-  title: IAM Member Policies
+  title: IAM policy member
   author: Sourced Group Inc.
-  description: Manages a member a role on a project
+  description: Manages an IAM policy member
 
 imports:
   - path: iam_member.py
@@ -30,15 +30,15 @@ properties:
     items:
       role:
         type: string
-        description: The role to grant members.
+        description: The role to grant to members.
       members:
         type: array
-        description: List of identities
+        description: A list of identities.
         items:
           type: string
           description: |
-            Specifies the identity requesting access for a Cloud Platform
-            resource. Members can have the following values:
+            Specifies the identity requesting access to a Cloud Platform
+            resource. Can have the following values:
               - user:{emailid} - An email address that represents a specific
                 IAM User account. For example, user:name@example.com
               - serviceAccount:{emailid} - An email address that represents a
