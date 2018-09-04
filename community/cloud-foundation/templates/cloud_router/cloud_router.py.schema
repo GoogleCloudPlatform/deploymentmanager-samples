@@ -51,7 +51,7 @@ outputs:
   properties:
     - routerUrl:
         type: string
-        description: Name of the router resource.
+        description: The URL (SelfLink) of the router resource.
 
 documentation:
   - templates/cloud_router/README.md
