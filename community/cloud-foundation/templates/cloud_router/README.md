@@ -7,7 +7,7 @@ This template creates a Cloud Router.
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Create a [network](../network/README.md)
-- Assign the [/roles/compute.networkAdmin](https://cloud.google.com/compute/docs/access/iam) role to the project service account
+- Grant the [compute.networkAdmin](https://cloud.google.com/compute/docs/access/iam) IAM role to the project service account
 
 ## Deployment
 
@@ -22,7 +22,7 @@ See the `properties` section in the schema file(s):
 
 ### Usage
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
+1. Clone the [Deployment Manager Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
 ```
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
