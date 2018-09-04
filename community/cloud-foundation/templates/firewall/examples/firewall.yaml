@@ -1,6 +1,6 @@
-# Example on how to use the firewall template
+# Example of the firewall template usage.
 #
-# In this example, an array of firewall rules are applied to the
+# In this example, an array of firewall rules is applied to the
 # 'network-test' VPC.
 #
 
@@ -20,7 +20,7 @@ resources:
               ports:
                 - "80"
                 - "443"
-          description: test rule for network-test
+          description: Test rule for the 'network-test' network.
           direction: INGRESS
           sourceRanges:
             - 10.0.0.0/8
@@ -32,7 +32,7 @@ resources:
             - IPProtocol: tcp
               ports:
                 - "53"
-          description: test rule for network-test-network
+          description: Test rule for the 'network-test' network.
           direction: EGRESS
           priority: 20
           destinationRanges:
