@@ -24,21 +24,21 @@ properties:
   network:
     type: string
     description: |
-      The network name. Defaults to 'global/networks/default'
+      The network name. Defaults to 'global/networks/default'.
   rules:
     type: array
     description: |
       An array of firewall rules as defined in the documentation:
-      https://cloud.google.com/compute/docs/reference/rest/beta/firewalls
+      https://cloud.google.com/compute/docs/reference/rest/beta/firewalls.
 
-      If the 'priority' field is specified in the rule, it's always used as is.
-      If the 'priority' field for the rule is not set, the template will set
-      the priority to the same value as index of the rule in the array +1000.
-      For example, if not set in rule, priority for the first rule in the array
-      is '1000', for the second rule '1001', and so on. What this means is that
-      if the 'priority' field isn't specified in any of the rules in the array,
-      the ruleset will be automatically sorted by priority, so consistency when
-      specifying (or not specifying) the 'priority' field is strongly advised.
+      If the 'priority' field value is set in a rule, that value is used "as is".
+      If the 'priority' field value is not set in the rule, the template sets
+      the priority to the same value as the rule's index in the array +1000.
+      For example, the priority for the first rule in the array becomes '1000', 
+      for the second rule '1001', and so on. If the 'priority' field is not set in 
+      any of the rules in the array, the ruleset is sorted by priority automatically. 
+      We strongly advise to consistenly setting (or not setting) the 'priority' field 
+      value throughout the ruleset.
 
       Example:
         - name: allow-proxy-from-inside
@@ -47,7 +47,7 @@ properties:
               ports:
                 - "80"
                 - "443"
-          description: This rule allows connectivity to the HTTP proxies
+          description: This rule allows connectivity to HTTP proxies.
           direction: INGRESS
           sourceRanges:
             - 10.0.0.0/8
@@ -59,7 +59,7 @@ properties:
             - IPProtocol: tcp
               ports:
                 - "53"
-          description: this rule allows DNS queries to google's 8.8.8.8
+          description: This rule allows DNS queries to Google's 8.8.8.8
           direction: EGRESS
           destinationRanges:
             - 8.8.8.8/32

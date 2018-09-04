@@ -1,8 +1,7 @@
-# Example on how to use the firewall template
+# Example of the firewall template usage.
 #
-# In this example, an array of firewall rules are applied to the
+# In this example, an array of firewall rules is applied to the
 # 'network-test' VPC.
-#
 
 imports:
   - path: templates/firewall/firewall.py
