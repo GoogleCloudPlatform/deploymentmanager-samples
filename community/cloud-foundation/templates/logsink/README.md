@@ -1,16 +1,16 @@
 # Logsink
 
-Templated logsink deployment
+This template creates a logsink (logging sink).
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Create one of the following:
     - [GCS bucket](https://cloud.google.com/storage/docs/json_api/v1/buckets)
     - [PubSub topic](https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics)
     - [BigQuery dataset](https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets)
-
+- Grant the [logging.configWriter or logging.admin](https://cloud.google.com/logging/docs/access-control) IAM role to the project service account
 
 ## Deployment
 
@@ -18,53 +18,51 @@ Templated logsink deployment
 
 - [logging.v2.sink](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks)
 
-
 ### Properties
 
-See `properties` section in the schema files
+See `properties` section in the schema file(s):
 
 -  [Logsink](logsink.py.schema)
 
+### Usage
 
-### Deployment
-
-#### Usage
-
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-sample)
-2. Go to the [community/cloud-foundation](community/cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/logsink.yaml](examples/logsink.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
-
-
-For example:
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
 ```
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
-cd community/cloud-foundation
-cp templates/logsink/examples/logsink.yaml my_logsink.yaml
-vim my_logsink.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+```
+
+2. Go to the [community/cloud-foundation](../../) directory:
+
+```
+    cd community/cloud-foundation
+```
+
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/logsink.yaml](examples/logsink.yaml):
+
+```
+    cp templates/logsink/examples/logsink.yaml my_logsink.yaml
+```
+
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```
+    vim my_logsink.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_logsink.yaml
 ```
 
-#### Create
+6. In case you need to delete your deployment:
 
 ```
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config logsink.yaml
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
-
-
-#### Delete
-
-```
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
-```
-
 
 ## Examples
 
-- [Log entries exported to PubSub, Storage, BigQuery](examples/logsink.yaml)
+- [Logging entries exported to PubSub, Storage, and BigQuery](examples/logsink.yaml)
