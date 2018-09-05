@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-This template will set the Organization Policy to allow VMs to have public 
-IPs once the project has been created, billing has been attached to the 
-project, and all the APIs have been enabled.
+This template creates an organization policy to allow VMs to have public 
+IPs.
 """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     project = context.properties['projectId']
     resources = []
