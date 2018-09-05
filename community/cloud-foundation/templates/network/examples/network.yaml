@@ -9,6 +9,7 @@
 
 imports:
   - path: templates/network/network.py
+    name: network.py
 
 resources:
   - name: test-network
