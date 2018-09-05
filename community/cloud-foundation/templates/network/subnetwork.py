@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create a subnetwork resource"""
+""" This template creates a subnetwork. """
 
 
 def generate_config(context):
-    """Entry point for the deployment resources"""
+    """ Entry point for the deployment resources. """
 
     name = context.properties.get('name') or context.env['name']
     required_properties = ['network', 'ipCidrRange', 'region']
@@ -25,7 +25,7 @@ def generate_config(context):
         'secondaryIpRanges'
     ]
 
-    # Load required properties, then optional ones if specified
+    # Load the mandatory properties, then the optional ones (if specifiedP).
     properties = {p: context.properties[p] for p in required_properties}
     properties.update(
         {

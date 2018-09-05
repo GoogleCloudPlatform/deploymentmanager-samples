@@ -1,11 +1,11 @@
-# Example on how to use the network templates
+# Example of the network template usage.
 #
-# In this example, a network is created and it shows that subnets could be created
-# via the `subnetworks` property of the `network.py` template (test-subnetwork-1)
+# In this example, a network is created. Subnetworks can be created
+# via the `subnetworks` property of the `network.py` template (such as 
+# test-subnetwork-1)
 #
-# Notice the `name` property for the `templates/network.py` resource type is
-# optional. If omitted in the properties, the DM resource name is used. If 
-# defined in the properties, it takes precedence.
+# Note that the `name` property of the `templates/network.py` resource type is
+# optional. If omitted, the DM resource name is used.
 
 imports:
   - path: templates/network/network.py

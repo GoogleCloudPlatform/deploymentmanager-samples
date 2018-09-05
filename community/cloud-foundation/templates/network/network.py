@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create a network resource"""
+""" This template creates a network, optionally with subnetworks. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     name = context.properties.get('name') or context.env['name']
     network_self_link = '$(ref.{}.selfLink)'.format(name)
@@ -36,7 +36,7 @@ def generate_config(context):
         }
     ]
 
-    # Subnetwork Resources
+    # Subnetworks:
     for subnetwork in context.properties.get('subnetworks', []):
         subnetwork['network'] = network_self_link
         resources.append(

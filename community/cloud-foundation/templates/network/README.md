@@ -1,12 +1,12 @@
-# Networks and subnets
+# Network and subnetwork
 
-Templated network and subnet deployment
+This template creates a network, optionally with subnetworks.
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
-
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
+- ??? roles/permissions ???
 
 ## Deployment
 
@@ -15,54 +15,54 @@ Templated network and subnet deployment
 - [compute.v1.network](https://cloud.google.com/compute/docs/reference/latest/networks)
 - [compute.v1.subnetwork](https://cloud.google.com/compute/docs/reference/latest/subnetworks)
 
-
 ### Properties
 
-See `properties` section in the schema files
+See `properties` section in the schema file(s):
 
 -  [Network](network.py.schema)
 -  [Subnetwork](subnetwork.py.schema)
 
 
-### Deployment
-
-#### Usage
-
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-sample)
-2. Go to the [community/cloud-foundation](community/cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/network.yaml](examples/network.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
+### Usage
 
 
-For example:
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
 ```
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
-cd community/cloud-foundation
-cp templates/network/examples/network.yaml my_network.yaml
-vim my_network.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+```
+
+2. Go to the [community/cloud-foundation](../../) directory:
+
+```
+    cd community/cloud-foundation
+```
+
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/network.yaml](examples/network.yaml):
+
+```
+    cp templates/network/examples/neywork.yaml my_network.yaml
+```
+
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```
+    vim my_network.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_network.yaml
 ```
 
-#### Create
+6. In case you need to delete your deployment:
 
 ```
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_network.yaml
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
-
-
-#### Delete
-
-```
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
-```
-
 
 ## Examples
 
-- [Network with subnets](examples/network.yaml)
+- [Network with subnetworks](examples/network.yaml)
