@@ -1,16 +1,16 @@
-# Routes
+# Route
 
-Templated route deployment
+This template creates a route.
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Create a [network](../network/README.md)
-- Depending on the traffic destination specified, you may need to create one or more of the following:
+- Optionally (depending on the specified traffic destination), create one or more of the following:
   - [VM](../vm/vm.md)
   - [VPN Tunnel](../vpn/README.md)
-
+- Grant the [compute.networkAdmin or compute.admin](https://cloud.google.com/compute/docs/access/iam) IAM role to the project service account
 
 ## Deployment
 
@@ -21,49 +21,48 @@ Templated route deployment
 
 ### Properties
 
-See `properties` section in the schema files
+See `properties` section in the schema file(s):
 
 -  [Route](route.py.schema)
 
-### Deployment
+### Usage
 
-#### Usage
-
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-sample)
-2. Go to the [community/cloud-foundation](community/cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/route.yaml](examples/route.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
-
-
-For example:
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
 ```
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-sample
-cd community/cloud-foundation
-cp templates/route/examples/route.yaml my_route.yaml
-vim my_route.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+```
+
+2. Go to the [community/cloud-foundation](../../) directory:
+
+```
+    cd community/cloud-foundation
+```
+
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/route.yaml](examples/route.yaml):
+
+```
+    cp templates/route/examples/route.yaml my_route.yaml
+```
+
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```
+    vim my_route.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_route.yaml
 ```
 
-#### Create
+6. In case you need to delete your deployment:
 
 ```
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_route.yaml
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
-
-
-#### Delete
-
-```
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
-```
-
-
 ## Examples
 
 - [Route](examples/route.yaml)

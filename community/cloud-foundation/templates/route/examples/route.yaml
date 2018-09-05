@@ -1,25 +1,25 @@
-# Example on how to use the route template
+# Example of the route template usage.
 #
-# In this example, routes are created for 4 different destination traffic
-# handler types:
+# In this example, routes are created for 4 types of destination traffic
+# handlers:
 #   1- a static IP route (test-ip-route)
-#   2- a instance route (test-instance-route)
+#   2- an instance route (test-instance-route)
 #   3- a gateway route (test-gateway-route)
 #   4- a vpn tunnel route (test-vpn-tunnel-route)
 #
-# The 'routeType' property determines the destination traffic handler which
-# will require the relevant destination property to be set.
-#   -If the routeType is 'ipaddress', the 'nextHopIp' property must be set. Replace
-#    the temporary IP placeholder with your static IP address.
+# The value of the 'routeType' property determines what destination property must
+# be set:
+#   -If the routeType is 'ipaddress', the 'nextHopIp' property must be set. 
+#    Replace the IP placeholder with your static IP address.
 #   -If the routeType is 'instance', the 'instanceName' property must be set.
-#    Replace the temporary instance placeholder with your instance name.
+#    Replace the instance placeholder with your instance name.
 #   -If the routeType is 'gateway', the 'gatewayName' property must be set.
-#    This should be set to 'default-internet-gateway'.
+#    This must be set to 'default-internet-gateway'.
 #    https://cloud.google.com/compute/docs/reference/rest/v1/routes
 #   -If the routeType is 'vpntunnel', the 'vpnTunnelName' property must be
-#    set. Replace the temporary vpntunnel name place holder with your VPN
+#    set. Replace the vpntunnel placeholder with your VPN
 #    tunnel name.
-# Replace the temporary network name placeholder with your created VPC name.
+# Replace the network name placeholder with your actual VPC name.
 
 imports:
   - path: templates/route/route.py
