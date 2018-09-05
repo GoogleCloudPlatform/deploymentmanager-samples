@@ -1,11 +1,11 @@
 # Pubsub
 
-Templated Pub/Sub deployment
+This template creates a Pub/Sub (publish-subscribe) service.
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 
 ## Deployment
 
@@ -16,52 +16,49 @@ Templated Pub/Sub deployment
 
 ### Properties
 
-See `properties` section in the schema file
+See the `properties` section in the schema file(s):
 
 - [Pub/Sub](pubsub.py.schema)
 
-### Outputs
+### Usage
 
-See `outputs` section in the schema file
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
-- [Pub/Sub](pubsub.py.schema)
+```
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+```
 
-### Deployment
+2. Go to the [community/cloud-foundation](../../) directory:
 
-#### Usage
+```
+    cd community/cloud-foundation
+```
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
-2. Go to the [community/cloud_foundation](../../) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/pubsub.yaml](examples/pubsub.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/pubsub.yaml](examples/pubsub.yaml):
 
-For example:
+```
+    cp templates/pubsub/examples/pubsub.yaml my_pubsub.yaml
+```
 
-``` bash
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
-cd community/cloud-foundation
-cp templates/pubsub/examples/pubsub.yaml my_pubsub.yaml
-vim my_pubsub.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```
+    vim my_pubsub.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_pubsub.yaml
 ```
 
-#### Create
+6. In case you need to delete your deployment:
 
-``` bash
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_pubsub.yaml
 ```
-
-#### Delete
-
-``` bash
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
 
 ## Examples
 
-- [Create Pub/Sub topic with two subscriptions and IAM policies set](examples/pubsub.yaml)
+- [Pub/Sub](examples/pubsub.yaml)

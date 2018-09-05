@@ -1,7 +1,8 @@
-# Example on how to use the Pub/Sub template
+# Example of the PubSub template usage.
 #
 # In this example, a 'test-topic' is created with two PULL subscriptions.
-# IAM policy is assigned to the topi and one of the subscriptions.
+# IAM policies are assigned to the topic and to one of the subscriptions.
+
 imports:
   - path: templates/pubsub/pubsub.py
     name: pubsub.py

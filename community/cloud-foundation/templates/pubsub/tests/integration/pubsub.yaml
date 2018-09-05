@@ -1,7 +1,8 @@
-# Example on how to use the pubsub template
+# Test of the PubSub template.
 #
 # Variables:
-#   RAND: A random string used mostly by the testing suite.
+#   RAND: A random string used by the testing suite.
+
 imports:
   - path: templates/pubsub/pubsub.py
     name: pubsub.py
