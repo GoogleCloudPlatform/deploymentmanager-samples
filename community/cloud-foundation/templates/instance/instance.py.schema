@@ -13,10 +13,10 @@
 # limitations under the License.
 
 info:
-  title: Instance template
+  title: Compute Instance
   author: Sourced Group Inc.
   description: |
-    Deploys compute instance attached to a custom (or default) network
+    Deploys a Compute Instance connected to a custom (or default) network.
 
 required:
   - zone
@@ -27,28 +27,28 @@ required:
 properties:
   name:
     type: string
-    description: The name of the instance resource
+    description: The name of the Instance resource.
   network:
     type: string
     description: |
-      The network name where the instance will be placed
-      e.g. 'my-custom-network' or 'default'
+      Name of the network the instance will be connected to;
+      e.g., 'my-custom-network' or 'default'.
   zone:
     type: string
     description: Availability zone. E.g. 'us-central1-a'
   machineType:
     type: string
     description: |
-      Compute instance type. E.g. 'n1-standard-1'
-      See https://cloud.google.com/compute/docs/machine-types for more details
+      The Compute Instance type; e.g., 'n1-standard-1'.
+      See https://cloud.google.com/compute/docs/machine-types for details.
   canIpForward:
     type: boolean
     description: |
-      Allows the instance to send and receive packets with non-matching destination
-      or source IPs.
+      If "True". allows the instance to send and receive packets with non-matching destination
+      and source IPs.
   diskType:
     type: string
-    description: Boot disk type
+    description: The boot disk type.
     enum:
       - pd-ssd
       - pd-standard
@@ -56,21 +56,20 @@ properties:
   diskImage:
     type: string
     description: |
-      The source image to create the disk. To create a disk with one of the
+      The source image for the disk. To create the disk with one of the
       public operating system images, specify the image by its family name.
-      For example, specify family/debian-9 to use the latest Debian 9 image:
-      projects/debian-cloud/global/images/family/debian-9
-      To create a disk with a custom image that you created, specify the image
-      name in the following format: global/images/my-custom-image
-      See https://cloud.google.com/compute/docs/images for more details
+      For example, specify family/debian-9 to use the latest Debian 9 image
+      projects/debian-cloud/global/images/family/debian-9.
+      To create a disk with a custom image (that you created), specify the image
+      name in the following format: global/images/my-custom-image.
+      See https://cloud.google.com/compute/docs/images for details.
   diskSizeGb:
     type: integer
     minimum: 10
   metadata:
     type: object
     description: |
-      Instance metadata.
-      For example:
+      The instance metadata. For example:
       metadata:
         items:
           - key: startup-script
@@ -91,16 +90,16 @@ outputs:
   properties:
     - externalIp:
       type: string
-      description: Reference to the external ip address of the new instance
+      description: Reference to the external IP address of the new instance.
     - internalIp:
       type: string
-      description: Reference to tbe internal ip address of the new instance
+      description: Reference to the internal IP address of the new instance.
     - name:
       type: string
-      description: A name of the instance resource
+      description: The name of the instance resource.
     - selfLink:
       type: string
-      description: A link to the instance resource
+      description: Link to the instance resource.
 
 documentation:
   - templates/instance/README.md

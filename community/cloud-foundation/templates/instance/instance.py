@@ -11,16 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates an instance."""
+""" This template creates a Compute instance."""
 
 def set_optional_property(receiver, source, property_name):
-    """ If set, copies given property value from one object to another """
+    """ If set, copies the given property value from one object to another. """
 
     if property_name in source:
         receiver[property_name] = source[property_name]
 
 def create_boot_disk(properties, zone, instance_name):
-    """ Create boot disk configuration """
+    """ Create a boot disk configuration. """
 
     disk_name = instance_name
     boot_disk = {
@@ -43,8 +43,8 @@ def create_boot_disk(properties, zone, instance_name):
     return boot_disk
 
 def get_network(properties):
-    """ Get configuration that connects an instance to preexisting network
-        and assigns ephemeral public IP.
+    """ Get the configuration that connects the instance to an existing network
+        and assigns to it an ephemeral public IP.
     """
 
     network_name = properties.get('network')
@@ -59,7 +59,7 @@ def get_network(properties):
     }
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     zone = context.properties['zone']
     vm_name = context.properties.get('name', context.env['name'])
