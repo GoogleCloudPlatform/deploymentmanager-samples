@@ -1,0 +1,9 @@
+steps:
+- id: 'login'
+  name: 'mseravalli/gcloud-zsh'
+  args: ['auth', 'activate-service-account', '--key-file=sa-project-creator.json']
+- id: 'upsert projects'
+  name: 'mseravalli/gcloud-zsh'
+  entrypoint: '/bin/zsh'
+  args: ['./upsert_all_projects.sh']
+
