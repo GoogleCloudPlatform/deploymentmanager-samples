@@ -142,7 +142,7 @@ def GenerateConfig(context):
 
   project_name = context.env['name']
   project_id = None
-  if 'project-id' in context.properties:
+  if 'project-id' not in context.properties:
     m = hashlib.sha256()
     m.update(project_name.encode())
     salt = "92jc8slt"
