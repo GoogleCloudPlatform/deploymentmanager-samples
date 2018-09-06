@@ -14,6 +14,7 @@
 """Creates a single project with specified service accounts and APIs enabled."""
 
 import copy
+import hashlib
 import random
 import re
 import sys
@@ -140,8 +141,16 @@ def GenerateConfig(context):
   """Generates config."""
 
   project_name = context.env['name']
-  random_postfix = hex(random.randint(0,2**64-1))[2:].replace('L', '')
-  project_id = (project_name + "-" + random_postfix)[:30]
+  project_id = None
+  if context.properties['project-id'] == "": 
+    m = hashlib.sha256()
+    m.update(project_name.encode())
+    salt = "92jc8slt"
+    m.update(salt.encode())
+    postfix = m.hexdigest()
+    project_id = (project_name + "-" + postfix)[:30]
+  else:
+    project_id = context.properties['project-id']
 
   billing_name = 'billing_' + project_id
 
