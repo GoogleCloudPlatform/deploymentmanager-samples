@@ -112,17 +112,17 @@ properties:
 outputs:
   properties:
     - externalIp:
-      type: string
-      description: Reference to the external IP address of the new instance.
+        type: string
+        description: Reference to the external IP address of the new instance.
     - internalIp:
-      type: string
-      description: Reference to the internal IP address of the new instance.
+        type: string
+        description: Reference to the internal IP address of the new instance.
     - name:
-      type: string
-      description: The name of the instance resource.
+        type: string
+        description: The name of the instance resource.
     - selfLink:
-      type: string
-      description: Link to the instance resource.
+        type: string
+        description: Link to the instance resource.
 
 documentation:
   - templates/instance/README.md
