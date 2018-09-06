@@ -14,8 +14,13 @@ TO_CREATE=$(comm -23 <(echo $TO_CREATE) <(echo $WHITELIST))
 TO_UPDATE=$(comm -23 <(echo $TO_UPDATE) <(echo $WHITELIST))
 TO_DELETE=$(comm -23 <(echo $TO_DELETE) <(echo $WHITELIST))
 
+echo 'To be created'
 echo $TO_CREATE
+
+echo 'To be updated'
 echo $TO_UPDATE
+
+echo 'To be deleted'
 echo $TO_DELETE
 
 for i in $(echo $TO_CREATE | sed "s/\\\n/\n/g"); do
