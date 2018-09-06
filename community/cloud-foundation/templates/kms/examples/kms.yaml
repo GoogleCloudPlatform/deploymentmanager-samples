@@ -1,0 +1,30 @@
+# Example of the Google Cloud KMS template usage.
+#
+# In this example, a KMS KeyRing and cryptographic key are created.
+# The cryptographic key's purpose is ENCRYPT_DECRYPT by default.
+# IAM Policies are applied to the cryptographic key.
+#
+# Replace the following placeholders with relevant values:
+#   <FIXME:keyring_name>: a KeyRing name unique in the Project
+#   <FIXME:cryptokey_name>: a cryptographic key name unique in the KeyRing
+#   <FIXME:user_account_email_address>: a valid user account email address
+#   <FIXME:next_rotation_time>: the Next Key Rotation time in the Zulu 
+#   format; e.g., 2014-10-02T15:01:23.045123456Z
+
+imports:
+  - path: templates/kms/kms.py
+    name: kms.py
+
+resources:
+  - name: test-kms
+    type: kms.py
+    properties:
+      keyRingName: <FIXME:keyring_name>
+      region: us-east1
+      keys:
+        - cryptoKeyName: <FIXME:cryptokey_name>
+          nextRotationTime: <FIXME:next_rotation_time>
+          iamPolicyBinding:
+            - role: roles/cloudkms.admin
+              members:
+                - user:<FIXME:user_account_email_address>

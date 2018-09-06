@@ -1,0 +1,20 @@
+# Test of the Google Cloud KMS KeyRing template.
+
+imports:
+  - path: templates/kms/kms.py
+    name: kms.py
+
+resources:
+  - name: test-kms
+    type: kms.py
+    properties:
+      keyRingName: ${KEYRING_NAME}
+      region: ${REGION}
+      keys:
+        - cryptoKeyName: ${KEY_NAME}
+          cryptoKeyPurpose: ${KEY_PURPOSE}
+          nextRotationTime: ${NEXT_ROTATION_TIME}
+          iamPolicyBinding:
+            - role: ${ROLE}
+              members:
+                - ${SA_FQDN}
