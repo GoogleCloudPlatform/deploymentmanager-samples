@@ -1,6 +1,6 @@
 # Google Cloud Storage Buckets
 
-This Template creates a cloud storage bucket
+This Template creates a Google Cloud Storage bucket
 
 ## Prerequisites
 
