@@ -47,9 +47,17 @@ def generate_config(context):
         }
     }
 
-    optional_props = ['location', 'versioning', 'storageClass', \
-                      'predefinedAcl', 'predefinedDefaultObjectAcl', \
-                      'logging', 'lifecycle', 'labels', 'website']
+    optional_props = [
+        'location',
+        'versioning',
+        'storageClass',
+        'predefinedAcl',
+        'predefinedDefaultObjectAcl',
+        'logging',
+        'lifecycle',
+        'labels',
+        'website'
+    ]
 
     for prop in optional_props:
         if prop in context.properties:
@@ -59,7 +67,7 @@ def generate_config(context):
 
     # If IAM policy bindings are defined then those bindings need to be applied
     storage_provider_type = 'gcp-types/storage-v1:storage.buckets.setIamPolicy'
-    bindings = context.properties.get('bindings')
+    bindings = context.properties.get('bindings', [])
     if bindings:
         iam_policy = {
             'name': bucket_name + '-iampolicy',
@@ -68,7 +76,7 @@ def generate_config(context):
                 {
                     'bucket': '$(ref.' + bucket_name + '.name)',
                     'project': project_id,
-                    'bindings': context.properties['bindings']
+                    'bindings': bindings
                 }
         }
         resources.append(iam_policy)

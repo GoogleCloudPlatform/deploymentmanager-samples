@@ -1,6 +1,6 @@
 # Google Cloud Storage Buckets
 
-This Template creates a Google Cloud Storage bucket
+This Template creates a Google Cloud Storage bucket.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ This Template creates a Google Cloud Storage bucket
 
 ### Properties
 
-See `properties` section in the schema files
+See `properties` section in the schema file(s):
 
 - [gcs_bucket](gcs_bucket.py.schema)
 
@@ -24,40 +24,40 @@ See `properties` section in the schema files
 
 1. Clone the [Deployment Manager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 
-```bash
+```shell
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 ```
 
 2. Go to the [community/cloud-foundation](../../) directory
 
-```bash
+```shell
     cd community/cloud-foundation
 ```
 
 3. Copy the example DM config to be used as a model for the deployment, in this case [examples/gcs_bucket.yaml](examples/gcs_bucket.yaml)
 
-```bash
+```shell
     cp templates/gcs_bucket/examples/gcs_bucket.yaml my_gcs_bucket.yaml
 ```
 
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 
-```bash
+```shell
     vim my_gcs_bucket.yaml  # <== change values to match your GCP setup
 ```
 
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
    with your with your own deployment name
 
-```bash
+```shell
     gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
         --config my_gcs_bucket.yaml
 ```
 
 6. In case you need to delete your deployment:
 
-```bash
+```shell
     gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
 
