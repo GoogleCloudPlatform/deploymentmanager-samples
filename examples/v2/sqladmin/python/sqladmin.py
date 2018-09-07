@@ -28,6 +28,7 @@ def GenerateConfig(context):
       'name': instance_name,
       'type': 'gcp-types/sqladmin-v1beta4:instances',
       'properties': {
+          'region': context.properties['region'],
           'settings': {
               'tier': context.properties['tier'],
               'backupConfiguration' : {
