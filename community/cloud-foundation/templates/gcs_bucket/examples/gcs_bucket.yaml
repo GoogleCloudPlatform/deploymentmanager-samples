@@ -16,10 +16,10 @@ imports:
     name: gcs_bucket.py
 
 resources:
-  - name: <FIXME:BucketName>
+  - name: test-bucket
     type: gcs_bucket.py
     properties:
-      name: <FIXME:BucketName>
+      name: test-bucket
       location: us-east1
       autoGenerateName: True
       versioning:
