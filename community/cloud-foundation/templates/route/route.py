@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates custom Routes."""
+"""This template creates a custom route."""
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     network_name = generate_network_url(
         context.env['project'],
@@ -25,7 +25,7 @@ def generate_config(context):
     resources = []
     for i, route in enumerate(context.properties['routes'], 1000):
 
-        # Common route properties
+        # Set the common route properties.
         properties = {
             'network': network_name,
             'tags': route['tags'],
@@ -34,7 +34,7 @@ def generate_config(context):
             'destRange': route['destRange']
         }
 
-        # Check the route type and fill the respective fields
+        # Check the route type and fill out the following fields:
         if route['routeType'] == 'ipaddress':
             properties['nextHopIp'] = route.get('nextHopIp')
         elif route['routeType'] == 'instance':
@@ -72,22 +72,22 @@ def generate_config(context):
 
 
 def generate_network_url(project, network):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/global/networks/{}'.format(project, network)
 
 
 def generate_instance_url(project, zone, instance):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/zones/{}/instances/{}'.format(project, zone, instance)
 
 
 def generate_gateway_url(project, gateway):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/global/gateways/{}'.format(project, gateway)
 
 
 def generate_vpn_tunnel_url(project, region, vpn_tunnel):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/regions/{}/vpnTunnels/{}'.format(
         project,
         region,
