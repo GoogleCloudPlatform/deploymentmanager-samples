@@ -9,8 +9,6 @@
 #
 # IAM Policies can be applied during bucket creation should you choose to 
 # apply them, add `bindings` section under properties
-# Replace the following with appropirate values
-# <FIXME:BucketName>: Name of the bucket (unique across all GCP buckets.)
 # Please refer to `templates/gcs_bucket.py.schema` for more details
 
 imports:
@@ -18,10 +16,10 @@ imports:
     name: gcs_bucket.py
 
 resources:
-  - name: <FIXME:BucketName>
+  - name: test-bucket
     type: gcs_bucket.py
     properties:
-      name: <FIXME:BucketName>
+      name: test-bucket
       location: us-east1
       autoGenerateName: True
       versioning:
