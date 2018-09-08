@@ -9,8 +9,9 @@
 #
 # IAM Policies are also applied with the `bindings` section
 # Replace the following with appropirate values
-# {user_account_email_address} : A valid user account
-# {service_account_email_address}: A valid service account email address
+# <FIXME:BucketName>: Name of the bucket (unique across all GCP buckets.)
+# <FIXME:user_account_email_address>: A valid user account
+# <FIXME:service_account_email_address>: A valid service account email address
 # Refer to https://cloud.google.com/storage/docs/json_api/v1/buckets for more details
 
 imports:
@@ -18,10 +19,10 @@ imports:
     name: gcs_bucket.py
 
 resources:
-  - name: test-bucket
+  - name: <FIXME:BucketName>
     type: gcs_bucket.py
     properties:
-      name: test-bucket
+      name: <FIXME:BucketName>
       location: us-east1
       autoGenerateName: True
       versioning:
@@ -29,7 +30,6 @@ resources:
       bindings:
         - role: roles/storage.objectViewer
           members:
-            - user:{user_account_email_address}
-            - serviceAccount:{service_account_email_address}
-
+            - user:<FIXME:user_account_email_address>
+            - serviceAccount:<FIXME:service_account_email_address>
 
