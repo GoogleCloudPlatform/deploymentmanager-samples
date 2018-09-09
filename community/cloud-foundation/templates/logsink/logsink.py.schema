@@ -13,10 +13,10 @@
 # limitations under the License.
 
 info:
-  title: Log Exports
+  title: Logging Sink
   author: Sourced Group Inc.
   description: |
-    Deploys a log export to a desired destination.
+    Creates a logging sink to export entries to a desired destination.
 
 required:
   - destinationType
@@ -25,19 +25,17 @@ required:
 properties:
   name:
     type: string
-    description: Name of sink resource
+    description: Name of the sink resource.
   destinationName:
     type: string
     description: |
-      Name of the destination resource. Such as: Bucket name,
-      PubSub topic id, BigQuery dataset id.
-      When using a pubsub topic the value must be a topic id.
-      When using a BQ dataset value must be a dataset ID. The ID must
+      An identifier of the destination resource, such as: a name for a Bucket,
+      a topic ID for a PubSub, or a dataset ID for a BigQuery. The IDs must
       contain only letters (a-z, A-Z), numbers (0-9), or underscores (_).
-      The maximum length is 1,024 characters.
+      The maximum ID length is 1,024 characters.
   destinationType:
     type: string
-    description: The resource type of the destination
+    description: The type of the destination resource.
     enum:
       - pubsub
       - storage
@@ -45,16 +43,16 @@ properties:
   uniqueWriterIdentity:
     type: boolean
     description: |
-      Determines the kind of IAM identity returned as writerIdentity in the
-      new sink. When true, the sink is owned by a non-project resource such
-      as an organization. The value of writerIdentity will then be a unique
+      Determines the kind of the IAM identity returned as writerIdentity for the
+      new sink. If "true", the sink is owned by a non-project resource such
+      as an organization. In this case, the writerIdentity value is a unique
       serivce account used only for exports from the new sink.
     default: true
   filter:
     type: string
     description: |
-      An advanced logs filter. Only exports log entries that are in the resource
-      owning the sink and matches the filter.
+      An advanced log filter that limits the export to those log entries that: (a) 
+      are in the resource that owns the sink; and (b) matches the filter condition(s).
 
 documentation:
   - templates/logsink/README.md
