@@ -47,9 +47,6 @@ function setup() {
     # Global setup; executed once per test file.
     if [ ${BATS_TEST_NUMBER} -eq 1 ]; then
         create_config
-        # IMP: Ensure Google APIs Service Agent service account
-        # has "Storage Admin" Role assigned before running these tests
-        # Else, the delete_config will fail with Forbidden 403 Error
         # create service accounts to test IAM bindings
         gcloud iam service-accounts create "${BUCKET_NAME}" \
             --display-name "Test Service Account"
@@ -63,7 +60,7 @@ function teardown() {
     if [[ "$BATS_TEST_NUMBER" -eq "${#BATS_TEST_NAMES[@]}" ]]; then
         delete_config
         rm -f "${RANDOM_FILE}"
-        # delete service account after tests are complete
+        # delete service account after tests are complete.
         gcloud --quiet iam service-accounts delete "${SA_NAME}"
     fi
 

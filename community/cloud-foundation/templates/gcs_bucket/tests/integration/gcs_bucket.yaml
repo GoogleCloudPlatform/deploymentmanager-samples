@@ -1,8 +1,4 @@
 # Example on how to use the storage bucket template
-# This config is suited for running BATS tests
-# Assumes a few things - for e.g. serviceaccount exists before running
-#
-# For a stand alone example refer to templates/gcs_bucket/examples/ folder
 #
 # Variables (declared in the gcs_bucket.bats file):
 #   RAND: Just a random string used mostly by the testing suite.
@@ -21,7 +17,6 @@ resources:
     properties:
       name: ${BUCKET_NAME}
       location: us-east1
-      autoGenerateName: False
       versioning:
         enabled: True
       bindings:

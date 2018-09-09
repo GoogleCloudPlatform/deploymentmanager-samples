@@ -5,8 +5,8 @@ This Template creates a Google Cloud Storage bucket.
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
-- Grant [storage.admin](https://cloud.google.com/storage/docs/access-control/iam-roles) to the Deployment Manager service account
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
+- Grant [storage.admin](https://cloud.google.com/storage/docs/access-control/iam-roles) role to the Deployment Manager service account
 
 ## Deployment
 
@@ -22,7 +22,7 @@ See `properties` section in the schema file(s):
 
 ### Usage
 
-1. Clone the [Deployment Manager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 
 ```shell
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples

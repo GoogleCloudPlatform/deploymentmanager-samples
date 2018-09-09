@@ -11,28 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Create a storage bucket resource. """
-import string
-import random
+""" Creates a cloud storage bucket. """
 
 
 def generate_config(context):
-    """
-    Entry point for the deployment resources
-    if autoGenerateName is True then generate name
-    by appending provided name with a random_string.
-    """
+    """ Entry point for the deployment resources. """
 
     resources = []
-    random_string_len = 10
-
     project_id = context.env['project']
     bucket_name = context.properties.get('name') or context.env['name']
-
-    autogenerate_name = context.properties.get('autoGenerateName')
-    if autogenerate_name:
-        rand = generate_random_string(random_string_len)
-        bucket_name = '-'.join([bucket_name, rand]).lower()
 
     # output variables
     bucket_selflink = '$(ref.{}.selfLink)'.format(bucket_name)
@@ -96,12 +83,3 @@ def generate_config(context):
                 }
             ]
     }
-
-
-def generate_random_string(num_chars):
-    """
-    Generates a random alphanumeric string of length num_chars.
-    """
-
-    chars = string.ascii_letters + string.digits
-    return ''.join(random.choice(chars) for x in range(num_chars))
