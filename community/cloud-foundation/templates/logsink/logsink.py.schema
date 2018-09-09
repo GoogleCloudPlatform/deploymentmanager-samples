@@ -35,7 +35,7 @@ properties:
       The maximum ID length is 1,024 characters.
   destinationType:
     type: string
-    description: The type of the destination resourse.
+    description: The type of the destination resource.
     enum:
       - pubsub
       - storage
