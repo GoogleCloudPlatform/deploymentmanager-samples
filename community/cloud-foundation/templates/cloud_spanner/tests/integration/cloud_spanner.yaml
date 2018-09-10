@@ -1,0 +1,27 @@
+# Example on how to use the cloud spanner template
+#
+# Variables:
+#   RAND: Just a random string used mostly by the testing suite.
+#
+
+imports:
+- path: templates/cloud_spanner/cloud_spanner.py
+  name: cloud_spanner.py
+
+resources:
+- name: myspannercluster-${RAND}
+  type: cloud_spanner.py
+  properties:
+    displayName: "Spanner Cluster 1"
+    nodeCount: 2
+    instanceConfig: nam3
+    bindings:
+      - role: "roles/spanner.admin"
+        members:
+          - "serviceAccount:${PROJECT_NUMBER}@cloudservices.gserviceaccount.com"
+    databases:
+      - name: "spannerdb1"
+        bindings:
+          - role: "roles/spanner.databaseAdmin"
+            members:
+              - "serviceAccount:${PROJECT_NUMBER}@cloudservices.gserviceaccount.com"
