@@ -29,8 +29,7 @@ def generate_config(context):
                 'datasetId': name,
                 'projectId': context.env['project']
             },
-        'location': context.properties.get('location',
-                                           'US')
+        'location': context.properties('location')
     }
 
     optional_properties = [
