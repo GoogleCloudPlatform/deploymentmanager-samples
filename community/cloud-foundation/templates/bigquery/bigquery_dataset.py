@@ -29,7 +29,7 @@ def generate_config(context):
                 'datasetId': name,
                 'projectId': context.env['project']
             },
-        'location': context.properties('location')
+        'location': context.properties['location']
     }
 
     optional_properties = [
@@ -41,7 +41,7 @@ def generate_config(context):
         if context.properties.get(prop):
             properties[prop] = context.properties[prop]
 
-    if context.properties.get('access'):
+    if 'access' in context.properties:
         # Validate the access roles
         for access_role in context.properties.get('access'):
             role = access_role.get('role')
