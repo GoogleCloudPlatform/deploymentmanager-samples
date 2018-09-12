@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """This template creates a BigQuery Dataset."""
 
 
@@ -32,32 +31,30 @@ def generate_config(context):
         'location': context.properties['location']
     }
 
-    optional_properties = [
-        'description',
-        'defaultTableExpirationMs'
-    ]
+    optional_properties = ['description', 'defaultTableExpirationMs']
 
     for prop in optional_properties:
-        if context.properties.get(prop):
+        if prop in context.properties:
             properties[prop] = context.properties[prop]
 
     if 'access' in context.properties:
         # Validate the access roles
-        for access_role in context.properties.get('access'):
-            role = access_role.get('role')
-            if role and role not in whitelisted_roles:
-                raise ValueError(
-                    'Role supplied \"{}\" for dataset \"{}\" not '
-                    ' within the whitelist: {} '.format(
-                        role,
-                        context.properties['name'],
-                        whitelisted_roles
+        for access_role in context.properties['access']:
+            if 'role' in access_role:
+                role = access_role['role']
+                if role not in whitelisted_roles:
+                    raise ValueError(
+                        'Role supplied \"{}\" for dataset \"{}\" not '
+                        ' within the whitelist: {} '.format(
+                            role,
+                            context.properties['name'],
+                            whitelisted_roles
+                        )
                     )
-                )
 
         properties['access'] = context.properties['access']
 
-        if context.properties.get('setDefaultOwner'):
+        if 'setDefaultOwner' in context.properties:
             # build default owner for dataset
             base = '@cloudservices.gserviceaccount.com'
             default_dataset_owner = context.env['project_number'] + base
