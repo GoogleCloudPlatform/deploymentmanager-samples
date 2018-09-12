@@ -25,7 +25,7 @@ def generate_config(context):
         'secondaryIpRanges'
     ]
 
-    # Load the mandatory properties, then the optional ones (if specifiedP).
+    # Load the mandatory properties, then the optional ones (if specified).
     properties = {p: context.properties[p] for p in required_properties}
     properties.update(
         {
