@@ -9,7 +9,7 @@ creates a Cloud Container Builder build.
 This sample uses the undocumented DM Actions feature (estimated to come out
 in Q2 2018) to call the Cloud Container Builder projects.builds.create API.
 This doesn't create a DM resource like you would normally see, it just calls
-the API as specified in the metadat.runtimePolicy section. This section may
+the API as specified in the metadata.runtimePolicy section. This section may
 contain the values UPDATE\_ALWAYS (call the API for create or update changes
 in the deployment), CREATE (only call on create), UPDATE\_ON\_CHANGE (call
 when the action changes), DELETE (call on deletes).
