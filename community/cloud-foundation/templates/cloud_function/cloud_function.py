@@ -51,7 +51,9 @@ def archive_files(files):
     return output_file.getvalue()
 
 def upload_source(function, imports, local_path, source_archive_url):
-    """ Creates upload sources resource. """
+    """ Uploads cloud function source code from local machine to Cloud Storage
+        bucket. If bucket doesn't exist, it will be created.
+    """
 
     # Create in-memory archive of cloud function source files
     sources = extract_source_files(imports, local_path)
