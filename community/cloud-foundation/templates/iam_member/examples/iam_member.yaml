@@ -20,9 +20,9 @@ resources:
       roles:
         - role: roles/editor
           members:
-            - user:name@example.com
+            - user:<FIXME:user-email-example:name@example.com>
             - serviceAccount:<FIXME:service-account-example:example@myprojectname.gserviceaccount.com>
         - role: roles/viewer
           members:
             - group:<FIXME:group-address-example:admins@example.com>
-            - domain:google.com
+            - domain:<FIXME:domain-name-example:example.com>
