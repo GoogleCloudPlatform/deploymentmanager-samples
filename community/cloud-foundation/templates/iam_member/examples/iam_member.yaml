@@ -2,6 +2,12 @@
 #
 # The `members` property is a list of members to which the
 # `role` is applied.
+#
+# Replace `user-email` with a valid email.
+# Replace `service-account` with a valid service account.
+# Replace `group-address` with a valid group. 
+# Replace `domain-name` with a valid domain.
+
 
 imports:
   - path: templates/iam_member/iam_member.py
@@ -15,8 +21,8 @@ resources:
         - role: roles/editor
           members:
             - user:name@example.com
-            - serviceAccount:example@myprojectname.gserviceaccount.com
+            - serviceAccount:<FIXME:service-account-example:example@myprojectname.gserviceaccount.com>
         - role: roles/viewer
           members:
-            - group:admins@example.com
+            - group:<FIXME:group-address-example:admins@example.com>
             - domain:google.com
