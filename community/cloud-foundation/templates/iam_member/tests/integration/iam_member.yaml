@@ -1,7 +1,7 @@
-# Example on how to use the iam member template
+# Test of the IAM member template .
 #
 # Variables:
-#   RAND: A random string used mostly by the testing suite.
+#   RAND: A random string used by the testing suite
 #   TEST_SERVICE_ACCOUNT: Service account name
 #   CLOUD_FOUNDATION_PROJECT_ID: Project ID
 
