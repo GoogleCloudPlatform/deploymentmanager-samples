@@ -54,12 +54,23 @@ properties:
 
 outputs:
   properties:
-    - policies:
+    policies:
       type: array
-      description: List of IAM policy resource names.
+      description: Array of IAM policy resource information.
       items:
-        type: string
-        description: A IAM policy resource name.
+        description: |
+          IAM policy resource name. Will be in the format
+          'iam-subnet-policy-<subnetId>'. For example, the output
+          can be referenced as:
+          $(ref.<my-policies>.policies.iam-subnet-policy-<subnet1>.selfLink)
+        patternProperties:
+          ".*":
+            type: object
+            description: Details for a subnetwork IAM policy.
+            properties:
+              etag:
+                type: string
+                description: The etag of the subnetwork's IAM policy.
 
 documentation:
   - templates/shared_vpc_subnet_iam/README.md

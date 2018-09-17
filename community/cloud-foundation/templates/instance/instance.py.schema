@@ -90,17 +90,17 @@ properties:
 outputs:
   properties:
     - externalIp:
-      type: string
-      description: Reference to the external ip address of the new instance
+        type: string
+        description: Reference to the external ip address of the new instance
     - internalIp:
-      type: string
-      description: Reference to tbe internal ip address of the new instance
+        type: string
+        description: Reference to tbe internal ip address of the new instance
     - name:
-      type: string
-      description: A name of the instance resource
+        type: string
+        description: A name of the instance resource
     - selfLink:
-      type: string
-      description: A link to the instance resource
+        type: string
+        description: The URI (SelfLink) of the instance resource.
 
 documentation:
   - templates/instance/README.md

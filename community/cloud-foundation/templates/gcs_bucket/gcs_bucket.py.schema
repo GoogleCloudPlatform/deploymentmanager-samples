@@ -211,12 +211,16 @@ properties:
           If the requested object path is missing, and any mainPageSuffix object
           is missing, if applicable, the service will return the named object 
           from this bucket as the content for a 404 Not Found result.
+
 outputs:
   properties:
-    - storageBucketSelfLink:
+    - name:
         type: string
-        description: URI for the created storage bucket resource.
-    - storageBucketURL:
+        description: The name of the storage bucket resource.
+    - selfLink:
+        type: string
+        description: The URI (SelfLink) of the storage bucket resource.
+    - url:
         type: string
         description: |
           The base URL for the bucket, in the format gs://<bucket-name>.

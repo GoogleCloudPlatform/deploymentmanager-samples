@@ -57,7 +57,7 @@ def generate_config(context):
                     'value': name
                 },
                 {
-                    'name': 'networkUrl',
+                    'name': 'selfLink',
                     'value': network_self_link
                 }
             ]

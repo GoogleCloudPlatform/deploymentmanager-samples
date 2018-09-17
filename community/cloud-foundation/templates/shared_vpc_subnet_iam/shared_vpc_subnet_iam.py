@@ -18,7 +18,7 @@ def generate_config(context):
     """ Entry point for the deployment resources """
 
     resources = []
-    outputs = []
+    out = {}
     for subnet in context.properties['subnets']:
         subnet_id = subnet['subnetId']
         policy_name = 'iam-subnet-policy-{}'.format(subnet_id)
@@ -44,11 +44,10 @@ def generate_config(context):
             }
         )
 
-        outputs.append(
-            {
-                'name': 'policy_name',
-                'value': policy_name
-            }
-        )
+        out[policy_name] = {
+            'etag': '$(ref.' + policy_name + '.etag)'
+        }
+
+    outputs = [{'name': 'policies', 'value': out}]
 
     return {'resources': resources, 'outputs': outputs}

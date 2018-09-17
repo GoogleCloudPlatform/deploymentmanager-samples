@@ -74,11 +74,15 @@ def generate_config(context):
         'outputs':
             [
                 {
-                    'name': 'storageBucketSelfLink',
+                    'name': 'name',
+                    'value': bucket_name
+                },
+                {
+                    'name': 'selfLink',
                     'value': bucket_selflink
                 },
                 {
-                    'name': 'storageBucketURL',
+                    'name': 'url',
                     'value': bucket_uri
                 }
             ]

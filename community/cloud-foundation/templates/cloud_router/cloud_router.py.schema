@@ -35,7 +35,7 @@ properties:
     description: The name of the resource.
   network:
     type: string
-    description: The URI of the network to which the router belongs.
+    description: The name of the network to which the router belongs.
   region:
     type: string
     description: The URI of the region where the router resides.
@@ -49,9 +49,15 @@ properties:
 
 outputs:
   properties:
-    - routerUrl:
+    - name:
         type: string
-        description: The URL (SelfLink) of the router resource.
+        description: The name of the router resource.
+    - selfLink:
+        type: string
+        description: The URI (SelfLink) of the router resource.
+    - creationTimestamp:
+        type: string
+        description: Creation timestamp in RFC3339 text format.
 
 documentation:
   - templates/cloud_router/README.md

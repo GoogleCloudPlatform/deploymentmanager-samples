@@ -1,7 +1,9 @@
 # Example of the Folder template usage.
 #
-# Replace `orgId` or `folderId` with your
-# organization ID or folder ID, respectively.
+# Replace the following placeholders with valid values:
+#   <FIXME:org-id>: the organization id the folder will be created under
+#   <FIXME:folder-id>: the folder id the folder will be created under
+#
 
 imports:
 - path: templates/folder/folder.py
