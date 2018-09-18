@@ -15,8 +15,8 @@ This template creates a VPN.
 
 - [compute.v1.targetVpnGateway](https://cloud.google.com/compute/docs/reference/latest/targetVpnGateways)
 - [compute.v1.address](https://cloud.google.com/compute/docs/reference/rest/v1/addresses)
-- [compute.v1.forwardingRule](https://cloud.google.com/compute/docs/reference/latest/forwardingRule)
-- [compute.v1.vpnTunnel](https://cloud.google.com/compute/docs/reference/latest/vpnTunnel)
+- [compute.v1.forwardingRule](https://cloud.google.com/compute/docs/reference/latest/forwardingRules)
+- [compute.v1.vpnTunnel](https://cloud.google.com/compute/docs/reference/latest/vpnTunnels)
 - [gcp-types/compute-v1:compute.routers.patch](https://www.googleapis.com/discovery/v1/apis/compute/v1/rest)
 
 ### Properties
