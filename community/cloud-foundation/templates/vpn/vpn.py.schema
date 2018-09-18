@@ -15,7 +15,7 @@
 info:
   title: VPN
   author: Sourced Group
-  description: Deploys a VPN Tunnel, gateway and fowarding rules.
+  description: Creates a VPN tunnel, gateway, and fowarding rules.
 
 required:
   - network
@@ -27,47 +27,46 @@ required:
 properties:
   network:
     type: string
-    description: URI of the network to which this router belongs.
+    description: The URI of the network to which the VPN belongs.
   region:
     type: string
-    description: URI of the region where the router resides.
+    description: The URI of the region where the VPN resides.
   peerAddress:
     type: string
-    description: IP address of the peer VPN gateway. Only IPv4 is supported.
+    description: The IP address of the peer VPN gateway. Only IPv4 is supported.
     pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}$
   asn:
     type: integer
     description: |
-      Local BGP Autonomous System Number (ASN). Must be an RFC6996 private ASN,
-      either 16-bit or 32-bit. The value will be fixed for this router
-      resource. All VPN tunnels that link to this router will have the same
-      local ASN.
+      The local BGP Autonomous System Number (ASN). Must be an RFC6996 private
+      ASN, either 16-bit or 32-bit. The value will be fixed for the VPN resource.
+      All VPN tunnels that link to the router will have the same local ASN.
   sharedSecret:
     type: string
     description: |
-      Shared secret used to set the secure session between the Cloud VPN
+      The value is used to set the secure session between the Cloud VPN
       gateway and the peer VPN gateway.
 
 outputs:
   properties:
     - targetVpnGateway:
         type: string
-        description: Name of the Target VPN gateway resource.
+        description: The name of the target VPN gateway resource.
     - staticIp:
         type: string
-        description: Name of the Reserved Address resource.
+        description: The name of the reserved address resource.
     - espRule:
         type: string
-        description: Name of the ForwardingRule resource for ESP traffic.
+        description: The name of the ForwardingRule resource for the ESP traffic.
     - udp4500Rule:
         type: string
-        description: Name of the ForwardingRule resource for UDP 4500 traffic.
+        description: The name of the ForwardingRule resource for the UDP 4500 traffic.
     - udp500Rule:
         type: string
-        description: Name of the ForwardingRule resource for UDP 500 traffic.
+        description: The name of the ForwardingRule resource for the UDP 500 traffic.
     - vpnTunnel:
         type: string
-        description: Name of the VPN Tunnel resource.
+        description: The mame of the VPN tunnel resource.
 
 documentation:
   - templates/vpn/README.md
