@@ -80,14 +80,14 @@ function teardown() {
   run gcloud alpha resource-manager folders list \
     --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
     --organization "${CLOUD_FOUNDATION_ORGANIZATION_ID}"
-  [[ "$output" =~ "Folder Under Org ${RAND}" ]]
+  [[ "$output" =~ "Folder under Org ${RAND}" ]]
 }
 
 @test "Verifying that a folder was created under the specified folder in deployment ${DEPLOYMENT_NAME}" {
   run gcloud alpha resource-manager folders list \
     --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
     --folder "${TEST_ORG_FOLDER_NAME}"
-  [[ "$output" =~ "Folder Under Folder ${RAND}" ]]
+  [[ "$output" =~ "Folder under Folder ${RAND}" ]]
 }
 
 @test "Deleting deployment" {
