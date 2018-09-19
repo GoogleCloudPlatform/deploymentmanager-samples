@@ -39,14 +39,14 @@ See the `properties` section in the schema file(s):
 3. Copy the example DM config to be used as a model for the deployment, in this case [examples/gke.yaml](examples/gke.yaml)
 
     ```shell
-        cp templates/gke/examples/gke.yaml my_gke.yaml
+        cp templates/gke/examples/gke_zonal.yaml my_gke_zonal.yaml
     ```
 
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 
     ```shell
-        vim my_gke.yaml  # <== change values to match your GCP setup
+        vim my_gke_zonal.yaml  # <== change values to match your GCP setup
     ```
 
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
@@ -54,7 +54,7 @@ See the `properties` section in the schema file(s):
 
     ```shell
         gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-            --config my_gke.yaml
+            --config my_gke_zonal.yaml
     ```
 
 6. In case you need to delete your deployment:
@@ -65,6 +65,6 @@ See the `properties` section in the schema file(s):
 
 ## Examples
 
-- [GKE Zonal Cluster](examples/gke.yaml)
+- [GKE Zonal Cluster](examples/gke_zonal.yaml)
 - [GKE Regional Cluster](examples/gke_regional.yaml)
 - [GKE Private Regional Cluster](examples/gke_regional_private.yaml)
