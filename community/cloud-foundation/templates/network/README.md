@@ -41,7 +41,7 @@ See the `properties` section in the schema file(s):
 3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/network.yaml](examples/network.yaml):
 
 ```shell
-    cp templates/network/examples/neywork.yaml my_network.yaml
+    cp templates/network/examples/network.yaml my_network.yaml
 ```
 
 4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
