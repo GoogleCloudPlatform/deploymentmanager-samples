@@ -6,6 +6,8 @@ This template creates a Pub/Sub (publish-subscribe) service.
 
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
+- Grant the [pubsub.admin](https://cloud.google.com/pubsub/docs/access-control)
+IAM role to the Deployment Manager service account
 
 ## Deployment
 
@@ -62,3 +64,4 @@ See the `properties` section in the schema file(s):
 ## Examples
 
 - [Pub/Sub](examples/pubsub.yaml)
+- [Pub/Sub with PUSH subscription](examples/pubsub_push.yaml)

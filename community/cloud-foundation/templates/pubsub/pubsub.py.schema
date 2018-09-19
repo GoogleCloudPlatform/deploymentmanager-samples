@@ -92,3 +92,4 @@ documentation:
 
 examples:
   - templates/pubsub/examples/pubsub.yaml
+  - templates/pubsub/examples/pubsub_push.yaml
