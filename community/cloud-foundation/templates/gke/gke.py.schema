@@ -37,7 +37,9 @@ properties:
   region:
     type: string
     default: us-east1
-    description: The region the cluster belongs to.
+    description: |
+      The region the cluster belongs to. Should be set when clusterLocationType
+      is set to Regional
   zone:
     type: string
     default: us-east1-b

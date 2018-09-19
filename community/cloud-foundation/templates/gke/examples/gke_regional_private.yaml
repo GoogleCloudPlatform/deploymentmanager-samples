@@ -3,9 +3,12 @@
 # In this example, a GKE private regional cluster is created.
 # Optional properties are also set in this example.
 #
-# Replace the following with valid values
-# <FIXME:network_name>: A valid VPC network name
-# <FIXME:subnet_name>: A valid VPC subnet name
+# Replace the following with valid values:
+#   <FIXME:network_name>: a valid VPC network name.
+#   <FIXME:subnet_name>: a valid VPC subnet name.
+# Replace credentials, for accessing the master endpoint, with the valid values:
+#   <FIXME:user_name>: user name for masterAuth.
+#   <FIXME:password>: password (atleast 16 chars) for masterAuth
 
 imports:
   - path: templates/gke/gke.py
@@ -23,6 +26,7 @@ resources:
         network: <FIXME:network_name>
         subnetwork: <FIXME:subnet_name>
         intialNodeCount: 1
+        initialClusterVersion: 1.10.6-gke.3
         nodeConfig:
           localSsdCount: 1
           oauthScopes:
@@ -48,8 +52,8 @@ resources:
           autoUpgrade: True
           autoRepair: True
         masterAuth:
-          username: mr.yoda
-          password: 8bGc26SP$FD449RN7f
+          username: <FIXME:user_name>
+          password: <FIXME:password>
         loggingService: logging.googleapis.com
         monitoringService: monitoring.googleapis.com
         privateCluster: True

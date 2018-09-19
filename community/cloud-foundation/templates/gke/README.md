@@ -14,7 +14,7 @@ This template creates a Google Kubernetes Engine cluster.
 ### Resources
 
 - [container-v1beta1:projects.locations.clusters](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/projects.locations.clusters)
-- [container.v1.cluster](https://cloud.google.com/compute/docs/reference/latest/gke)
+- [container.v1.cluster](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.zones.clusters)
 
 ### Properties
 
