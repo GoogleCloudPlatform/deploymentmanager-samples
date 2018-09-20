@@ -26,7 +26,7 @@ resources:
       add:
       - role: roles/dataflow.serviceAgent
         members:
-        - user:deploymentmanager-samples@cloud-dm-arcus-oneshot.iam.gserviceaccount.com
+        - serviceAccount:deploymentmanager-samples@cloud-dm-arcus-oneshot.iam.gserviceaccount.com
 - name: remove-iam-policy
   action: gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy
   properties:
@@ -36,4 +36,4 @@ resources:
       remove:
       - role: roles/dataflow.serviceAgent
         members:
-        - user:deploymentmanager-samples@cloud-dm-arcus-oneshot.iam.gserviceaccount.com
+        - serviceAccount:deploymentmanager-samples@cloud-dm-arcus-oneshot.iam.gserviceaccount.com
