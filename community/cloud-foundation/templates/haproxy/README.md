@@ -29,40 +29,40 @@ See the `properties` section in the schema file(s):
 
 ### Usage
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
+1. Clone the [Deployment Manager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
-```
+```shell
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 ```
 
 2. Go to the [community/cloud-foundation](../../) directory:
 
-```
+```shell
     cd community/cloud-foundation
 ```
 
 3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/haproxy.yaml](examples/haproxy.yaml):
 
-```
+```shell
     cp templates/haproxy/examples/haproxy.yaml my_haproxy.yaml
 ```
 
 4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
 
-```
+```shell
     vim my_haproxy.yaml  # <== change values to match your GCP setup
 ```
 
 5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
 
-```
+```shell
     gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
         --config my_haproxy.yaml
 ```
 
 6. In case you need to delete your deployment:
 
-```
+```shell
     gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
 
