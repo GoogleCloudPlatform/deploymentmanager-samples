@@ -1,0 +1,39 @@
+# Example of the Cloud Build template usage.
+#
+# In this example, a sample NodeJS "Hello World" app is built and pushed to
+# the container registry.
+#
+# The Build steps are as follows:
+#  Step1: Clone the cloud-builders GitJHub repo
+#  Step2: Build the Docker image from Dockerfile in the npm/examples/hello_world dir
+#  Step3: Tag the image as gcr.io/$PROJECT_ID/${_IMAGE_NAME}
+#  Step3: Push the image to the container registry gcr.io/$PROJECT_ID/${_IMAGE_NAME}
+
+imports:
+  - path: templates/cloudbuild/cloudbuild.py
+    name: build.py
+
+resources:
+  - name: mycloudbuild
+    type: build.py
+    properties:
+      steps:
+        - name: 'gcr.io/cloud-builders/git'
+          args:
+            - clone
+            - https://github.com/GoogleCloudPlatform/cloud-builders
+        - name: 'gcr.io/cloud-builders/docker'
+          args:
+            - build
+            - '--tag=gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+            - '.'
+          dir: cloud-builders/npm/examples/hello_world
+        - name: 'gcr.io/cloud-builders/docker'
+          args:
+            - push
+            - 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+      substitutions:
+        _IMAGE_NAME: npm-helloworld
+      images:
+        - 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+      timeout: '200s'
