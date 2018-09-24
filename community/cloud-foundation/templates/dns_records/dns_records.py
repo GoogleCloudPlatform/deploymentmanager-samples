@@ -11,21 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create DNS record-sets resources for a managed zone"""
+"""This template creates DNS records for a managed zone."""
+
 import string
 import random
 
 
 def generate_config(context):
     """ Entry point for the deployment resources.
-    For each ResourceRecordSet. Create:
-    1. A Change to create it.
-    2. A Change to delete it.
-
-    The name of the action should be unique so create a random
-    string to append to the name field.
+    For each ResourceRecordSet, create a resource with an action to
+    create, and another resource with an action to delete.
+    The action name must be unique. Create a random
+    string and append it to the name field.
     """
-
 
     resources = []
     random_string_len = 10
@@ -69,8 +67,8 @@ def generate_config(context):
 
 
 def generate_unique_string(num_chars):
-    """ generates an random alphanumeric string
-    The length of the returned string will be num_chars
+    """ Generate a random alphanumeric string.
+    The length of the returned string is num_chars
     """
 
     chars = string.ascii_letters + string.digits
