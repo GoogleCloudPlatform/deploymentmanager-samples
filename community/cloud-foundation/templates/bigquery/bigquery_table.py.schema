@@ -16,10 +16,9 @@ info:
   title: BigQuery Table
   author: Sourced Group Inc.
   description: |
-    Deploys a BigQuery Table.
-
+    Creates a BigQuery table.
     For more information on this resource:
-    https://cloud.google.com/bigquery/docs/
+    https://cloud.google.com/bigquery/docs/.
 
 imports:
   - path: bigquery_table.py
@@ -30,50 +29,50 @@ required:
 properties:
   name:
     type: string
-    description: The name of the resource.
+    description: The resource name.
   datasetId:
     type: string
     description: |
-      The ID of the dataset this table belongs to.
+      The ID of the dataset the table belongs to.
   friendlyName:
     type: string
-    description: A descriptive name for this table.
+    description: A descriptive name for the table.
   expirationTime:
     type: string
     description: |
-      The time when this table expires, in milliseconds since the epoch. If
-      not present, the table will persist indefinitely. Expired tables will
-      be deleted and their storage reclaimed. The defaultTableExpirationMs
+      The time when the table expires, in milliseconds since the epoch. If
+      not specified, the table persists indefinitely. Expired tables are 
+      deleted, and their storage is reclaimed. The defaultTableExpirationMs
       property of the encapsulating dataset can be used to set a default
-      expirationTime on newly created tables. Example, 1535739430
+      expirationTime on newly created tables. For example, 1535739430.
   timePartitioning:
     type: object
-    description: Time-based partitioning specification for this table.
+    description: The time-based partitioning specification for this table.
     properties:
       expirationMs:
         type: string
         format: int64
         description: |
-          Number of milliseconds for which to keep the storage for partitions
-          in the table. The storage in a partition will have an expiration
-          time of its partition time plus this value.
+          The number of milliseconds for which the storage for partitions
+          is kept in the table. The storage in a partition has an expiration
+          time of its partition time plus the expirationMs value.
       field:
         type: string
         description: |
-          If not set, the table is partitioned by pseudo column, referenced
-          via either '_PARTITIONTIME' as TIMESTAMP type, or '_PARTITIONDATE'
-          as DATE type. If field is specified, the table is instead partitioned
-          by this field. The field must be a top-level TIMESTAMP or DATE field.
-          Its mode must be NULLABLE or REQUIRED.
+          The field to partition the table by. This field must be a top-level 
+          TIMESTAMP or DATE field. Its mode must be NULLABLE or REQUIRED.
+          If not specified, the table is partitioned by a pseudo-column, 
+          referenced via either '_PARTITIONTIME' as TIMESTAMP type or 
+          '_PARTITIONDATE' as DATE type. 
       requirePartitionFilter:
         type: boolean
         description: |
-          If set to true, queries over this table require a partition filter
-          that can be used for partition elimination to be specified.
+          If True, queries over the table require a partition filter
+          (that can be used for partition elimination) to be specified.
       type:
         type: string
         description: |
-          The only type supported is DAY, which will generate one partition
+          The only supported type is DAY, which generates one partition
           per day.
   view:
     type: object
@@ -82,42 +81,41 @@ properties:
       query:
         type: string
         description: |
-          A query that BigQuery executes when the view is referenced.
+          The query that BigQuery executes when the view is referenced.
       useLegacySql:
         type: boolean
         description: |
-          Specifies whether to use BigQuery's legacy SQL for this view. The
-          default value is true. If set to false, the view will use BigQuery's
-          standard SQL: https://cloud.google.com/bigquery/sql-reference/
-          Queries and views that reference this view must use the same flag
+          Defines whether to use BigQuery's legacy SQL for the view. The
+          default is True. If set to False, the view uses BigQuery's
+          standard SQL: https://cloud.google.com/bigquery/sql-reference/.
+          Queries and views that reference the view must use the same flag
           value.
       userDefinedFunctionResources:
         type: array
         description: |
-          Describes user-defined function resources used in the query.
+          User-defined function resources used in the query.
         items:
           oneOf:
             - inlineCode:
               type: string
               description: |
-                An inline resource that contains code for a user-defined
-                function (UDF). Providing a inline code resource is
-                equivalent to providing a URI for a file containing the same
-                code.
+                The inline resource that contains code for a user-defined
+                function (UDF). An equivalent a URI for a file containing 
+                the same code.
             - resourceUri:
               type: string
               description: |
-                A code resource to load from a Google Cloud Storage URI
+                The code resource to load from a Google Cloud Storage URI
                 (gs://bucket/path).
   schema:
     type: array
     description: |
-      The schema for the data. Schema is required for CSV and JSON formats.
-      Schema is disallowed for Google Cloud Bigtable, Cloud Datastore
+      The schema for the data. Required for the CSV and JSON formats.
+      Disallowed for the Google Cloud Bigtable, Cloud Datastore
       backups, and Avro formats.
     items:
       type: object
-      description: Describes the fields in a table.
+      description: Defines the table fields.
       required:
         - name
         - type
@@ -126,19 +124,19 @@ properties:
           type: string
           pattern: ^[_a-zA-Z][0-9a-zA-Z_]{1,128}$
           description: |
-            The field name. The name must contain only letters (a-z, A-Z),
-            numbers (0-9), or underscores (_), and must start with a letter
+            The field name. Must contain only letters (a-z, A-Z),
+            numbers (0-9), or underscores (_); must start with a letter
             or underscore. The maximum length is 128 characters.
         type:
           type: string
           description: |
-            The field data type. Possible values include STRING, BYTES,
+            The field data type. Possible values are STRING, BYTES,
             INTEGER, INT64 (same as INTEGER), FLOAT, FLOAT64 (same as
             FLOAT), BOOLEAN, BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME,
-            DATETIME, RECORD (where RECORD indicates that the field contains
-            a nested schema) or STRUCT (same as RECORD).
-            See details at https://cloud.google.com/bigquery/docs/schemas
-            and https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types
+            DATETIME, RECORD (indicates that the field contains a nested 
+            schema), and STRUCT (same as RECORD). See details at 
+            https://cloud.google.com/bigquery/docs/schemas and 
+            https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types.
           enum:
             - STRING
             - BYTES
@@ -157,8 +155,8 @@ properties:
         mode:
           type: string
           description:
-            The field mode. Possible values include NULLABLE, REQUIRED and
-            REPEATED. The default value is NULLABLE.
+            The field mode. Possible values are NULLABLE, REQUIRED, and
+            REPEATED. The default is NULLABLE.
           enum:
             - NULLABLE
             - REQUIRED
@@ -175,17 +173,17 @@ outputs:
         description: The URI of the created resource.
     - etag:
         type: string
-        description: A hash of the resource.
+        description: The hash of the resource.
     - creationTime:
         type: string
         description: |
-          The time when this dataset was created, in milliseconds since
+          The time when the dataset was created, in milliseconds since
           epoch.
     - lastModifiedTime:
         type: string
         description: |
-          The date when this dataset or any of its tables was last modified,
-          in milliseconds since the epoch.
+          The date when the dataset (or any of its tables) was last 
+          modified, in milliseconds since the epoch.
     - location:
         type: string
         description: |
@@ -194,7 +192,7 @@ outputs:
     - numBytes:
         type: string
         description: |
-          The size of this table in bytes, excluding any data in the streaming
+          The size of the table in bytes, excluding data in the streaming
           buffer.
     - numLongTermBytes:
         type: string
@@ -205,16 +203,17 @@ outputs:
     - numRows:
         type: string
         description: |
-          The number of rows of data in this table, excluding any data in the
+          The number of rows of data in the table, excluding data in the
           streaming buffer.
     - type:
         type: string
         description: |
-          Describes the table type. The following values are supported: TABLE:
-          A normal BigQuery table. VIEW: A virtual table defined by a SQL
-          query. EXTERNAL: A table that references data stored in an external
-          storage system, such as Google Cloud Storage. The default value is
-          TABLE.
+          The table type. The following values are supported: 
+           TABLE - a normal BigQuery table
+           VIEW - a virtual table defined by an SQL query
+           EXTERNAL - a table that references data stored in an external
+           storage system, such as Google Cloud Storage. 
+          The default value is TABLE.
 
 documentation:
   - templates/bigquery/README.md
