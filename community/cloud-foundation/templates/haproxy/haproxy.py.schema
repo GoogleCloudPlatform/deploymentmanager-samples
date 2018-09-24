@@ -68,7 +68,8 @@ properties:
           - source
       port:
         type: integer
-        description: Number of the port at which the load balancer will receive requests.
+        description: |
+          Number of the port at which the load balancer will receive requests.
       mode:
         type: string
         default: http
@@ -76,45 +77,52 @@ properties:
         enum:
           - http
           - tcp
-    instances:
-      type: object
-      description: Back-end settings of the HAProxy load balancer.
-      required:
-        - port
-        - groups
-      properties:
-        port:
-          type: integer
+  instances:
+    type: object
+    description: Back-end settings of the HAProxy load balancer.
+    required:
+      - port
+      - groups
+    properties:
+      port:
+        type: integer
+        description: |
+          Number of the port at which instances will accept requests.
+      groups:
+        type: array
+        description: A list of instanceGroups that will be load-balanced.
+        items:
+          type: string
           description: |
-            Number of the port at which instances will accept requests.
-          groups:
-            type: array
-            description: A list of instanceGroups that will be load-balanced.
-            items:
-              type: string
-              description: |
-                The instance group name. If located in the same availability zone
-                as a load balancer, a group name is sufficient. If located elsewhere,
-                the name should have the following format: 'zones/[ZONE]/instanceGroups/[GROUP]'.
+            The instance group name. If located in the same availability zone
+            as a load balancer, a group name is sufficient. If located elsewhere,
+            the name should have the following format: 'zones/[ZONE]/instanceGroups/[GROUP]'.
+      refreshIntervalMin:
+        type: integer
+        minimum: 1
+        maximum: 30
+        default: 10
+        description: |
+          Specifies how often the list of instances should be refreshed.
 
 outputs:
   properties:
     - externalIp:
-      type: string
-      description: Reference to an external IP address of the load balancer.
+        type: string
+        description: Reference to an external IP address of the load balancer.
     - internalIp:
-      type: string
-      description: Reference to an internal IP address of the load balancer.
+        type: string
+        description: Reference to an internal IP address of the load balancer.
     - name:
-      type: string
-      description: The load balancer name.
+        type: string
+        description: The load balancer name.
     - selfLink:
-      type: string
-      description: Link to the load balancer instance.
+        type: string
+        description: Link to the load balancer instance.
     - port:
-      type: integer
-      description: |
-        Number of the port where the HAProxy load balancer will accept requests.
+        type: integer
+        description: |
+          Number of the port where the HAProxy load balancer will accept requests.
 
 documentation:
   - templates/haproxy/README.md

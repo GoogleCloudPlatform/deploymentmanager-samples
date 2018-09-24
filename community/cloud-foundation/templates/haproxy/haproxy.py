@@ -28,6 +28,7 @@ function get_metadata() {
 # Set up an HAProxy update script.
 CONFIG_UPDATER="/sbin/haproxy-conf-updater"
 get_metadata "haproxy-conf-updater" > $CONFIG_UPDATER
+REFRESH_RATE=`get_metadata "refresh-rate"`
 chmod +x $CONFIG_UPDATER
 
 # Set up an HAProxy config.
@@ -36,7 +37,7 @@ $CONFIG_UPDATER
 # Keep the HAProxy config up to date.
 CRONFILE=$(mktemp)
 crontab -l > "${CRONFILE}" || true
-echo "* * * * * ${CONFIG_UPDATER}" >> "${CRONFILE}"
+echo "${REFRESH_RATE} * * * * ${CONFIG_UPDATER}" >> "${CRONFILE}"
 crontab "${CRONFILE}"
 service cron start
 """
@@ -137,6 +138,9 @@ def configure_haproxy_backend(home_zone, properties, metadata):
                        in instances_properties['groups']])
 
     append_metadata_entry(metadata, 'groups', groups)
+    cron_refresh_rate = instances_properties['refreshIntervalMin']
+    cron_minutes_value = '*/' + str(cron_refresh_rate)
+    append_metadata_entry(metadata, 'refresh-rate', cron_minutes_value)
 
 def configure_haproxy_setup(metadata):
     """ Adds metadata that installs and configures the HAProxy. """

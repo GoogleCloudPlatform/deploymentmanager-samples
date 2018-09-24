@@ -111,6 +111,15 @@ function teardown() {
     [[ "$output" =~ ":8888" ]]             # Instance group's port
 }
 
+@test "Verifying that update interval was set" {
+    run gcloud compute ssh "ilb-proxy-${RAND}" --zone us-central1-a \
+        --command "sudo crontab -l" \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
+
+    [[ "$status" -eq 0 ]]
+    [[ "$output" = "*/15 * * * * /sbin/haproxy-conf-updater" ]]
+}
+
 @test "Deleting deployment" {
     run gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" -q \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"

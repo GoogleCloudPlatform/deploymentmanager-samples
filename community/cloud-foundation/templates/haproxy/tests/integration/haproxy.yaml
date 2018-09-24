@@ -23,6 +23,7 @@ resources:
         mode: tcp
       instances:
         port: 8888
+        refreshIntervalMin: 15
         groups:
           - group-${RAND}-1
           - zones/us-central1-c/instanceGroups/group-${RAND}-2
