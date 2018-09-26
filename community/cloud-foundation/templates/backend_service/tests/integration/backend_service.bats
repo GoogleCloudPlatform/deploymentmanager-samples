@@ -24,11 +24,10 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     export RES_DESCRIPTION="This is the description"
     export BC_DESCRIPTION="Backend description"
     export TIMEOUT="35"
-    export ENABLE_CDN="false"
+    export ENABLE_CDN="true"
     export SESSION="CLIENT_IP"
     export REGIONAL_BALANCING_MODE="CONNECTION"
     export GLOBAL_BALANCING_MODE="RATE"
-    export ZONE="us-central1-c"
     export REGIONAL_BALANCING_SCHEME="INTERNAL"
     export REGIONAL_BALANCING_PROTOCOL="TCP"
     export GLOBAL_BALANCING_SCHEME="EXTERNAL"
@@ -84,6 +83,7 @@ function teardown() {
     [[ "$output" =~ "maxRate: ${MAX_RATE}" ]]
     [[ "$output" =~ "loadBalancingScheme: ${GLOBAL_BALANCING_SCHEME}" ]]
     [[ "$output" =~ "protocol: ${GLOBAL_BALANCING_PROTOCOL}" ]]
+    [[ "$output" =~ "enableCDN: ${ENABLE_CDN}" ]]
 }
 
 @test "Verifying regional internal backend service" {
@@ -93,7 +93,6 @@ function teardown() {
         --region "${REGION}"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "balancingMode: ${REGIONAL_BALANCING_MODE}" ]]
-    [[ "$output" =~ "enableCDN: ${ENABLE_CDN}" ]]
     [[ "$output" =~ "loadBalancingScheme: ${REGIONAL_BALANCING_SCHEME}" ]]
     [[ "$output" =~ "protocol: ${REGIONAL_BALANCING_PROTOCOL}" ]]
     [[ "$output" =~ "  description: ${BC_DESCRIPTION}" ]]

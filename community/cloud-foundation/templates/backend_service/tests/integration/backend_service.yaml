@@ -14,7 +14,6 @@ resources:
       description: ${RES_DESCRIPTION}
       loadBalancingScheme: ${REGIONAL_BALANCING_SCHEME}
       timeoutSec: ${TIMEOUT}
-      enableCDN: ${ENABLE_CDN}
       sessionAffinity: ${SESSION}
       backends:
         - group: $(ref.regional-igm-${RAND}.instanceGroup)
@@ -28,6 +27,7 @@ resources:
       protocol: ${GLOBAL_BALANCING_PROTOCOL}
       healthCheck: $(ref.test-healthcheck-http-${RAND}.selfLink)
       loadBalancingScheme: ${GLOBAL_BALANCING_SCHEME}
+      enableCDN: ${ENABLE_CDN}
       backends:
         - group: $(ref.zonal-igm-${RAND}.instanceGroup)
           balancingMode: ${GLOBAL_BALANCING_MODE}
@@ -46,7 +46,7 @@ resources:
     type: compute.v1.instanceGroupManager
     properties:
       instanceTemplate: $(ref.instance-template-${RAND}.selfLink)
-      zone: ${ZONE}
+      zone: us-central1-c
       targetSize: 1
 
   - name: instance-template-${RAND}
