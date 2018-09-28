@@ -1,48 +1,36 @@
-# Projects
+# Project
 
-Templated project creation. This templates will:
+This template:
 
-1. Create a new project.
-2. Set the billing account on the new project.
-3. Set IAM permissions on the new project.
-4. Turn on a set of APIs in the new project.
-5. Create service accounts in the new project.
-6. Create an usage export Cloud Storage bucket in the new project
-
+1. Creates a new project.
+2. Sets a billing account for the new project
+3. Sets IAM permissions in the new project
+4. Turns on a set of APIs in the new project
+5. Creates service accounts for the new project
+6. Creates an usage export Cloud Storage bucket for the new projec
 
 ## Prerequisites
 
-The prerequisites to create a project via DM. You can perform some of these
-steps via the Cloud Console at https://console.cloud.google.com/
+Following are the prerequisites for creating a project via Deployment Manager. You can perform some of the steps via the Cloud Console at https://console.cloud.google.com/. The `gcloud` command line tool is used to deploy the configs.
 
-The `gcloud` command line tool is used for the deployment of the configs.
+`Note:` Permission changes can take up to 20 minutes to propagate. If you run commands before the propagation is completed, you may receive errors regarding the user not having permissions.
 
-Permission changes can take up to 20 minutes to propagate. Sometimes
-propagation is much faster, but if you run commands too early you may
-receive errors about the user not having permissions.
+1. Install [gcloud](https://cloud.google.com/sdk).
 
-1. **Install [gcloud](https://cloud.google.com/sdk)**
+2.  Create a project that will create and own the deployments (henceforth referred to as *DM Creation Project*). See:  https://cloud.google.com/resource-manager/docs/creating-managing-organization.
+    
+    `Important:` Because of the special permissions granted to the *DM Creation Project*, it should not be used for any purpose other than creating other projects.
 
-1.  **Create a project that will create and own the deployments**
-
-    * This will be called the *"DM Creation Project"* for the rest of these
-      instructions.
-    * See: https://cloud.google.com/resource-manager/docs/creating-managing-organization
-    * **IMPORTANT**: Because of the special permissions granted in later steps,
-      this *DM Creation Project* should not be used for any purpose other than
-      creating other projects.
-
-1.  **Activate the following APIs on the *DM Creation Project***
-
+3.  Activate the following APIs for the *DM Creation Project*:
     * Google Cloud Deployment Manager V2 API
     * Google Cloud Resource Manager API
     * Google Cloud Billing API
     * Google Identity and Access Management (IAM) API
     * Google Service Management API
 
-    You may use `gcloud services enable` command to do this:
+    You may use the `gcloud services enable` command to do this:
 
-    ```
+    ```shell
     gcloud services enable deploymentmanager.googleapis.com
     gcloud services enable cloudresourcemanager.googleapis.com
     gcloud services enable cloudbilling.googleapis.com
@@ -50,37 +38,23 @@ receive errors about the user not having permissions.
     gcloud services enable servicemanagement.googleapis.com
     ```
 
-1.  **Find the *Cloud Services* service account associated with the *DM Creation Project***
+4.  Find the *Cloud Services* service account associated with the *DM Creation Project*.
 
-    It will be in the form `<project_number>@cloudservices.gserviceaccount.com`
-    and listed under [IAM & admin](https://console.cloud.google.com/iam-admin/iam)
-    in Google Cloud Console. This will be called the *"DM Service Account"* for
-    the rest of these instructions.
-    * See https://cloud.google.com/resource-manager/docs/access-control-proj
+    It is formatted as `<project_number>@cloudservices.gserviceaccount.com`,
+    and is listed under [IAM & Admin](https://console.cloud.google.com/iam-admin/iam)
+    in Google Cloud Console. This account is henceforth referred to as the *DM Service Account*. See https://cloud.google.com/resource-manager/docs/access-control-proj.
 
-1.  **Create an Organization node**
+5.  Create an Organization node.
 
-    If you don't already have an Organization node under which you will create
-    projects, then create one following [these
-    instructions](https://cloud.google.com/resource-manager/docs/creating-managing-organization).
+    If you do not already have an Organization node under which you can create
+    projects, create that node following [these instructions](https://cloud.google.com/resource-manager/docs/creating-managing-organization).
 
-1.  **Give the *DM Service Account* the following permissions on the organization node:**
+6.  Grant the *DM Service Account* the following permissions on the Organization node:
+`roles/resourcemanager.projectCreator`. This is visible in the Cloud Console's IAM permissions in *Resource Manager -> Project Creator*. See https://cloud.google.com/resource-manager/docs/access-control-proj.
 
-    * `roles/resourcemanager.projectCreator`
-        * This is visible in Cloud Console's *IAM permissions in Resource Manager
-        ->  Project Creator.*
-    * See https://cloud.google.com/resource-manager/docs/access-control-proj
+7.  Create/find the *Billing Account* associated with the Organization. See: https://cloud.google.com/support/billing/. Take note of the *Billing Account*'s ID, which is formatted as follows:`00E12A-0AB8B2-078CE8`.
 
-1.  **Create/find a *Billing Account* associated with the organization**
-
-    * See: https://cloud.google.com/support/billing/
-    * Take note if the Billing Account ID that looks like `00E12A-0AB8B2-078CE8`
-
-1.  **Give the *DM Service Account* the following permissions on the Billing Account:**
-    * `roles/billing.user`
-        * This is visible in Cloud Console's IAM permissions in
-          *Billing -> Billing Account User*.
-
+8.  Give the *DM Service Account* the following permissions on the *Billing Account*: `roles/billing.user`. This is visible in Cloud Console's IAM permissions in *Billing -> Billing Account User*.
 
 ## Deployment
 
@@ -100,52 +74,50 @@ receive errors about the user not having permissions.
 - [gcp-types/compute-beta:compute.networks.delete](https://cloud.google.com/compute/docs/reference/rest/beta/networks)
 - [gcp-types/iam-v1:iam.projects.serviceAccounts.delete](https://cloud.google.com/iam/reference/rest/v1/projects.serviceAccounts)
 
-
 ### Properties
 
-See `properties` section in the schema files
+See the `properties` section in the schema file(s):
 
 -  [project](project.py.schema)
 
+### Usage
 
-### Deployment
+1. Clone the [Deployment Manager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
-#### Usage
-
-1. Clone the [DM Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
-2. Go to the [community/cloud-foundation](../../../cloud-foundation) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/project.yaml](examples/project.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
-
-
-For example:
-
-```
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
-cd community/cloud-foundation
-cp templates/project/examples/project.yaml my_project.yaml
-vim my_project.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_project.yaml
+```shell
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 ```
 
-#### Create
+2. Go to the [community/cloud-foundation](../../) directory:
 
-```
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_project.yaml
-```
-
-
-#### Delete
-
-```
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+```shell
+    cd community/cloud-foundation
 ```
 
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/project.yaml](examples/project.yaml):
+
+```shell
+    cp templates/project/examples/project.yaml my_project.yaml
+```
+
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```shell
+    vim my_project.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```shell
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+        --config my_project.yaml
+```
+
+6. In case you need to delete your deployment:
+
+```shell
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+```
 
 ## Examples
 

@@ -1,3 +1,8 @@
+# Test of the project template.
+#
+# Variables:
+#   RAND: a random string used by the testing suite.
+
 imports:
   - path: templates/project/project.py
     name: project.py
