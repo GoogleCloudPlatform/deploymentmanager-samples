@@ -27,7 +27,7 @@ See the `properties` section in the schema file(s):
 
 ### Usage
 
-1. Clone the [DM Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
+1. Clone the [Deployment Mmanager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
 ```shell
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
