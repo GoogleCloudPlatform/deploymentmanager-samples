@@ -3,7 +3,7 @@
 # In this example, an HAProxy load balancing instance is created to route traffic
 # between two existing managed instance groups:
 # * zones/us-central1-a/instanceGroups/instance-group-1
-# * zones/us-east1-b/instanceGroups/instance-group-2
+# * zones/us-east1-b/instanceGroups/instance-group-3
 
 imports:
   - path: templates/instance/instance.py
