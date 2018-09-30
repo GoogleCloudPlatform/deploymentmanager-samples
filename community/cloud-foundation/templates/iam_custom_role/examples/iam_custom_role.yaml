@@ -13,7 +13,7 @@ imports:
     name: organization_custom_role.py
 
 resources:
-  - name: test-custom-org-role
+  - name: example-custom-org-role
     type: organization_custom_role.py
     properties:
       orgId: <FIXME:OrgId>
@@ -23,7 +23,7 @@ resources:
       includedPermissions:
         - iam.roles.get
         - iam.roles.list
-  - name: test-project-custom-role
+  - name: example-project-custom-role
     type: project_custom_role.py
     properties:
       roleId: myCustomProjectRole
