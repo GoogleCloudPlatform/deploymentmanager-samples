@@ -11,11 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" This template creates an instance template. """
+""" This template creates an Instance Template. """
 
 
 def set_optional_property(receiver, source, property_name, rename_to=None):
-    """ If set, copies the given property value from one object to another """
+    """ If set, copies the given property value from one object to another 
+        and optionally rename it.
+    """
 
     rename_to = rename_to or property_name
     if property_name in source:
