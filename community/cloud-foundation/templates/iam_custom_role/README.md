@@ -6,7 +6,7 @@ This template creates a custom IAM role for an organization or a project.
 
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
-- Grant the [iam.roleAdmin, iam.organizationRoleAdmin or owner](https://cloud.google.com/iam/docs/understanding-custom-roles) IAM role to the project service account
+- Grant the [iam.roleAdmin, iam.organizationRoleAdmin or owner](https://cloud.google.com/iam/docs/understanding-custom-roles#required_permissions_and_roles) IAM role to the project service account
 
 ## Deployment
 
