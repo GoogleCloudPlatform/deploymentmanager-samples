@@ -38,7 +38,8 @@ def create_boot_disk(properties, zone, instance_name):
 
     disk_type = properties.get('diskType')
     if disk_type:
-        disk_params['diskType'] = 'zones/{}/diskTypes/{}'.format(zone, disk_type)
+        disk_params['diskType'] = 'zones/{}/diskTypes/{}'.format(zone,
+                                                                 disk_type)
 
     return boot_disk
 
@@ -72,13 +73,14 @@ def generate_config(context):
         'type': 'compute.v1.instance',
         'properties':{
             'zone': zone,
-            'machineType': 'zones/{}/machineTypes/{}'.format(zone, machine_type),
+            'machineType': 'zones/{}/machineTypes/{}'.format(zone,
+                                                             machine_type),
             'disks': [boot_disk],
             'networkInterfaces': [network]
         }
     }
 
-    for name in ['metadata', 'canIpForward']:
+    for name in ['metadata', 'serviceAccounts', 'canIpForward']:
         set_optional_property(instance['properties'], context.properties, name)
 
     return {
@@ -86,11 +88,11 @@ def generate_config(context):
         'outputs': [
             {
                 'name': 'internalIp',
-                'value': '$(ref.{}.networkInterfaces[0].networkIP)'.format(vm_name)
+                'value': '$(ref.{}.networkInterfaces[0].networkIP)'.format(vm_name) # pylint: disable=line-too-long
             },
             {
                 'name': 'externalIp',
-                'value': '$(ref.{}.networkInterfaces[0].accessConfigs[0].natIP)'.format(vm_name)
+                'value': '$(ref.{}.networkInterfaces[0].accessConfigs[0].natIP)'.format(vm_name) # pylint: disable=line-too-long
             },
             {
                 'name': 'name',

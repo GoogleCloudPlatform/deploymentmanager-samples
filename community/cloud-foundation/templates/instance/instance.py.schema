@@ -18,6 +18,9 @@ info:
   description: |
     Deploys compute instance attached to a custom (or default) network
 
+imports:
+  - path: instance.py
+
 required:
   - zone
   - machineType
@@ -78,15 +81,35 @@ properties:
     properties:
       items:
         type: array
-        description: A collection of metadata key-value pairs. 
-        item:
+        description: A collection of metadata key-value pairs.
+        items:
           type: object
           properties:
             key:
               type: string
             value:
-              type: string
-              
+              type: [string, number, boolean]
+  serviceAccounts:
+    type: array
+    description: |
+      A list of service accounts, with their specified scopes, authorized for
+      this instance. Only one service account per VM instance is supported.
+    items:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of the service account
+        scopes:
+          type: array
+          description: The list of scopes to be made available for this service account
+          items:
+            type: string
+            description: |
+              Access scope, e.g. 'https://www.googleapis.com/auth/compute.readonly'
+              Visit https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam
+              for more details
+
 outputs:
   properties:
     - externalIp:
