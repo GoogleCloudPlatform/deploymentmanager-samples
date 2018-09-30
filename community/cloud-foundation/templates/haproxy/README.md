@@ -1,7 +1,7 @@
 # HAProxy
 
 This template:
-- Creates a Compute Instance with an HAProxy installed
+- Creates a Compute Instance with an [HAProxy](http://www.haproxy.org/) installed
 - Configures HAProxy to load-balance traffic between one or more of the provided
 [instance groups](https://cloud.google.com/compute/docs/reference/rest/v1/instanceGroups)
 
