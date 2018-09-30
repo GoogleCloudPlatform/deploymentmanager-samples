@@ -13,26 +13,25 @@
 # limitations under the License.
 
 info:
-  title: IAM Project Level Custom Roles
+  title: Custom IAM Role (Project Level)
   author: Sourced Group Inc.
   description: |
-    Creates a custom project role under the specified organization ID.
-
+    Creates a custom project-level IAM role under the specified organization ID.
     For more information on this resource:
     https://cloud.google.com/iam/reference/rest/v1/projects.roles/create
 
-    To deploy custom project roles your organization will require the Identity
+    To deploy custom project-level roles, your project needs the Identity
     and Access Management (IAM) API to be enabled. You may also need to grant
     additional roles to the default Google APIs service account.
     See [Best Practices](https://cloud.google.com/deployment-manager/docs/best-practices/#permissions) for more information.
 
-    After a role has been deleted, existing bindings remain but are inactive.
-    The role can be undeleted within 7 days. After 7 days, the role enters a
+    After a role has been deleted, its bindings remain, in the inactive status.
+    The role can be undeleted within 7 days of deletion. After 7 days, the role is picked by a
     permanent deletion process that lasts 30 days. During this process, the
-    role and all bindings associated with the role are permanently removed,
-    and you cannot create a new role with the same role ID. After the role has
-    been permanently deleted -- which takes 37 days from the initial deletion
-    request -- a new role can be created using the deleted role ID.
+    role and all its bindings are permanently removed, and you cannot create a new role 
+    with the same role ID. After the role has been permanently deleted -- which 
+    takes 37 days from the initial deletion request -- a new role can be created using 
+    the deleted role's ID.
 
 imports:
   - path: project_custom_role.py
@@ -45,17 +44,17 @@ properties:
   roleId:
     type: string
     pattern: ^[a-zA-Z][0-9a-zA-Z]{7,63}$
-    description: A unique ID for the role.
+    description: A unique ID of the custom role.
   title:
     type: string
     description: The title of the custom role.
   description:
     type: string
-    description: A description of the custom role.
+    description: Description of the custom role.
   includedPermissions:
     type: array
     default: []
-    description: The permissions that this custom role includes.
+    description: Permissions that the custom role includes.
 
 documentation:
   - templates/iam_custom_role/README.md
