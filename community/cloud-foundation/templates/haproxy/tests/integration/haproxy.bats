@@ -98,7 +98,7 @@ function teardown() {
             sleep 10;
      done
 
-    # Exampine VM serial output
+    # Verify VM serial output
     run gcloud compute ssh "ilb-proxy-${RAND}" --zone us-central1-a \
         --command "sudo tail -n 15 /etc/haproxy/haproxy.cfg" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
