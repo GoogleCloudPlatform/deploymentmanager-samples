@@ -37,8 +37,8 @@ properties:
       For example, the priority for the first rule in the array becomes '1000', 
       for the second rule '1001', and so on. If the 'priority' field is not set in 
       any of the rules in the array, the ruleset is sorted by priority automatically. 
-      We strongly advise to consistenly setting (or not setting) the 'priority' field 
-      value throughout the ruleset.
+      We strongly advise being consistent in your use of the 'priority' field: 
+      either provide or skip values in all instances throughout the ruleset.
 
       Example:
         - name: allow-proxy-from-inside
