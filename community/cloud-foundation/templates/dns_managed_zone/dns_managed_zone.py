@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create a managed zone resource in clouddns """
+""" This template creates a managed zone resource in the Cloud DNS. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     resources = []
 
