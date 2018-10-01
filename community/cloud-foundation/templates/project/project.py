@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-This template creates a single project with the specified service 
+This template creates a single project with the specified service
 accounts and APIs enabled.
 """
 import copy
@@ -126,7 +126,7 @@ def activate_apis(properties):
             }
         )
 
-    # Return the API resources to enable other resources to use them as 
+    # Return the API resources to enable other resources to use them as
     # dependencies, to ensure that they are created first. For example,
     # the default VPC or service account.
     return resources, api_names_list
