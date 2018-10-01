@@ -1,4 +1,4 @@
-# Example on how to use the Org Policy template
+# Example of the organization policy template usage.
 #
 imports:
   - path: templates/org_policy/org_policy.py
