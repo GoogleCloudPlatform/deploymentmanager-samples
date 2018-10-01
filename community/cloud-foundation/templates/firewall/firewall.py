@@ -11,21 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" This template creates firewall rules for a network """
+""" This template creates firewall rules for a network. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     project = context.env['project']
     network = context.properties.get('network')
 
     resources = []
     for i, rule in enumerate(context.properties['rules'], 1000):
-        # Use VPC if specified in the properties, otherwise the user can either
-        # specify the network URL in the config, or if not specified in the
-        # config, the API defaults to 'global/networks/default' as per
-        # documentation
+        # Use VPC if specified in the properties. Otherwise, specify
+        # the network URL in the config. If the network is not specified in
+        # the config, the API defaults to 'global/networks/default'.
         if network and not rule.get('network'):
             rule['network'] = 'projects/{}/global/networks/{}'.format(
                 project,
