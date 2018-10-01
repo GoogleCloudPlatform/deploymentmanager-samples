@@ -40,7 +40,7 @@ See the `properties` section in the schema file(s):
 3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/org_policy.yaml](examples/org_policy.yaml):
 
 ```shell
-    cp templates/org_policy/exampples/org_policy.yaml my_org_policy.yaml
+    cp templates/org_policy/examples/org_policy.yaml my_org_policy.yaml
 ```
 
 4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
