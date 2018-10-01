@@ -6,19 +6,19 @@ TEST_NAME=$(basename "${BATS_TEST_FILENAME}" | cut -d '.' -f 1)
 
 export TEST_SERVICE_ACCOUNT="test-sa-${RAND}"
 
-# Create and save a random 10 char string in a file
+# Create a random 10-char string and save it in a file.
 RANDOM_FILE="/tmp/${CLOUD_FOUNDATION_ORGANIZATION_ID}-${TEST_NAME}.txt"
 if [[ ! -e "${RANDOM_FILE}" ]]; then
     RAND=$(head /dev/urandom | LC_ALL=C tr -dc a-z0-9 | head -c 10)
     echo ${RAND} > "${RANDOM_FILE}"
 fi
 
-# Set variables based on random string saved in the file
-# envsubst requires all variables used in the example/config to be exported
+# Set variables based on the random string saved in the file.
+# envsubst requires all variables used in the example/config to be exported.
 if [[ -e "${RANDOM_FILE}" ]]; then
     export RAND=$(cat "${RANDOM_FILE}")
     DEPLOYMENT_NAME="${CLOUD_FOUNDATION_PROJECT_ID}-${TEST_NAME}-${RAND}"
-    # Deployment names cannot have underscores. Replace with dashes.
+    # Replace underscores in the deployment name with dashes.
     DEPLOYMENT_NAME=${DEPLOYMENT_NAME//_/-}
     CONFIG=".${DEPLOYMENT_NAME}.yaml"
 fi
@@ -36,11 +36,11 @@ function delete_config() {
 }
 
 function setup() {
-    # Global setup - this gets executed only once per test file
+    # Global setup; this is executed once per test file.
     if [ ${BATS_TEST_NUMBER} -eq 1 ]; then
         gcloud compute networks create "network-${RAND}" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-            --description "integration test ${RAND}" \
+            --description "Integration test ${RAND}" \
             --subnet-mode custom
         gcloud compute networks subnets create "subnet-${RAND}-1" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
@@ -57,11 +57,11 @@ function setup() {
         create_config
     fi
 
-    # Per-test setup steps here
+    # Per-test setup steps.
 }
 
 function teardown() {
-    # Global teardown - this gets executed only once per test file
+    # Global teardown; this is executed once per test file.
     if [[ "$BATS_TEST_NUMBER" -eq "${#BATS_TEST_NAMES[@]}" ]]; then
         gcloud compute networks subnets delete "subnet-${RAND}-2" --region us-east1 \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
@@ -74,7 +74,7 @@ function teardown() {
         rm -f "${RANDOM_FILE}"
     fi
 
-    # Per-test teardown steps here
+    # Per-test teardown steps.
 }
 
 
@@ -83,7 +83,7 @@ function teardown() {
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
 }
 
-@test "Verifying roles were created in deployment ${DEPLOYMENT_NAME}" {
+@test "Verifying that roles were granted in deployment ${DEPLOYMENT_NAME}" {
     run gcloud beta compute networks subnets get-iam-policy "subnet-${RAND}-1" --region us-east1 \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" --filter="bindings.members:${TEST_SERVICE_ACCOUNT}"
     [[ "$output" =~ "serviceAccount:${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com" ]]
@@ -95,6 +95,6 @@ function teardown() {
     [[ "$output" =~ "roles/compute.networkUser" ]]
 }
 
-@test "Deployment Delete" {
+@test "Deleting deployment" {
     gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" -q --project "${CLOUD_FOUNDATION_PROJECT_ID}"
 }

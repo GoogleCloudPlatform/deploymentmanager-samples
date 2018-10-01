@@ -15,7 +15,7 @@
 info:
   title: Shared VPC Subnet IAM
   author: Sourced Group Inc.
-  description: Grants IAM roles for a user on a shared VPC subnet.
+  description: Grants IAM roles to a user on a shared VPC subnetwork
 
 required:
   - subnets
@@ -23,25 +23,25 @@ required:
 properties:
   subnets:
     type: array
-    description: Array of subnets and members to grant IAM roles to.
+    description: An array of subnetworks and members to grant IAM roles to.
     items:
       subnetId:
         type: string
-        description: The subnet Id
+        description: The subnet ID.
       region:
         type: string
-        description: The region that subnetId resides in.
+        description: The region the subnetId resides in.
       role:
         type: string
-        description: The role to grant members.
+        description: The role to grant.
       members:
         type: array
-        description: List of identities
+        description: A list of member identities.
         items:
           type: string
           description: |
-            Specifies the identity requesting access for a Cloud Platform
-            resource. Members can have the following values:
+            The identity of a member requesting access for a Cloud Platform
+            resource. Can have the following values:
               - user:{emailid} - An email address that represents a specific
                 Google account. For example, user:name@example.com
               - serviceAccount:{emailid} - An email address that represents a
@@ -56,10 +56,10 @@ outputs:
   properties:
     - policies:
       type: array
-      description: List of IAM policy resource names.
+      description: A list of IAM policy resource names.
       items:
         type: string
-        description: A IAM policy resource name.
+        description: An IAM policy resource name.
 
 documentation:
   - templates/shared_vpc_subnet_iam/README.md
