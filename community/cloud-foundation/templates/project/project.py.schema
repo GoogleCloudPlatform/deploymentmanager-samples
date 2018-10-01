@@ -16,9 +16,9 @@ info:
   title: Project
   author: Sourced Group Inc.
   description: |
-    Deploys a single project. The project is created, has a billing account
-    attached, permissions altered, APIs activated, and service accounts
-    created.
+    Supports creation of a single project. The project is created with a
+    billing account attached, permissions altered, APIs activated, and 
+    service accounts created.
 
 required:
   - billingAccountId
@@ -31,11 +31,11 @@ properties:
       human-readable name that is different from the project ID.
   parent:
     type: object
-    description: The parent of the project
+    description: The parent of the project.
     properties:
       type:
         type: string
-        decription: The parent type (organization or folder)
+        decription: The parent type (organization or folder).
         enum:
           - organization
           - folder
@@ -43,7 +43,7 @@ properties:
       id:
         type: [integer, string]
         description: |
-          The ID of the parent that the projects will be under.
+          The ID of the projects' parent.
   billingAccountId:
     type: string
     description: |
@@ -57,9 +57,10 @@ properties:
   usageExportBucket:
     type: boolean
     description: |
-      Whether an usage export bucket should be created.
-      This option is not true by default, so it doesn't inadvertently incur
-      costs to the user, but it's strongly suggested to be enabled.
+      Defines whether a usage export bucket must be created.
+      False by default so as to not inadvertently incur
+      costs to the user. It is strongly suggested to be enabled
+      (set to True).
   serviceAccounts:
     type: array
     default: []
@@ -71,20 +72,20 @@ properties:
       displayName:
         type: string
         description: |
-          The name to display for the service account. If not set the display
-          name will use the `accountId` as the display name.
+          The name to display for the service account. If not set, `accountId`
+          is used as the display name.
       roles:
         type: array
         items:
           type: string
-          description: A list of roles to grant the service account.
+          description: The list of roles to grant the service account.
       networkAccess:
         type: boolean
         description: |
-          Boolean flag if set to True grants shared vpc subnet IAM permissions
-          to this service account for the subnet specified by the
+          If True, grants the shared VPC subnet IAM permissions
+          to the service account for the subnet specified by the
           `sharedVPCSubnets.subnetId` field.
-          This field should not be set if `sharedVPCHost` is set to True.
+          This field must not be set if `sharedVPCHost` is True.
   groups:
     type: array
     default: []
@@ -96,17 +97,17 @@ properties:
         type: array
         items:
           type: string
-          description: A list of roles to grant the Google group.
+          description: The list of roles to grant the Google group.
   concurrentApiActivation:
     type: boolean
     default: False
     description: |
-      Boolean flag if set to True activates all the requested APIs
-      concurrently. When set to False, the apis are activated serially.
+      If True, activates all the requested APIs concurrently.
+      When set to False, the APIs are activated serially.
       Concurrent activation makes for faster deployment but could potentially
-      fail the deployment exceeding the quota limits, make sure to request for
-      adequate quota before using this option. Serial activation tends to be a
-      lot slower.
+      fail the deployment exceeding the quota limits. Make sure to request
+      adequate quota before using this option. Serial activation tends to be
+      significantly slower.
   sharedVPC:
     type: string
     description: |
@@ -115,35 +116,35 @@ properties:
   sharedVPCSubnets:
     type: array
     description: |
-      The IDs of specific shared VPC subnets to share into the new project.
+      The IDs of specific shared VPC subnets to share in the new project.
     items:
       subnetId:
         type: string
         description: |
           The ID of the subnet to set IAM policies on. For example,
-          `test-subnetwork-1`
+          `test-subnetwork-1`.
       region:
         type: string
         description: The region of the subnet.
   sharedVPCHost:
     type: boolean
     description: |
-      Boolean flag if set to True indicates that this project to be used as a
+      If set to True, indicates that this project is to be used as a
       host project for Shared VPC networks.
-      The `sharedVPC` and `sharedVPCSubnets` property cannot be set if this
+      The `sharedVPC` and `sharedVPCSubnets` properties cannot be set if this
       property is set.
   removeDefaultVPC:
     type: boolean
     default: True
     description: |
-      Boolean flag if set to True will remove the default VPC that is
-      provisioned when a project is created.
+      If True, removes the default VPC that is provisioned when a project
+      is created.
   removeDefaultSA:
     type: boolean
     default: True
     description: |
-      Boolean flag if set to True will remove the default service account. This
-      SA is in the form <projectID>@cloudservices.gserviceaccount.com.
+      If True, removes the default service account. This SA is in the 
+      <projectID>@cloudservices.gserviceaccount.com form.
 
 outputs:
   properties:
