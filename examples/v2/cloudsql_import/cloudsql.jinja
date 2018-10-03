@@ -1,0 +1,118 @@
+{#
+  20180716 - ohammami <osm.hammami@gmail.com>
+  version 0.1
+#}
+
+{% set ID = env['name'] %}
+
+resources:
+- name: {{ ID }}-master
+  type: sqladmin.v1beta4.instance
+  properties:
+    backendType: SECOND_GEN
+    instanceType: CLOUD_SQL_INSTANCE
+    databaseVersion: MYSQL_5_7
+    region: {{ properties['region'] }}
+    settings:
+      tier: {{ properties['machinetype'] }}
+      dataDiskSizeGb: {{ properties['dataDiskSizeGb'] }}
+      dataDiskType: PD_SSD
+      storageAutoResize: true
+      locationPreference:
+        zone: {{ properties['zone'] }}
+      activationPolicy: ALWAYS
+      backupConfiguration:
+        enabled: true
+        binaryLogEnabled: true
+        startTime: 00:00
+{% if properties['authorization'] %}
+      ipConfiguration:
+        authorizedNetworks:
+  {% for i in range(properties['authorization']| length) %}
+          - name: {{ properties['authorization'][i]['name'] }}
+            value: {{ properties['authorization'][i]['network'] }}
+  {% endfor %}
+{% endif %}
+
+{% if properties['databases'] %}
+  {% for i in range(properties['databases']| length) %}
+- name: {{ ID }}-db-{{ properties['databases'][i]['name'] }}
+  type: sqladmin.v1beta4.database
+  properties:
+    name: {{ properties['databases'][i]['name'] }}
+    instance: $(ref.{{ ID }}-master.name)
+    {% if properties['databases'][i]['charset'] %}
+    charset: {{ properties['databases'][i]['charset'] }}
+    {% else %}
+    charset: utf8
+    {% endif %}
+    {% if (i - 1) >= 0 %}
+  metadata:
+    dependsOn:
+      - {{ ID }}-db-{{ properties['databases'][i - 1]['name'] }}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+- name: {{ ID }}-user-root
+  type: sqladmin.v1beta4.user
+  properties:
+    name: root
+    host: "%" 
+    instance: $(ref.{{ ID }}-master.name)
+    password: {{ properties['rootpass'] }}
+{% if properties['databases'] %}
+  metadata:
+    dependsOn:
+      - {{ ID }}-db-{{ properties['databases'][(properties['databases']| length) - 1]['name'] }}
+{% endif %}
+
+{% if properties['users'] %}
+  {% for i in range(properties['users']| length) %}
+- name: {{ ID }}-user-{{ properties['users'][i]['name'] }}
+  type: sqladmin.v1beta4.user
+  properties:
+    name: {{ properties['users'][i]['name'] }}
+{% if properties['users'][i]['host'] %}
+    host: "{{ properties['users'][i]['host'] }}"
+{% else %}
+    host: "%"
+{% endif %}
+    instance: $(ref.{{ ID }}-master.name)
+    password: {{ properties['users'][i]['password']  }}
+  metadata:
+    dependsOn:
+    {% if (i - 1) >= 0 %}
+      - {{ ID }}-user-{{ properties['users'][i - 1]['name'] }}
+    {% else %}
+      - {{ ID }}-user-root
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if properties['sqlimportstructure'] %}
+- name: {{ ID }}-import-structure
+  action: gcp-types/sqladmin-v1beta4:sql.instances.import
+  properties:
+    instance: {{ ID }}-master
+    project: {{ env['project'] }}
+    importContext:
+      kind: sql#importContext
+      fileType: SQL
+      uri: {{ properties['sqlimportstructure'] }}
+  metadata:
+    dependsOn:
+  {% if properties['users'] %}
+      - {{ ID }}-user-{{ properties['users'][(properties['users']| length) - 1]['name'] }}
+  {% else %}
+      - {{ ID }}-user-root
+  {% endif %}
+{% endif %}
+
+outputs:
+  - name: {{ ID }}-master-ip
+    value: $(ref.{{ ID }}-master.ipAddresses[0].ipAddress)
+  - name: {{ ID }}-master-connectionName
+    value: $(ref.{{ ID }}-master.connectionName)
+  - name: {{ ID }}-master-serviceAccount
+    value:  $(ref.{{ ID }}-master.serviceAccountEmailAddress)

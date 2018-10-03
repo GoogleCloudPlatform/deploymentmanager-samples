@@ -1,0 +1,9 @@
+resources:
+- name: group
+  type: gcp-types/monitoring-v3:projects.groups
+  properties:
+    displayName: My group
+    filter: resource.type="gce_instance"
+      AND resource.metadata.name=starts_with("foo")
+    isCluster: false
+

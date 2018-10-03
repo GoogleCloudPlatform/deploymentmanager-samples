@@ -1,0 +1,13 @@
+resources:
+- name: metric_descriptor
+  type: gcp-types/monitoring-v3:projects.metricDescriptors
+  properties:
+    displayName: My metric descriptor
+    labels:
+    - key: response_code
+      description: HTTP response code
+    metricKind: CUMULATIVE
+    type: custom.googleapis.com/agent/log_entry_retry_count
+    unit: "1"
+    valueType: INT64
+

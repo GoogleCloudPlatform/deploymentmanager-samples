@@ -79,13 +79,16 @@ the user not having permissions.
         *   Visible in Cloud Console's IAM permissions in Billing -> Billing
             Account User.
 
+>**Caution**: These steps give the DM Service Account elevated privileges, and should be used
+>with care.
 
 ## Using the templates.
 
 Once the prerequisites have been completed, projects can be created with
-Deployment Manager via the API or the CLI. **Users SHOULD NOT use the DM
-Creation Project to create any other resources. It SHOULD be dedicated to
-project creation exclusively.**
+Deployment Manager via the API or the CLI.
+
+We recommend that you use the DM Creation Project primarily to create new projects
+and their resources. Avoid creating other GCP resources in the Creation project.
 
 1.  Now customize the templates for your organization. You will need to:
 

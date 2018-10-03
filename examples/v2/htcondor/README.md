@@ -31,6 +31,9 @@ To deploy, you must have a GCP account and have gcloud installed.
         zone: us-central1-f
         email: your.email@provider.com
         instancetype: n1-standard-4
+        instanceosfamily: centos
+        instanceosversion: 6
+        condorversion: 8.4.11-1.el7
     ```
 
     *   the `count` specifies the number of compute nodes in the cluster

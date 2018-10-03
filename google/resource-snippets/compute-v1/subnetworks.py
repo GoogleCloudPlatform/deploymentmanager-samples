@@ -28,10 +28,19 @@ def GenerateConfig(context):
   network = ComputeResource('network', compute_constants.NETWORKS, {
       'autoCreateSubnetworks': False
   })
-  ComputeResource('subnet', compute_constants.SUBNETWORKS, {
+  subnetwork = ComputeResource('subnet', compute_constants.SUBNETWORKS, {
       'network': network.SelfLink(),
       'region': region,
-      'ipCidrRange': properties['ipCidrRange']
+      'ipCidrRange': properties['ipCidrRange'],
   })
-
+  if 'secondaryIpRanges' in properties:
+    subnetwork['secondaryIpRanges'] = properties['secondaryIpRanges']
+  if 'enableFlowLogs' in properties:
+    subnetwork['enableFlowLogs'] = properties['enableFlowLogs']
+  if 'allowSubnetCidrRoutesOverlap' in properties:
+    subnetwork['allowSubnetCidrRoutesOverlap'] = properties['allowSubnetCidrRoutesOverlap']
+  if 'privateIpGoogleAccess' in properties:
+    subnetwork['privateIpGoogleAccess'] = properties['privateIpGoogleAccess']
+  if 'description' in properties:
+    subnetwork['description'] = properties['description']
   return Resources()
