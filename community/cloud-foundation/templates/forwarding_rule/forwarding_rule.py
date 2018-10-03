@@ -74,7 +74,7 @@ def generate_config(context):
         'region',
         'target',
         'loadBalancingScheme',
-        'subnetwork'
+        'subnetwork',
         'network',
         'backendService',
         'ipVersion'
