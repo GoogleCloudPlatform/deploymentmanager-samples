@@ -72,7 +72,7 @@ function teardown() {
     run gcloud compute instance-groups managed describe "zonal-igm-${RAND}" \
         --format "yaml(autoscaler)" --zone "${ZONE}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "zonal-mig-${RAND}" ]]
+    [[ "$output" =~ "zonal-autoscaler-${RAND}" ]]
     [[ "$output" =~ "coolDownPeriodSec: ${COOL_DOWN_PERIOD}" ]]
     [[ "$output" =~ "utilizationTarget: ${CPU_UTILIZATION_2}" ]]
     [[ "$output" =~ "description: ${DESCRIPTION}" ]]
