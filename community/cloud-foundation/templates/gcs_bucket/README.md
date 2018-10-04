@@ -1,12 +1,12 @@
-# Google Cloud Storage Buckets
+# Google Cloud Storage Bucket
 
-This Template creates a Google Cloud Storage bucket.
+This template creates a Google Cloud Storage bucket.
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
-- Grant [storage.admin](https://cloud.google.com/storage/docs/access-control/iam-roles) role to the Deployment Manager service account
+- Grant the [storage.admin](https://cloud.google.com/storage/docs/access-control/iam-roles) IAM role to the Deployment Manager service account
 
 ## Deployment
 
@@ -16,7 +16,7 @@ This Template creates a Google Cloud Storage bucket.
 
 ### Properties
 
-See `properties` section in the schema file(s):
+See the `properties` section in the schema file(s):
 
 - [gcs_bucket](gcs_bucket.py.schema)
 
@@ -63,6 +63,6 @@ See `properties` section in the schema file(s):
 
 ## Examples
 
-- [Create Storage Bucket](examples/gcs_bucket.yaml)
-- [Create Storage Bucket with LifeCycle Enabled](examples/gcs_bucket_lifecycle.yaml)
-- [Create Storage Bucket with IAM Bindings](examples/gcs_bucket_iam_bindings.yaml)
+- [Storage Bucket](examples/gcs_bucket.yaml)
+- [Storage Bucket with LifeCycle Enabled](examples/gcs_bucket_lifecycle.yaml)
+- [Storage Bucket with IAM Bindings](examples/gcs_bucket_iam_bindings.yaml)

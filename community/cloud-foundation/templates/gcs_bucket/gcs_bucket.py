@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Creates a cloud storage bucket. """
+""" This template creates a Google Cloud Storage bucket. """
 
 
 def generate_config(context):
@@ -52,7 +52,7 @@ def generate_config(context):
 
     resources.append(bucket)
 
-    # If IAM policy bindings are defined then those bindings need to be applied
+    # If IAM policy bindings are defined, apply these bindings.
     storage_provider_type = 'gcp-types/storage-v1:storage.buckets.setIamPolicy'
     bindings = context.properties.get('bindings', [])
     if bindings:
