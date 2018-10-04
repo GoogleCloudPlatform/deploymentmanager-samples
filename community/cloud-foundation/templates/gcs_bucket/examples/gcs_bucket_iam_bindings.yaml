@@ -1,0 +1,33 @@
+# Example on how to use the cloud storage bucket template.
+#
+# In this example, a storage bucket is created in location us-east1.
+# Cloud storage bucket names should be unique globally.
+# For bucket and object naming guidelines
+# Refer to https://cloud.google.com/storage/docs/naming for more details
+#
+# IAM Policies are also applied with the `bindings` section.
+#
+# Replace the following with appropirate values
+# <FIXME:bucket_name>: A globally unique storage bucket name.
+# <FIXME:user_account_email_address>: A valid user account
+# <FIXME:service_account_email_address>: A valid service account email address
+# Refer to https://cloud.google.com/storage/docs/json_api/v1/buckets for more details
+
+imports:
+  - path: templates/gcs_bucket/gcs_bucket.py
+    name: gcs_bucket.py
+
+resources:
+  - name: <FIXME:bucket_name>
+    type: gcs_bucket.py
+    properties:
+      name: <FIXME:bucket_name>
+      location: us-east1
+      versioning:
+        enabled: True
+      bindings:
+        - role: roles/storage.objectViewer
+          members:
+            - user:<FIXME:user_account_email_address>
+            - serviceAccount:<FIXME:service_account_email_address>
+

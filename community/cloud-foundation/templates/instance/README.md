@@ -1,11 +1,12 @@
 # Instance
 
-Templated instance deployment
+This template creates a Compute Instance.
 
 ## Prerequisites
 
 - Install [gcloud](https://cloud.google.com/sdk)
-- Create a [GCP project, setup billing, enable requisite APIs](../project/README.md)
+- Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
+- Grant the [compute.admin](https://cloud.google.com/compute/docs/access/iam) IAM role to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
 
 ## Deployment
 
@@ -15,52 +16,49 @@ Templated instance deployment
 
 ### Properties
 
-See `properties` section in the schema files
+See the `properties` section in the schema file(s):
 
 - [Instance](instance.py.schema)
 
-### Outputs
+### Usage
 
-See `outputs` section in the schema files
+1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
-- [Instance](instance.py.schema)
+```shell
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+```
 
-### Deployment
+2. Go to the [community/cloud-foundation](../../) directory:
 
-#### Usage
+```shell
+    cd community/cloud-foundation
+```
 
-1. Clone the [DM Samples_repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
-2. Go to the [community/cloud-foundation](../../) directory
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/instance.yaml](examples/instance.yaml)
-4. Change the values in the config file to match your specific GCP setup.
-   Refer to the properties in the schema files described above.
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
-   with your with your own deployment name
+3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/instance.yaml](examples/instance.yaml):
 
-For example:
+```shell
+    cp templates/instance/examples/instance.yaml my_instance.yaml
+```
 
-``` bash
-git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
-cd community/cloud-foundation
-cp templates/instance/examples/instance.yaml my_instance.yaml
-vim my_instance.yaml  # <== change values to match your GCP setup
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+4. Change the values in the config file to match your specific GCP setup (for properties, refer to the schema files listed above):
+
+```shell
+    vim my_instance.yaml  # <== change values to match your GCP setup
+```
+
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant deployment name):
+
+```shell
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
     --config my_instance.yaml
 ```
 
-#### Create
+6. In case you need to delete your deployment:
 
-``` bash
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_instance.yaml
-```
-
-#### Delete
-
-``` bash
-gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+```shell
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
 
 ## Examples
 
-- [Create Compute Instance with SSD drive and nginx installed](examples/instance.yaml)
+- [Compute Instance](examples/instance.yaml)

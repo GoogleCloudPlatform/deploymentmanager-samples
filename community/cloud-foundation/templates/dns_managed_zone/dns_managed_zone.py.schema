@@ -16,7 +16,7 @@ info:
   title: Cloud DNS Managed Zone
   author: Source Group Inc.
   description: |
-    Creates a cloud dns managed zone
+    Creates a managed zone in the Cloud DNS.
     For more information on this resource
     - https://cloud.google.com/dns/zones/
 
@@ -31,37 +31,37 @@ properties:
   zoneName:
     type: string
     description: |
-      User assigned name for the managed zone.
-      This is required by Cloud DNS
+      A user-assigned name for the managed zone.
+      This is required by the Cloud DNS.
   dnsName:
     type: string
     pattern: \.$
     description: |
-      The DNS name of this managed zone, for instance "example.com.".
-      Just assert that it ends in a dot, as that is the most common mistake.
+      The DNS name of the managed zone; for example, "example.com."
+      Make sure that the value ends with a period "."
   description:
     type: string
     pattern: ^.{0,1023}$
     description: |
-      Description for the managed zone name. Mutable string of at most
-      1024 characters associated with this resource for the users convenience.
-      Has no effect on the managed zone's function.
+      A description of the managed zone. A mutable string, max 1024 characters 
+      long. Associated with the resource for users' convenience; does not affect 
+      managed zone's function.
 
 outputs:
   properties:
     - dnsName:
         type: string
-        description: DNS Name for the managed zone
+        description: The DNS name of the managed zone.
     - managedZoneDescription:
         type: string
-        description: Description of the managed zone.
+        description: The description of the managed zone.
     - nameServers:
         type: array
         description: |
           The list of nameservers that will be authoritative for this domain.
     - managedZoneName:
         type: string
-        description: Managed zone resource name
+        description: The managed zone's resource name.
 
 documentation:
   - templates/dns_managed_zone/README.md

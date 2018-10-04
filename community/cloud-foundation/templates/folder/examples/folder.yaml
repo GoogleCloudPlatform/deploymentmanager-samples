@@ -1,7 +1,7 @@
-# Example on how to use the Folder template
+# Example of the Folder template usage.
 #
-# Replace the `orgId` or `folderId` place holder value with your
-# organization Id or folder Id respectively.
+# Replace `orgId` or `folderId` with your
+# organization ID or folder ID, respectively.
 
 imports:
 - path: templates/folder/folder.py
@@ -13,8 +13,8 @@ resources:
   properties:
     folders:
       - name: org-folder
-        orgId: organizations/111222333444
+        orgId: organizations/<FIXME:org-id-example:111222333444>
         displayName: Folder under Organization
       - name: folder-folder
-        folderId: folders/1234567890
+        folderId: folders/<FIXME:folder-id-example:1234567890>
         displayName: Folder under Folder

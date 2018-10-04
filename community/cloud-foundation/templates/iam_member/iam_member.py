@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Set a IAM Policy """
+""" This template creates an IAM policy member. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     project_id = context.env['project']
     policy_get_name = 'get-iam-policy-{}'.format(project_id)
@@ -33,8 +33,7 @@ def generate_config(context):
 
     resources = [
         {
-            # Get the IAM policy first to avoid to remove any existing
-            # bindings.
+            # Get the IAM policy first to avoid removing existing bindings.
             'name': policy_get_name,
             'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',  # pylint: disable=line-too-long
             'properties': {
@@ -42,8 +41,8 @@ def generate_config(context):
             }
         },
         {
-            # Set the IAM policy patching the existing policy with what is
-            # in the config.
+            # Set the IAM policy by patching the existing policy with the
+            # config contents.
             'name': policy_add_name,
             'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',  # pylint: disable=line-too-long
             'properties':
@@ -60,7 +59,7 @@ def generate_config(context):
             'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',  # pylint: disable=line-too-long
             'metadata':
                 {
-                    # The policy is removed when the resource is deleted
+                    # The policy is removed when the resource is deleted.
                     'runtimePolicy': ['DELETE'],
                 },
             'properties':
@@ -69,7 +68,7 @@ def generate_config(context):
                     'policy': '$(ref.' + policy_add_name + ')',
                     'gcpIamPolicyPatch':
                         {
-                            # Removing roles that were previously set
+                            # Remove the previously created roles.
                             'remove': policies_to_add
                         }
                 }

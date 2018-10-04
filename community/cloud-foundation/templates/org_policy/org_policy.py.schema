@@ -13,9 +13,9 @@
 # limitations under the License.
 
 info:
-  title: Org Policies
+  title: Organization Policy
   author: Sourced Group Inc.
-  description: Deploys Organizational Policies
+  description: Creates organizational policies.
 
 imports:
   - path: org_policy.py
@@ -27,12 +27,11 @@ required:
 properties:
   projectId:
     type: string
-    description: The project ID
+    description: The project ID.
   policies:
     type: array
     description: |
-      The policies to be applied to the project. It's an array of policies as
-      defined by the documentation in
+      An array of policies to be applied to the project, defined in documentation
       https://cloud.google.com/resource-manager/reference/rest/v1/Policy
       For example:
         - constraint: constraints/compute.vmExternalIpAccess

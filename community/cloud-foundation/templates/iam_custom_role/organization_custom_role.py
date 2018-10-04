@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates custom IAM Organization Roles."""
+"""This template creates a custom IAM Organization role."""
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     org_id = context.properties['orgId']
     included_permissions = context.properties['includedPermissions']
 
     role = {
         'includedPermissions': included_permissions,
-        # Default the stage to General Availability
+        # Default the stage to General Availability.
         'stage': 'GA'
     }
 

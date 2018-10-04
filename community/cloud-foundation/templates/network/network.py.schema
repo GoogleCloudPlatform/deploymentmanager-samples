@@ -16,7 +16,7 @@ info:
   title: Network
   author: Sourced Group Inc.
   description: |
-    Deploys a Network.
+    Creates a network.
 
     For more information on this resource:
       - https://cloud.google.com/compute/docs/reference/rest/v1/networks
@@ -24,7 +24,7 @@ info:
 imports:
   - path: subnetwork.py
 
-#required:
+# required:
 #  - name
 
 properties:
@@ -35,12 +35,12 @@ properties:
     type: boolean
     default: false
     description: |
-      If true, the newly created network is assigned the default CIDR of
-      10.128.0.0/9 and it automatically creates one subnetwork per region.
+      If "true": (a) the newly created network is assigned the default CIDR of
+      10.128.0.0/9; and (b) one subnetwork per region is created automatically.
   subnetworks:
     type: array
     description: |
-      An array of subnetworks, as defined by the `subnetwork.py` template.
+      An array of subnetworks, as defined in the `subnetwork.py` template.
       Example:
         - name: test-subnetwork-1
           region: us-east1
@@ -57,10 +57,10 @@ outputs:
   properties:
     - name:
         type: string
-        description: The network resource name
+        description: The network resource name.
     - networkUrl:
         type: string
-        description: The selfLink URL for the network resource
+        description: The selfLink URL for the network resource.
 
 documentation:
   - templates/network/README.md

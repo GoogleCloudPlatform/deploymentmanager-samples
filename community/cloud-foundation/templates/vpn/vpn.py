@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates a VPN Tunnel, gateway and forwarding rules."""
+"""This template creates a VPN tunnel, gateway, and forwarding rules."""
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     network = generate_network_url(
         context.env['project'],
@@ -31,7 +31,7 @@ def generate_config(context):
 
     resources = [
         {
-            # Target VPN gateway resource
+            # The target VPN gateway resource.
             'name': target_vpn_gateway,
             'type': 'compute.v1.targetVpnGateway',
             'properties':
@@ -41,7 +41,7 @@ def generate_config(context):
                 }
         },
         {
-            # Reserved address resource
+            # The reserved address resource.
             'name': static_ip,
             'type': 'compute.v1.address',
             'properties': {
@@ -49,7 +49,7 @@ def generate_config(context):
             }
         },
         {
-            # Forwarding rule resource for ESP traffic
+            # The forwarding rule resource for the ESP traffic.
             'name': esp_rule,
             'type': 'compute.v1.forwardingRule',
             'properties':
@@ -61,7 +61,7 @@ def generate_config(context):
                 }
         },
         {
-            # Forwarding rule resource for UDP traffic on port 4500
+            # The forwarding rule resource for the UDP traffic on port 4500.
             'name': udp_4500_rule,
             'type': 'compute.v1.forwardingRule',
             'properties':
@@ -74,7 +74,7 @@ def generate_config(context):
                 }
         },
         {
-            # Forwarding rule resource for UDP traffic on port 500
+            # The forwarding rule resource for the UDP traffic on port 500
             'name': udp_500_rule,
             'type': 'compute.v1.forwardingRule',
             'properties':
@@ -87,7 +87,7 @@ def generate_config(context):
                 }
         },
         {
-            # VPN tunnel resource
+            # The VPN tunnel resource.
             'name': vpn_tunnel,
             'type': 'compute.v1.vpnTunnel',
             'properties':
@@ -118,9 +118,9 @@ def generate_config(context):
             }
         },
         {
-            # An action that is executed after the VPN_TUNNEL, it calls the
+            # An action that is executed after the vpn_tunnel function. It calls the
             # method patch by ID on the descriptor document
-            # https://www.googleapis.com/discovery/v1/apis/compute/v1/rest
+            # https://www.googleapis.com/discovery/v1/apis/compute/v1/rest.
             'name': router_vpn_binding,
             'action': 'gcp-types/compute-v1:compute.routers.patch',
             'properties':
@@ -184,12 +184,12 @@ def generate_config(context):
 
 
 def generate_network_url(project_id, network):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/global/networks/{}'.format(project_id, network)
 
 
 def generate_router_url(project_id, region, router):
-    """Format the resource name to a resource URI"""
+    """Format the resource name as a resource URI."""
     return 'projects/{}/regions/{}/routers/{}'.format(
         project_id,
         region,

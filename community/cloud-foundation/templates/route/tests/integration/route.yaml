@@ -1,7 +1,7 @@
-# Example on how to use the route template
+# Test of the route template.
 #
 # Variables:
-#   RAND: Just a random string used mostly by the testing suite.
+#   RAND: A random string used by the testing suite.
 #
 
 imports:

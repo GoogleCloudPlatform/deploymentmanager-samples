@@ -1,10 +1,10 @@
-# Example on how to use the IAM Custom Role templates
+# Example of the IAM custom role template usage.
 #
 # In this example, two custom roles are created:
 #   1- a custom organizational role (test-custom-org-role)
 #   2- a custom project role (test-project-role)
 #
-# Replace the `orgId` placeholder value with your organization ID.
+# Replace `orgId` with your organization ID.
 
 imports:
   - path: templates/iam_custom_role/project_custom_role.py
@@ -13,17 +13,17 @@ imports:
     name: organization_custom_role.py
 
 resources:
-  - name: test-custom-org-role
+  - name: example-custom-org-role
     type: organization_custom_role.py
     properties:
-      orgId: "12345678901234567890"
+      orgId: <FIXME:OrgId>
       roleId: myCustomOrgRole
       title: My Org Role Title
       description: My Org Role Description
       includedPermissions:
         - iam.roles.get
         - iam.roles.list
-  - name: test-project-custom-role
+  - name: example-project-custom-role
     type: project_custom_role.py
     properties:
       roleId: myCustomProjectRole

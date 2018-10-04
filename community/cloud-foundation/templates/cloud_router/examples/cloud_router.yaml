@@ -1,6 +1,6 @@
-# Example on how to use the Cloud Router templates
+# Example of the Cloud Router template usage.
 #
-# Replace the `network` place holder value with your network name.
+# Replace `test-network` with your network's name.
 
 imports:
   - path: templates/cloud_router/cloud_router.py

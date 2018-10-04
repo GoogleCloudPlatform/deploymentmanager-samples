@@ -1,9 +1,10 @@
-# Example on how to use the firewall template
+# Example of the firewall template usage.
 #
-# In this example, an array of firewall rules are applied to the
-# 'network-test' VPC.
+# In this example, an array of firewall rules is applied to the
+# 'network' VPC.
 #
-
+# Replace 'network-name' with a valid VPC network name.
+#
 imports:
   - path: templates/firewall/firewall.py
     name: firewall.py
@@ -12,7 +13,7 @@ resources:
   - name: test-firewall
     type: firewall.py
     properties:
-      network: network-test
+      network: <FIXME:network-name>
       rules:
         - name: allow-proxy-from-inside
           allowed:

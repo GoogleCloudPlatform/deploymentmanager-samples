@@ -1,0 +1,38 @@
+# Example on how to use the cloud storage bucket template with lifecycle
+# and object versioning enabled.
+#
+# In this example, a storage bucket is created in location us-east1.
+# Cloud storage bucket names should be unique globally.
+# For bucket and object naming guidelines
+# Refer to https://cloud.google.com/storage/docs/naming for more details
+#
+# Replace the following with appropriate values
+# <FIXME:bucket_name>: A globally unique storage bucket name.
+# Refer to https://cloud.google.com/storage/docs/json_api/v1/buckets for more details
+
+imports:
+  - path: templates/gcs_bucket/gcs_bucket.py
+    name: gcs_bucket.py
+
+resources:
+  - name: <FIXME:bucket_name>
+    type: gcs_bucket.py
+    properties:
+      name: <FIXME:bucket_name>
+      location: us-east1
+      versioning:
+        enabled: True
+      lifecycle:
+        rule:
+          - action:
+              type: SetStorageClass
+              storageClass: NEARLINE
+            condition:
+              age: 36500
+              createdBefore: "2018-08-16"
+              isLive: false
+              matchesStorageClass:
+                - REGIONAL
+                - STANDARD
+                - COLDLINE
+              numNewerVersions: 5

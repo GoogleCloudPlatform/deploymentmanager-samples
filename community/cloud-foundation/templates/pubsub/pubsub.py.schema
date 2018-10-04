@@ -13,71 +13,71 @@
 # limitations under the License.
 
 info:
-  title: Pub/Sub template
+  title: Pub/Sub (publish-subscribe) service
   author: Sourced Group Inc.
   description: |
-    Deploys a topic with zero or more subscriptions
+    Creates a topic, optionally with multiple subscriptions.
 
 properties:
   topic:
     type: string
     description: |
-      A name of a topic where messages will be published to. If not specified,
-      a deployment name will be used
+      The name of the topic that will publish messages. If not specified,
+      the deployment name is used.
   subscriptions:
     type: array
-    description: List of topic subscriptions
+    description: A list of topic's subscriptions.
     item:
       type: object
-      description: A topic subscription
+      description: The topic's subscription.
       properties:
         name:
           type: string
-          description: A subscription name
+          description: The subscription name.
         pushEndpoint:
           type: string
           description: |
-            A URL locating the endpoint to which messages should be pushed
+            The URL of the endpoint to push the messages to.
         ackDeadlineSeconds:
           type: integer
           description: |
-            Maximum time to acknowledge the message before retry
+            The maximum time to acknowledge a message receipt before retry.
           minimum: 10
           maximum: 600
         accessControl:
           type: array
           description: |
-            A subscription's IAM policy.
-            See more at https://cloud.google.com/pubsub/docs/reference/rest/v1/Policy
+            The subscription's IAM policy.
+            For details, see https://cloud.google.com/pubsub/docs/reference/rest/v1/Policy.
           item:
             type: object
             properties:
               role:
                 type: string
                 description: |
-                  IAM role. 
-                  See more at https://cloud.google.com/iam/docs/understanding-roles
+                  The IAM role. 
+                  For details, see https://cloud.google.com/iam/docs/understanding-roles
               members:
                 type: array
-                description: Specifies the identities requesting access for a resource
+                description: A list of identities of the members to be granted access to the resource.
                 item:
                   type: string
   accessControl:
     type: array
     description: |
-      A subscription's IAM policy.
-      See more at https://cloud.google.com/pubsub/docs/reference/rest/v1/Policy
+      The subscription's IAM policy.
+      For details, see https://cloud.google.com/pubsub/docs/reference/rest/v1/Policy
     item:
       type: object
       properties:
         role:
           type: string
           description: |
-            IAM role. 
-            See more at https://cloud.google.com/iam/docs/understanding-roles
+            The IAM role. 
+            For details, see https://cloud.google.com/iam/docs/understanding-roles
         members:
           type: array
-          description: Specifies the identities requesting access for a resource
+          description: A list of identities of the members to be granted access to the resource.
           item:
             type: string
 
@@ -85,10 +85,11 @@ outputs:
   properties:
     - topicName:
         type: string
-        description: Created topic name
+        description: The created topic's name.
 
 documentation:
   - templates/pubsub/README.md
 
 examples:
   - templates/pubsub/examples/pubsub.yaml
+  - templates/pubsub/examples/pubsub_push.yaml

@@ -1,7 +1,7 @@
-# Example on how to use the dns managed zone template
+# Example of the DNS managed zone template usage.
 #
-# In this example, a dns managed zone is created
-# via the `zoneName` property and `dnsName` property of  the `dns_managed_zone.py` template 
+# In this example, a DNS managed zone is created with the use of
+# the `zoneName` and `dnsName` properties. 
 
 imports:
   - path: templates/dns_managed_zone/dns_managed_zone.py
