@@ -39,17 +39,17 @@ Please follow instructions from https://cloud.google.com/solutions/high-throughp
 to set up HTCondor in the GCP environment.
 
 Other dependencies include Python, the googleapiclient and oauth2client 
-for Python.
+for Python (installed on the submit node by default).
 
 Note that the default quota on the number of instances (CPUs) may be too low 
 as set by default. The current instance quota can be checked on the quota
 console page and can be increased by clicking the “Edit Quota” button on 
 that page.
 
-Access to the Google Cloud Compute Engine API should be enabled. Please 
+Access to the Google Cloud Compute Engine API should be enabled. The HTCondor
+submit node has the API enabled as part of its deployment. Please 
 follow instructions on https://cloud.google.com/apis/docs/enable-disable-apis 
-to enable this API from the management console (note that the GCP installation 
-of the HTCondor cluster does not allow access to the Google API by default.)
+to enable this API from the management console to enable the API for other nodes.
 
 The script assumes that the Managed Instance Group for the compute nodes is 
 provisioned. Make sure that the “Maximum number of instances” parameter is 
@@ -65,13 +65,13 @@ Script accepts the following arguments:
 | --region      | GCP region where the managed instance group is located |
 | --zone        | Name of GCP zone where the managed instance group is located |
 | --group_manager | Name of the managed instance group |
-| --debuglevel (optional) | Detailed debug information. 1-basic debug info. 2-detail debug info |
+| --debuglevel (optional) | Detailed debug information. 1 - basic debug info. 2 - detail debug info |
 | -h (optional) | Show command line help information |
  
 Example for starting the script:
 
 ```
-python autoscaler.py slurm-var-demo us-central1 us-central1-f condor-compute-igm --debuglevel 1
+python autoscaler.py --project_id=condor-cluster-project --region=us-central1 --zone=us-central1-f --group_manager=condor-compute-igm --debuglevel=2
 ```
 
 ### Deployment

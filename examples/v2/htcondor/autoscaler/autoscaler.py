@@ -24,40 +24,46 @@ from oauth2client.client import GoogleCredentials
 
 import os
 import math
-import json
 import argparse
 
 parser = argparse.ArgumentParser("autoscaler.py")
-parser.add_argument("project_id", help="Project id", type=str)
-parser.add_argument("region", help="GCP region where the managed instance group is located", type=str)
-parser.add_argument("zone", help="Name of GCP zone where the managed instance group is located", type=str)
-parser.add_argument("group_manager", help="Name of the managed instance group", type=str)
-parser.add_argument("--debug-level", help="Show detailed debug information. 1-basic debug info. 2-detail debug info", type=int)
+parser.add_argument("--project_id", help="Project id", type=str)
+parser.add_argument("--region", help="GCP region where the managed instance group is located", type=str)
+parser.add_argument("--zone", help="Name of GCP zone where the managed instance group is located", type=str)
+parser.add_argument("--group_manager", help="Name of the managed instance group", type=str)
+parser.add_argument("--debuglevel", help="Show detailed debug information. 1-basic debug info. 2-detail debug info", type=int)
 args = parser.parse_args()
 
 # Project ID
-project = args.project_id #Ex:'slurm-var-demo'
+project = args.project_id  # Ex:'slurm-var-demo'
 
 # Region where the managed instance group is located
-region = args.region #Ex: 'us-central1'
+region = args.region  # Ex: 'us-central1'
 
 # Name of the zone where the managed instance group is located
-zone = args.zone #Ex: 'us-central1-f'
+zone = args.zone  # Ex: 'us-central1-f'
 
 # The name of the managed instance group.
-instance_group_manager = args.group_manager #Ex: 'condor-compute-igm'
+instance_group_manager = args.group_manager  # Ex: 'condor-compute-igm'
 
 # Default number of cores per intance, will be replaced with actual value
-cores_per_node = 2
+cores_per_node = 4
 
 # Default number of running instances that the managed instance group should maintain at any given time. This number will go up and down based on the load (number of jobs in the queue)
 size = 0
 
 # Debug level: 1-print debug information, 2 - print detail debug information
 debug = 0
-if (args.debug-level):
-    debug = args.debug-level
+if (args.debuglevel):
+    debug = args.debuglevel
 
+if debug > 1:
+    print 'Launching autoscaler.py with the following arguments:'
+    print 'project_id: ' + project
+    print 'region: ' + region
+    print 'zone: ' + zone
+    print 'group_manager: ' + instance_group_manager
+    print 'debuglevel: ' + str(debug)
 
 # Remove specified instance from MIG and decrease MIG size
 def deleteFromMig(instance):
