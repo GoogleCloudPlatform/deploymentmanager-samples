@@ -36,7 +36,8 @@ We assume that an HTCondor cluster is running on GCP prior to installing and con
 ### Prerequisites
 
 Please follow instructions from https://cloud.google.com/solutions/high-throughput-computing-htcondor 
-to set up HTCondor in the GCP environment.
+to set up HTCondor in the GCP environment. Make sure to use attribute `setup_autoscaler = false` in 
+the properties of your condor-cluster, since this autoscaler will control the resources.
 
 Other dependencies include Python, the googleapiclient and oauth2client 
 for Python (installed on the submit node by default).

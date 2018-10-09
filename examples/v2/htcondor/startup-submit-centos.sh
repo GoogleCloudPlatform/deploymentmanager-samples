@@ -14,12 +14,14 @@ else
 fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
 
+# Install utilities and condor and configure it
 cd /tmp
 yum install -y wget curl net-tools vim gcc
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 rpm --import RPM-GPG-KEY-HTCondor
 cd /etc/yum.repos.d && wget $CONDOR_REPO_URL
 yum install -y $CONDOR_INSTALL_OPT
+
 cd /tmp
 cat <<EOF > condor_config.local
 DISCARD_SESSION_KEYRING_ON_STARTUP=False
@@ -32,6 +34,13 @@ mkdir -p /etc/condor/config.d
 mv condor_config.local /etc/condor/config.d
 $CONDOR_STARTUP_CMD
 
+# Install Google python API for optional autoscaler installation
+cd /tmp
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install --upgrade google-api-python-client
+pip install --upgrade oauth2client
+
+# Install and configure logging agent
 cd /tmp; curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
 bash install-logging-agent.sh
 
@@ -47,5 +56,9 @@ tag condor
 EOF
 mkdir -p /etc/google-fluentd/config.d/
 mv condor.conf /etc/google-fluentd/config.d/
+
+mkdir -p /var/log/condor/jobs
+touch /var/log/condor/jobs/stats.log
+chmod 666 /var/log/condor/jobs/stats.log
 
 service google-fluentd restart
