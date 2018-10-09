@@ -48,22 +48,4 @@ EOF
 mkdir -p /etc/google-fluentd/config.d/
 mv condor.conf /etc/google-fluentd/config.d/
 
-cat <<EOF > condor-jobs.conf
-<source>
-type tail
-format multiline
-format_firstline /^\.\.\./
-format1 /^\\.\\.\\.\\n... \\((?<job>[^\.]*)\\.(?<subjob>[^\\.]*)\\.(?<run>[^\\)]*)\\).*Usr 0 (?<usrh>[^:]*):(?<usrm>[^:]*):(?<usrs>[^,]*), Sys 0 (?<sysh>[^:]*):(?<sysm>[^
-:]*):(?<syss>[^ ]*)  -  Run Remote Usage.*/
-types usrh:integer,usrm:integer,usrs:integer,sysh:integer,sysm:integer,syss:integer
-path /var/log/condor/jobs/*.log
-pos_file /var/lib/google-fluentd/pos/condor-jobs.pos
-read_from_head true
-tag condor
-</source>
-EOF
-mv condor-jobs.conf /etc/google-fluentd.config.d/
-mkdir -p /var/log/condor/jobs
-touch /var/log/condor/jobs/stats.log
-chmod 666 /var/log/condor/jobs/stats.log
 service google-fluentd restart
