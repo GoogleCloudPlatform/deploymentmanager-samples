@@ -65,6 +65,7 @@ if debug > 1:
     print 'group_manager: ' + instance_group_manager
     print 'debuglevel: ' + str(debug)
 
+
 # Remove specified instance from MIG and decrease MIG size
 def deleteFromMig(instance):
     instanceUrl = 'https://www.googleapis.com/compute/v1/projects/' \
@@ -78,24 +79,9 @@ def deleteFromMig(instance):
     response = requestDelInstance.execute()
     if debug > 0:
         print 'Request to delete instance ' + instance
-        pprint(respDel)
+        pprint(response)
 
     return response
-
-
-def getCpuLimit():
-    request = service.regions().get(project=project, region=region,
-                                    fields='quotas')
-    response = request.execute()
-    cpuLimit = 0
-
-    quotas = response['quotas']
-    for quota in quotas:
-        if quota['metric'] == 'PREEMPTIBLE_CPUS':
-            cpuLimit = quota['limit']
-
-    return int(cpuLimit)
-
 
 def getInstanceTemplateInfo():
     requestTemplateName = \
@@ -134,7 +120,7 @@ def getInstanceTemplateInfo():
     response = request.execute()
     guest_cpus = response['guestCpus']
     if debug > 1:
-        print 'Machine information information'
+        print 'Machine information'
         pprint(responseInstanceTemplateInfo['properties'])
     if debug > 0:
         print 'Guest CPUs: ' + str(guest_cpus)
@@ -168,12 +154,6 @@ pprint(instanceTemlateInfo)
 
 cores_per_node = instanceTemlateInfo['guest_cpus']
 print 'Number of CPU per node: ' + str(cores_per_node)
-
-
-instance_limit = int(math.ceil(float(getCpuLimit())
-                     / float(cores_per_node)))
-print 'Instance limit: ' + str(instance_limit)
-
 
 # Get state for for all jobs in Condor
 name_req = 'condor_status  -af name state'
@@ -212,10 +192,7 @@ print node_busy
 for node in node_busy:
     if not node_busy[node]:
         print 'Will shut down: ' + node + ' ...'
-
         respDel = deleteFromMig(node)
-        if debug > 1:
-            pprint(respDel)
 
 # Scale up (if needed)
 
@@ -237,9 +214,6 @@ if queue > 0:
        print "Calucalting size of MIG: " + str(queue) + "/" + str(cores_per_node) + " = " + str(size)
 else:
     size = 0
-
-# Limit number of instances based on quota
-size = min(instance_limit, size)
 
 print 'New MIG target size: ' + str(size)
 
