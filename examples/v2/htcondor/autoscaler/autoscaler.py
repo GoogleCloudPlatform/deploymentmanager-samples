@@ -150,12 +150,14 @@ queue_length_resp = os.popen(queue_length_req).read().split()
 if len(queue_length_resp) > 1:
     queue = int(queue_length_resp[0])
     idle_jobs = int(queue_length_resp[6])
+    on_hold_jobs = int(queue_length_resp[10])
 else:
     queue = 0
     idle_jobs = 0
 
-print 'Current queue length: ' + str(queue)
+print 'Total queue length: ' + str(queue)
 print 'Idle jobs: ' + str(idle_jobs)
+print 'Jobs on hold: ' + str(on_hold_jobs)
 
 instanceTemlateInfo = getInstanceTemplateInfo()
 if debug > 1:
@@ -172,6 +174,10 @@ if debug > 1:
     print 'Currently running jobs in Condor'
     print slot_names
 
+# Adjust current queue length by the number of jos that are on-hold
+queue -=on_hold_jobs
+if on_hold_jobs>0:
+    print "Adjusted queue length: " + str(queue) 
 
 # Calculate number instances to satisfy current job queue length
 if queue > 0:
