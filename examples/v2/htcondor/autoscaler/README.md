@@ -73,7 +73,7 @@ Script accepts the following arguments:
 Example for starting the script:
 
 ```
-python autoscaler.py --project_id=condor-cluster-project --region=us-central1 --zone=us-central1-f --group_manager=condor-compute-igm --debuglevel=2
+python autoscaler.py --project_id slurm-var-demo --region us-central1 --zone us-central1-f --group_manager condor-compute-igm --verbosity 2
 ```
 
 ### Deployment
