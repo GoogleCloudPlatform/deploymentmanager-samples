@@ -4,7 +4,7 @@
 solving computationally intensive problems.
 When HTCondor is installed in the Cloud, it is beneficial to change the 
 number of compute instances based on the number of jobs in order to find 
-a solution faster. autoscaler.py is a python script that checks the total 
+a solution faster. autoscaler.py is a Python script that checks the total 
 number of jobs and  resizes the compute cluster in the Cloud to meet the demand.
 If this script is setup to run periodically, for example by a cron job, it will 
 update number of HTCondor compute instances to be proportional to the number
@@ -39,7 +39,7 @@ Please follow instructions from https://cloud.google.com/solutions/high-throughp
 to set up HTCondor in the GCP environment. Make sure to use attribute `setup_autoscaler = false` in 
 the properties of your condor-cluster, since this autoscaler will control the resources.
 
-Other dependencies include Python, the googleapiclient and oauth2client 
+Other dependencies include Python, the GoogleApiClient and oauth2client 
 for Python (installed on the submit node by default).
 
 Note that the default quota on the number of instances (CPUs) may be too low 
@@ -67,6 +67,7 @@ Script accepts the following arguments:
 | --zone        | Name of GCP zone where the managed instance group is located |
 | --group_manager | Name of the managed instance group |
 | --debuglevel (optional) | Detailed debug information. 1 - basic debug info. 2 - detail debug info |
+| --computeinstancelimit (optional) | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
 | -h (optional) | Show command line help information |
  
 Example for starting the script:
