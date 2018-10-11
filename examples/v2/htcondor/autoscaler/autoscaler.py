@@ -31,6 +31,7 @@ parser.add_argument("--project_id", help="Project id", type=str)
 parser.add_argument("--region", help="GCP region where the managed instance group is located", type=str)
 parser.add_argument("--zone", help="Name of GCP zone where the managed instance group is located", type=str)
 parser.add_argument("--group_manager", help="Name of the managed instance group", type=str)
+parser.add_argument("--computeinstancelimit", help="Maximum number of compute instances", type=int)
 parser.add_argument("--debuglevel", help="Show detailed debug information. 1-basic debug info. 2-detail debug info", type=int)
 args = parser.parse_args()
 
@@ -57,12 +58,18 @@ debug = 0
 if (args.debuglevel):
     debug = args.debuglevel
 
+# Limit for the maximum number of compute instance. If zero (default setting), no limit will be enforced by the  script 
+compute_instance_limit = 0
+if (args.computeinstancelimit):
+    compute_instance_limit = args.computeinstancelimit
+
 if debug > 1:
     print 'Launching autoscaler.py with the following arguments:'
     print 'project_id: ' + project
     print 'region: ' + region
     print 'zone: ' + zone
     print 'group_manager: ' + instance_group_manager
+    print 'computeinstancelimit: ' + str(compute_instance_limit)
     print 'debuglevel: ' + str(debug)
 
 
@@ -172,6 +179,11 @@ if queue > 0:
        print "Calucalting size of MIG: ⌈" + str(queue) + "/" + str(cores_per_node) + "⌉ = " + str(size)
 else:
     size = 0
+
+# If compute instance limit is specified, can not start more instances then specified in the limit
+if compute_instance_limit > 0 and size > compute_instance_limit:
+    size = compute_instance_limit;
+    print "MIG target size will be limited by " + str(compute_instance_limit)
 
 print 'New MIG target size: ' + str(size)
 
