@@ -66,11 +66,7 @@ Script accepts the following arguments:
 | --region      | GCP region where the managed instance group is located |
 | --zone        | Name of GCP zone where the managed instance group is located |
 | --group_manager | Name of the managed instance group |
-<<<<<<< HEAD
 | --verbosity (optional) | Show detail output. 1 - show basic debug info. 2 - show detail debug info |
-=======
-| --debuglevel (optional) | Detailed debug information. 1 - basic debug info. 2 - detail debug info |
->>>>>>> 878eadfcb7b287dfe1c706b6a7f67452c46f117c
 | --computeinstancelimit (optional) | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
 | -h (optional) | Show command line help information |
  
