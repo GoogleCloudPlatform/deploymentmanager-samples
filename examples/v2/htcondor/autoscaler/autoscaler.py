@@ -27,12 +27,12 @@ import math
 import argparse
 
 parser = argparse.ArgumentParser("autoscaler.py")
-parser.add_argument("--project_id", help="Project id", type=str)
-parser.add_argument("--region", help="GCP region where the managed instance group is located", type=str)
-parser.add_argument("--zone", help="Name of GCP zone where the managed instance group is located", type=str)
-parser.add_argument("--group_manager", help="Name of the managed instance group", type=str)
-parser.add_argument("--computeinstancelimit", help="Maximum number of compute instances", type=int)
-parser.add_argument("--debuglevel", help="Show detailed debug information. 1-basic debug info. 2-detail debug info", type=int)
+parser.add_argument("-p", "--project_id", help="Project id", type=str)
+parser.add_argument("-r", "--region", help="GCP region where the managed instance group is located", type=str)
+parser.add_argument("-z", "--zone", help="Name of GCP zone where the managed instance group is located", type=str)
+parser.add_argument("-g", "--group_manager", help="Name of the managed instance group", type=str)
+parser.add_argument("-c", "--computeinstancelimit", help="Maximum number of compute instances", type=int)
+parser.add_argument("-v", "--verbosity", help="Increase output verbosity. 1-show basic debug info. 2-show detail debug info", type=int, choices=[0, 1, 2])
 args = parser.parse_args()
 
 # Project ID
@@ -55,13 +55,14 @@ size = 0
 
 # Debug level: 1-print debug information, 2 - print detail debug information
 debug = 0
-if (args.debuglevel):
-    debug = args.debuglevel
+if (args.verbosity):
+    debug = args.verbosity
 
 # Limit for the maximum number of compute instance. If zero (default setting), no limit will be enforced by the  script 
 compute_instance_limit = 0
 if (args.computeinstancelimit):
-    compute_instance_limit = args.computeinstancelimit
+    compute_instance_limit = abs(args.computeinstancelimit)
+
 
 if debug > 1:
     print 'Launching autoscaler.py with the following arguments:'
