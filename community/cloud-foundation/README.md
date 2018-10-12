@@ -56,9 +56,23 @@ gcloud deployment-manager deployments create my-network-deployment \
 ```
 
 
-### Deploying infrastructure with the Cloud Foundation tool
+### Deploying infrastructure with the Cloud Foundation Tool
 
-**TO BE IMPLEMENTED**
+Part of the Cloud Foundation Toolkit is a CLI tool (cft) that makes use of
+deployment configs that have extra functionality compared to ones used by
+`glcoud` to deploy resources to GCP via the Deployment Manager service.
+
+The configs can be used with the same [template library](templates) provided with this
+toolkit.
+
+The specific configuration for each template is different, but in general
+deployments via `gcloud` should be done by creating a *DM config file*
+referencing the template(s), then invoking `gcloud`:
+
+```
+./src/cft create
+    --config <CONFIG_1>.yaml <CONFIG_2>.yaml <CONFIG_3>.yaml
+```
 
 
 ## Contributing

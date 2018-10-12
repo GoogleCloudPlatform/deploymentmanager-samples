@@ -1,6 +1,7 @@
 [style]
 based_on_style = google
+allow_split_before_dict_value = False
 dedent_closing_brackets = True
 indent_dictionary_value = True
-split_before_expression_after_opening_paren=True
-split_all_comma_separated_values=True
+split_before_expression_after_opening_paren = True
+split_all_comma_separated_values = True
