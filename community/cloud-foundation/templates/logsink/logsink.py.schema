@@ -18,6 +18,14 @@ info:
   description: |
     Creates a logging sink to export entries to a desired destination.
 
+imports:
+  - path: ../pubsub/pubsub.py
+    name: pubsub.py
+  - path: ../bigquery/bigquery_dataset.py
+    name: bigquery_dataset.py
+  - path: ../gcs_bucket/gcs_bucket.py
+    name: gcs_bucket.py
+
 required:
   - destinationType
   - destinationName
@@ -51,11 +59,74 @@ properties:
   filter:
     type: string
     description: |
-      An advanced log filter that limits the export to those log entries that: (a) 
-      are in the resource that owns the sink; and (b) matches the filter condition(s).
+      An advanced log filter that limits the export to those log entries that:
+      (a) are in the resource that owns the sink; and
+      (b) matches the filter condition(s).
+  pubsubProperties:
+    type: object
+    description: |
+      Pubsub properties as defined in the `templates/pubsub/pubsub.py.schema`.
+      Example:
+        - name: test-logsink-project-pubsub
+          type: logsink.py
+          properties:
+            destinationName: test-logsink-project-pubsub-dest
+            destinationType: pubsub
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            pubsubProperties:
+              topic: test-logsink-project-pubsub-topic-dest
+              accessControl:
+                - role: roles/pubsub.admin
+                  members:
+                    - user:my-email@email.com
+  storageProperties:
+    type: object
+    description: |
+      Bucket properties as defined in the
+      `templates/gcs_bucket/gcs_bucket.py.schema`.
+      Example:
+        - name: test-logsink-project-storage-create
+          type: logsink.py
+          properties:
+            destinationName: test-logsink-project-storage-dest
+            destinationType: storage
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            storageProperties:
+              location: us-east1
+              bindings:
+                - role: roles/storage.objectViewer
+                  members:
+                    - user:my-email@email.com
+  bqProperties:
+    type: object
+    description: |
+      NOTE: There is a issue where BQ does not accept the uniqueWriter
+      returned by the logsink to be used in the userByEmail property.
+      Until that is resolved, this property is not supported.
+      BigQuery dataset properties as defined in the
+      `templates/bigquery/bigquery_dataset.py.schema`.
+      Example:
+        - name: test-logsink-project-bq-create
+         type: logsink.py
+          properties:
+            # BQ names use underscores
+            destinationName: test_logsink_project_bq_dest
+            destinationType: bigquery
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            bqProperties:
+              location: US
+              access:
+                - role: OWNER
+                  userByEmail: my-email@email.com
 
 documentation:
   - templates/logsink/README.md
 
 examples:
-  - templates/logsink/examples/logsink.yaml
+  - templates/logsink/examples/org_logsink_pubsub_destination.yaml
+  - templates/logsink/examples/billingaccount_logsink_bucket_destination.yaml
+  - templates/logsink/examples/folder_logsink_pubsub_destination.yaml
+  - templates/logsink/examples/project_logsink_bucket_destination.yaml
