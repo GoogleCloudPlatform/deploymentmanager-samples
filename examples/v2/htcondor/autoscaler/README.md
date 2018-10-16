@@ -4,8 +4,8 @@
 solving computationally intensive problems.
 When HTCondor is installed in the Cloud, it is beneficial to change the 
 number of compute instances based on the number of jobs in order to find 
-a solution faster. autoscaler.py is a Python script that checks the total 
-number of jobs and  resizes the compute cluster in the Cloud to meet the demand.
+a solution faster. autoscaler.py is a Python script that checks 
+number of active jobs in HTCondor queue and  resizes compute cluster in the Cloud to meet the demand.
 If this script is setup to run periodically, for example by a cron job, it will 
 update number of HTCondor compute instances to be proportional to the number
 of jobs waiting in the queue. That will improve the time to completion of 
@@ -60,15 +60,15 @@ as big as the largest cluster that should be provisioned.
 
 Script accepts the following arguments:
  
-| Argument      | Description    |
-| ------------- | -------------- |
-| --project_id  | GCP Project ID |
-| --region      | GCP region where the managed instance group is located |
-| --zone        | Name of GCP zone where the managed instance group is located |
-| --group_manager | Name of the managed instance group |
-| --verbosity (optional) | Show detail output. 1 - show basic debug info. 2 - show detail debug info |
-| --computeinstancelimit (optional) | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
-| -h (optional) | Show command line help information |
+| Argument      | Alternative | Description    |
+| ------------- | ----------- |-------------- |
+| --project_id  | -p | GCP Project ID |
+| --region      | -r | GCP region where the managed instance group is located |
+| --zone        | -z | Name of GCP zone where the managed instance group is located |
+| --group_manager | -g | Name of the managed instance group |
+| --verbosity (optional) | -v | Show detail output. 1 - show basic debug info. 2 - show detail debug info |
+| --computeinstancelimit (optional) | -v | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
+| -help (optional) | -h | Show command line help information |
  
 Example for starting the script:
 
