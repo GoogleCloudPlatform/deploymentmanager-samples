@@ -68,7 +68,7 @@ Script accepts the following arguments:
 | --group_manager | -g | Name of the managed instance group |
 | --verbosity (optional) | -v | Show detail output. 1 - show basic debug info. 2 - show detail debug info |
 | --computeinstancelimit (optional) | -v | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
-| -help (optional) | -h | Show command line help information |
+| --help (optional) | -h | Show command line help information |
  
 Example for starting the script:
 
