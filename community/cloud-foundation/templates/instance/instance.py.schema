@@ -71,6 +71,8 @@ properties:
     minimum: 10
   metadata:
     type: object
+    required:
+      - items
     description: |
       The instance metadata. For example:
       metadata:
@@ -88,6 +90,17 @@ properties:
               type: string
             value:
               type: [string, number, boolean]
+  tags:
+    type: object
+    required:
+      - items
+    description: Tags to apply to this instance.
+    properties:
+      items:
+        type: array
+        description: An array of tags.
+        items:
+          type: string
   serviceAccounts:
     type: array
     description: |

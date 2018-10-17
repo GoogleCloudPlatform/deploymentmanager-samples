@@ -49,8 +49,12 @@ def get_network(properties):
     """
 
     network_name = properties.get('network')
+
+    if not '.' in network_name and not '/' in network_name:
+        network_name = 'global/networks/{}'.format(network_name)
+
     return {
-        'network': 'global/networks/{}'.format(network_name),
+        'network': network_name,
         'accessConfigs': [
             {
                 'name': 'External NAT',
@@ -80,7 +84,7 @@ def generate_config(context):
         }
     }
 
-    for name in ['metadata', 'serviceAccounts', 'canIpForward']:
+    for name in ['metadata', 'serviceAccounts', 'canIpForward', 'tags']:
         set_optional_property(instance['properties'], context.properties, name)
 
     return {
