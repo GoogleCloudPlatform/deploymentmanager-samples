@@ -1,92 +1,39 @@
-# Cloud Foundation Toolkit Project
+# Cloud Foundation Toolkit Project and Repository
 
-This project aims to provide a number of high-quality, production-ready GCP
-Deployment Manager templates, tools, example usage and documentation to help
-enterprises to create their foundational infrastructure in Google Cloud.
+## Overview
 
+The Cloud Foundation toolkit (henceforth, CFT) includes the following parts:
 
-## Usage
+- A comprehensive set of production-ready resource templates that follow
+  Google's best practices, which can be used with the CFT or the gcloud
+  utility (part of the Google Cloud SDK) - see Template Developer Guide(../docs/template_dev_guide.md)
+- A command-line interface (henceforth, CLI) that deploys resources defined in
+  single or multiple CFT-compliant config files - see the
+  [CFT User Guide](../docs/userguide.md)
+- A sample pipeline that enables running CFT deployment operations from
+  Jenkins - see the [CFT Integrator Guide](*** does not exist yet ***)
 
-The DM templates developed by this project can be used either (1) individually
-via the `gloud` utility, or (2) via the Cloud Foundation tool that will be able to link
-multiple unrelated templates together in order to deploy the foundation as a whole
+## Repository Structure
 
-### Deploying infrastructure with individual templates via gcloud
+The CFT project repository contains the following files and directories:
 
-Each individual template has it's own usage documentation in their respective folders.
-For example, `templates/cloud_router/README.md`
-
-The specific configuration for each template is different, but in general
-deployments via `gcloud` should be done by creating a *DM config file*
-referencing the template(s), then invoking `gcloud`:
-
-```
-gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config <YOUR_DEPLOYMENT_CONFIG>.yaml
-```
-
-As an example, to create a simple network with the `network.py` template, create
-a deployment config file:
-
-```
-# This is my_network.yaml file
-imports:
-  - path: templates/network.py
-
-resources:
-  - name: my-network
-    type: templates/network.py
-    properties:
-      name: my-network
-      autoCreateSubnetworks: true
-```
-
-The properties, required and optional, defined by the `network.py` template can
-be found in the schema file associated with the template: `network.py.schema`.
-These properties can be tweaked to implement infrastructure that are specific
-to a particular enterprise.
-
-Once the deployment config is ready, think of a name for your deployment, say,
-`my-network-deployment` and execute `gcloud`, giving the name and config file
-as arguments:
-
-```
-gcloud deployment-manager deployments create my-network-deployment \
-    --config my_network.yaml
-```
-
-
-### Deploying infrastructure with the Cloud Foundation Tool
-
-Part of the Cloud Foundation Toolkit is a CLI tool (cft) that makes use of
-deployment configs that have extra functionality compared to ones used by
-`glcoud` to deploy resources to GCP via the Deployment Manager service.
-
-The configs can be used with the same [template library](templates) provided with this
-toolkit.
-
-The specific configuration for each template is different, but in general
-deployments via `gcloud` should be done by creating a *DM config file*
-referencing the template(s), then invoking `gcloud`:
-
-```
-./src/cft create
-    --config <CONFIG_1>.yaml <CONFIG_2>.yaml <CONFIG_3>.yaml
-```
-
-
-## Contributing
-
-Detailed information on contributing and developing can be found
-[here](docs/development.md)
-
-
-## Testing
-
-Detailed information on testing can be found [here](docs/testing.md)
-
+- Root:
+  - README.md - this file
+  - LICENSE - ***
+  - Makefile - ***
+  - MANUFEST - ***
+  - src:
+    - ...
+  - docs:
+    - userguide.md - the CFT guide for those users who are planning to use it
+      "as is"
+    - template_dev_guide.md - the CFT guide for those developers who are
+      planning to modify the existing templates and/or create their own
+    - tool_dev_guide.md - the CFT guide for those developers who are planning
+      to modify, or integrate with, the deployment tool  
+  - templates
+  - ...
 
 ## License
 
 Apache 2.0 - See [LICENSE](LICENSE) for more information.
-
