@@ -1,0 +1,6 @@
+export CFT_PROJECT_ID=my-project
+export CFT_SA=mysa-account@sourced-root.iam.gserviceaccount.com
+export CFT_ORGANIZATION_ID=21902919597
+export CFT_ORGANIZATION_FOLDER_ID=68124729812
+export CFT_PIPELINE_DEPLOYER_ROLE=organizations/21902919597/roles/PipelineDeployer
+export CFT_BILLING_ACCOUNT_ID=00D12A-0BC9A2-188BE7

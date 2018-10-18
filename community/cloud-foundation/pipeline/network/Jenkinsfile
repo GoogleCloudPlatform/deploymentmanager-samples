@@ -1,0 +1,36 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+
+    stages{
+        stage('Checkout Repos') {
+            steps {
+                echo '------------------'
+                echo 'Cleaning dirs'
+                sh 'rm -rf cft'
+                echo '------------------'
+                echo 'Cloning DM Samples github repo'
+                sh 'git clone https://github.com/sourced/deploymentmanager-samples cft'
+                sh 'cd cft && git checkout tool && cd ..'
+            }
+        }
+        stage('Checking cft Installation') {
+            steps {
+                echo '------------------'
+                echo 'Checking CFT Version'
+                sh 'cft -v'
+            }
+        }
+        stage('Execute CFT') {
+            environment {
+                CONFIG="$WORKSPACE/network/"
+            }
+            steps {
+                echo '------------------'
+                echo 'Creating $CONFIG'
+                sh '. ~/cft-env-vars && cd cft/community/cloud-foundation && cft apply $CONFIG'
+            }
+        }
+    }
+}
