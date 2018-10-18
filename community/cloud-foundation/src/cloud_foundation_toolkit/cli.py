@@ -33,7 +33,16 @@ def build_common_args(parser):
         nargs='+',
         help='The path to the config files or directory'
     )
-
+    parser.add_argument(
+        '--graph',
+        '-g',
+        action='store_true',
+        default=False,
+        help=(
+            'If specified, only displays the yaml representing the dependency '
+            'graph for the action'
+        )
+    )
 
 def parse_args(args):
     """parse CLI options """
@@ -74,6 +83,7 @@ def parse_args(args):
         'apply',
         'create',
         'delete',
+        'graph',
         'update'
     ]
 

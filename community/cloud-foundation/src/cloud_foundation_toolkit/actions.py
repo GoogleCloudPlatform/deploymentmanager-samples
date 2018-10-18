@@ -85,25 +85,42 @@ def execute(args):
         action, args.config, arguments
     )
 
-    for i, level in enumerate(graph, start=1):
-        print('---------- Stage {} ----------'.format(i))
-        for config in level:
-            if args.dry_run:
-                print(
-                    ' - project: {}, deployment: {}'.format(
-                        config.project,
-                        config.deployment
-                    )
+    if args.graph:
+        output = []
+        for level in graph:
+            configs = []
+            for config in level:
+                configs.append(
+                    {
+                        'project': config.project,
+                        'deployment': config.deployment,
+                        'source': config.source
+                    }
                 )
-            else:
-                LOG.debug('%s config %s', action, config.deployment)
-                deployment = Deployment(config)
-                method = getattr(deployment, action)
-                try:
-                    method(**arguments)
-                except apitools_exceptions.HttpNotFoundError:
-                    LOG.warn('Deployment %s does not exit', config.deployment)
-                    if action != 'delete':
-                        raise
-    print('------------------------------')
+            output.append(configs)
+        YAML().dump(output, sys.stdout)
+    else:
+        for i, level in enumerate(graph, start=1):
+            print('---------- Stage {} ----------'.format(i))
+            for config in level:
+                if args.dry_run:
+                    print(
+                        ' - project: {}, deployment: {}'.format(
+                            config.project,
+                            config.deployment
+                        )
+                    )
+                else:
+                    LOG.debug('%s config %s', action, config.deployment)
+                    deployment = Deployment(config)
+                    method = getattr(deployment, action)
+                    try:
+                        method(**arguments)
+                    except apitools_exceptions.HttpNotFoundError:
+                        LOG.warn(
+                            'Deployment %s does not exit', config.deployment
+                        )
+                        if action != 'delete':
+                            raise
+        print('------------------------------')
 
