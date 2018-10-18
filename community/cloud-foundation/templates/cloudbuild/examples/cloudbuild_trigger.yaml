@@ -3,15 +3,16 @@
 # In this example, a Build trigger for automated builds is created.
 #
 # Replace the following placeholders with valid values:
-#   <FIXME:buildtrigger_description>: trigger description
-#   <FIXME:project_id>: PROJECT_ID of the project where the repo resides
-#   <FIXME:repo_name>: a valid Cloud Source repository name
+#   <FIXME:buildtrigger_description> : trigger description
+#   <FIXME:project_id>  : PROJECT_ID of the project where the repo resides
+#   <FIXME:repo_name>   : a valid Cloud Source repository name
 #   <FIXME: branch_name>: a valid branch name in the source repository
 #   <FIXME:builder_name>: a cloud-builder supported on Google Cloud;
-#   see details at https://cloud.google.com/cloud-build/docs/cloud-builders
-#   <FIXME:build_args>: a list of build arguments supported by the builder;
-#     enter each argument on a separate line as show below
-#     Example git clone build step:
+#                         see details at 
+#                         https://cloud.google.com/cloud-build/docs/cloud-builders
+#   <FIXME:build_args>  : a list of build arguments supported by the builder;
+#                         enter each argument on a separate line as show below
+#   Example git clone build step:
 #     - name: 'gcr.io/cloud-builders/git'
 #       args:
 #         - clone
