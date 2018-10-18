@@ -157,6 +157,12 @@ outputs:
     - serviceAccountDisplayName:
         type: string
         description: Name of the default service account for the project.
+    - resources:
+        type: array
+        description: |
+          Names of the resources the template creates. This output can be used
+          by other templates for explicit waiting for all project configuration
+          steps to finish.
 
 documentation:
   - templates/project/README.md
