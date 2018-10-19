@@ -61,12 +61,15 @@ To install Bats:
 
 #### Using the Cloud Foundation Config File
 
-Because you are likely to work under a GCP Organization different from ours,
-we abstracted ??? excised ??? some of the base settings needed for the tests
-and moved them to a *personalized* configuration file, which by default is
-expected to be `~/.cloud-foundation-tests.conf`, although the location of this
-test config file can be customized via the `CLOUD_FOUNDATION_CONF` variable.
-For example:
+To run tests, you need to modify the organization, project, and
+account-specific values in the configuration file. Proceed as follows:
+
+1. Copy `tests/cloud-foundation-tests.conf.example` to
+   `~/.cloud-foundation-tests.conf`.
+2. Change the values as required.
+
+`Note:` You can modify the configuration file path by changing the
+CLOUD_FOUNDATION_CONF environment variable. For example:
 
 ```shell
 export CLOUD_FOUNDATION_CONF=/etc/cloud-foundation-tests.conf
@@ -80,13 +83,12 @@ organization) in the test config file. See, for example,
 
 An alternative to using the Cloud Foundation config file is to use environment
 variables. Make sure to export all variables described in the
-`tests/cloud-foundation-tests.conf.example` file, with your organization-specific changes.
+`tests/cloud-foundation-tests.conf.example` file, with your organization-specific
+changes.
 
 ### Running Tests
 
-Currently, only one test file can be executed at a time. ??? Correct ???
-Work is being done to implement a full-suite test runner that will execute all
-(or a subset of) the available tests.
+`Note:` Currently, only one test file can be executed at a time.
 
 Always run the test from the root of the `cloud-foundation` project:
 

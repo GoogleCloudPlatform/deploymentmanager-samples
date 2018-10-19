@@ -94,10 +94,10 @@ source src/cftenv
 ```
 
 The above activates the virtual environment, then finds the Google SDK path
-and adds libraries to PYTHONPATH. This ??? what is "this" ??? cannot be simply
-added to the `Makefile` becasue `make` creates sanitized sub-shells for each
-command, and the parent shell does not get the environment variables that the
-virtual environment sets up on activation.
+and adds libraries to PYTHONPATH. These cannot be simply added to the
+`Makefile` because `make` creates sanitized sub-shells for each command, and
+the parent shell does not get the environment variables that the virtual
+environment sets up on activation.
 
 `Note:` The `tox.ini` file in this project is configured to
 "*install*" the utility using pip's "develop" mode, i.e., the pip **does not**

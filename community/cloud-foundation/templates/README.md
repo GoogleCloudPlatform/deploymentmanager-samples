@@ -10,7 +10,7 @@ e.g., "network", "cloud_router", "healthcheck", etc. Each template folder contai
 
 - Readme.md - a textual description of the template's usage, prerequisites, etc.
 - <resource>.py - the Python 2.7 template file
-- <resource>.py.schema - the ***
+- <resource>.py.schema - the schema file associated with the template
 - examples:
   - <resource>.yaml - a sample config file that utilizes the template
 - tests:
