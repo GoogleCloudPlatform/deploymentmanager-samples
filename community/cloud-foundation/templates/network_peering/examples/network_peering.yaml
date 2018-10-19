@@ -1,12 +1,12 @@
 # Example of the VPC network peering template usage.
 #
-# In this example, a peering is created between two networks.
+# In this example, a 'Network A' is peered with a 'Network B'.
 # 
 # Replace the following placeholders with appropriate values:
-#   <FIXME:peer_name>: a name for the peering
-#   <FIXME:network_name>: name of the source network
-#   <FIXME:project_id>: project-id where the peer network resides
-#   <FIXME:peer_network>: name of the peer network
+#   <FIXME:network_name> : URL of Network A in the peering
+#   <FIXME:peer_network> : URL of Network B in the peering
+#   <FIXME:project_id>   : target project-id where the peer network resides
+#                          or omit for networks in the current project.
 
 imports:
   - path: templates/network_peering/network_peering.py
@@ -16,7 +16,7 @@ resources:
   - name: test-peering
     type: peering.py
     properties:
-      name: <FIXME:peer_name>
+      name: 'sample-peering'
       network: <FIXME:network_name>
       peerNetwork: projects/<FIXME:project_id>/global/networks/<FIXME:peer_network>
       autoCreateRoutes: true
