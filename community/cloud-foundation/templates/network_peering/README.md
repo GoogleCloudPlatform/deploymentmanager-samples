@@ -63,8 +63,8 @@ See the `properties` section in the schema file(s):
     gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
     ```
 
-> **Note**: When deleting an _ACTIVE_ peering, you may recieve an error.  
-> Refer to [peering limitations](https://cloud.google.com/vpc/docs/using-vpc-peering#number_of_peerings_limit) and  [troubleshooting](https://cloud.google.com/vpc/docs/using-vpc-peering#troubleshooting) for details.
+**IMPORTANT**: When deleting an _ACTIVE_ peering, you may recieve an error.  
+Refer to [peering limitations](https://cloud.google.com/vpc/docs/using-vpc-peering#number_of_peerings_limit) and  [troubleshooting](https://cloud.google.com/vpc/docs/using-vpc-peering#troubleshooting) for details.
 
 ## Examples
 
