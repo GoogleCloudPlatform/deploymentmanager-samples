@@ -52,7 +52,7 @@ See the `properties` section in the schema file(s):
    Refer to the properties in the schema files described above.
 
     ```shell
-        vim my_cloudbuild.yaml  # <== change values to match your GCP setup
+    vim my_cloudbuild.yaml  # <== change values to match your GCP setup
     ```
 
 5. Create your deployment as described below, replacing `<YOUR_DEPLOYMENT_NAME>`
