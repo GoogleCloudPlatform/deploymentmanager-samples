@@ -1,6 +1,6 @@
 # Example of the Managed Instance Group template usage.
 #
-# In this example, a regional managed instance group is created.
+# In this example, a simple regional managed instance group is created.
 
 imports:
   - path: templates/managed_instance_group/managed_instance_group.py
