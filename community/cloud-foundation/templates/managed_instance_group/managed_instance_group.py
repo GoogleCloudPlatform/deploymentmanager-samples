@@ -53,7 +53,7 @@ def get_instance_template(properties, name_prefix):
     """ If an instance template exists, returns a link to that template.
     If no instance template exists:
         (a) creates that template;
-        (b) retruns a link to it; and
+        (b) returns a link to it; and
         (c) returns resources/outputs that were required to create the template.
     """
 
