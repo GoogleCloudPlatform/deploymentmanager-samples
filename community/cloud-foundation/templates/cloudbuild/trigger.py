@@ -20,16 +20,24 @@ def generate_config(context):
     resources = []
     properties = context.properties
     name = context.env['name']
-    trigger_template = properties['triggerTemplate']
+    project_id = context.env['project']
+    # set projectId in triggerTemplate
+    properties['triggerTemplate']['projectId'] = project_id
     build_def = properties.get('build')
     build_filename = properties.get('filename')
-    build_trigger = {
+    build_trigger_id = '$(ref.{}.id)'.format(name)
+
+    # build trigger create action
+    build_trigger_create = {
         'name':
             name,
         'action':
             'gcp-types/cloudbuild-v1:cloudbuild.projects.triggers.create',
+        'metadata': {
+            'runtimePolicy': ['CREATE'],
+        },
         'properties': {
-            'triggerTemplate': trigger_template
+            'triggerTemplate': properties['triggerTemplate']
         }
     }
 
@@ -43,20 +51,37 @@ def generate_config(context):
 
     for prop in optional_properties:
         if prop in properties:
-            build_trigger['properties'][prop] = properties[prop]
+            build_trigger_create['properties'][prop] = properties[prop]
 
     if build_def:
-        build_trigger['properties']['build'] = build_def
+        build_trigger_create['properties']['build'] = build_def
     elif build_filename:
-        build_trigger['properties']['filename'] = build_filename
+        build_trigger_create['properties']['filename'] = build_filename
 
-    resources.append(build_trigger)
+    resources.append(build_trigger_create)
+
+    # build trigger delete action
+    build_trigger_delete = {
+        'name':
+            name + '-delete',
+        'action':
+            'gcp-types/cloudbuild-v1:cloudbuild.projects.triggers.delete',
+        'metadata': {
+            'runtimePolicy': ['DELETE'],
+        },
+        'properties': {
+            'projectId': project_id,
+            'triggerId': build_trigger_id
+        }
+    }
+
+    resources.append(build_trigger_delete)
 
     # Output variables
     outputs = [
         {
             'name': 'id',
-            'value': '$(ref.{}.id)'.format(name)
+            'value': build_trigger_id
         },
         {
             'name': 'createTime',

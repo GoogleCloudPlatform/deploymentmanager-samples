@@ -33,19 +33,19 @@ See the `properties` section in the schema file(s):
 1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 
     ```shell
-        git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
     ```
 
 2. Go to the [community/cloud-foundation](../../) directory
 
     ```shell
-        cd community/cloud-foundation
+    cd community/cloud-foundation
     ```
 
 3. Copy the example DM config to be used as a model for the deployment, in this case [examples/cloudbuild.yaml](examples/cloudbuild.yaml)
 
     ```shell
-        cp templates/cloudbuild/examples/cloudbuild.yaml my_cloudbuild.yaml
+    cp templates/cloudbuild/examples/cloudbuild.yaml my_cloudbuild.yaml
     ```
 
 4. Change the values in the config file to match your specific GCP setup.
@@ -55,18 +55,18 @@ See the `properties` section in the schema file(s):
         vim my_cloudbuild.yaml  # <== change values to match your GCP setup
     ```
 
-5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
+5. Create your deployment as described below, replacing `<YOUR_DEPLOYMENT_NAME>`
    with your with your own deployment name
 
     ```shell
-        gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-            --config my_cloudbuild.yaml
+    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+        --config my_cloudbuild.yaml
     ```
 
 6. In case you need to delete your deployment:
 
     ```shell
-        gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
     ```
 
 ## Examples

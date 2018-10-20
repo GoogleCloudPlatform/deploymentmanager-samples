@@ -20,6 +20,9 @@ info:
     For more information on this resource, see
     https://cloud.google.com/cloud-build/docs/running-builds/automate-builds.
 
+imports:
+  - path: trigger.py
+
 required:
   - triggerTemplate
 
@@ -49,7 +52,7 @@ properties:
         type: string
         description: |
           The directory to run the build in (path relative to the source root).
-          If a step's dir value is specified as an absolute path, this value 
+          If a step's dir value is specified as an absolute path, this value
           is ignored for that step's execution.
       revision:
         type: string
@@ -70,25 +73,25 @@ properties:
     description: |
       A file glob match using http://godoc/pkg/path/filepath#Match extended 
       with support for "**". If both ignoredFiles and changed files are empty, 
-      they are not used to determine whether or not to trigger a build. If 
+      they are not used to determine whether or not to trigger a build. If
       ignoredFiles is not empty, we ignore the files that match any of
-      the ignored_file globs. If the changeset contains no files outside of the 
+      the ignored_file globs. If the changeset contains no files outside of the
       ignoredFiles globs, we do not trigger a build.
     items:
       type: string
   includedFiles:
     type: array
     description: |
-      A file glob match using http://godoc/pkg/path/filepath#Match extended 
-      with support for "**". If any of the files altered in the commit pass 
-      the ignoredFiles filter, and includedFiles is empty, then (as far as this 
-      filter is concerned), we must trigger a build. If any of the files 
+      A file glob match using http://godoc/pkg/path/filepath#Match extended
+      with support for "**". If any of the files altered in the commit pass
+      the ignoredFiles filter, and includedFiles is empty, then (as far as this
+      filter is concerned), we must trigger a build. If any of the files
       altered in the commit pass the ignoredFiles filter, and includedFiles
       is not empty, we must make sure that at least one of those files matches
       the includedFiles glob. If not, we do not trigger a build.
     items:
       type: string
-  buildTemplate:
+  build_template:
     oneOf:
       - "$ref": "#/definitions/build"
       - "$ref": "#/definitions/filename"
@@ -129,7 +132,7 @@ definitions:
         type: string
         description: |
           The directory to run the build in (path relative to the source root).
-          If a step's dirextory is specified as an absolute path, this value is 
+          If a step's directory is specified as an absolute path, this value is
           ignored for that step's execution.
       revision:
         type: string
@@ -146,7 +149,7 @@ definitions:
   filename:
     type: string
     description: |
-      The path, from the source root, to a file whose contents are used for 
+      The path, from the source root, to a file whose contents are used for
       the template.
   build:
     type: object
@@ -174,9 +177,9 @@ definitions:
             env:
               type: array
               description: |
-                The list of environment variable definitions to be used when 
-                running a step. The elements are in the "KEY=VALUE" form, 
-                wherein the environment variable "KEY" is given the value 
+                The list of environment variable definitions to be used when
+                running a step. The elements are in the "KEY=VALUE" form,
+                wherein the environment variable "KEY" is given the value
                 "VALUE".
               items:
                 type: string
@@ -186,8 +189,8 @@ definitions:
                 The list of build arguments to be passed to the step when
                 it is started. If the image used to run the step's container
                 has an entry point, the array elements are used as arguments
-                to that entry point. If the image does not define an entry 
-                point, the first element in the array is used as the entry 
+                to that entry point. If the image does not define an entry
+                point, the first element in the array is used as the entry
                 point, and the remainder are used as arguments.
               items:
                 type: string
@@ -196,12 +199,12 @@ definitions:
               description: |
                 The working directory to use when running the step's container.
                 If the value is a relative path, it is relative to the build's
-                working directory. If this value is an absolute path, it may 
-                be outside the build's working directory. In this case, the 
+                working directory. If this value is an absolute path, it may
+                be outside the build's working directory. In this case, the
                 contents of the path may not be persisted across the build step
-                executions, unless a volume for that path is specified.          
-                If the build specifies a RepoSource with dir and a step with a 
-                dir, which specifies an absolute path, the RepoSource dir is 
+                executions, unless a volume for that path is specified.
+                If the build specifies a RepoSource with dir and a step with a
+                dir, which specifies an absolute path, the RepoSource dir is
                 ignored for the step's execution.
             id:
               type: string
@@ -213,7 +216,7 @@ definitions:
               description: |
                 The ID(s) of the step(s) this build step depends on.
                 The build step will not start until all the build steps in 
-                waitFor have completed successfully. If waitFor is empty, 
+                waitFor have completed successfully. If waitFor is empty,
                 this build step will start when all the previous build steps 
                 in the Build.Steps list have completed successfully.
               items:
@@ -227,8 +230,8 @@ definitions:
             secretEnv:
               type: array
               description: |
-                The list of environment variables are encrypted using the 
-                Cloud Key Management Service crypto key. These values must be 
+                The list of environment variables are encrypted using the
+                Cloud Key Management Service crypto key. These values must be
                 specified in the build's Secret.
               items:
                 type: string
@@ -262,11 +265,12 @@ definitions:
       timeout:
         type: string
         description: |
-          The time limit for executing the build step. If not defined, the
-          step has no time limit, and is allowed to continue to run
-          until it either completes or the build itself times out.
-          Defined in seconds with up to nine fractional digits,
-          terminated by 's'; for example: 3.5s. 
+          Amount of time that this build should be allowed to run, to second
+          granularity. If this amount of time elapses, work on the build will
+          cease and the build status will be TIMEOUT.
+          Default time is ten minutes.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
       images:
         type: array
         description: |
@@ -287,9 +291,9 @@ definitions:
             type: array
             description: |
               The list of images to be pushed upon successful completion of all
-              build steps. The images are pushed using the Builder service 
+              build steps. The images are pushed using the Builder service
               account's credentials. The digests of the pushed images are
-              stored in the Build resource's results field. If any of the 
+              stored in the Build resource's results field. If any of the
               images fail to be pushed, the build status is marked as FAILURE.
             items:
               type: string
@@ -313,7 +317,7 @@ definitions:
                       The Cloud Storage bucket, with an optional object path,
                       in the "gs://bucket/path/to/somewhere/" form. Files in
                       the workspace matching any pattern under that path are
-                      uploaded to Cloud Storage with this location as a prefix. 
+                      uploaded to Cloud Storage with this location as a prefix.
                   paths:
                     type: array
                     description: |
@@ -420,7 +424,7 @@ outputs:
     - createTime:
         type: string
         description: | 
-          The time the build was requested, in the RFC3339 UTC Zulu format.
+          The time the build was requested, in the RFC3339 UTC "Zulu" format.
 
 documentation:
   - templates/cloudbuild/README.md

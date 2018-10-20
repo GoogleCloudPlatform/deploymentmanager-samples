@@ -20,12 +20,14 @@ info:
     For more information on this resource, see
     https://cloud.google.com/cloud-build/docs/.
 
+imports:
+  - path: cloudbuild.py
+
 required:
   - steps
 
 properties:
   source:
-    type: object
     description: The location of the source files to build.
     oneOf:
       - "$ref": "#/definitions/storageSource"

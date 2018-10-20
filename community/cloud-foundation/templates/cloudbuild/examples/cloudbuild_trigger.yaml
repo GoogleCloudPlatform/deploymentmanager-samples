@@ -1,22 +1,19 @@
 # Example of the Cloud Build trigger template usage.
 #
-# In this example, a Build trigger for automated builds is created.
+# In this example, a Build trigger is created for the following Github repo.
+# https://github.com/GoogleCloudBuild/gcbapp-example
 #
-# Replace the following placeholders with valid values:
-#   <FIXME:buildtrigger_description> : trigger description
-#   <FIXME:project_id>  : PROJECT_ID of the project where the repo resides
-#   <FIXME:repo_name>   : a valid Cloud Source repository name
-#   <FIXME: branch_name>: a valid branch name in the source repository
-#   <FIXME:builder_name>: a cloud-builder supported on Google Cloud;
-#                         see details at 
-#                         https://cloud.google.com/cloud-build/docs/cloud-builders
-#   <FIXME:build_args>  : a list of build arguments supported by the builder;
-#                         enter each argument on a separate line as show below
-#   Example git clone build step:
-#     - name: 'gcr.io/cloud-builders/git'
-#       args:
-#         - clone
-#         - https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+# Pre-requisites steps for creating this trigger: 
+# Step1: Login to github and fork the following github repo
+#        https://github.com/GoogleCloudBuild/gcbapp-example
+# Step2: Create a Cloud Source repo named gcbapp-example
+#        After the repo is created successfully do the following     
+#        - Select "Automatically mirror from Github/Bitbucket" option
+#        - Select "Hosting Service", Choose "Github" from dropdown then Connect
+#        - Follow steps to Authenticate your Github repo
+#        - Once authenticated, select the repo (from Step1) from the list
+#        - Select, "I consent .." checkbox then Click "connect"
+#
 
 imports:
   - path: templates/cloudbuild/trigger.py
@@ -26,22 +23,22 @@ resources:
   - name: mybuildtrigger
     type: trigger.py
     properties:
-      description: <FIXME:buildtrigger_description>
+      description: Cloud Build example app
       triggerTemplate:
-        repoSource:
-          projectId: <FIXME:project_id>
-          repoName: <FIXME:repo_name>
-          branchName: <FIXME:branch_name>
-      ignoredFiles:
-        - .gitignore
+        repoName: 'gcbapp-example'
+        branchName: 'master'
       build:
         steps:
-          - name: 'gcr.io/cloud-builders/<FIXME:builder_name>'
+          - name: 'gcr.io/cloud-builders/docker'
             args:
-              - <FIXME:build_args>
-              - <FIXME:build_args>
-          - name: 'gcr.io/cloud-builders/<FIXME:builder_name>'
+              - 'build'
+              - '--tag=gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+              - '.'
+          - name: 'gcr.io/cloud-builders/docker'
             args:
-              - <FIXME:build_args>
-              - <FIXME:build_args>
-        timeout: '300s'
+              - 'push'
+              - 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+        substitutions:
+          _IMAGE_NAME: gcbapp-example
+        images:
+          - 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
