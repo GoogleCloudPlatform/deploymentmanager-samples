@@ -1,10 +1,14 @@
 # Example of the Managed Instance Group template usage.
 #
 # In this example, a regional managed instance group with attached health check
-# is created.
-# Replace the following placeholders with valid values:
-#  <FIXME:healthCheckUri>: an URI of existing health check
-#
+# and auto-scaling is created.
+# 
+# Pre-requisites steps to run this example:
+# Step 1. Create a health check
+# Step 2. Replace the placeholders as indicated below
+#         <FIXME:healthCheckUri>: an URI of existing health check
+#         typically in the following format: 
+#         "projects/$PROJECT_ID/global/httpHealthChecks/health-check-name"
 
 imports:
   - path: templates/managed_instance_group/managed_instance_group.py
