@@ -42,7 +42,7 @@ properties:
         type: string
         description: |
           The ID of the project that owns the Cloud Source repository.
-          If omitted, the IF of the project requesting the build is assumed.
+          If omitted, the ID of the project requesting the build is assumed.
       repoName:
         type: string
         description: |
