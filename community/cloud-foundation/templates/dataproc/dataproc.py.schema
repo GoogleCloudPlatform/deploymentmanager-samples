@@ -70,12 +70,12 @@ properties:
     type: string
     description: |
       The Compute Engine network to be used for machine communications. Cannot
-      be specified if the 'subnetwork' value is privided.
+      be specified if the 'subnetwork' value is provided.
   subnetwork:
     type: string
     description: |
       The Compute Engine subnetwork to be used for machine communications.
-      Cannot be specified if the 'network' value is privided..
+      Cannot be specified if the 'network' value is provided.
   networkTags:
     type: array
     description: A list of Compute Engine tags to add to all instances.
