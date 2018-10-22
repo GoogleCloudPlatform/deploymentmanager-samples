@@ -16,7 +16,7 @@ info:
   title: Internal Load Balancer
   author: Sourced Group Inc.
   description: |
-    Supports creation of an internal load balancing solution that consists 
+    Supports the creation of an internal load balancing solution that consists 
     of a forwarding rule and a backend service. For details, visit
     https://cloud.google.com/load-balancing/docs/internal/.
 
@@ -44,7 +44,7 @@ properties:
   region:
     type: string
     description: |
-      The URL of the region where the internal load balancer resides.
+      The name of the region where the internal load balancer resides.
   ports:
     type: array
     description: | 
@@ -57,8 +57,8 @@ properties:
   network:
     type: string
     description: |
-      The network the load-balanced IP must belong to for the internal load
-      balancer. If no value is provided, the default network is used.
+      The network which the load-balanced IP must belong to. If no value is provided,
+      the default network is used.
       If you specify this property, you can specify the network as a full or
       partial URL. For example, the following are all valid URLs:
        - https://www.googleapis.com/compute/v1/projects/PROJECT/global/networks/NETWORK
@@ -67,8 +67,7 @@ properties:
   subnetwork:
     type: string
     description: |
-      The subnetwork the load-balanced IP must belong to for the internal load
-      balancer.
+      The subnetwork which the load-balanced IP must belong to.
       If you specify this property, you can specify the subnetwork as a full or
       partial URL. For example, the following are all valid URLs:
        - https://www.googleapis.com/compute/v1/projects/PROJECT/regions/REGION/subnetworks/SUBNETWORK
