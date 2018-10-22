@@ -1,13 +1,7 @@
 # Example of the Google Cloud KMS template usage.
 #
-# In this example, a KMS KeyRing is created with a cryptographic 
-# key for asymmetric signing. The key uses the 
-# RSA_SIGN_PKCS1_2048_SHA256 algorithm.
-#
-# Replace the following placeholders with relevant values:
-#  <FIXME:keyring_name>: a KeyRing name unique in the Project.
-#  <FIXME:cryptokey_name>: a cryptographic key name unique 
-#  in the KeyRing
+# In this example, a KMS KeyRing is created with a cryptographic signing key
+# The key uses the RSA_SIGN_PKCS1_2048_SHA256 algorithm.
 
 imports:
   - path: templates/kms/kms.py
@@ -17,10 +11,10 @@ resources:
   - name: test-kms
     type: kms.py
     properties:
-      keyRingName: <FIXME:keyring_name>
+      keyRingName: my-keyring-2
       region: us-east1
       keys:
-        - cryptoKeyName: <FIXME:cryptokey_name>
+        - cryptoKeyName: my-sign-key
           cryptoKeyPurpose: ASYMMETRIC_SIGN
           versionTemplate:
             protectionLevel: SOFTWARE

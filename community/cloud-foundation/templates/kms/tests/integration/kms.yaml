@@ -13,8 +13,7 @@ resources:
       keys:
         - cryptoKeyName: ${KEY_NAME}
           cryptoKeyPurpose: ${KEY_PURPOSE}
-          nextRotationTime: ${NEXT_ROTATION_TIME}
           iamPolicyBinding:
             - role: ${ROLE}
               members:
-                - ${SA_FQDN}
+                - serviceAccount:${SA_FQDN}

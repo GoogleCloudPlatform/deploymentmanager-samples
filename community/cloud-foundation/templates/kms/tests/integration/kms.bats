@@ -23,11 +23,11 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     export KEYRING_NAME="test-keyring-${RAND}"
     export REGION="global"
     export KEY_NAME="test-key-${RAND}"
-    export SA_NAME="${KEYRING_NAME}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com"
-    export SA_FQDN="serviceAccount:${SA_NAME}"
+    export SA_NAME="test-kms-${RAND}"
+    export SA_FQDN="${SA_NAME}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com"
     export ROLE="roles/cloudkms.admin"
     export KEY_PURPOSE="ENCRYPT_DECRYPT"
-    export NEXT_ROTATION_TIME=$(date -d '2 months' '+%Y-%m-%dT%H:%M:%S.%NZ')
+    # export NEXT_ROTATION_TIME=$(date -d '2 months' '+%Y-%m-%dT%H:%M:%S.%NZ')
 fi
 
 ########## HELPER FUNCTIONS ##########
@@ -47,7 +47,7 @@ function setup() {
     if [ ${BATS_TEST_NUMBER} -eq 1 ]; then
         create_config
         # Create service accounts to test IAM bindings.
-        gcloud iam service-accounts create "${KEYRING_NAME}" \
+        gcloud iam service-accounts create "${SA_NAME}" \
             --display-name "Test KMS Service Account"
     fi
 
@@ -60,7 +60,7 @@ function teardown() {
         delete_config
         rm -f "${RANDOM_FILE}"
         # Delete service account after tests had been completed.
-        gcloud --quiet iam service-accounts delete "${SA_NAME}"
+        gcloud --quiet iam service-accounts delete "${SA_FQDN}"
     fi
 
     # Per-test teardown steps.
@@ -69,10 +69,13 @@ function teardown() {
 ########## TESTS ##########
 
 @test "Creating deployment ${DEPLOYMENT_NAME} from ${CONFIG}" {
-    gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" \
-        --config "${CONFIG}" --project "${CLOUD_FOUNDATION_PROJECT_ID}"
+    run gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" \
+        --config "${CONFIG}" \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
 }
+
+sleep 5
 
 @test "Verifying the KeyRing ${KEYRING_NAME} was created " {
     run gcloud kms keyrings list --location ${REGION} \
@@ -130,6 +133,6 @@ function teardown() {
     [[ "$output" =~ "${SA_FQDN}" ]]
 }
 
-# Note: There is no Delete Deployment step because KeyRings and Keys 
-# cannot be deleted.
-
+########### NOTE ##################
+# There is no Delete Deployment step because KeyRings, Keys cannot be deleted.
+##################################
