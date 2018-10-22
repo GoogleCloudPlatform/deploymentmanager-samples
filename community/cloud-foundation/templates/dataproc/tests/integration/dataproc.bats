@@ -108,7 +108,7 @@ function teardown() {
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "numInstances: ${SECONDARY_WORKER_INSTANCES}" ]]
-    [[ "$output" =~ "${MASTER_TYPE}" ]] # Copied from worker node
+    [[ "$output" =~ "${WORKER_TYPE}" ]] # Copied from worker node
     [[ "$output" =~ "isPreemptible: ${SECONDARY_WORKER_PREEMPTIBLE}" ]]
 }
 

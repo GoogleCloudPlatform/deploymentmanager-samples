@@ -13,8 +13,6 @@
 # limitations under the License.
 """ This template creates a Dataproc cluster. """
 
-DEFAULT_REGION = 'global'
-
 PRIMARY_GROUP_SCHEMA = {'numInstances': None, 'machineType': 'machineTypeUri'}
 
 SECONDARY_GROUP_SCHEMA = {'numInstances': None, 'isPreemptible': None}
@@ -121,7 +119,7 @@ def generate_config(context):
     name = properties.get('name', context.env['name'])
     project_id = context.env['project']
     image = context.properties.get('image')
-    region = properties.get('region', DEFAULT_REGION)
+    region = properties['region']
 
     cluster_config = get_gce_cluster_config(properties)
 
