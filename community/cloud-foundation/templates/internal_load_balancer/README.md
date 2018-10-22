@@ -52,7 +52,7 @@ See the `properties` section in the schema file(s):
     vim my_internal_load_balancer.yaml  # <== change values to match your GCP setup
 ```
 
-5. Create your deployment (replace \<YOUR\_DEPLOYMENT\_NAME\> with the relevant
+5. Create your deployment (replace <YOUR_DEPLOYMENT_NAME> with the relevant
    deployment name):
 
 ```shell
