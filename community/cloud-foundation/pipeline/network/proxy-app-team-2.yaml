@@ -1,5 +1,5 @@
 name: proxy-app-team-2
-project: sourced-cft-demo-0
+project: {{env.CFT_CHILD_PROJECT}}
 description: Proxy deployment for app-team-2
 
 imports:

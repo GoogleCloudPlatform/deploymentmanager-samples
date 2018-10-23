@@ -1,5 +1,5 @@
 name: firewall-app-team-1
-project: sourced-cft-demo-0
+project: {{env.CFT_CHILD_PROJECT}}
 description: Firewall deployment for app-team-1
 
 imports:

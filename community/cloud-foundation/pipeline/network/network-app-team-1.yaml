@@ -1,5 +1,5 @@
 name: network-app-team-1
-project: sourced-cft-demo-0
+project: {{env.CFT_CHILD_PROJECT}}
 description: Network deployment for app-team-1
 
 imports:
