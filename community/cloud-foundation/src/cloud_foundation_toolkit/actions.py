@@ -15,6 +15,7 @@
 """ Deployment Actions """
 
 import glob
+import json
 import os.path
 import sys
 
@@ -85,7 +86,7 @@ def execute(args):
         action, args.config, arguments
     )
 
-    if args.graph:
+    if args.show_stages:
         output = []
         for level in graph:
             configs = []
@@ -98,29 +99,37 @@ def execute(args):
                     }
                 )
             output.append(configs)
-        YAML().dump(output, sys.stdout)
-    else:
-        for i, level in enumerate(graph, start=1):
-            print('---------- Stage {} ----------'.format(i))
-            for config in level:
-                if args.dry_run:
+        if args.format == 'yaml':
+            YAML().dump(output, sys.stdout)
+        elif args.format == 'json':
+            print(json.dumps(output, indent=2))
+        else:
+            for i, stage in enumerate(output, start=1):
+                print('---------- Stage {} ----------'.format(i))
+                for config in stage:
                     print(
-                        ' - project: {}, deployment: {}'.format(
-                            config.project,
-                            config.deployment
+                            ' - project: {}, deployment: {}, source: {}'.format(
+                            config['project'],
+                            config['deployment'],
+                            config['source']
                         )
                     )
-                else:
-                    LOG.debug('%s config %s', action, config.deployment)
-                    deployment = Deployment(config)
-                    method = getattr(deployment, action)
-                    try:
-                        method(**arguments)
-                    except apitools_exceptions.HttpNotFoundError:
-                        LOG.warn(
-                            'Deployment %s does not exit', config.deployment
-                        )
-                        if action != 'delete':
-                            raise
+            print('------------------------------')
+
+    else:
+        for i, stage in enumerate(graph, start=1):
+            print('---------- Stage {} ----------'.format(i))
+            for config in stage:
+                LOG.debug('%s config %s', action, config.deployment)
+                deployment = Deployment(config)
+                method = getattr(deployment, action)
+                try:
+                    method(**arguments)
+                except apitools_exceptions.HttpNotFoundError:
+                    LOG.warn(
+                        'Deployment %s does not exit', config.deployment
+                    )
+                    if action != 'delete':
+                        raise
         print('------------------------------')
 

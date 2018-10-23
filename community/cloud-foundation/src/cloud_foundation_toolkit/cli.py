@@ -34,14 +34,21 @@ def build_common_args(parser):
         help='The path to the config files or directory'
     )
     parser.add_argument(
-        '--graph',
-        '-g',
+        '--show-stages',
+        '-s',
         action='store_true',
         default=False,
         help=(
             'If specified, only displays the yaml representing the dependency '
             'graph for the action'
         )
+    )
+    parser.add_argument(
+        '--format',
+        '-f',
+        choices=['human', 'yaml', 'json'],
+        default='human',
+        help='The format of the output'
     )
 
 def parse_args(args):
@@ -65,13 +72,6 @@ def parse_args(args):
         )
     )
     parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help=(
-            'Prints the order of execution of the configs. No changes are made'
-        )
-    )
-    parser.add_argument(
         '--verbosity',
         default='warning',
         help='The log level'
@@ -83,7 +83,6 @@ def parse_args(args):
         'apply',
         'create',
         'delete',
-        'graph',
         'update'
     ]
 
