@@ -12,77 +12,78 @@
 
 You can use the Cloud Foundation toolkit (henceforth, CFT) as a standalone
 solution, via its command line interface (CLI) – see
-[CFT User Guide](../docs/userguide.md) for details. Alternatively, you can initiate
-CFT actions via its API, from a variety of existing orchestration tools, or
-from your own application.
+[CFT User Guide](../docs/userguide.md) for details. Alternatively, you can
+initiate CFT actions via its API, from a variety of existing orchestration
+tools, or from your own application.
 
 This document describes one of the CFT integration scenarios, wherein
-you initiate the CFT actions from Jenkins. This Guide uses as an example a
-Jenkins-based "sample pipeline" that is included in this CFT directory.
+you initiate the CFT actions from Jenkins. It uses as an example a
+Jenkins-based "sample pipeline", which is included in this CFT directory.
 
-`Note:` This document assumes the reader knows the basics of
-[Jenkins](https://jenkins.io/) and the
+`Note:` This document assumes that you are familiar with the basics of
+[Jenkins](https://jenkins.io/) and of its
 [Pipeline Plugin](https://jenkins.io/doc/book/pipeline/).
 
-`Note:` The Jenkins-based process is for demonstration purposes only. It is not
-intended as a product. Your Jenkins setup is likely to be different for the one
-we use/demonstrate; therefore, to achieve similar results, you will need to
-modify all the demo files.
+`Note:` The Jenkins-based process this document describes is for demonstration
+purposes only. It is not intended as a product. Your Jenkins setup is likely
+to be different from the one used for demonstrate. Therefore, to achieve
+similar results, you need to modify certain parameters in all the demo files.
 
 ## Prerequisites
 
-1. A working Jenkins server.
-    - Since different organizations have vastly differently
-     Jenkins setups, it isn't the objective of this document to document this
-     step. One could use an Compute Image from the
-     [Marketplace](https://console.cloud.google.com/marketplace/browse?q=jenkins)
-    - Extra Plugins:
-        - Pipeline Utility Steps
-2. GCP Service Accounts (SA)
-    - `Service Account for Jenkins`: Jenkins must be configured with permissions
-      necessary to manage DM deployments. This can be done by associating a SA
-      to the GCP Compute Instance running Jenkins (if Jenkins is in GCP). Or by
-      configuring the SA credentials with the Jenkins user if running Jenkins
-      outside GCP
-    - `Service Account for the GCP project`: Also knows as DM Service Account,
-      this SA needs permissions to all APIs DMs uses to create resources.
-3. Cloud Foundation Toolkit
+1. A working Jenkins server:
+    - Different organizations have vastly different Jenkins setups. Therefore,
+      this document provides no specific recommendations for fulfilling this
+      prerequisite. You might use a Compute Image from
+      [Marketplace](https://console.cloud.google.com/marketplace/browse?q=jenkins).
+    - Extra Plugins: Pipeline Utility Steps ??? what does this mean ???
+2. GCP Service Accounts (SA):
+    - `Service Account for Jenkins`: Jenkins must be configured with
+      permissions sufficient for managing DM deployments. This can be achieved
+      by:
+      - Associating a SA with the GCP Compute Instance running Jenkins (if
+        Jenkins is in GCP), or
+      - Configuring the SA credentials with the Jenkins user (if running
+        Jenkins outside GCP)
+    - `Service Account for the GCP project` (a.k.a. the DM Service Account):
+      this SA needs permissions to all APIs DM uses to create resources.
+3. The Cloud Foundation toolkit:
     - CFT must be installed in the Jenkins master and slaves. For installation
-      intructions, look into the [User
-      Guide](../docs/userguides.md#toolkit-installation-and-configuration)
-    - Notice that [gcloud sdk](https://cloud.google.com/sdk) is a requirement
-      for CFT
-4. Environment Variables file
-    - An example file is [here](pipeline-vars). Substitute the <FIXME:XXX> with
-      values specific to you organization, and move the file to the Jenkins
-      user's home directory
+      instructions, see the [CFT User
+      Guide](../docs/userguides.md#toolkit-installation-and-configuration).
+    - Note that the [Google Cloud SDK](https://cloud.google.com/sdk) is a
+      prerequisite for the CFT.
+4. The Environment Variables file:
+    - An example file is [here](pipeline-vars).
+    - Replace <FIXME:XXX> with values specific to you organization, and move
+      the file to the Jenkins user's home directory.
 
 ## Pipelines
 
-This directory implements deployment pipelines showing how CFT can be used in
-an *ficticious company*. In this ficticious company, it is assumed that 3
-separate teams are responsible for sweparate pieces of the cloud
-infrastructure:
+This directory implements deployment pipelines to show how the CFT can be used
+in a *fictitious company*. In this fictitious company, three separate teams are
+responsible for the corresponding separate pieces of the cloud infrastructure:
 
 - Central Cloud Platform Team:
-    - Responsible for creating GCP projects, IAM entities, Permissions,
-      Billing, etc
-    - This team owns the pipeline and configs in the [project](project)
-- Central Networking Team
-    - Responsible for networking between for all other teams, interconnects,
-      on-prem integration, etc
-    - This team owns the pipeline and configs in the [network](network)
-- Application Team
-    - Each application team is reponsible for deploying their own application
-      stacks. In this example, there's a single application team responsible
-      for deploying its own GKE clusters in different environments.
-    - This team owns the pipeline and configs in the [app](app)
+  - Responsible for creating GCP projects, IAM entities, Permissions,
+    Billing, etc.
+  - Owns the pipeline and configs in [project](project)
+- Central Networking Team:
+  - Responsible for networking between for all other teams, interconnects,
+    on-premise integration, etc.
+  - Owns the pipeline and configs in [network](network)
+- Application Teams (typically, more than one):
+  - Responsible for deploying the team-specific application stack (in this
+    example, there is a single application team, which is responsible for
+    deploying its GKE clusters in the different environments)
+  - Owns the pipeline and configs in [app](app)
 
+Each folder in this directory of the CFT repository represents and implements
+a pipeline that corresponds to one of the above teams.
 
-Each folder in this directory represents and implements pipelines for each of
-these teams above.
-Notice that this is not an usual way of organizing Jenkins pipelines. Normally,
-each pipeline is under its own git repo with it's own access controls for
-different teams, but since this is a simple demonstration, each pipeline is in
-a subfolder in the same repo.
+`Note:` This is not a typical way of organizing Jenkins pipelines. Normally,
+each pipeline would be in its own Git repository, with its own access controls
+for the different teams.
 
+??? That's it? Don't we want to tell the reader how to run
+the Jenkins example ???
