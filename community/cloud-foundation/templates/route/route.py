@@ -17,10 +17,7 @@
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    network_name = generate_network_url(
-        context.env['project'],
-        context.properties['network']
-    )
+    network_name = generate_network_url(context.properties)
 
     resources = []
     for i, route in enumerate(context.properties['routes'], 1000):
@@ -71,23 +68,41 @@ def generate_config(context):
     return {'resources': resources}
 
 
-def generate_network_url(project, network):
-    """Format the resource name as a resource URI."""
-    return 'projects/{}/global/networks/{}'.format(project, network)
+def generate_network_url(properties):
+    """ Gets the network name. """
+
+    network_name = properties.get('network')
+    is_self_link = '/' in network_name or '.' in network_name
+
+    if is_self_link:
+        network_url = network_name
+    else:
+        network_url = 'global/networks/{}'.format(network_name)
+
+    return network_url
 
 
 def generate_instance_url(project, zone, instance):
-    """Format the resource name as a resource URI."""
-    return 'projects/{}/zones/{}/instances/{}'.format(project, zone, instance)
+    """ Format the resource name as a resource URI. """
+
+    is_self_link = '/' in instance or '.' in instance
+
+    if is_self_link:
+        instance_url = instance
+    else:
+        instance_url = 'projects/{}/zones/{}/instances/{}'
+        instance_url = instance_url.format(project, zone, instance)
+
+    return instance_url
 
 
 def generate_gateway_url(project, gateway):
-    """Format the resource name as a resource URI."""
+    """ Format the resource name as a resource URI. """
     return 'projects/{}/global/gateways/{}'.format(project, gateway)
 
 
 def generate_vpn_tunnel_url(project, region, vpn_tunnel):
-    """Format the resource name as a resource URI."""
+    """ Format the resource name as a resource URI. """
     return 'projects/{}/regions/{}/vpnTunnels/{}'.format(
         project,
         region,

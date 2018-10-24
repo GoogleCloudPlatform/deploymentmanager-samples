@@ -1,0 +1,20 @@
+# Test of the HA NAT gateway template.
+
+imports:
+  - path: templates/nat_gateway/nat_gateway.py
+    name: nat_gateway.py
+    
+resources:
+  - name: test-nat-gateway-${RAND}
+    type: nat_gateway.py
+    properties:
+      network: network-${RAND}
+      subnetwork: subnet-${RAND}
+      natIpRange: 10.0.1.0/24
+      region: us-east1
+      zones:
+        - us-east1-b
+        - us-east1-c
+        - us-east1-d
+      natGatewayTag: natgw
+      nattedVmTag: no-ip

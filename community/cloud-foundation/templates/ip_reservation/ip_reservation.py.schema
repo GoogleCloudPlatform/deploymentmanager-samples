@@ -17,6 +17,10 @@ info:
   author: Sourced Group Inc.
   description: Reservers internal, external, or global IP address.
 
+imports:
+  - path: ../ip_reservation/ip_address.py
+    name: ip_address.py
+
 required:
   - ipAddresses
 
