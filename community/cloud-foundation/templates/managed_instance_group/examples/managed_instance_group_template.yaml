@@ -1,0 +1,16 @@
+# Example of the Managed Instace Group template usage.
+#
+
+imports:
+  - path: templates/managed_instance_group/managed_instance_group.py
+    name: managed_instance_group.py
+
+resources:
+  - name: managed_instance_group-example
+    type: managed_instance_group.py
+    properties:
+      baseInstanceName: group-base-name
+      name: mig1
+      targetSize: 3
+      instanceTemplate: "global/instanceTemplates/pre-emptible-cloud-init-template"
+      zone: us-east1-b
