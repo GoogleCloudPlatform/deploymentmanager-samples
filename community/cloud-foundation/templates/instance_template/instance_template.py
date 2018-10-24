@@ -15,7 +15,7 @@
 
 
 def set_optional_property(receiver, source, property_name, rename_to=None):
-    """ If set, copies the given property value from one object to another 
+    """ If set, copies the given property value from one object to another
         and optionally rename it.
     """
 
@@ -94,7 +94,8 @@ def generate_config(context):
         'tags',
         'canIpForward',
         'labels',
-        'serviceAccounts'
+        'serviceAccounts',
+        'scheduling'
     ]
 
     for prop in optional_props:
