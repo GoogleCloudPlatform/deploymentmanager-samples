@@ -1,10 +1,9 @@
 name: sourced-cft-demo-0
-project: {{env.CFT_PROJECT_ID}}
 imports:
   - path: templates/project/project.py
     name: project.py
 resources:
-  - name: sourced-cft-demo-0
+  - name: {{env.CFT_CHILD_PROJECT}}
     type: project.py
     properties:
       parent:

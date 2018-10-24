@@ -2,11 +2,11 @@
 
 
 // requires "Pipeline Utility Steps" plugin
-// requires 
+// requires "pipeline-vars" file to be setup inside jenkins user home dir
 
 def config_dir = "pipeline/network" // relative to ${cft_dir}
 
-def env = "~/cft-vars"
+def env = "~/pipeline-vars"
 def repo = "https://github.com/sourced/deploymentmanager-samples"
 def branch = "pipeline"
 def git_dir = "cft"
@@ -37,7 +37,6 @@ pipeline {
                             def configs = config_list.join(" ")
                             echo "Executing configs: ${configs}"
                             sh ". ${env} && cd ${git_dir}/${cft_dir} && cft apply ${configs}"
-//                            sh ". ~/cft-env-vars && cd ${git_dir}/${cft_dir} && cft apply ${configs}"
                         }
                         i++
                     }

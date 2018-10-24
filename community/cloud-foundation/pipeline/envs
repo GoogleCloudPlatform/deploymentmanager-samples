@@ -1,6 +1,0 @@
-export CFT_PROJECT_ID=sourced-root
-export CFT_SA=cft-jenkins-sa@sourced-root.iam.gserviceaccount.com
-export CFT_ORGANIZATION_ID=670891908486
-export CFT_ORGANIZATION_FOLDER_ID=572136718701
-export CFT_PIPELINE_DEPLOYER_ROLE=organizations/${CFT_ORGANIZATION_ID}/roles/PipelineDeployer
-export CFT_BILLING_ACCOUNT_ID=00E11A-0AB9A2-077BE7

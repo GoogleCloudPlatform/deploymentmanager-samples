@@ -1,5 +1,5 @@
 name: app-team-1-prod
-project: sourced-cft-demo-0
+project: {{env.CFT_CHILD_PROJECT}}
 description: App Team 1 PROD GKE Cluster
 
 imports:
