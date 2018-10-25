@@ -36,7 +36,7 @@ similar results, you need to modify certain parameters in all the demo files.
       this document provides no specific recommendations for fulfilling this
       prerequisite. You might use a Compute Image from
       [Marketplace](https://console.cloud.google.com/marketplace/browse?q=jenkins).
-    - Extra Plugins: Pipeline Utility Steps ??? what does this mean ???
+    - Install the Pipeline Utility Steps plugin.
 2. GCP Service Accounts (SA):
     - `Service Account for Jenkins`: Jenkins must be configured with
       permissions sufficient for managing DM deployments. This can be achieved
@@ -84,6 +84,3 @@ a pipeline that corresponds to one of the above teams.
 `Note:` This is not a typical way of organizing Jenkins pipelines. Normally,
 each pipeline would be in its own Git repository, with its own access controls
 for the different teams.
-
-??? That's it? Don't we want to tell the reader how to run
-the Jenkins example ???
