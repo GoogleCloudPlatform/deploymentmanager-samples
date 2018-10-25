@@ -2,7 +2,7 @@
 #
 
 imports:
-  - path: templates/managed_instance_group/managed_instance_group.py
+  - path: templates/managed_instance_group/managed_instance_group_template.py
     name: managed_instance_group.py
 
 resources:
@@ -12,5 +12,5 @@ resources:
       baseInstanceName: group-base-name
       name: mig1
       targetSize: 3
-      instanceTemplate: "global/instanceTemplates/pre-emptible-cloud-init-template"
+      instanceTemplate: "global/instanceTemplates/sample-template"
       zone: us-east1-b

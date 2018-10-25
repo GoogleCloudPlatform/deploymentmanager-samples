@@ -7,8 +7,18 @@
 imports:
   - path: templates/instance_template/instance_template.py
     name: instance_template.py
+  - path: templates/managed_instance_group/managed_instance_group_template.py
+    name: managed_instance_group.py
 
 resources:
+  - name: managed_instance_group-example
+    type: managed_instance_group.py
+    properties:
+      baseInstanceName: group-base-name-${RAND}
+      name: mig-${RAND}
+      targetSize: 3
+      instanceTemplate: "global/instanceTemplates/it-${RAND}"
+      zone: us-east1-b
   - name: instance-template-${RAND}
     type: instance_template.py
     properties:

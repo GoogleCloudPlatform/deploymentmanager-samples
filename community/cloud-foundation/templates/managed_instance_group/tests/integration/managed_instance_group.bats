@@ -25,7 +25,7 @@ fi
 ########## HELPER FUNCTIONS ##########
 
 function create_config() {
-    envsubst < "templates/instance_template/tests/integration/${TEST_NAME}.yaml" > "${CONFIG}"
+    envsubst < "templates/managed_instance_group/tests/integration/${TEST_NAME}.yaml" > "${CONFIG}"
 }
 
 function delete_config() {
@@ -58,62 +58,19 @@ function teardown() {
     [[ "$status" -eq 0 ]]
 }
 
-@test "Verifying instance template disk properties" {
-    run gcloud compute instance-templates describe it-${RAND} \
-        --format "yaml(properties.disks[0].initializeParams)" \
+@test "Verifying managed instance group exists" {
+    run gcloud compute instance-groups managed list \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "diskType: pd-ssd" ]]
-    [[ "$output" =~ "sourceImage: ${IMAGE}" ]]
-    [[ "$output" =~ "diskSizeGb: '50'" ]]
+    [[ "$output" =~ "mig-${RAND}" ]]
 }
 
-@test "Verifying instance spec properties" {
-    run gcloud compute instance-templates describe it-${RAND} \
+@test "Verifying managed instance group replicas" {
+    run gcloud compute instance-groups managed describe "mig-${RAND}"
+        --zone=us-east1-b \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "machineType: f1-micro" ]]
-    [[ "$output" =~ "description: Instance description" ]]
-    [[ "$output" =~ "canIpForward: true" ]]
-}
-
-@test "Verifying instance template properties" {
-    run gcloud compute instance-templates describe it-${RAND} \
-        --format "value(name, description, properties.labels)" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "Template description" ]]
-    [[ "$output" =~ "it-${RAND}" ]]
-    [[ "$output" =~ "name=wrench" ]]
-}
-
-@test "Verifying instance template network tags" {
-    run gcloud compute instance-templates describe it-${RAND} \
-        --format "yaml(properties.tags)" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "ftp" ]]
-    [[ "$output" =~ "https" ]]
-}
-
-@test "Verifying instance template metadata" {
-    run gcloud compute instance-templates describe it-${RAND} \
-        --format "yaml(properties.metadata)" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "key: createdBy" ]]
-    [[ "$output" =~ "value: unitTest" ]]
-}
-
-@test "Verifying instance template network properties" {
-    NET="https://www.googleapis.com/compute/v1/projects/${CLOUD_FOUNDATION_PROJECT_ID}/global/networks/test-network-${RAND}"
-    run gcloud compute instance-templates describe it-${RAND} \
-        --format "yaml(properties.networkInterfaces[0])" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "name: External NAT" ]]
-    [[ "$output" =~ "type: ONE_TO_ONE_NAT" ]]
-    [[ "$output" =~ "network: ${NET}" ]]
+    [[ "$output" =~ "targetSize: 3" ]]
 }
 
 @test "Deleting deployment" {
