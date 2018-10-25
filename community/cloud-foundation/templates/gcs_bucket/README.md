@@ -24,42 +24,42 @@ See the `properties` section in the schema file(s):
 
 1. Clone the [Deployment Manager samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples)
 
-```shell
-    git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
-```
+   ```shell
+   git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
+   ```
 
 2. Go to the [community/cloud-foundation](../../) directory
 
-```shell
-    cd community/cloud-foundation
-```
+   ```shell
+   cd community/cloud-foundation
+   ```
 
-3. Copy the example DM config to be used as a model for the deployment, in this case [examples/gcs_bucket.yaml](examples/gcs_bucket.yaml)
+3. Copy the example DM config to be used as a model for the deployment, in this case [examples/gcs\_bucket.yaml](examples/gcs_bucket.yaml)
 
-```shell
-    cp templates/gcs_bucket/examples/gcs_bucket.yaml my_gcs_bucket.yaml
-```
+   ```shell
+   cp templates/gcs_bucket/examples/gcs_bucket.yaml my_gcs_bucket.yaml
+   ```
 
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 
-```shell
-    vim my_gcs_bucket.yaml  # <== change values to match your GCP setup
-```
+   ```shell
+   vim my_gcs_bucket.yaml  # <== Replace the <FIXME:..> placeholders in the file
+   ```
 
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
    with your with your own deployment name
 
-```shell
-    gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-        --config my_gcs_bucket.yaml
-```
+   ```shell
+   gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
+       --config my_gcs_bucket.yaml
+   ```
 
 6. In case you need to delete your deployment:
 
-```shell
-    gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
-```
+   ```shell
+   gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
+   ```
 
 ## Examples
 

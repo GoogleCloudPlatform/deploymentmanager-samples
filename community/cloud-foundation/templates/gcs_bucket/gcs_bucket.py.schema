@@ -160,8 +160,8 @@ properties:
               properties:
                 age:
                   type: number
-                  description: The object age. Selects all objects of this age
-                  or older.
+                  description: |
+                    The object age. Selects all objects of this age or older.
                 createdBefore:
                   type: string
                   description: |

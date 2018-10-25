@@ -19,12 +19,7 @@ def generate_config(context):
 
     resources = []
     project_id = context.env['project']
-    bucket_name = context.properties.get('name') or context.env['name']
-
-    # output variables
-    bucket_selflink = '$(ref.{}.selfLink)'.format(bucket_name)
-    bucket_uri = 'gs://' + bucket_name + '/'
-
+    bucket_name = context.properties.get('name', context.env['name'])
     bucket = {
         'name': bucket_name,
         'type': 'storage.v1.bucket',
@@ -75,11 +70,11 @@ def generate_config(context):
             [
                 {
                     'name': 'storageBucketSelfLink',
-                    'value': bucket_selflink
+                    'value': '$(ref.{}.selfLink)'.format(bucket_name)
                 },
                 {
                     'name': 'storageBucketURL',
-                    'value': bucket_uri
+                    'value': 'gs://{}/'.format(bucket_name)
                 }
             ]
     }
