@@ -36,7 +36,7 @@ To deploy, you must have a GCP account and have gcloud installed.
         condorversion: 8.4.11-1.el7
     ```
 
-    *   the `count` specifies the number of compute nodes in the cluster
+    *   the `count` specifies the number of compute nodes in the cluster provisioned at deployment time
     *   `zone` is the zone and region in which to launch the vms
     *   `email` is used for the configuration of htcondor (optional)
     *   `instancetype` is the type of nodes to use
@@ -107,6 +107,12 @@ To deploy, you must have a GCP account and have gcloud installed.
 
     ```
     % condor_history  --userlog /var/log/condor/jobs/stats.log
+    ```
+
+6.  Turn off all cluster resources when not in use, i.e.:
+
+    ```
+    % gcloud deployment-manager deployments delete mycondorcluster
     ```
 
 ## Files

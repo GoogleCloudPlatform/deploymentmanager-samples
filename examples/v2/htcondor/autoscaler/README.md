@@ -1,4 +1,4 @@
-# HTCondor Compute Cluster Resizing Based  on the Number of Jobs in the Queue
+# How to Resize an HTCondor Compute Cluster Based on the Number of Jobs in the Queue
 
 [HTCondor](https://research.cs.wisc.edu/htcondor/) is a framework for 
 solving computationally intensive problems.
@@ -36,21 +36,28 @@ We assume that an HTCondor cluster is running on GCP prior to installing and con
 ### Prerequisites
 
 Please follow instructions from https://cloud.google.com/solutions/high-throughput-computing-htcondor 
-to set up HTCondor in the GCP environment. Make sure to use attribute `setup_autoscaler = false` in 
-the properties of your condor-cluster, since this autoscaler will control the resources.
+to set up HTCondor in the GCP environment. Make sure to use attribute 
+`setup_autoscaler = false` in the properties of your condor-cluster, since 
+this autoscaler will control the resources.
 
 Other dependencies include Python, the GoogleApiClient and oauth2client 
 for Python (installed on the submit node by default).
 
-Note that the default quota on the number of instances (CPUs) may be too low 
-as set by default. The current instance quota can be checked on the quota
-console page and can be increased by clicking the “Edit Quota” button on 
-that page.
+Note that the default quota on the number of instances ("Compute Engine API / 
+CPUs" and/or "Compute Engine API / In-use IP addresses")
+may be too low as set by default. The current instance quota can be checked
+on the quota console page and can be increased by clicking the “Edit Quota” 
+button on that page.
 
-Access to the Google Cloud Compute Engine API should be enabled. The HTCondor
-submit node has the API enabled as part of its deployment. Please 
-follow instructions on https://cloud.google.com/apis/docs/enable-disable-apis 
-to enable this API from the management console to enable the API for other nodes.
+The service account used by the autoscaler to interact with GCE should have 
+access to the Google Cloud Compute Engine API. In the default deployment,
+we enable the service account of the submit node to have access to the API 
+i.e. the service account of the submit node has scope 
+https://www.googleapis.com/auth/compute. If you
+plan to execute the autoscaler from a different machine, make sure that the 
+service account of that machine has the compute 
+scope enabled (more infortmation at 
+https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes).
 
 The script assumes that the Managed Instance Group for the compute nodes is 
 provisioned. Make sure that the “Maximum number of instances” parameter is 
@@ -67,13 +74,13 @@ Script accepts the following arguments:
 | --zone        | -z | Name of GCP zone where the managed instance group is located |
 | --group_manager | -g | Name of the managed instance group |
 | --verbosity (optional) | -v | Show detail output. 1 - show basic debug info. 2 - show detail debug info |
-| --computeinstancelimit (optional) | -v | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
+| --computeinstancelimit (optional) | -c | Maximum number of compute nodes that can be started from the script. Default is no limit enforced by this script |
 | --help (optional) | -h | Show command line help information |
  
 Example for starting the script:
 
 ```
-python autoscaler.py --project_id htcondor-project --region us-central1 --zone us-central1-f --group_manager condor-compute-igm --verbosity 2
+python autoscaler.py --project_id htcondor-project --region us-central1 --zone us-central1-f --group_manager condor-compute-igm --verbosity 1
 ```
 
 ### Deployment
