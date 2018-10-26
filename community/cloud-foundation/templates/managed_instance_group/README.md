@@ -1,6 +1,6 @@
-# Instance Template
+# Managed Instance Group
 
-This template creates an instance template.
+This template creates an managed instance group.
 
 ## Prerequisites
 
@@ -13,13 +13,13 @@ role to the [Deployment Manager service account](https://cloud.google.com/deploy
 
 ### Resources
 
-- [compute.v1.instanceTemplate](https://cloud.google.com/compute/docs/reference/latest/instanceTemplates)
+- [compute.v1.instanceGroupManager](https://cloud.google.com/compute/docs/reference/rest/v1/instanceGroupManagers)
 
 ### Properties
 
 See the `properties` section in the schema file(s):
 
-- [Instance Template](instance_template.py.schema)
+- [Managed Instance Group](managed_instance_group.py.schema)
 
 ### Usage
 
@@ -36,18 +36,18 @@ See the `properties` section in the schema file(s):
 ```
 
 3. Copy the example DM config to be used as a model for the deployment, in this
-   case [examples/instance\_template.yaml](examples/instance_template.yaml)
+   case [examples/managed\_instance\_group.yaml](examples/managed_instance_group.yaml)
 
 ```shell
-    cp templates/instance_template/examples/instance_template.yaml \
-        my_instance_template.yaml
+    cp templates/managed_instance_group/examples/managed_instance_group.yaml \
+        my_managed_instance_group.yaml
 ```
 
 4. Change the values in the config file to match your specific GCP setup.
    Refer to the properties in the schema files described above.
 
 ```shell
-    vim my_instance_template.yaml  # <== change values to match your GCP setup
+    vim my_managed_instance_group.yaml  # <== change values to match your GCP setup
 ```
 
 5. Create your deployment as described below, replacing <YOUR_DEPLOYMENT_NAME>
@@ -55,7 +55,7 @@ See the `properties` section in the schema file(s):
 
 ```shell
     gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-        --config my_instance_template.yaml
+        --config my_managed_instance_group.yaml
 ```
 
 6. In case you need to delete your deployment:
@@ -66,4 +66,4 @@ See the `properties` section in the schema file(s):
 
 ## Examples
 
-- [Instance Template](examples/instance_template.yaml)
+- [Managed Instance Group](examples/managed_instance_group.yaml)

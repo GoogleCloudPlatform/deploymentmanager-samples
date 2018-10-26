@@ -66,11 +66,11 @@ function teardown() {
 }
 
 @test "Verifying managed instance group replicas" {
-    run gcloud compute instance-groups managed describe "mig-${RAND}"
-        --zone=us-east1-b \
+    run gcloud compute instance-groups managed list \
+        --filter="target_size:3" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "targetSize: 3" ]]
+    [[ "$output" =~ "mig-${RAND}" ]]
 }
 
 @test "Deleting deployment" {

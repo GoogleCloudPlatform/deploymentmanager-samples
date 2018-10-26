@@ -1,4 +1,4 @@
-# Test of the Instance Template template.
+# Test of the Managed Instance Group template.
 #
 # Variables:
 #   RAND: a random string used by the testing suite
@@ -7,17 +7,17 @@
 imports:
   - path: templates/instance_template/instance_template.py
     name: instance_template.py
-  - path: templates/managed_instance_group/managed_instance_group_template.py
+  - path: templates/managed_instance_group/managed_instance_group.py
     name: managed_instance_group.py
 
 resources:
-  - name: managed_instance_group-example
+  - name: managed_instance_group-${RAND}
     type: managed_instance_group.py
     properties:
       baseInstanceName: group-base-name-${RAND}
       name: mig-${RAND}
       targetSize: 3
-      instanceTemplate: "global/instanceTemplates/it-${RAND}"
+      instanceTemplate: $(ref.instance-template-${RAND}.selfLink)
       zone: us-east1-b
   - name: instance-template-${RAND}
     type: instance_template.py

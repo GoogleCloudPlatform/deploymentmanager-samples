@@ -20,23 +20,34 @@ info:
 
 required:
   - baseInstanceName
-
+  - name
+  - targetSize
+  - instanceTemplate
+  - zone
 properties:
+  baseInstanceName:
+    type: string
+    description: The base instance name to use for instances in this group. The value must be 1-58 characters long. Instances are named by appending a hyphen and a random four-character string to the base instance name. The base instance name must comply with RFC1035.
   name:
     type: string
-    description: The name of the instance template resource.
-  templateDescription:
+    description: The name of the managed instance group resource.
+  targetSize:
+    type: integer
+    description: The target number of running instances for this managed instance group. Deleting or abandoning instances reduces this number. Resizing the group changes this number.
+  instanceTemplate:
     type: string
-    description: The resource description (optional).
-
+    description: The URL of the instance template that is specified for this managed instance group. The group uses this template to create all new instances in the managed instance group.
+  zone:
+    type: string
+    description: The URL of the zone where the managed instance group is located (for zonal resources).
 outputs:
   properties:
     - name:
         type: string
-        description: The instance template name.
+        description: The managed instance group name.
     - selfLink:
         type: string
-        description: The URI (SelfLink) of the instance template resource.
+        description: The URI (SelfLink) of the managed instance group resource.
 
 documentation:
   - templates/managed_instance_group/README.md

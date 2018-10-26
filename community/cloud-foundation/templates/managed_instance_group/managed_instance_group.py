@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" This template creates an Instance Template. """
+""" This template creates an Managed Instance Group. """
 
 
 def generate_config(context):
@@ -23,7 +23,7 @@ def generate_config(context):
     base_name = properties.get('baseInstanceName')
     instance_template_name = properties.get('instanceTemplate')
     zone = properties.get('zone')
-    managed_instance_group_template = {
+    managed_instance_group = {
         'name': name,
         'type': 'compute.v1.instanceGroupManager',
         'properties':
@@ -36,7 +36,7 @@ def generate_config(context):
     }
 
     return {
-        'resources': [managed_instance_group_template],
+        'resources': [managed_instance_group],
         'outputs':
             [
                 {
