@@ -18,14 +18,12 @@
 
 The Cloud Foundation toolkit (henceforth, CFT) includes the following parts:
 
-- A comprehensive set of production-ready resource templates that follow
-  Google's best practices, which can be used with the CFT or the gcloud
-  utility (part of the Google Cloud SDK)
+- A comprehensive set of [production-ready resource templates](../templates/README.md)
+  that follow Google's best practices, which can be used with the CFT or the
+  gcloud utility (part of the Google Cloud SDK)
 - A command-line interface (henceforth, CLI) that deploys resources defined in
   single or multiple CFT-compliant config files - see the
-  [CFT User Guide](userguide.md)
-- A sample pipeline that enables running CFT deployment operations from
-  Jenkins - see the [CFT Integrator Guide](*** does not exist yet ***)
+  [CFT User Guide](../userguide.md)
 
 This Guide is intended for the developers who are planning to modify the
 existing templates or create new ones.

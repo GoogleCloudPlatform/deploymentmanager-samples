@@ -11,7 +11,7 @@ The Cloud Foundation toolkit (henceforth, CFT) includes the following parts:
   single or multiple CFT-compliant config files - see the
   [CFT User Guide](../docs/userguide.md)
 - A sample pipeline that enables running CFT deployment operations from
-  Jenkins - see the [CFT Integrator Guide](*** does not exist yet ***)
+  Jenkins - see the [pipeline documentation](../pipeline/README.md)
 
 ## Repository Structure
 

@@ -68,9 +68,13 @@ The CFT includes:
 
 - A command-line interface (henceforth, CLI) that deploys resources defined in
   single or multiple CFT-compliant config files
-- A comprehensive set of production-ready resource templates that follow
+- A comprehensive set of production-ready resource [templates](#templates) that follow
   Google's best practices, which can be used with the CFT or the gcloud
   utility (the latter a part of the Google Cloud SDK).
+
+You can use the CFT "as is" or modify it to suit your specific needs. Instructions
+and recommendations for the CFT code modifications are in the
+[CFT Developer Guide](../tool_dev_guide.md).
 
 ## CFT Configs
 
@@ -94,7 +98,7 @@ If not specified, the name of the deployment is inferred from the config
 file name. For example, if the path to the config file is
 `path/to/configs/my-network.yaml`, and the config does not specify the `name`
 directive, the deployment name is set to `my-network`. This is meant as a
-workaround for maintaining compatibility between the `CTT` and `gcloud` configs.
+workaround for maintaining compatibility between the `CFT` and `gcloud` configs.
 However, **it is strongly recommended that the `name` directive is specified**.
 
 #### project
@@ -319,6 +323,11 @@ CFT-compliant configs can use templates written in Python or Jinja2. [Templates
 included in the toolkit](../templates) are recommended (although not mandatory)
 as they offer robust functionality, ease of use, and adherence to best
 practices.
+
+You can use the templates included in our library "as is," and/or modify them
+to suit your needs, as well as develop your own templates. Instructions and
+recommendations for template development are in the
+[Template Developer Guide](../template_dev_guide.md).  
 
 ## Toolkit Installation and Configuration
 
