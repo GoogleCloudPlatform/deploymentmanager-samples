@@ -59,7 +59,7 @@ properties:
       field:
         type: string
         description: |
-          The field to partition the table by. This field must be a top-level 
+          The field to be used for table partitioning. This field must be a top-level 
           TIMESTAMP or DATE field. Its mode must be NULLABLE or REQUIRED.
           If not specified, the table is partitioned by a pseudo-column, 
           referenced via either '_PARTITIONTIME' as TIMESTAMP type or 
