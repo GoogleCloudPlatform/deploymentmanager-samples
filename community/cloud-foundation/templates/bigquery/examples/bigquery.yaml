@@ -1,6 +1,6 @@
-# Example of the BigQuery Dataset and Table usage.
+# Example of the BigQuery (dataset and table) template usage.
 #
-# Replace `my_account@email.com` with your account email.
+# Replace `<FIXME:my_account@email.com>` with your account email.
 
 imports:
   - path: templates/bigquery/bigquery_dataset.py
@@ -16,7 +16,7 @@ resources:
       location: US
       access:
         - role: OWNER
-          userByEmail: my_account@email.com
+          userByEmail: <FIXME:my_account@email.com>
 
   - name: test-bq-table
     type: bigquery_table.py

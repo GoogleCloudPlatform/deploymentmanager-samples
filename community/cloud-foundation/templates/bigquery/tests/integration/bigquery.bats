@@ -47,7 +47,7 @@ function setup() {
   }
 
 function teardown() {
-    # Global teardown - this gets executed only once per test file
+    # Global teardown; executed once per test file.
     if [[ "$BATS_TEST_NUMBER" -eq "${#BATS_TEST_NAMES[@]}" ]]; then
         gcloud iam service-accounts delete \
             "${TEST_SERVICE_ACCOUNT}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com" \
@@ -66,21 +66,21 @@ function teardown() {
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
 }
 
-@test "Verifying that the dataset was created in deployment ${DEPLOYMENT_NAME}" {
+@test "Verifying that a dataset was created in deployment ${DEPLOYMENT_NAME}" {
     run bq show --format=prettyjson \
         "${CLOUD_FOUNDATION_PROJECT_ID}":test_bq_dataset_${RAND}
     [ "$status" -eq 0 ]
     [[ "$output" =~ "\"datasetId\": \"test_bq_dataset_${RAND}\"" ]]
 }
 
-@test "Verifying that the table was created in dataset deployment ${DEPLOYMENT_NAME}" {
+@test "Verifying that a table was created in the dataset in deployment ${DEPLOYMENT_NAME}" {
     run bq ls --format=prettyjson \
         "${CLOUD_FOUNDATION_PROJECT_ID}":test_bq_dataset_${RAND}
     [ "$status" -eq 0 ]
     [[ "$output" =~ "\"tableId\": \"test_bq_table_${RAND}\"" ]]
 }
 
-@test "Verifying table schema was created in dataset deployment ${DEPLOYMENT_NAME}" {
+@test "Verifying that a table schema was created in the dataset deployment ${DEPLOYMENT_NAME}" {
     run bq show --schema test_bq_dataset_${RAND}.test_bq_table_${RAND}
     [ "$status" -eq 0 ]
     [[ "$output" =~ "{\"type\":\"STRING\",\"name\":\"firstname\"}" ]]
@@ -88,7 +88,7 @@ function teardown() {
     [[ "$output" =~ "{\"type\":\"INTEGER\",\"name\":\"age\"}" ]]
 }
 
-@test "Deployment Delete" {
+@test "Deleting deployment" {
     gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
 
