@@ -1,8 +1,8 @@
-# Example on how to use the IAM custom role template
+# Test of the IAM custom role template.
 #
 # Variables:
-#   CLOUD_FOUNDATION_ORGANIZATION_ID: The organization ID of your organization.
-#   RAND: Just a random string used mostly by the testing suite.
+#   CLOUD_FOUNDATION_ORGANIZATION_ID: TYour organization's ID
+#   RAND: A random string used by the testing suite
 
 imports:
   - path: templates/iam_custom_role/project_custom_role.py

@@ -1,18 +1,18 @@
-# Example on how to use the project template
+# Example of the project template usage.
 #
-# In this example, a project is created, along with some of the most used
-# resources that an enterprise needs for regular operation
+# In this example, a project is created, along with some of the
+# resources that an enterprise is likely to need for regular operations.
 #
-# Notice that the `parent.type` property defaults to "organization" so it
-# doesn't need to be specified in the config. It is specified here for
-# informational purposes
+# Note that the `parent.type` property defaults to "organization", so it
+# does not need to be specified in the config. It is specified here for
+# informational purposes.
 #
-# See `templates/project.py.schema` for detailed information on these
-# properties
+# See `templates/project.py.schema` for detailed information on the
+# properties.
 #
-# Replace the `parent.id` placeholder value with your organization ID.
-# Replace the `billingAccountId` placeholder value with your billing
-# account ID
+# Replace the `parent.id` placeholder with your organization ID.
+# Replace the `billingAccountId` placeholder with your billing
+# account ID.
 
 imports:
   - path: templates/project/project.py

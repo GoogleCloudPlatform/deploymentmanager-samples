@@ -1,3 +1,8 @@
+# Test of the firewall template.
+#
+# Variables:
+#   RAND: A random string used by the testing suite
+
 imports:
   - path: templates/firewall/firewall.py
     name: firewall.py
