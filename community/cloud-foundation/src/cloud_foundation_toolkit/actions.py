@@ -41,7 +41,7 @@ def check_file(config):
     for ext in extensions:
         if ext == config[-len(ext):]:
             return True
-    return False
+
 
 def get_config_files(config):
     """ Build a list of config files

@@ -20,8 +20,9 @@ class Args(object):
 
     def __init__(self, **kwargs):
         self.preview = False
-        self.dry_run = False
         self.project = False
+        self.show_stages = False
+        self.format = 'human'
         [setattr(self, k, v) for k, v in kwargs.items()]
 
 
@@ -42,10 +43,25 @@ def test_execute(configs):
         assert r == None
         assert m1.call_count == n_configs
 
-        args.dry_run = True
+        args.show_stages = True
         r = actions.execute(args)
         assert r == None
         assert m1.call_count == n_configs
+
+        with mock.patch('cloud_foundation_toolkit.actions.json.dumps') as m2:
+            args.format = 'json'
+            r = actions.execute(args)
+            assert m1.call_count == n_configs
+            assert m2.call_count == 1
+
+        with mock.patch('cloud_foundation_toolkit.actions.YAML.dump') as m2:
+            args.format = 'yaml'
+            r = actions.execute(args)
+            assert m1.call_count == n_configs
+            assert m2.call_count == 1
+
+
+
 
 
 def test_valid_actions():
@@ -58,7 +74,7 @@ def test_action(configs):
     args = Args(config=[configs.directory])
     for action in ACTIONS:
         args.action = action
-        args.dry_run = False
+        args.show_stages = False
         n_configs = len(configs.files)
         with mock.patch('cloud_foundation_toolkit.actions.Deployment') as m1:
             # Test the normal/expected flow of the function
@@ -89,14 +105,14 @@ def test_action(configs):
 
             # Test dry-run
             m1.reset_mock()
-            args.dry_run = True
+            args.show_stages = True
             r = actions.execute(args)
             method = getattr(mock.call(), action)
             m1.assert_not_called()
 
 
 def test_get_config_files(configs):
-    # Test only directory
+    # Test only single directory
     r = actions.get_config_files([configs.directory])
     files = [v.path for k, v in configs.files.items()]
     files.sort()
