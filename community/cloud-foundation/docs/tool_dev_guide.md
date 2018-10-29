@@ -6,7 +6,6 @@
 - [Prerequisites](#prerequisites)
     - [Google Cloud SDK](#google-cloud-sdk)
     - [Development Environment](#development-environment)
-- [Development](#development)
 - [Unit Tests](#unit-tests)
     - [From Outside the Development Environment](#from-outside-the-development-environment)
     - [From Within the Development Environment](#from-within-the-development-environment)
@@ -61,13 +60,9 @@ The CFT development environment is based on:
   management of Python virtual environments
 - [pytest](https://docs.pytest.org/en/latest/contents.html) for unit tests
 
-1. Install Tox.
+Proceed as follows:
 
-Because Tox creates virtual environments, this package should be installed
-??? in the same directory? Or ??? with the system Python, unless you have a
-more complex setup, in which case it is your responsibility to choose the
-installation location.
-
+1. Install Tox with the system Python.
 2. Install CFT prerequisites:
 
 ```shell
@@ -118,10 +113,6 @@ make cft-clean-venv
 ```
 
 - Create the environment as described in Step 3 above.
-
-## Development
-
-??? What do we want to tell the CFT developer here ???
 
 ## Unit Tests
 

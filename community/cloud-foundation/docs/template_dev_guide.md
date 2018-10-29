@@ -3,7 +3,7 @@
 <!-- TOC -->
 
 - [Overview](#overview)
-- [Development](#development)
+- [Prerequisites](#prerequisites)
 - [Testing](#testing)
     - [Bats Installation](#bats-installation)
     - [Testing Environment Setup](#testing-environment-setup)
@@ -28,7 +28,7 @@ The Cloud Foundation toolkit (henceforth, CFT) includes the following parts:
 This Guide is intended for the developers who are planning to modify the
 existing templates or create new ones.
 
-## Development
+## Prerequisites
 
 1. Install and set up the [Google Cloud SDK](https://cloud.google.com/sdk/).
 2. Install the template development prerequisites:
@@ -36,8 +36,6 @@ existing templates or create new ones.
 ```shell
 make template-prerequisites
 ```
-
-??? Anything else we want to say here ???
 
 ## Testing
 
