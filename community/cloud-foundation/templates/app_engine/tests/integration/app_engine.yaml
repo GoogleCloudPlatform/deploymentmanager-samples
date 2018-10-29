@@ -1,0 +1,14 @@
+# Test of the App Engine template.
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+
+resources:
+  - name: test-app-engine-${RAND}
+    type: app_engine.py
+    properties:
+      locationId: us-east1
+      servingStatus: SERVING
+      featureSettings:
+        splitHealthChecks: True
