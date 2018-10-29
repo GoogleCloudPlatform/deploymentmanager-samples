@@ -16,12 +16,11 @@ To try a basic deployment in Cloud Shell, open the [quickstart tutorial](https:/
 
 ## Cloud Foundation Toolkit
 
-We are happy to introduce the Cloud Foundation Toolkit to provide a common baseline of 
-GCP best practices implemented infrastructure as code.
+We are happy to introduce the Cloud Foundation Toolkit to provide a common baseline of GCP best practices implemented with infrastructure as code.
 
-Large portion of the templates are available under [community/cloud-foundation](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/master/community/cloud-foundation), templates reviewed but not finalized can be found at the [cloud-foundation branch](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/cloud-foundation/community/cloud-foundation)
+A large portion of the templates is available under [community/cloud-foundation](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/master/community/cloud-foundation), templates that had been reviewed but are not yet finalized can be found at the [cloud-foundation branch](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/cloud-foundation/community/cloud-foundation)
 
-These templates are setting a high standard for infrastructure automation by adding a detailed schema, documentation and integration test. The example configuration makes you able to deploy these templates within minutes.
+These templates are setting a high standard for infrastructure automation by adding a detailed schema, documentation and integration tests. The example configuration allows you to deploy these templates within minutes.
 
 ## Contributing
 
