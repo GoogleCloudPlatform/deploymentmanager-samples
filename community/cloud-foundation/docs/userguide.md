@@ -37,23 +37,23 @@
 ## Overview
 
 The GCP Deployment Manager service does not support cross-deployment
-references, and the gcloud utility does not support concurrent deployment of
+references, and the `gcloud` utility does not support concurrent deployment of
 multiple inter-dependent configs. The `Cloud Foundation toolkit` (henceforth,
-`CFT`) expands the capabilities of Deployment Manager and gcloud to support
+`CFT`) expands the capabilities of Deployment Manager and `gcloud` to support
 the following scenarios:
 
 - Creation, update, and deletion of multiple deployments in a single operation
-  that:
+  which:
   - Accepts multiple config files as input
   - Automatically resolves dependencies between these configs
   - Creates/updates deployments in the dependency-stipulated order, or
-    deletes deployments in the reverse dependency order
+    deletes deployments in a reverse dependency order
 - Cross-deployment (including cross-project) referencing of deployment outputs,
-  which obviates the need for hard-coding many parameters in the configs
+  which removes the need for hard-coding many parameters in the configs
 
 For example, if config file `A` contained all network resources, config file
 `B` contained all instances, and config `C` contained firewall rules, router,
-and VPN, in gcloud you would need to *manually* define the config deployment
+and VPN, in `gcloud` you would need to *manually* define the config deployment
 order according to the resource dependencies. The VPN would depend on the cloud
 router, both of them would depend on the network, etc. The `CFT` computes the
 dependencies *automatically*, which eliminates the need for manual deployment
@@ -69,8 +69,8 @@ The CFT includes:
 - A command-line interface (henceforth, CLI) that deploys resources defined in
   single or multiple CFT-compliant config files
 - A comprehensive set of production-ready resource [templates](#templates) that follow
-  Google's best practices, which can be used with the CFT or the gcloud
-  utility (the latter a part of the Google Cloud SDK).
+  Google's best practices, which can be used with the CFT or the `gcloud`
+  utility. (`gcloud` is part of the Google Cloud SDK).
 
 You can use the CFT "as is" or modify it to suit your specific needs. Instructions
 and recommendations for the CFT code modifications are in the
