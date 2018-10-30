@@ -21,6 +21,7 @@ def generate_config(context):
     network = context.properties.get('network')
 
     resources = []
+    out = {}
     for i, rule in enumerate(context.properties['rules'], 1000):
         # Use VPC if specified in the properties. Otherwise, specify
         # the network URL in the config. If the network is not specified in
@@ -38,4 +39,12 @@ def generate_config(context):
                 'properties': rule
             }
         )
-    return {'resources': resources}
+
+        out[rule['name']] = {
+            'selfLink': '$(ref.' + rule['name'] + '.selfLink)',
+            'creationTimestamp': '$(ref.' + rule['name'] + '.creationTimestamp)',
+        }
+
+    outputs = [{'name': 'rules', 'value': out}]
+
+    return {'resources': resources, 'outputs': outputs}

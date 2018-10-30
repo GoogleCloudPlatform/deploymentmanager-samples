@@ -69,12 +69,16 @@ def generate_config(context):
         'outputs':
             [
                 {
-                    'name': 'storageBucketSelfLink',
-                    'value': '$(ref.{}.selfLink)'.format(bucket_name)
+                    'name': 'name',
+                    'value': bucket_name
                 },
                 {
-                    'name': 'storageBucketURL',
-                    'value': 'gs://{}/'.format(bucket_name)
+                    'name': 'selfLink',
+                    'value': bucket_selflink
+                },
+                {
+                    'name': 'url',
+                    'value': bucket_uri
                 }
             ]
     }

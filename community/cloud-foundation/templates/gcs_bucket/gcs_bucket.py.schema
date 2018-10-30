@@ -215,10 +215,13 @@ properties:
           is missing, and no mainPageSuffix object is provided.
 outputs:
   properties:
-    - storageBucketSelfLink:
+    - name:
         type: string
-        description: The URI of the created storage bucket resource.
-    - storageBucketURL:
+        description: The name of the storage bucket resource.
+    - selfLink:
+        type: string
+        description: The URI (SelfLink) of the storage bucket resource.
+    - url:
         type: string
         description: |
           The base URL of the bucket in the gs://<bucket-name> format.
