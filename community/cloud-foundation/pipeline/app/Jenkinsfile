@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh "rm -rf ${git_dir}"
                 sh "git clone ${repo} ${git_dir}"
-                sh "cd cft && git checkout ${branch}"
+                sh "cd ${git_dir} && git checkout ${branch}"
             }
         }
         stage('Initialize Deploy Stages') {
