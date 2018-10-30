@@ -74,7 +74,7 @@ The CFT includes:
 
 You can use the CFT "as is" or modify it to suit your specific needs. Instructions
 and recommendations for the CFT code modifications are in the
-[CFT Developer Guide](../tool_dev_guide.md).
+[CFT Developer Guide](tool_dev_guide.md).
 
 ## CFT Configs
 
@@ -320,14 +320,14 @@ resources:
 ## Templates
 
 CFT-compliant configs can use templates written in Python or Jinja2. [Templates
-included in the toolkit](../templates) are recommended (although not mandatory)
+included in the toolkit](../templates/README.md) are recommended (although not mandatory)
 as they offer robust functionality, ease of use, and adherence to best
 practices.
 
 You can use the templates included in our library "as is," and/or modify them
 to suit your needs, as well as develop your own templates. Instructions and
 recommendations for template development are in the
-[Template Developer Guide](../template_dev_guide.md).  
+[Template Developer Guide](template_dev_guide.md).  
 
 ## Toolkit Installation and Configuration
 
@@ -471,7 +471,7 @@ an error. Yon can, however, do one of the following:
   [The "update" Action](#the-update-action) section
 - Use the **apply** action which will attempt to create the deployment if it
   doesn't already exist in DM, or update the deployment it already exist - see
-  [The "apply" action](#the-apply-action) section
+  [The "apply" Action](#the-apply-action) section
 
 To create multiple deployments, in the CLI, type:
 
@@ -535,10 +535,10 @@ DM. An attempt to update deployment that does not exist will result in an
 error. Yon can, however, do one of the following:
 
 - Use the **create** action to create the required deployments - see
-  [The "create" action](#the-create-action) section
+  [The "create" Action](#the-create-action) section
 - Use the **apply** action which will attempt to create the deployment if it
   doesn't already exist in DM, or update the deployment it already exist - see
-  [The "apply" action](#the-apply-action) section
+  [The "apply" Action](#the-apply-action) section
 
 To update multiple configs, in the CLI, type:
 

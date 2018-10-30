@@ -50,7 +50,7 @@ similar results, you need to modify certain parameters in all the demo files.
 3. The Cloud Foundation toolkit:
     - CFT must be installed in the Jenkins master and slaves. For installation
       instructions, see the [CFT User
-      Guide](../docs/userguides.md#toolkit-installation-and-configuration).
+      Guide](../docs/userguide.md#toolkit-installation-and-configuration).
     - Note that the [Google Cloud SDK](https://cloud.google.com/sdk) is a
       prerequisite for the CFT.
 4. The Environment Variables file:

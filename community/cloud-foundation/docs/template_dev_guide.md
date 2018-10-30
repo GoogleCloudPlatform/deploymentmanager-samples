@@ -23,7 +23,7 @@ The Cloud Foundation toolkit (henceforth, CFT) includes the following parts:
   gcloud utility (part of the Google Cloud SDK)
 - A command-line interface (henceforth, CLI) that deploys resources defined in
   single or multiple CFT-compliant config files - see the
-  [CFT User Guide](../userguide.md)
+  [CFT User Guide](userguide.md)
 
 This Guide is intended for the developers who are planning to modify the
 existing templates or create new ones.

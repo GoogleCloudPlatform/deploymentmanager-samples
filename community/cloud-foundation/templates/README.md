@@ -24,9 +24,9 @@ You can use the templates included in the template library:
 
 - Via Google's Deployment Manager / gcloud as described in the
   [Google SDK documentation](https://cloud.google.com/sdk/)
-- Via the `CFT`, as described in the [CFT User Guide](../doc/userguide.md)
+- Via the `CFT`, as described in the [CFT User Guide](../docs/userguide.md)
 
 You can use the templates "as is," and/or modify them to suit your needs, as
 well as create new ones. Instructions and recommendations for template
 development are in the
-[Template Developer Guide](../doc/template_dev_guide.md).
+[Template Developer Guide](../docs/template_dev_guide.md).
