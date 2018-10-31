@@ -14,12 +14,14 @@ else
 fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
 
+# Install utilities and condor and configure it
 cd /tmp
 yum install -y wget curl net-tools vim gcc
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
 rpm --import RPM-GPG-KEY-HTCondor
 cd /etc/yum.repos.d && wget $CONDOR_REPO_URL
 yum install -y $CONDOR_INSTALL_OPT
+
 cd /tmp
 cat <<EOF > condor_config.local
 DISCARD_SESSION_KEYRING_ON_STARTUP=False
@@ -32,6 +34,13 @@ mkdir -p /etc/condor/config.d
 mv condor_config.local /etc/condor/config.d
 $CONDOR_STARTUP_CMD
 
+# Install Google python API for optional autoscaler installation
+cd /tmp
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install --upgrade google-api-python-client
+pip install --upgrade oauth2client
+
+# Install and configure logging agent
 cd /tmp; curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
 bash install-logging-agent.sh
 
@@ -48,22 +57,8 @@ EOF
 mkdir -p /etc/google-fluentd/config.d/
 mv condor.conf /etc/google-fluentd/config.d/
 
-cat <<EOF > condor-jobs.conf
-<source>
-type tail
-format multiline
-format_firstline /^\.\.\./
-format1 /^\\.\\.\\.\\n... \\((?<job>[^\.]*)\\.(?<subjob>[^\\.]*)\\.(?<run>[^\\)]*)\\).*Usr 0 (?<usrh>[^:]*):(?<usrm>[^:]*):(?<usrs>[^,]*), Sys 0 (?<sysh>[^:]*):(?<sysm>[^
-:]*):(?<syss>[^ ]*)  -  Run Remote Usage.*/
-types usrh:integer,usrm:integer,usrs:integer,sysh:integer,sysm:integer,syss:integer
-path /var/log/condor/jobs/*.log
-pos_file /var/lib/google-fluentd/pos/condor-jobs.pos
-read_from_head true
-tag condor
-</source>
-EOF
-mv condor-jobs.conf /etc/google-fluentd.config.d/
 mkdir -p /var/log/condor/jobs
 touch /var/log/condor/jobs/stats.log
 chmod 666 /var/log/condor/jobs/stats.log
+
 service google-fluentd restart
