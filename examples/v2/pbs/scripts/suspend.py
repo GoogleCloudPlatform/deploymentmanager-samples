@@ -1,9 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-# Copyright 2017 SchedMD LLC.
-# Modified for use with the Pbs Resource Manager.
-#
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
