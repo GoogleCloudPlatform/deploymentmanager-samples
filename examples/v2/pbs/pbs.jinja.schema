@@ -42,7 +42,7 @@ optional:
 - compute_disk_type
 - controller_disk_size_gb
 - controller_disk_type
-- external_compute_ips
+- compute_public_ips
 - pbs_version
 - preemptible_bursting
 
@@ -89,7 +89,7 @@ properties:
     maximum     : 64000
     description : Size of disk for the controller.
 
-  external_compute_ips:
+  compute_public_ips:
     type        : boolean
     default     : True
     description : |

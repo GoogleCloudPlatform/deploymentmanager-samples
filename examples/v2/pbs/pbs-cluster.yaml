@@ -23,7 +23,7 @@ resources:
 #    network                 : pbs-ext
 #    prefix                  : test2-
 
-    external_compute_ips    : false
+    compute_public_ips    : false
 
 #  [END cluster_yaml]
 

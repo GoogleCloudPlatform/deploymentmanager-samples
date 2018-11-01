@@ -46,7 +46,7 @@ resources:
       ports: ["0-65535"]
     - IPProtocol: ICMP
 
-{% if not properties['external_compute_ips'] %}
+{% if not properties['compute_public_ips'] %}
 - name: {{ properties['prefix'] }}no-ip-internet-route
   type: compute.v1.route
   properties:
@@ -74,7 +74,7 @@ resources:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["controller_disk_type"] }}
         diskSizeGb: {{ properties["controller_disk_size_gb"] }}
-{% if not properties['external_compute_ips'] %}
+{% if not properties['compute_public_ips'] %}
     canIpForward: true
 {% endif %}
 
@@ -104,10 +104,10 @@ resources:
 replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@INSTANCE_TYPE@","compute")|replace("@MUNGE_KEY@",properties["munge_key"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|replace("@CLUSTER_NAME@",properties["cluster_name"])|
 replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
 replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
-replace("@EXTERNAL_COMPUTE_IPS@",properties["external_compute_ips"]) }}
+replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
         - key: pbs_resume
           value: |
-            {{ imports["scripts/resume.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@REGION@",properties["region"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|replace("@PREEMPTIBLE@",properties["preemptible_bursting"])|replace("@EXTERNAL_COMPUTE_IPS@",properties["external_compute_ips"])|replace("@DISK_SIZE_GB@",properties["compute_disk_size_gb"])|replace("@DISK_TYPE@",properties["compute_disk_type"])  }}
+            {{ imports["scripts/resume.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@REGION@",properties["region"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|replace("@PREEMPTIBLE@",properties["preemptible_bursting"])|replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"])|replace("@DISK_SIZE_GB@",properties["compute_disk_size_gb"])|replace("@DISK_TYPE@",properties["compute_disk_type"])  }}
         - key: pbs_suspend
           value: |
             {{ imports["scripts/suspend.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"]) }}
@@ -130,7 +130,7 @@ replace("@EXTERNAL_COMPUTE_IPS@",properties["external_compute_ips"]) }}
         diskSizeGb: {{ properties["compute_disk_size_gb"] }}
     networkInterfaces:
     - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
-{% if properties['external_compute_ips'] %}
+{% if properties['compute_public_ips'] %}
       accessConfigs:
       - name: {{ properties['prefix'] }}External NAT
         type: ONE_TO_ONE_NAT
@@ -150,6 +150,6 @@ replace("@EXTERNAL_COMPUTE_IPS@",properties["external_compute_ips"]) }}
             {{ imports["scripts/startup-script.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@INSTANCE_TYPE@","compute")|replace("@MUNGE_KEY@",properties["munge_key"])|replace("@PBS_VERSION@",properties["pbs_version"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|
 replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
 replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
-replace("@EXTERNAL_COMPUTE_IPS@",properties["external_compute_ips"]) }}
+replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 {% endfor %}
 
