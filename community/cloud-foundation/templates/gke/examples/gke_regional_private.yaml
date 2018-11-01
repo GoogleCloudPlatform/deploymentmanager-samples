@@ -15,45 +15,70 @@ imports:
     name: gke.py
 
 resources:
-  - name: myk8sregional
+  - name: myk8regprivate
     type: gke.py
     properties:
       clusterLocationType: Regional
       region: us-east1
       cluster:
-        name: myk8sregional
-        description: my awesome k8s cluster
+        name: k8v1private
+        description: k8regional 2 pool
         network: <FIXME:network_name>
-        subnetwork: <FIXME:subnet_name>
-        intialNodeCount: 1
-        initialClusterVersion: 1.10.6-gke.3
-        nodeConfig:
-          localSsdCount: 1
-          oauthScopes:
-            - https://www.googleapis.com/auth/compute
-            - https://www.googleapis.com/auth/devstorage.read_only
-            - https://www.googleapis.com/auth/logging.write
-            - https://www.googleapis.com/auth/monitoring
-          taints:
-            - key: mykey1
-              value: value1
-              effect: NO_SCHEDULE
-            - key: mykey2
-              value: value2
-              effect: NO_EXECUTE
+        subnetwork: <FIXME:subnet_name> 
+        initialClusterVersion: 1.10.6-gke.6
+        nodePools:
+          - name: uniq1
+            initialNodeCount: 1
+            config:
+              localSsdCount: 1
+              oauthScopes:
+                - https://www.googleapis.com/auth/compute
+                - https://www.googleapis.com/auth/devstorage.read_only
+                - https://www.googleapis.com/auth/logging.write
+                - https://www.googleapis.com/auth/monitoring
+              taints:
+                - key: mykey1
+                  value: value1
+                  effect: NO_SCHEDULE
+                - key: mykey2
+                  value: value2
+                  effect: NO_EXECUTE
+            autoscaling:
+              enabled: True
+              minNodeCount: 1
+              maxNodeCount: 3
+            management:
+              autoUpgrade: True
+              autoRepair: True
+          - name: uniq2
+            initialNodeCount: 1
+            config:
+              localSsdCount: 1
+              oauthScopes:
+                - https://www.googleapis.com/auth/compute
+                - https://www.googleapis.com/auth/devstorage.read_only
+                - https://www.googleapis.com/auth/logging.write
+                - https://www.googleapis.com/auth/monitoring
+              taints:
+                - key: mykey3
+                  value: value3
+                  effect: NO_SCHEDULE
+                - key: mykey4
+                  value: value4
+                  effect: NO_EXECUTE
+            autoscaling:
+              enabled: True
+              minNodeCount: 1
+              maxNodeCount: 2
+            management:
+              autoUpgrade: True
+              autoRepair: True
         locations:
           - us-east1-c
           - us-east1-b
-        autoScaling:
-          enabled: True
-          minNodeCount: 1
-          maxNodeCount: 2
-        management:
-          autoUpgrade: True
-          autoRepair: True
         masterAuth:
-          username: <FIXME:user_name>
-          password: <FIXME:password>
+          username: <FIXME:username> 
+          password: <FIXME:password> 
         loggingService: logging.googleapis.com
         monitoringService: monitoring.googleapis.com
         privateCluster: True
