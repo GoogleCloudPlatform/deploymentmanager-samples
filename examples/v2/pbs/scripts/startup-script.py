@@ -25,7 +25,7 @@ APPS_DIR          = '/apps'
 PBS_VERSION       = '@PBS_VERSION@'
 STATIC_NODE_COUNT =  @STATIC_NODE_COUNT@
 
-EXTERNAL_COMPUTE_IPS = @EXTERNAL_COMPUTE_IPS@
+COMPUTE_PUBLIC_IPS = @COMPUTE_PUBLIC_IPS@
 
 PBS_PREFIX  = APPS_DIR + '/pbs/pbs-' + PBS_VERSION
 INSTANCE_NAME_PREFIX = '@INSTANCE_NAME_PREFIX@'
@@ -439,7 +439,7 @@ def main():
     print "ARGUMENT STATIC_NODE_COUNT: @STATIC_NODE_COUNT@"
     
 
-    #if ((INSTANCE_TYPE == "controller") and  not EXTERNAL_COMPUTE_IPS):
+    #if ((INSTANCE_TYPE == "controller") and  not COMPUTE_PUBLIC_IPS):
     if (INSTANCE_TYPE == "controller"):
         # Setup a NAT gateway for the compute instances to get internet from.
         subprocess.call(shlex.split("sysctl -w net.ipv4.ip_forward=1"))
