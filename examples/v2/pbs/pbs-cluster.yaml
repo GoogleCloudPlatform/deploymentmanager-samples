@@ -1,0 +1,29 @@
+# [START cluster_yaml]
+imports:
+- path: pbs.jinja
+
+resources:
+- name: pbs-cluster
+  type: pbs.jinja
+  properties:
+    cluster_name            : google2
+    static_node_count       : 5
+    zone                    : us-west2-b
+    region                  : us-west2
+    cidr                    : 10.10.0.0/16
+
+    controller_machine_type : n1-standard-2
+    compute_machine_type    : n1-standard-2
+
+    pbs_version             : 18.1.2
+    default_account         : default
+    default_users           : leybzon
+
+#    external_network        : false 
+#    network                 : pbs-ext
+#    prefix                  : test2-
+
+    external_compute_ips    : false
+
+#  [END cluster_yaml]
+
