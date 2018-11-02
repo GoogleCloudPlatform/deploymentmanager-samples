@@ -13,10 +13,11 @@
 # limitations under the License.
 
 resources:
-#- type: cloudfunctions.v1beta2.function
-- type: gcp-types/cloudfunctions-v1beta2:projects.locations.functions
+#- type: cloudfunctions.v1.function
+- type: gcp-types/cloudfunctions-v1:projects.locations.functions
   name: {{ env['deployment'] }}-my-function
   properties:
+    parent: projects/{{ env['project'] }}/locations/{{ properties['region'] }}
     location: {{ properties['region'] }}
     function: my-{{ env['deployment'] }}
     sourceArchiveUrl: gs://cloud-function-sample/function.zip
