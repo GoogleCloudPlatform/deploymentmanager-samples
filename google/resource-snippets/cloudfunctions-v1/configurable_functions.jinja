@@ -18,7 +18,6 @@ resources:
   name: {{ env['deployment'] }}-my-function
   properties:
     parent: projects/{{ env['project'] }}/locations/{{ properties['region'] }}
-    location: {{ properties['region'] }}
     function: my-{{ env['deployment'] }}
     sourceArchiveUrl: gs://cloud-function-sample/function.zip
     entryPoint: {{ properties['entryPoint'] }}
