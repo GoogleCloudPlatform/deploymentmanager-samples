@@ -7,15 +7,17 @@ from apitools.base.py import exceptions as apitools_exceptions
 from googlecloudsdk.api_lib.deployment_manager import dm_base
 from ruamel.yaml import YAML
 
-
 DM_OUTPUT_QUERY_REGEX = re.compile(
     r'!DMOutput\s+(?P<url>\bdm://[-/a-zA-Z0-9]+\b)|'
     r'\$\(out\.(?P<token>[-.a-zA-Z0-9]+)\)'
 )
 
-
 DMOutputQueryAttributes = namedtuple(
-    'DMOutputQueryAttributes', ['project', 'deployment', 'resource', 'name']
+    'DMOutputQueryAttributes',
+    ['project',
+     'deployment',
+     'resource',
+     'name']
 )
 
 
@@ -28,6 +30,8 @@ class DM_API(dm_base.DmCommand):
 
     https://github.com/google-cloud-sdk/google-cloud-sdk/blob/master/lib/googlecloudsdk/api_lib/deployment_manager/dm_base.py
     """
+
+
 API = DM_API()
 
 

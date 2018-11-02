@@ -10,7 +10,6 @@ LOG.propagate = False
 
 __VERSION__ = pkg_resources.get_distribution(__name__).version
 
-
 # Register credentials providers - for instance SA, etc
 credential_providers = [
     creds_store.DevShellCredentialProvider(),

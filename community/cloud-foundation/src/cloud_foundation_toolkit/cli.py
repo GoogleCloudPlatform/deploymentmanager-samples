@@ -12,8 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 """ Cloud Foundation Toolkit CLI """
 
 from __future__ import print_function
@@ -23,6 +21,7 @@ import sys
 from cloud_foundation_toolkit import __VERSION__ as CFT_VERSION
 from cloud_foundation_toolkit import LOG
 from cloud_foundation_toolkit.actions import execute
+
 
 def build_common_args(parser):
     """ Configures arguments to all actions/subparsers """
@@ -46,10 +45,13 @@ def build_common_args(parser):
     parser.add_argument(
         '--format',
         '-f',
-        choices=['human', 'yaml', 'json'],
+        choices=['human',
+                 'yaml',
+                 'json'],
         default='human',
         help='The format of the output'
     )
+
 
 def parse_args(args):
     """parse CLI options """
@@ -71,20 +73,11 @@ def parse_args(args):
             'the config files, so be careful when using this'
         )
     )
-    parser.add_argument(
-        '--verbosity',
-        default='warning',
-        help='The log level'
-    )
+    parser.add_argument('--verbosity', default='warning', help='The log level')
 
     # subparser for each action
     subparser_obj = parser.add_subparsers(dest='action')
-    actions = [
-        'apply',
-        'create',
-        'delete',
-        'update'
-    ]
+    actions = ['apply', 'create', 'delete', 'update']
 
     subparsers = {}
     for action in actions:

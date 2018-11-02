@@ -43,7 +43,6 @@ def ask():
     return answer
 
 
-
 class Config(object):
     """Class representing a CFT config.
 
@@ -67,9 +66,8 @@ class Config(object):
 
         if os.path.exists(item):
             with io.open(item) as _fd:
-                self.as_string = jinja2.Template(_fd.read()).render(
-                    env=os.environ
-                )
+                self.as_string = jinja2.Template(_fd.read()
+                                                ).render(env=os.environ)
         else:
             self.as_string = jinja2.Template(item).render(env=os.environ)
 
@@ -142,8 +140,7 @@ class Config(object):
         return self._dependencies
 
     def __repr__(self):
-        return '{}({}:{})'.format(self.__class__, self.deployment,
-                self.project)
+        return '{}({}:{})'.format(self.__class__, self.deployment, self.project)
 
 
 class ConfigGraph(object):
@@ -169,12 +166,14 @@ class ConfigGraph(object):
            parallel.
 
     """
+
     def __init__(self, configs, project=None):
         """ Constructor """
 
         # Populate the config dict
         self.configs = {
-            c.id: c for c in (Config(x, project=project) for x in configs)
+            c.id: c for c in (Config(x,
+                                     project=project) for x in configs)
         }
 
     @property
@@ -228,10 +227,7 @@ class ConfigGraph(object):
                 if node in self.configs:
                     level_configs.append(self.configs[node])
                 else:
-                    deployment = get_deployment(
-                        node.project,
-                        node.deployment
-                    )
+                    deployment = get_deployment(node.project, node.deployment)
                     if not deployment:
                         raise SystemExit(
                             'Unresolved dependency. Resource {}, on which'
@@ -295,7 +291,7 @@ class Deployment(DM_API):
     """
 
     # Number of seconds to wait for a create/update/delete operation
-    OPERATION_TIMEOUT = 20 * 60 # 20 mins. Same as gcloud
+    OPERATION_TIMEOUT = 20 * 60  # 20 mins. Same as gcloud
 
     # The keys required by a DM config (not CFT config)
     DM_CONFIG_KEYS = ['imports', 'resources', 'outputs']
@@ -320,10 +316,8 @@ class Deployment(DM_API):
 
         # Regex search/replace before loading the yaml
         self.config = self.yaml.load(
-            DM_OUTPUT_QUERY_REGEX.sub(
-                self.get_dm_output,
-                config.as_string
-            )
+            DM_OUTPUT_QUERY_REGEX.sub(self.get_dm_output,
+                                      config.as_string)
         )
         self.config['project'] = self._config.project
         self.config['name'] = self._config.deployment
@@ -393,7 +387,8 @@ class Deployment(DM_API):
         """
 
         return {
-            k: v for k, v in self.config.items() if k in self.DM_CONFIG_KEYS
+            k: v for k,
+            v in self.config.items() if k in self.DM_CONFIG_KEYS
         }
 
     @property
@@ -474,15 +469,10 @@ class Deployment(DM_API):
         )
 
         if delete_policy:
-            request['deletePolicy'] = message.DeletePolicyValueValuesEnum(
-                delete_policy
-            )
+            request['deletePolicy'
+                   ] = message.DeletePolicyValueValuesEnum(delete_policy)
 
-        LOG.debug(
-            'Deleting deployment %',
-            self.config['name'],
-            request
-        )
+        LOG.debug('Deleting deployment %', self.config['name'], request)
 
         # The actual operation.
         # No exception handling is done here to allow higher level
@@ -516,9 +506,8 @@ class Deployment(DM_API):
             preview=preview
         )
         if create_policy:
-            request['createPolicy'] = message.CreatePolicyValueValuesEnum(
-                create_policy
-            )
+            request['createPolicy'
+                   ] = message.CreatePolicyValueValuesEnum(create_policy)
         LOG.debug(
             'Creating deployment %s with data %s',
             self.config['name'],
@@ -534,6 +523,8 @@ class Deployment(DM_API):
         self.wait(operation)
         self.print_resources_and_outputs()
         return self.current
+
+
 #
 #        if preview:
 #            func = self.confirm_preview()
@@ -541,7 +532,6 @@ class Deployment(DM_API):
 #        elif getattr(self.current, 'update', False):
 #            self.update_preview()
 #
-
 
     def update(self, preview=False, create_policy=None, delete_policy=None):
         """Updates this deployment in DM.
@@ -584,16 +574,16 @@ class Deployment(DM_API):
             deployment=self.config['name'],
             deploymentResource=new_deployment,
             project=self.config['project'],
-            preview=preview or bool(getattr(self.current, 'update', False))
+            preview=preview or bool(getattr(self.current,
+                                            'update',
+                                            False))
         )
         if delete_policy:
-            request['deletePolicy'] = message.DeletePolicyValueValuesEnum(
-                delete_policy
-            )
+            request['deletePolicy'
+                   ] = message.DeletePolicyValueValuesEnum(delete_policy)
         if create_policy:
-            request['createPolicy'] = message.CreatePolicyValueValuesEnum(
-                create_policy
-            )
+            request['createPolicy'
+                   ] = message.CreatePolicyValueValuesEnum(create_policy)
 
         LOG.debug(
             'Updating deployment %s with data %s',
@@ -629,7 +619,6 @@ class Deployment(DM_API):
         else:
             raise SystemExit('Not a valid answer: {}'.format(answer))
 
-
     def update_preview(self):
         """Confirms an update preview.
 
@@ -652,7 +641,6 @@ class Deployment(DM_API):
         operation = self.client.deployments.Update(request)
         self.wait(operation, 'update preview')
         self.print_resources_and_outputs()
-
 
     def wait(self, operation, action=None, get=True):
         """Waits for a DM operation to be completed.
@@ -725,7 +713,6 @@ class Deployment(DM_API):
         except apitools_exceptions.HttpConflictError as err:
             self.update(preview=preview)
 
-
     def print_resources_and_outputs(self):
         """Prints the Resources and Outputs of this deployment."""
 
@@ -734,7 +721,7 @@ class Deployment(DM_API):
             self.messages,
             self.config['project'],
             self.config['name'],
-#           self.ReleaseTrack() is base.ReleaseTrack.ALPHA
+            #           self.ReleaseTrack() is base.ReleaseTrack.ALPHA
         )
 
         printer = resource_printer.Printer(flags.RESOURCES_AND_OUTPUTS_FORMAT)

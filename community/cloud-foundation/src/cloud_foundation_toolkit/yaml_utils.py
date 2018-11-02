@@ -1,7 +1,9 @@
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
+
 class CFTBaseYAML(YAML):
+
     def dump(self, data, stream=None, **kwargs):
         inefficient = False
         if stream is None:

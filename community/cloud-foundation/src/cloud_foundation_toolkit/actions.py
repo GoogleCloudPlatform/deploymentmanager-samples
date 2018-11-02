@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """ Deployment Actions """
 
 import glob
@@ -25,16 +24,22 @@ from ruamel.yaml import YAML
 from cloud_foundation_toolkit import LOG
 from cloud_foundation_toolkit.deployment import Config, ConfigGraph, Deployment
 
-
-# To avoid code repetition this ACTION_MAP is used to translate the 
+# To avoid code repetition this ACTION_MAP is used to translate the
 # args provided to the cmd line to the appropriate method of the
 # deployment object
 ACTION_MAP = {
-    'apply':  {'preview': 'preview'},
-    'create': {'preview': 'preview'},
+    'apply': {
+        'preview': 'preview'
+    },
+    'create': {
+        'preview': 'preview'
+    },
     'delete': {},
-    'update': {'preview': 'preview'}
+    'update': {
+        'preview': 'preview'
+    }
 }
+
 
 def check_file(config):
     extensions = ['.yaml', '.yml', '.jinja']
@@ -72,7 +77,8 @@ def execute(args):
 
     if action == 'delete' or (hasattr(args, 'reverse') and args.reverse):
         graph = reversed(
-            ConfigGraph(get_config_files(args.config), project=args.project)
+            ConfigGraph(get_config_files(args.config),
+                        project=args.project)
         )
     else:
         graph = ConfigGraph(get_config_files(args.config), project=args.project)
@@ -82,8 +88,11 @@ def execute(args):
         if k in ACTION_MAP.get(action, {}):
             arguments[ACTION_MAP[action][k]] = v
 
-    LOG.debug('Excuting %s on %s with arguments %s',
-        action, args.config, arguments
+    LOG.debug(
+        'Excuting %s on %s with arguments %s',
+        action,
+        args.config,
+        arguments
     )
 
     if args.show_stages:
@@ -108,7 +117,7 @@ def execute(args):
                 print('---------- Stage {} ----------'.format(i))
                 for config in stage:
                     print(
-                            ' - project: {}, deployment: {}, source: {}'.format(
+                        ' - project: {}, deployment: {}, source: {}'.format(
                             config['project'],
                             config['deployment'],
                             config['source']
@@ -126,10 +135,7 @@ def execute(args):
                 try:
                     method(**arguments)
                 except apitools_exceptions.HttpNotFoundError:
-                    LOG.warn(
-                        'Deployment %s does not exit', config.deployment
-                    )
+                    LOG.warn('Deployment %s does not exit', config.deployment)
                     if action != 'delete':
                         raise
         print('------------------------------')
-
