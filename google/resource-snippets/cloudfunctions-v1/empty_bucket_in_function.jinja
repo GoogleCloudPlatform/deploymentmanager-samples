@@ -18,6 +18,7 @@ resources:
 - type: gcp-types/cloudfunctions-v1:projects.locations.functions
   name: my-function
   properties:
+    parent: projects/{{ env['project'] }}/locations/{{ properties['region'] }}
     location: {{ properties['region'] }}
     function: my-{{ env['deployment'] }}
     sourceArchiveUrl: gs://$(ref.{{ BUCKET }}.name)/my-function
