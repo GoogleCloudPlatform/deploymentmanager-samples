@@ -35,8 +35,8 @@ resources:
     default_account         : default
     default_users           : leybzon
 
-#    external_network        : false 
-#    network                 : pbs-ext
+    external_network        : true 
+    network                 : pbs-test
 #    prefix                  : test2-
 
     compute_public_ips    : false
