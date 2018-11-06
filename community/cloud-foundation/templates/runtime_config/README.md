@@ -14,7 +14,7 @@ This template creates a Runtime Configurator with the associated resources.
 
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Enable the [Cloud Runtime Configurator API](https://console.developers.google.com/apis/api/runtimeconfig.googleapis.com)
-- Grant the [Cloud RuntimeConfig Admin](https://console.cloud.google.com/iam-admin/roles/details/roles%3Cruntimeconfig.admin)
+- Grant the [Cloud RuntimeConfig Admin](https://cloud.google.com/deployment-manager/runtime-configurator/access-control)
   IAM role to the Deployment Manager service account
 
 ## Deployment
@@ -27,7 +27,9 @@ This template creates a Runtime Configurator with the associated resources.
 
 See the `properties` section in the schema file(s):
 
-- [Runtime Configuration Schema](runtime_config.py.schema)
+- [Runtime Config Schema](runtime_config.py.schema)
+- [Variable Schema](variable.py.schema)
+- [Waiter Schema](waiter.py.schema)
 
 ### Usage
 
