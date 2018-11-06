@@ -36,7 +36,8 @@ resources:
     default_users           : leybzon
 
     external_network        : true 
-    network                 : pbs-test
+    network                 : pbs-ext
+    service_project         : slurm-var-demo 
 #    prefix                  : test2-
 
     compute_public_ips    : false

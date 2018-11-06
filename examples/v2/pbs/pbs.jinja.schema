@@ -42,6 +42,7 @@ optional:
 - compute_public_ips
 - pbs_version
 - preemptible_bursting
+- service_project
 
 properties:
   cidr:
@@ -116,6 +117,10 @@ properties:
     type        : string
     description : |
       String to be used to separate deployments within the same project. 
+
+  service_project:
+    type        : string
+    description : Used in case of shared VPC configuration. Project name where shared VPC is configured.
 
   static_node_count:
     type        : integer
