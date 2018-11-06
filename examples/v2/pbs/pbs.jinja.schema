@@ -34,6 +34,8 @@ required:
 
 optional:
 - cidr
+- controller_image
+- compute_image
 - munge_key
 - compute_disk_size_gb
 - compute_disk_type
@@ -58,6 +60,10 @@ properties:
     description : |
       Machine type to use for compute node instances, eg. n1-standard-4.
 
+  compute_image:
+    type        : string
+    description : Image to be used when compute instance is created
+
   compute_disk_type:
     enum        : ["pd-ssd", "pd-standard"]
     default     : pd-standard
@@ -74,6 +80,10 @@ properties:
     type        : string
     description : |
       Machine type to use for the controller instance, eg. n1-standard-4.
+
+  controller_image:
+    type        : string
+    description : Image to be used when controller instance is created
 
   controller_disk_type:
     enum        : ["pd-ssd", "pd-standard"]

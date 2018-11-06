@@ -17,6 +17,17 @@
   {% set network_reference = '$(ref.' ~ properties['prefix'] ~ 'pbs-network.selfLink)'  %}
 {% endif %}
 
+{% if properties['controller_image'] is defined %}
+  {% set controller_image_ref  =  properties['controller_image'] %}
+{% else %}
+  {% set controller_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
+{% endif %}
+
+{% if properties['compute_image'] is defined %}
+  {% set compute_image_ref  =  properties['compute_image'] %}
+{% else %}
+  {% set compute_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
+{% endif %}
 
 {% if properties["cidr"] is defined %}
   {% set cidr = properties["cidr"] %}
@@ -84,7 +95,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
+        sourceImage: {{ controller_image_ref }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["controller_disk_type"] }}
         diskSizeGb: {{ properties["controller_disk_size_gb"] }}
 {% if not properties['compute_public_ips'] %}
@@ -109,6 +120,7 @@ resources:
     tags:
       items:
         - controller
+{% if properties['controller_image'] is not defined %}
     metadata:
       items:
         - key: startup-script
@@ -124,7 +136,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
         - key: pbs_suspend
           value: |
             {{ imports["scripts/suspend.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"]) }}
-
+{% endif %}
 
 {% for n in range(properties['static_node_count']) %}
 - name: {{ properties['prefix'] }}compute{{ n + 1 }}
@@ -138,7 +150,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
+        sourceImage: {{ compute_image_ref }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["compute_disk_type"] }}
         diskSizeGb: {{ properties["compute_disk_size_gb"] }}
     networkInterfaces:
@@ -156,6 +168,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
     tags:
       items:
         - compute
+{% if properties['compute_image'] is not defined %}
     metadata:
       items:
         - key: startup-script
@@ -164,5 +177,6 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
 replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
 replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
+{% endif %}
 {% endfor %}
 

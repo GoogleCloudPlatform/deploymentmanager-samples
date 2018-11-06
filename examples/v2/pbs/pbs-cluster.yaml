@@ -42,5 +42,6 @@ resources:
 
     compute_public_ips    : false
 
+
 #  [END cluster_yaml]
 
