@@ -87,5 +87,5 @@ See `properties` section in the schema file(s):
 
 - [Organization logging entries exported to PubSub](examples/org_logsink_pubsub_destination.yaml)
 - [Billing account logging entries exported to Storage](examples/billingaccount_logsink_bucket_destination.yaml)
-- [Folder logging entries exported to PubSub](examples/folder_logsink_pubsub_destination.yaml)
+- [Folder logging entries exported to BigQuery](examples/folder_logsink_bq_destination.yaml)
 - [Project logging entries exported to Storage](examples/project_logsink_bucket_destination.yaml)

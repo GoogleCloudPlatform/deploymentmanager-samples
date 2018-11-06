@@ -128,5 +128,5 @@ documentation:
 examples:
   - templates/logsink/examples/org_logsink_pubsub_destination.yaml
   - templates/logsink/examples/billingaccount_logsink_bucket_destination.yaml
-  - templates/logsink/examples/folder_logsink_pubsub_destination.yaml
+  - templates/logsink/examples/folder_logsink_bq_destination.yaml
   - templates/logsink/examples/project_logsink_bucket_destination.yaml

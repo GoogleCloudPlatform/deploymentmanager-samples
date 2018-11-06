@@ -69,6 +69,7 @@ function teardown() {
         gcloud pubsub topics delete test-topic-${RAND}
         bq rm -rf test_dataset_${RAND}
         delete_config
+        rm -f "${RANDOM_FILE}"
     fi
 
     # Per-test teardown as per documentation.
