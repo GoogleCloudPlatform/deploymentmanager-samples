@@ -22,7 +22,7 @@ resources:
     properties:
       projectId: <FIXME:project_id>
       destinationName: <FIXME:existing_bucket_name>
-      destinationType: bucket
+      destinationType: storage
       uniqueWriterIdentity: true
 
   # Project sink with a bucket destination that is created
@@ -31,7 +31,7 @@ resources:
     properties:
       projectId: <FIXME:project_id>
       destinationName: <FIXME:bucket_name>
-      destinationType: bucket
+      destinationType: storage
       uniqueWriterIdentity: true
       storageProperties:
         location: us-east1
