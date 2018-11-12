@@ -1,53 +1,81 @@
 # Example of the GKE template usage.
 #
-# In this example, a GKE private regional cluster is created.
-# Optional properties are also set in this example.
+# In this example, a 3 node GKE private regional cluster is created.
+#   - nodePool autoscaling is enabled for this cluster
+#   - nodePool management is enabled (autoRepair and autoUpgrade)
+# 
 #
 # Replace the following with valid values:
-#   <FIXME:network_name>: a valid VPC network name.
-#   <FIXME:subnet_name>: a valid VPC subnet name.
-# Replace credentials, for accessing the master endpoint, with the valid values:
+#   - To access the master endpoint
 #   <FIXME:user_name>: user name for masterAuth.
 #   <FIXME:password>: password (atleast 16 chars) for masterAuth
 
 imports:
   - path: templates/gke/gke.py
     name: gke.py
+  - path: templates/network/network.py
+    name: network.py
 
 resources:
+  - name: myk8snw
+    type: network.py
+    properties:
+      autoCreateSubnetworks: false
+      subnetworks:
+        - name: myk8s-subnet
+          region: us-east1
+          ipCidrRange: 10.0.0.0/24
+          privateIpGoogleAccess: false
+          enableFlowLogs: true
   - name: myk8sregional
     type: gke.py
     properties:
       clusterLocationType: Regional
       region: us-east1
       cluster:
-        name: myk8sregional
+        name: myk8sprivate
         description: my awesome k8s cluster
-        network: <FIXME:network_name>
-        subnetwork: <FIXME:subnet_name>
-        intialNodeCount: 1
-        initialClusterVersion: 1.10.6-gke.3
-        nodeConfig:
-          localSsdCount: 1
-          oauthScopes:
-            - https://www.googleapis.com/auth/compute
-            - https://www.googleapis.com/auth/devstorage.read_only
-            - https://www.googleapis.com/auth/logging.write
-            - https://www.googleapis.com/auth/monitoring
-          taints:
-            - key: mykey1
-              value: value1
-              effect: NO_SCHEDULE
-            - key: mykey2
-              value: value2
-              effect: NO_EXECUTE
+        network: $(ref.myk8snw.networkUrl)
+        subnetwork: $(ref.myk8s-subnet.name)
+        initialClusterVersion: 1.11.2-gke.9
+        nodePools:
+          - name: myk8sprivatepool
+            initialNodeCount: 1
+            config:
+              machineType: n1-standard-1
+              localSsdCount: 1
+              oauthScopes:
+                - https://www.googleapis.com/auth/compute
+                - https://www.googleapis.com/auth/devstorage.read_only
+                - https://www.googleapis.com/auth/logging.write
+                - https://www.googleapis.com/auth/monitoring
+              labels:
+                environment: Production
+                department: FX
+              taints:
+                - key: mykey1
+                  value: value1
+                  effect: NO_SCHEDULE
+                - key: mykey2
+                  value: value2
+                  effect: NO_EXECUTE
+            autoscaling:
+              enabled: True
+              minNodeCount: 1
+              maxNodeCount: 3
+            management:
+              autoUpgrade: True
+              autoRepair: True
         locations:
-          - us-east1-c
           - us-east1-b
+          - us-east1-c
+          - us-east1-d
         autoScaling:
-          enabled: True
-          minNodeCount: 1
-          maxNodeCount: 2
+          enableNodeAutoprovisioning: True
+          resourceLimits:
+            resourceType: cpu
+            minimum: 4
+            maximum: 6
         management:
           autoUpgrade: True
           autoRepair: True
@@ -56,8 +84,10 @@ resources:
           password: <FIXME:password>
         loggingService: logging.googleapis.com
         monitoringService: monitoring.googleapis.com
-        privateCluster: True
-        masterIpv4CidrBlock: 172.16.0.0/28
+        privateClusterConfig:
+          enablePrivateNodes: True
+          enablePrivateEndpoint: True
+          masterIpv4CidrBlock: 172.16.0.0/28
         clusterIpv4Cidr: 10.0.0.0/11
         ipAllocationPolicy:
           useIpAliases: True

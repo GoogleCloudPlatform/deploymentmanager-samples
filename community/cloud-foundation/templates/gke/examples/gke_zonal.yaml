@@ -1,29 +1,51 @@
 # Example of the GKE template usage.
 #
-# In this example, a GKE zonal cluster is created.
+# In this example, a 3 node GKE zonal cluster is created.
 #
-# Replace the following with valid values
-# <FIXME:network_name>: A valid VPC network name
-# <FIXME:subnet_name>: A valid VPC subnet name
-
 
 imports:
   - path: templates/gke/gke.py
     name: gke.py
+  - path: templates/network/network.py
+    name: network.py
 
 resources:
+  - name: myk8snw
+    type: network.py
+    properties:
+      autoCreateSubnetworks: false
+      subnetworks:
+        - name: myk8s-subnet
+          region: us-east1
+          ipCidrRange: 10.0.0.0/24
+          privateIpGoogleAccess: false
+          enableFlowLogs: true
   - name: myk8s
     type: gke.py
     properties:
+      clusterLocationType: Zonal
       zone: us-east1-b
       cluster:
-        name: myk8s
+        name: myk8s-zonal
         description: my awesome k8s cluster
-        network: <FIXME:network_name>
-        subnetwork: <FIXME:subnet_name>
-        nodeConfig:
-          oauthScopes:
-            - https://www.googleapis.com/auth/compute
-            - https://www.googleapis.com/auth/devstorage.read_only
-            - https://www.googleapis.com/auth/logging.write
-            - https://www.googleapis.com/auth/monitoring
+        network: $(ref.myk8snw.networkUrl)
+        subnetwork: $(ref.myk8s-subnet.name)
+        nodePools:
+          - name: myzonalnodepool
+            initialNodeCount: 3
+            config:
+              machineType: n1-standard-1
+              localSsdCount: 1
+              labels:
+                environment: production
+                department: FX
+              oauthScopes:
+                - https://www.googleapis.com/auth/compute
+                - https://www.googleapis.com/auth/devstorage.read_only
+                - https://www.googleapis.com/auth/logging.write
+                - https://www.googleapis.com/auth/monitoring
+            version: 1.11.2-gke.9
+            autoscaling:
+              enabled: True
+              minNodeCount: 3
+              maxNodeCount: 5

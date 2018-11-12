@@ -57,167 +57,6 @@ properties:
       description:
         type: string
         description: An optional description of the cluster.
-      initialNodeCount:
-        type: number
-        default: 1
-        description: |
-          The number of nodes to create in this cluster. You must ensure that
-          your Compute Engine resource quota is sufficient for this number of
-          instances. You must also have available firewall and routes quota.
-        minimum: 1
-      nodeConfig:
-        type: object
-        description: Parameters used in creating the cluster's nodes.
-        required:
-          - oauthScopes
-        properties:
-          machineType:
-            type: string
-            default: n1-standard-1
-            description: |
-              The name of the Google Compute Engine machine type.
-          diskSizeGb:
-            type: number
-            default: 100
-            minimum: 10
-            description: |
-              Size of the disk attached to each node, specified in GB. 
-              The smallest allowed disk size is 10GB. 
-          imageType:
-            type: string
-            default: cos
-            description: The image type to use for the node.
-            enum:
-              - cos
-              - Ubuntu
-          oauthScopes:
-            type: array
-            description: |
-              The set of Google API scopes to be made available on all 
-              of the node VMs under the "default" service account.
-              E.g., scopes
-              https://www.googleapis.com/auth/compute
-              https://www.googleapis.com/auth/devstorage.read_only
-              https://www.googleapis.com/auth/logging.write
-              https://www.googleapis.com/auth/monitoring
-            items:
-              type: string
-          serviceAccount:
-            type: string
-            description: |
-              The GCP Service Account to be used by the node VMs.
-          metadata:
-            type: object
-            pattern: "[a-zA-Z0-9-_]+"
-            description: |
-              The metadata key/value pairs assigned to instances in the
-              cluster. Keys must conform to the regexp [a-zA-Z0-9-_]+ and be
-              less than 128 bytes in length. Additionally, to avoid ambiguity,
-              keys must neiter conflict with any other metadata keys for the 
-              project nor be one of the reserved keys "cluster-location", 
-              "cluster-name", "cluster-uid", "configure-sh", 
-              "gci-update-strategy", "gci-ensure-gke-docker", 
-              "instance-template", "kube-env", "startup-script", or 
-              "user-data". The total size of all keys and values must be less
-              than 512 KB.
-          labels:
-            type: object
-            description: |
-              The map of Kubernetes labels (key/value pairs) to be applied to each 
-              node. These are added to the default label(s) that 
-              Kubernetes may apply to the nodes.
-          localSsdCount:
-            type: number
-            description: The number of local SSD disks to be attached to the node.
-          tags:
-            type: array
-            description: |
-              A list of instance tags applied to all nodes. Tags are used to
-              identify valid sources or targets for network firewalls, and are
-              specified by the client during the cluster or node pool creation.
-              All tags must comply with RFC1035.
-            items:
-              type: string
-          preemptible:
-            type: boolean
-            default: False
-            description: |
-              Defines whether the nodes are created as preemptible VM instances.
-              https://cloud.google.com/compute/docs/instances/preemptible
-          accelerators:
-            type: array
-            description: |
-              A list of hardware accelerators to be attached to each node. 
-              See https://cloud.google.com/compute/docs/gpus for more 
-              information about support for GPUs.
-            items:
-              type: object
-              description: The Hardware Accelerator request object.
-              required:
-                - acceleratorCount
-                - acceleratorType
-              properties:
-                acceleratorCount:
-                  type: string
-                  description: |
-                    The number of the accelerator cards exposed to an instance.
-                acceleratorType:
-                  type: string
-                  description: |
-                    The accelerator type resource name. The list of supported
-                    accelerator types can be found here
-                    https://cloud.google.com/compute/docs/gpus/#Introduction
-          minCpuPlatform:
-            type: string
-            description: |
-              The minimum CPU platform to be used by the instance. 
-              The instance may be scheduled on the specified or newer CPU
-              platform. Applicable values are the friendly names of CPU 
-              platforms, such as "Intel Haswell" or "Intel Sandy Bridge".
-          workloadMetadataConfig:
-            type: object
-            description: The workload metadata configuration for the node.
-            items:
-              type: object
-              required:
-                - nodeMetadata
-              properties:
-                nodeMetadata:
-                  type: array
-                  description: |
-                    Configuration that defines how to expose the node 
-                    metadata to the workload running on the node.
-                  items:
-                    type: string
-                    enum:
-                      - UNSPECIFIED
-                      - SECURE
-                      - EXPOSE
-          taints:
-            type: array
-            description: |
-              A list of Kubernetes taints to be applied to each node.
-            items:
-              type: object
-              description: The taint object's key, value, and effect.
-              required:
-                - key
-                - value
-                - effect
-              properties:
-                key:
-                  type: string
-                  description: The taint object's key.
-                value:
-                  type: string
-                  description: The taint object's value.
-                effect:
-                  type: string
-                  enum:
-                    - EFFECT_UNSPECIFIED
-                    - NO_SCHEDULE
-                    - PREFER_NO_SCHEDULE
-                    - NO_EXECUTE
       masterAuth:
         type: object
         description: |
@@ -245,7 +84,7 @@ properties:
                 type: boolean
       initialClusterVersion:
         type: string
-        default: 1.9.7-gke.6
+        default: 1.11.2-gke.9
         description: |
           The initial Kubernetes version for the cluster. 
           The version can be upgraded later; the upgrades are reflected by the
@@ -279,6 +118,83 @@ properties:
         description: |
           The name of the Google Compute Engine subnetwork to which the 
           cluster is connected.
+      nodePools:
+        type: array
+        description: |
+          The node pools associated with this cluster. This field should not be
+          set if "nodeConfig" or "initialNodeCount" are specified.
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the node pool.
+            config:
+              "$ref": "#/definitions/nodeConfig"
+            initialNodeCount:
+              type: number
+              default: 1
+              description: |
+                The initial node count for the pool. You must ensure that your
+                Compute Engine resource quota is sufficient for this number of
+                instances. You must also have available firewall and routes
+                quota.
+              minimum: 1
+            version:
+              type: string
+              default: 1.11.2-gke.9
+              description: The version of Kubernetes of this node.
+            autoscaling:
+              type: object
+              description: |
+                Autoscaler configuration for this NodePool. Autoscaler is 
+                enabled only if a valid configuration is present.
+              properties:
+                enabled:
+                  type: boolean
+                  description: Is autoscaling enabled for this node pool.
+                minNodeCount:
+                  type: number
+                  description: |
+                    Minimum number of nodes in the NodePool.
+                    Must be >= 1 and <= maxNodeCount.
+                maxNodeCount:
+                  type: number
+                  description: |
+                    Maximum number of nodes in the NodePool.
+                    Must be >= minNodeCount. There has to enough quota to scale
+                    up the cluster.
+                autoprovisioned:
+                  type: boolean
+                  description: Can this node pool be deleted automatically.
+            management:
+              "$ref": "#/definitions/management"
+            maxPodsConstraint:
+              type: object
+              description: |
+                The constraint on the maximum number of pods that can be run
+                simultaneously on a node in the node pool.
+              properties:
+                maxPodsPerNode:
+                  type: string
+                  description: Constraint enforced on the max num of pods per node.
+            conditions:
+              type: array
+              description: Which conditions caused the current node pool state.
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Machine-friendly representation of the condition
+                    enum:
+                      - UNKNOWN
+                      - GCE_STOCKOUT
+                      - GKE_SERVICE_ACCOUNT_DELETED
+                      - GCE_QUOTA_EXCEEDED
+                  message:
+                    type: string
+                    description: Human-friendly representation of the condition
       clusterIpv4Cidr:
         type: string
         description: |
@@ -521,6 +437,15 @@ properties:
                       Time within the maintenance window to start the 
                       maintenance operations. It must be in the HH:MM
                       format, where HH 00-23 and MM 00-59 GMT.
+      binaryAuthorization:
+        type: object
+        description: Configuration for Binary Authorization.
+        properties:
+          enabled:
+            type: boolean
+            description: |
+              Enable Binary Authorization for this cluster. If enabled, all
+              container images will be validated by Google Binauthz.
       podSecurityPolicyConfig:
         type: object
         description: The configuration for the PodSecurityPolicy feature.
@@ -533,18 +458,239 @@ properties:
               If True, enables the PodSecurityPolicy controller for the
               cluster. If enabled, pods must be valid under PodSecurityPolicy
               to be created.
-      privateCluster:
-        type: boolean
+      autoscaling:
+        type: object
+        description: Cluster-level autoscaling configuration.
+        properties:
+          enableNodeAutoprovisioning:
+            type: boolean
+            default: False
+            description: Enables automatic node pool creation and deletion.
+          resourceLimits:
+            type: array
+            description: |
+              Contains global constraints regarding minimum and maximum amount
+              of resources in the cluster.
+            items:
+              type: object
+              properties:
+                resourceType:
+                  type: string
+                  description: |
+                    Resource name "cpu", "memory" or gpu-specific string.
+                minimum:
+                  type: string
+                  description: Minimum amount of the resource in the cluster.
+                maximum:
+                  type: string
+                  description: Maximum amount of the resource in the cluster.
+      privateClusterConfig:
+        type: object
+        description: Configuration options for private clusters.
+        properties:
+          enablePrivateNodes:
+            type: boolean
+            description: |
+              Whether nodes have internal IP addresses only. If enabled, all
+              nodes are given only RFC 1918 private addresses and communicate
+              with the master via private networking
+          enablePrivateEndpoint:
+            type: boolean
+            description: |
+              Whether the master's internal IP address is used as the cluster
+              endpoint.
+          masterIpv4CidrBlock:
+            type: string
+            description: |
+              The IP range in CIDR notation to use for the hosted master
+              network. This range will be used for assigning internal IP
+              addresses to the master or set of masters, as well as the ILB
+              VIP. This range must not overlap with any other ranges in use
+              within the cluster's network.
+      verticalPodAutoScaling:
+        type: object
         description: |
-          Defines whether the cluster is private. Private clusters,
-          by default, have no external IP addresses on the nodes. The nodes
-          and the master communicate over private IP addresses.
-      masterIpv4CidrBlock:
+          VerticalPodAutoscaling contains global, per-cluster information
+          required by Vertical Pod Autoscaler to automatically adjust the
+          resources of pods controlled by it.
+        properties:
+          enabled:
+            type: boolean
+      defaultMaxPodsConstraint:
+        type: object
+        description: Constraints applied to pods.
+        properties:
+          maxPodsPerNode:
+            type: string
+            description: Constraint enforced on the max num of pods per node.
+
+definitions:
+  nodeConfig:
+    type: object
+    description: Parameters used in creating the cluster's nodes.
+    required:
+      - oauthScopes
+    properties:
+      machineType:
+        type: string
+        default: n1-standard-1
+        description: |
+          The name of the Google Compute Engine machine type.
+      diskSizeGb:
+        type: number
+        default: 100
+        minimum: 10
+        description: |
+          Size of the disk attached to each node, specified in GB. 
+          The smallest allowed disk size is 10GB. 
+      imageType:
+        type: string
+        default: cos
+        description: The image type to use for the node.
+        enum:
+          - cos
+          - Ubuntu
+      oauthScopes:
+        type: array
+        description: |
+          The set of Google API scopes to be made available on all 
+          of the node VMs under the "default" service account.
+          E.g., scopes
+          https://www.googleapis.com/auth/compute
+          https://www.googleapis.com/auth/devstorage.read_only
+          https://www.googleapis.com/auth/logging.write
+          https://www.googleapis.com/auth/monitoring
+        items:
+          type: string
+      serviceAccount:
         type: string
         description: |
-          The IP prefix in the CIDR notation to use for the hosted 
-          master network. This prefix is used for assigning private IP 
-          addresses to the master or set of masters, as well as the ILB VIP.
+          The GCP Service Account to be used by the node VMs.
+      metadata:
+        type: object
+        pattern: "[a-zA-Z0-9-_]+"
+        description: |
+          The metadata key/value pairs assigned to instances in the
+          cluster. Keys must conform to the regexp [a-zA-Z0-9-_]+ and be
+          less than 128 bytes in length. Additionally, to avoid ambiguity,
+          keys must neiter conflict with any other metadata keys for the 
+          project nor be one of the reserved keys "cluster-location", 
+          "cluster-name", "cluster-uid", "configure-sh", 
+          "gci-update-strategy", "gci-ensure-gke-docker", 
+          "instance-template", "kube-env", "startup-script", or 
+          "user-data". The total size of all keys and values must be less
+          than 512 KB.
+      labels:
+        type: object
+        description: |
+          The map of Kubernetes labels (key/value pairs) to be applied to each 
+          node. These are added to the default label(s) that 
+          Kubernetes may apply to the nodes.
+      localSsdCount:
+        type: number
+        description: The number of local SSD disks to be attached to the node.
+      tags:
+        type: array
+        description: |
+          A list of instance tags applied to all nodes. Tags are used to
+          identify valid sources or targets for network firewalls, and are
+          specified by the client during the cluster or node pool creation.
+          All tags must comply with RFC1035.
+        items:
+          type: string
+      preemptible:
+        type: boolean
+        default: False
+        description: |
+          Defines whether the nodes are created as preemptible VM instances.
+          https://cloud.google.com/compute/docs/instances/preemptible
+      accelerators:
+        type: array
+        description: |
+          A list of hardware accelerators to be attached to each node. 
+          See https://cloud.google.com/compute/docs/gpus for more 
+          information about support for GPUs.
+        items:
+          type: object
+          description: The Hardware Accelerator request object.
+          required:
+            - acceleratorCount
+            - acceleratorType
+          properties:
+            acceleratorCount:
+              type: string
+              description: |
+                The number of the accelerator cards exposed to an instance.
+            acceleratorType:
+              type: string
+              description: |
+                The accelerator type resource name. The list of supported
+                accelerator types can be found here
+                https://cloud.google.com/compute/docs/gpus/#Introduction
+      minCpuPlatform:
+        type: string
+        description: |
+          The minimum CPU platform to be used by the instance. 
+          The instance may be scheduled on the specified or newer CPU
+          platform. Applicable values are the friendly names of CPU 
+          platforms, such as "Intel Haswell" or "Intel Sandy Bridge".
+      workloadMetadataConfig:
+        type: object
+        description: The workload metadata configuration for the node.
+        items:
+          type: object
+          required:
+            - nodeMetadata
+          properties:
+            nodeMetadata:
+              type: array
+              description: |
+                Configuration that defines how to expose the node 
+                metadata to the workload running on the node.
+              items:
+                type: string
+                enum:
+                  - UNSPECIFIED
+                  - SECURE
+                  - EXPOSE
+      taints:
+        type: array
+        description: |
+          A list of Kubernetes taints to be applied to each node.
+        items:
+          type: object
+          description: The taint object's key, value, and effect.
+          required:
+            - key
+            - value
+            - effect
+          properties:
+            key:
+              type: string
+              description: The taint object's key.
+            value:
+              type: string
+              description: The taint object's value.
+            effect:
+              type: string
+              enum:
+                - EFFECT_UNSPECIFIED
+                - NO_SCHEDULE
+                - PREFER_NO_SCHEDULE
+                - NO_EXECUTE
+  management:
+    type: object
+    description: |
+      NodeManagement defines the set of node management services turned on for
+      the node pool.
+    properties:
+      autoUpgrade:
+        type: boolean
+        description: Whether the nodes will be automatically upgraded.
+      autoRepair:
+        type: boolean
+        description: Whether the nodes will be automatically repaired.
+
 outputs:
   properties:
     - selfLink:
@@ -556,13 +702,12 @@ outputs:
     - currentMasterVersion:
         type: string
         description: The current version of the master in the cluster.
-    - currentNodeVersion:
+    - privateEndpoint:
         type: string
-        description: |
-          The current version of the node software components. In case of 
-          multiple versions (e.g., when the components are in the process
-          of being upgraded), this parameter reflects the minimum version
-          among all nodes.
+        description: The internal IP address of this cluster's master endpoint.
+    - publicEndpoint:
+        type: string
+        description: The external IP address of this cluster's master endpoint.
     - nodeIpv4CidrSize:
         type: number
         description: |
@@ -607,4 +752,6 @@ documentation:
   - templates/gke/README.md
 
 examples:
-  - templates/gke/examples/gke.yaml
+  - templates/gke/examples/gke_zonal.yaml
+  - templates/gke/examples/gke_regional.yaml
+  - templates/gke/examples/gke_regional_private.yaml

@@ -23,7 +23,7 @@ def generate_config(context):
     properties = context.properties
     cluster_type = properties.get('clusterLocationType')
     propc = properties['cluster']
-    name = propc.get('name') or context.env['name']
+    name = propc.get('name', context.env['name'])
     gke_cluster = {
         'name': name,
         'type': '',
@@ -32,9 +32,7 @@ def generate_config(context):
                 'cluster':
                     {
                         'name':
-                            name + '-cluster',
-                        'initialNodeCount':
-                            propc.get('initialNodeCount'),
+                            name,
                         'initialClusterVersion':
                             propc.get('initialClusterVersion')
                     }
@@ -45,8 +43,8 @@ def generate_config(context):
         provider = 'gcp-types/container-v1beta1:projects.locations.clusters'
         if not properties.get('region'):
             raise KeyError(
-                "region is a required property for a {} Cluster."
-                .format(cluster_type)
+                "region is a required property for a {} Cluster.".
+                format(cluster_type)
             )
         parent = 'projects/{}/locations/{}'.format(
             project_id,
@@ -58,18 +56,31 @@ def generate_config(context):
         provider = 'container.v1.cluster'
         if not properties.get('zone'):
             raise KeyError(
-                "zone is a required property for a {} Cluster."
-                .format(cluster_type)
+                "zone is a required property for a {} Cluster.".
+                format(cluster_type)
             )
         gke_cluster['properties']['zone'] = properties.get('zone')
 
     gke_cluster['type'] = provider
 
+    cluster_props = gke_cluster['properties']['cluster']
+
     req_props = ['network', 'subnetwork']
 
+    for prop in req_props:
+        cluster_props[prop] = propc.get(prop)
+        if prop not in propc:
+            raise KeyError(
+                "{} is a required cluster property for a {} Cluster.".format(
+                    prop,
+                    cluster_type
+                )
+            )
+
+    # optional properties
     optional_props = [
         'description',
-        'nodeConfig',
+        'nodePools',
         'masterAuth',
         'loggingService',
         'monitoringService',
@@ -84,21 +95,13 @@ def generate_config(context):
         'ipAllocationPolicy',
         'masterAuthorizedNetworksConfig'
         'maintenancePolicy',
+        'binaryAuthorization',
         'podSecurityPolicyConfig',
-        'privateCluster',
-        'masterIpv4CidrBlock'
+        'autoscaling',
+        'privateClusterConfig',
+        'verticalPodAutoScaling',
+        'defaultMaxPodsConstraint'
     ]
-
-    cluster_props = gke_cluster['properties']['cluster']
-
-    for prop in req_props:
-        cluster_props[prop] = propc.get(prop)
-        if prop not in propc:
-            raise KeyError(
-                "{} is a required cluster property for a {} Cluster."
-                .format(prop,
-                        cluster_type)
-            )
 
     for oprop in optional_props:
         if oprop in propc:
@@ -110,14 +113,13 @@ def generate_config(context):
     output_props = [
         'selfLink',
         'endpoint',
+        'currentMasterVersion',
+        'nodeIpv4CidrSize',
+        'servicesIpv4Cidr',
         'instanceGroupUrls',
-        'clusterCaCertificate',
         'clientCertificate',
         'clientKey',
-        'currentMasterVersion',
-        'currentNodeVersion',
-        'nodeIpv4CidrSize',
-        'servicesIpv4Cidr'
+        'clusterCaCertificate'
     ]
 
     for outprop in output_props:
@@ -125,13 +127,19 @@ def generate_config(context):
         output_obj['name'] = outprop
         ma_props = ['clusterCaCertificate', 'clientCertificate', 'clientKey']
         if outprop in ma_props:
-            output_obj['value'] = '$(ref.' + name + \
-                '.masterAuth.' + outprop + ')'
+            output_obj['value'] = '$(ref.{}.masterAuth.{})'.format(
+                name,
+                outprop
+            )
         elif outprop == 'instanceGroupUrls':
-            output_obj['value'] = '$(ref.' + name + \
-                '.nodePools[0].' + outprop + ')'
+            for index, _ in enumerate(propc['nodePools']):
+                output_obj['value'] = '$(ref.{}.nodePools[{}].{})'.format(
+                    name,
+                    str(index),
+                    outprop
+                )
         else:
-            output_obj['value'] = '$(ref.' + name + '.' + outprop + ')'
+            output_obj['value'] = '$(ref.{}.{})'.format(name, outprop)
 
         outputs.append(output_obj)
 

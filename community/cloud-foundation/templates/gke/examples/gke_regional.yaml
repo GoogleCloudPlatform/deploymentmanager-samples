@@ -1,15 +1,28 @@
 # Example of the GKE template usage.
 #
-# In this example, a GKE regional cluster is created.
-# Replace the following with valid values
-# <FIXME:network_name>: A valid VPC network name
-# <FIXME:subnet_name>: A valid VPC subnet name
+# This config creates a 3 node GKE regional cluster in the following zones.
+# - us-east1-b 
+# - us-east1-c
+# - us-east1-d
+# - nodePool maangement is enabled (autoRepair, autoUpgrade) 
 
 imports:
   - path: templates/gke/gke.py
     name: gke.py
+  - path: templates/network/network.py
+    name: network.py
 
 resources:
+  - name: myk8snw
+    type: network.py
+    properties:
+      autoCreateSubnetworks: false
+      subnetworks:
+        - name: myk8s-subnet
+          region: us-east1
+          ipCidrRange: 10.0.0.0/24
+          privateIpGoogleAccess: false
+          enableFlowLogs: true
   - name: myk8sregional
     type: gke.py
     properties:
@@ -17,15 +30,23 @@ resources:
       region: us-east1
       cluster:
         name: myk8sregional
-        description: my awesome k8s cluster
-        network: <FIXME:network_name>
-        subnetwork: <FIXME:subnet_name>
-        nodeConfig:
-          oauthScopes:
-            - https://www.googleapis.com/auth/compute
-            - https://www.googleapis.com/auth/devstorage.read_only
-            - https://www.googleapis.com/auth/logging.write
-            - https://www.googleapis.com/auth/monitoring
+        description: my k8s regional cluster
+        network: $(ref.myk8snw.networkUrl)
+        subnetwork: $(ref.myk8s-subnet.name)
         locations:
-          - us-east1-c
           - us-east1-b
+          - us-east1-c
+          - us-east1-d
+        nodePools:
+          - name: myk8sregionalpool
+            initialNodeCount: 1
+            version: 1.11.2-gke.9
+            config:
+              oauthScopes:
+                - https://www.googleapis.com/auth/compute
+                - https://www.googleapis.com/auth/devstorage.read_only
+                - https://www.googleapis.com/auth/logging.write
+                - https://www.googleapis.com/auth/monitoring
+            management:
+              autoUpgrade: true
+              autoRepair: true
