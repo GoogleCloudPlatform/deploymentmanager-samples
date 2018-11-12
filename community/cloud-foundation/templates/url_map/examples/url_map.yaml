@@ -18,16 +18,15 @@ resources:
   - name: test-url-map
     type: url_map.py
     properties:
-      urlMap:
-        defaultService: <FIXME:defaultService1>
-        hostRules:
-          - hosts:
-              - <FIXME:hostname>
-            pathMatcher: media-matcher
-        pathMatchers:
-          - name: media-matcher
-            defaultService: <FIXME:defaultService2>
-            pathRules:
-              - service: <FIXME:mediaService>
-                paths:
-                  - /media
+      defaultService: <FIXME:defaultService1>
+      hostRules:
+        - hosts:
+            - <FIXME:hostname>
+          pathMatcher: media-matcher
+      pathMatchers:
+        - name: media-matcher
+          defaultService: <FIXME:defaultService2>
+          pathRules:
+            - service: <FIXME:mediaService>
+              paths:
+                - /media
