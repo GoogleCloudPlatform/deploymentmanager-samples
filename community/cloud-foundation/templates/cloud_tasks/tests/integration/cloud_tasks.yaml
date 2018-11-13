@@ -1,6 +1,4 @@
 # Test of Cloud Tasks template.
-#
-# In this example, a test queue and task are created.
 
 imports:
   - path: templates/cloud_tasks/queue.py
