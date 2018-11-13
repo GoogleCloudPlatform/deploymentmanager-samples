@@ -24,7 +24,6 @@ imports:
   - path: stackdriver_metric_descriptor.py
 
 required:
-  - displayName
   - type
   - metricKind
   - valueType

@@ -28,7 +28,6 @@ def generate_config(context):
     }
 
     required_properties = [
-        'displayName',
         'type',
         'metricKind',
         'valueType',
@@ -40,7 +39,7 @@ def generate_config(context):
             metric_descriptor['properties'][prop] = properties[prop]
 
     # Optional properties:
-    optional_properties = ['labels', 'description', 'metadata']
+    optional_properties = ['displayName', 'labels', 'description', 'metadata']
 
     for prop in optional_properties:
         if prop in properties:
