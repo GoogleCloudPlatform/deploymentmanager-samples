@@ -34,7 +34,7 @@ cft-test-venv:
 	${PYTHON} -m pytest -v
 
 template-prerequisites:
-	rm -rf bats && git clone https://github.com/sstephenson/bats.git && ./bats/install.sh ../venv && rm -rf bats
+	rm -rf bats && git clone https://github.com/sstephenson/bats.git && ./bats/install.sh venv && rm -rf bats
 
 build:
 	${PYTHON} setup.py sdist bdist_wheel
