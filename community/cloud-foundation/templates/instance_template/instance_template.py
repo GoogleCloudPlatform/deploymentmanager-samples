@@ -59,15 +59,17 @@ def get_network(properties):
     network_interfaces = {
         'network': network_url
     }
-    access_configs = {
-        'name': 'External NAT',
-        'type': 'ONE_TO_ONE_NAT'
-    }
 
-    if 'natIP' in properties:
-        access_configs['natIP'] = properties['natIP']
+    if properties['hasExternalIp']:
+        access_configs = {
+            'name': 'External NAT',
+            'type': 'ONE_TO_ONE_NAT'
+        }
 
-    network_interfaces['accessConfigs'] = [access_configs]
+        if 'natIP' in properties:
+            access_configs['natIP'] = properties['natIP']
+
+        network_interfaces['accessConfigs'] = [access_configs]
 
     netif_optional_props = ['subnetwork', 'networkIP']
     for prop in netif_optional_props:

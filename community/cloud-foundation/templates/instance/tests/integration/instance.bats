@@ -40,7 +40,12 @@ function setup() {
         gcloud compute networks create "test-network-${RAND}" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
             --description "integration test ${RAND}" \
-            --subnet-mode auto
+            --subnet-mode custom
+        gcloud compute networks subnets create "test-subnet-${RAND}" \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
+            --network "test-network-${RAND}" \
+            --range 10.0.1.0/24 \
+            --region us-central1
     fi
 
   # Per-test setup steps.
@@ -49,6 +54,9 @@ function setup() {
 function teardown() {
     Global teardown; this is executed once per test file
     if [[ "$BATS_TEST_NUMBER" -eq "${#BATS_TEST_NAMES[@]}" ]]; then
+        gcloud compute networks subnets delete "test-subnet-${RAND}" \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
+            --region us-central1 -q
         gcloud compute networks delete "test-network-${RAND}" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
         delete_config

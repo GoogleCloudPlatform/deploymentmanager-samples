@@ -20,6 +20,8 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     CONFIG=".${DEPLOYMENT_NAME}.yaml"
 fi
 
+export PROJECT_NUMBER=$(gcloud projects list | grep "${CLOUD_FOUNDATION_PROJECT_ID}" | awk {'print $NF'})
+
 ########## HELPER FUNCTIONS ##########
 
 function create_config() {
@@ -44,6 +46,9 @@ function setup() {
             --network "network-${RAND}" \
             --range 10.0.1.0/24 \
             --region us-east1
+        gcloud compute project-info add-metadata \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
+            --metadata=enable-oslogin=TRUE
         create_config
     fi
     # Per-test setup steps.
@@ -57,6 +62,9 @@ function teardown() {
             --region us-east1 -q
         gcloud compute networks delete "network-${RAND}" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
+        gcloud compute project-info remove-metadata \
+            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
+            --keys=enable-oslogin
         delete_config
         rm -f "${RANDOM_FILE}"
     fi
@@ -115,6 +123,31 @@ function teardown() {
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "test-nat-gateway-${RAND}-healthcheck-firewall" ]]
+}
+
+@test "Verifying NAT functionality created in deployment ${DEPLOYMENT_NAME}" {
+    # SSH into the instance with external IP and SSH into the instance without
+    # an external IP that is using the NAT gateway and successfully execute
+    # wget on a site.
+    run gcloud compute ssh "test-inst-has-ext-ip-${RAND}" --zone "us-east1-b" \
+        --ssh-flag="-q" \
+        --command "gcloud compute ssh test-inst-nat-no-ext-ip-${RAND} \
+            --internal-ip --command 'wget google.com' --zone 'us-east1-b' \
+            --quiet" \
+        --quiet
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "HTTP request sent, awaiting response... 200 OK" ]]
+
+    # SSH into the instance with external IP and SSH into the instance without
+    # an external IP that is not using the NAT gateway. The wget command will
+    # fail.
+    run gcloud compute ssh "test-inst-has-ext-ip-${RAND}" --zone "us-east1-b" \
+        --ssh-flag="-q" \
+        --command "gcloud compute ssh test-inst-no-ext-ip-${RAND} --internal-ip \
+            --command 'wget google.com --timeout=5' --zone 'us-east1-b' \
+            --quiet" \
+        --quiet
+    [[ "$output" =~ "failed: Network is unreachable" ]]
 }
 
 @test "Deleting deployment" {

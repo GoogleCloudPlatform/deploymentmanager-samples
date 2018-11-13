@@ -14,6 +14,7 @@ will require additional firewall rules (for example, TCP/UDP/ICMP, etc.).
   IAM role to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
 - Grant the [compute.networkAdmin](https://cloud.google.com/compute/docs/access/iam)
   IAM role to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
+- NOTE: The NAT Gateway integration tests will need additional IAM permissions. The tests will SSH into test instances to verify the NAT functionality. Please refer to [Managing Instance Access Using OS Login](https://cloud.google.com/compute/docs/instances/managing-instance-access#enable_oslogin) and [Connecting through a bastion host](https://cloud.google.com/compute/docs/instances/connecting-advanced#bastion_host) page for additional information.
 
 ## Deployment
 
