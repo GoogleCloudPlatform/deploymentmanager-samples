@@ -5,6 +5,8 @@
 imports:
   - path: templates/cloud_tasks/queue.py
     name: queue.py
+  - path: templates/cloud_tasks/task.py
+    name: task.py
 
 resources:
   - name: ${QUEUE_NAME}
@@ -22,3 +24,15 @@ resources:
       appEngineHttpQueue:
         appEngineRoutingOverride:
           service: "default"
+
+  - name: ${TASK_NAME}
+    type: task.py
+    properties:
+      queueId: $(ref.${QUEUE_NAME}.name)
+      task:
+        appEngineHttpRequest:
+          httpMethod: POST
+          appEngineRouting:
+            service: default
+          relativeUri: /
+      responseView: FULL

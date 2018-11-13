@@ -120,6 +120,14 @@ sleep 2
     [[ "$output" =~ "${MIN_BACKOFF}" ]]
 }
 
+@test "Verify if the task ${TASK_NAME} was created " {
+    run gcloud beta tasks describe ${TASK_NAME} \
+        --queue ${QUEUE_NAME}
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "createTime:" ]]
+    [[ "$output" =~ "${TASK_NAME}" ]]
+}
+
 @test "Deleting deployment ${DEPLOYMENT_NAME}" {
     run gcloud beta deployment-manager deployments delete "${DEPLOYMENT_NAME}"\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q

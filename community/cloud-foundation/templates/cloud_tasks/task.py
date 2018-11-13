@@ -14,6 +14,22 @@
 """ This template creates a Cloud Task resource. """
 
 
+def generate_queue_name(context):
+    if 'projects/' in context.properties['queueId'] or '$(ref.' in context.properties['queueId']:
+        # Full queue name or reference
+        queue_name = context.properties['queueId']
+    else:
+        # Format the queue name
+        project_id = context.properties.get('projectId', context.env['project'])
+        queue_name = 'projects/{}/locations/{}/queues/{}'.format(
+            project_id,
+            context.properties['location'],
+            context.properties['queueId']
+        )
+
+    return queue_name
+
+
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
@@ -21,11 +37,7 @@ def generate_config(context):
     properties = context.properties
     name = context.env['name']
     project_id = properties.get('projectId', context.env['project'])
-    parent = 'projects/{}/locations/{}/queues/{}'.format(
-        project_id,
-        properties['location'],
-        properties['queueId']
-    )
+    parent = generate_queue_name(context)
 
     task = {
         'name':
@@ -60,6 +72,18 @@ def generate_config(context):
             {
                 'name':'name',
                 'value': '$(ref.{}.name)'.format(name)
+            },
+            {
+                'name':'createTime',
+                'value': '$(ref.{}.createTime)'.format(name)
+            },
+            {
+                'name':'view',
+                'value': '$(ref.{}.view)'.format(name)
+            },
+            {
+                'name':'scheduleTime',
+                'value': '$(ref.{}.scheduleTime)'.format(name)
             }
         ]
     }

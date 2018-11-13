@@ -202,14 +202,9 @@ properties:
 
 outputs:
   properties:
-    - maxBurstSize:
-        type: number
-        description: |
-          Defines how fast tasks in the queue are processed when many tasks are
-          in the queue, and the rate is high. Allows the queue to have a high
-          rate, so the processing starts shortly after a task is enqueued, but
-          still limits the resource usage when many tasks are enqueued in a
-          short period of time.
+    - name:
+        type: string
+        description: The queue name.
     - state:
         type: string
         description: The state of the queue.

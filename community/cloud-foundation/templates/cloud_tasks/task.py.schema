@@ -26,15 +26,18 @@ imports:
 required:
   - task
   - queueId
+  - appEngineHttpRequest
 
 properties:
   queueId:
     type: string
     description: |
       The name of the queue under which the task is created.
-      Can contain letters ([A-Za-z]), numbers ([0-9]), or hyphens (-).
-      The maximum length is 100 characters.
-    maximum: 100
+      This can be one of the following:
+       - The full name of the queue which follows the format
+        projects/<project>/locations/<region>/queues/<queue_name> or
+       - Can contain letters ([A-Za-z]), numbers ([0-9]), or hyphens (-).
+         The maximum length is 100 characters.
   projectId:
     type: string
     description: |
@@ -49,6 +52,7 @@ properties:
       locations can be obtained by calling locations.list.
       For more information, see 
       https://cloud.google.com/about/locations/.
+      If `queueId` is the full name of the queue, this field is ignored.
   task:
     type: object
     description: |
@@ -159,27 +163,14 @@ properties:
 
 outputs:
   properties:
+    name:
+      type: string
+      description: The name of the task resource.
     createTime:
       type: string
       description: |
         The time when the task was created. createTime is truncated to the
         nearest second.
-    dispatchCount:
-      type: number
-      description: |
-        The number of attempts dispatched. This count includes tasks that have
-        been dispatched but haven't received a response.
-    responseCount:
-      type: number
-      description: The number of attempts that have received a response.
-    firstAttempt:
-      type: object
-      description: |
-        The status of the task's first attempt. Only dispatchTime is set.
-        No other Attempt information is retained by Cloud Tasks.
-    lastAttempt:
-      type: object
-      description: The status of the task's last attempt.
     view:
       type: string
       description: The subset of the Task data.
@@ -187,6 +178,12 @@ outputs:
         - VIEW_UNSPECIFIED
         - BASIC
         - FULL
+    scheduleTime:
+      type: string
+      description: |
+        The time when the task is scheduled to be attempted. For App Engine
+        queues, this is when the task will be attempted or retried.
+        `schedule_time` will be truncated to the nearest microsecond.
 
 documentation:
   - templates/cloud_tasks/README.md

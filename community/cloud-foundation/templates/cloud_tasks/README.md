@@ -17,6 +17,8 @@ This set of two templates creates a Cloud Task and a Cloud Task Queue.
   from the Google Cloud console
 - Grant the [appengine.applications.get](https://cloud.google.com/appengine/docs/admin-api/access-control)
   IAM permission to the Deployment Manager service account
+- NOTE: Cloud Tasks requires an App Engine application. To run the integration tests
+  please ensure that an App Engine application exists. An App Engine app can be created using the [App Engine Template](../app_engine) or by running the [App Engine Template integration tests](../app_engine/tests/integration)
 
 ## Deployment
 
