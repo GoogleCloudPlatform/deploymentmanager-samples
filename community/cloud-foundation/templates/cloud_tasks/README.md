@@ -53,7 +53,7 @@ See the `properties` section in the schema file(s):
    ```(shell)
    cp templates/cloud_tasks/examples/create_typeprovider.sh .
    chmod u+x create_typeprovider.sh
-   ./create_typeprovider
+   ./create_typeprovider.sh
    ```
 
 4. Copy the example DM config to be used as a model for the deployment. In this case, [examples/cloud\_tasks\_queue.yaml](examples/cloud_tasks_queue.yaml)
@@ -88,7 +88,7 @@ See the `properties` section in the schema file(s):
    ```(shell)
    cp templates/cloud_tasks/examples/delete_typeprovider.sh .
    chmod u+x delete_typeprovider.sh
-   ./delete_typeprovider
+   ./delete_typeprovider.sh
    ```
 
 ## Examples
