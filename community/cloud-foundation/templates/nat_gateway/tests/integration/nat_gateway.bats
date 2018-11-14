@@ -46,9 +46,6 @@ function setup() {
             --network "network-${RAND}" \
             --range 10.0.1.0/24 \
             --region us-east1
-        gcloud compute project-info add-metadata \
-            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-            --metadata=enable-oslogin=TRUE
         create_config
     fi
     # Per-test setup steps.
@@ -62,9 +59,6 @@ function teardown() {
             --region us-east1 -q
         gcloud compute networks delete "network-${RAND}" \
             --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
-        gcloud compute project-info remove-metadata \
-            --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-            --keys=enable-oslogin
         delete_config
         rm -f "${RANDOM_FILE}"
     fi
