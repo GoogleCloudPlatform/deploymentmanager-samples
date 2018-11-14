@@ -1,0 +1,8 @@
+imports:
+- path: mac_os_access_level.jinja
+
+resources:
+- name: access-levels-template
+  type: mac_os_access_level.jinja
+  properties:
+    level: level_name
