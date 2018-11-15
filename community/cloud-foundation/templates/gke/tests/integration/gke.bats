@@ -27,7 +27,7 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     export MACHINE_TYPE="n1-standard-1"
     export NODE_COUNT="1"
     export LOCALSSD_COUNT="1"
-    export CLUSTER_VERSION="1.10.9-gke.3"
+    export CLUSTER_VERSION="latest"
     export LOGGING_SERVICE="logging.googleapis.com"
     export MONITORING_SERVICE="monitoring.googleapis.com"
     export MASTERIPV4_CIDRBLOCK="172.16.0.0/28"
