@@ -93,13 +93,6 @@ function teardown() {
     [[ "$output" =~ "${CLUSTER_NAME}" ]]
 }
 
-@test "Cluster ${CLUSTER_NAME} has ClusterVersion = ${CLUSTER_VERSION}" {
-    run gcloud container clusters describe "${CLUSTER_NAME}" \
-        --region ${REGION} --format="value(initialClusterVersion)"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "${CLUSTER_VERSION}" ]]
-}
-
 @test "Cluster ${CLUSTER_NAME} is deployed to network ${NETWORK_NAME}" {
     run gcloud container clusters describe "${CLUSTER_NAME}" \
         --region ${REGION} --format="value(network)"
