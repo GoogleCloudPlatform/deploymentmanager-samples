@@ -47,8 +47,6 @@ function setup() {
     # Global setup; executed once per test file.
     if [ ${BATS_TEST_NUMBER} -eq 1 ]; then
         create_config
-        # gcloud beta components are required to run this test.
-        gcloud components install beta
     fi
 
     # Per-test setup steps.
