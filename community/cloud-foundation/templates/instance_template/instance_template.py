@@ -56,13 +56,27 @@ def get_network(properties):
     else:
         network_url = 'global/networks/{}'.format(network_name)
 
-    return {
-        'network': network_url,
-        'accessConfigs': [{
+    network_interfaces = {
+        'network': network_url
+    }
+
+    if properties['hasExternalIp']:
+        access_configs = {
             'name': 'External NAT',
             'type': 'ONE_TO_ONE_NAT'
-        }]
-    }
+        }
+
+        if 'natIP' in properties:
+            access_configs['natIP'] = properties['natIP']
+
+        network_interfaces['accessConfigs'] = [access_configs]
+
+    netif_optional_props = ['subnetwork', 'networkIP']
+    for prop in netif_optional_props:
+        if prop in properties:
+            network_interfaces[prop] = properties[prop]
+
+    return network_interfaces
 
 
 def generate_config(context):
