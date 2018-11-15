@@ -1,13 +1,11 @@
-# Test of the BigQuery template usage.
+# Test of the BigQuery template.
 #
 # Variables:
 #   RAND: a random string used by the testing suite.
-#   CLOUD_FOUNDATION_USER_ACCOUNT: grant the user account configured
+#   CLOUD_FOUNDATION_USER_ACCOUNT: grants the user account configured
 #     in the cloud_foundation_tests.conf permissions to perform BigQuery
-#     command line commands to validate the datasets and tables that were
+#     command-line actions to validate the datasets and tables that were
 #     created. For example, `bq show` and `bq ls`.
-#
-#
 
 imports:
   - path: templates/bigquery/bigquery_dataset.py

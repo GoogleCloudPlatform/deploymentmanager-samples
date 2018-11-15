@@ -82,6 +82,12 @@ def generate_config(context):
                         'serviceAccountDisplayName',
                     'value':
                         '$(ref.project.projectNumber)@cloudservices.gserviceaccount.com'  # pylint: disable=line-too-long
+                },
+                {
+                    'name':
+                        'resources',
+                    'value':
+                        [resource['name'] for resource in resources]
                 }
             ]
     }
@@ -262,7 +268,9 @@ def create_service_accounts(context):
             policies_to_add.append({'role': role, 'members': [group_name]})
 
     # Create the project IAM permissions.
-    resources.extend(create_project_iam(service_account_dep, policies_to_add))
+    if policies_to_add:
+        iam = create_project_iam(service_account_dep, policies_to_add)
+        resources.extend(iam)
 
     if network_list and not context.properties.get('sharedVPCHost'):
         # Create the shared VPC subnet IAM permissions.

@@ -1,11 +1,11 @@
 # BigQuery
 
-These templates creates a BigQuery Dataset and Table.
+This template creates a BigQuery dataset and table.
 
 ## Prerequisites
 - Install [gcloud](https://cloud.google.com/sdk)
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
-- Grant the [`roles/bigquery.dataEditor`, `roles/bigquery.dataOwner` or `roles/bigquery.admin`](https://cloud.google.com/bigquery/docs/access-control) roles to the project service account
+- Grant the [`roles/bigquery.dataEditor`, `roles/bigquery.dataOwner` or `roles/bigquery.admin`](https://cloud.google.com/bigquery/docs/access-control) IAM roles to the project service account
 
 ## Deployment
 
@@ -14,14 +14,12 @@ These templates creates a BigQuery Dataset and Table.
 - [bigquery.v2.dataset](https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets)
 - [bigquery.v2.tables](https://cloud.google.com/bigquery/docs/reference/rest/v2/tables)
 
-
 ### Properties
 
-See `properties` section in the schema file(s)
+See the `properties` section in the schema file(s)
 
 - [BigQuery Dataset](bigquery_dataset.py.schema)
 - [BigQuery Tables](bigquery_table.py.schema)
-
 
 ### Usage
 
@@ -55,7 +53,7 @@ See `properties` section in the schema file(s)
 
 ```shell
     gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_bigquery.yaml
+        --config my_bigquery.yaml
 ```
 
 6. In case you need to delete your deployment:
@@ -63,7 +61,6 @@ See `properties` section in the schema file(s)
 ```shell
     gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
 ```
-
 
 ## Examples
 

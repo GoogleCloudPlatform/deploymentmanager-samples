@@ -50,8 +50,11 @@ def get_network(properties):
 
     network_name = properties.get('network')
 
+    if not '.' in network_name and not '/' in network_name:
+        network_name = 'global/networks/{}'.format(network_name)
+
     network_interfaces = {
-        'network': 'global/networks/{}'.format(network_name),
+        'network': network_name,
     }
 
     if properties['hasExternalIp']:

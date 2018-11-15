@@ -20,6 +20,7 @@ def generate_config(context):
     network_name = generate_network_url(context.properties)
 
     resources = []
+    out = {}
     for i, route in enumerate(context.properties['routes'], 1000):
 
         # Set the common route properties.
@@ -65,7 +66,14 @@ def generate_config(context):
             }
         )
 
-    return {'resources': resources}
+        out[route['name']] = {
+            'selfLink': '$(ref.' + route['name'] + '.selfLink)',
+            'nextHopNetwork': network_name
+        }
+
+    outputs = [{'name': 'routes', 'value': out}]
+
+    return {'resources': resources, 'outputs': outputs}
 
 
 def generate_network_url(properties):
