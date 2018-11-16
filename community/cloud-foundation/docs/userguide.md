@@ -1,3 +1,4 @@
+
 # Cloud Foundation Toolkit - User Guide
 
 <!-- TOC -->
@@ -387,7 +388,6 @@ sudo make uninstall
 To update CFT to a newer version, proceed as follows:
 
 ```shell
-git pull origin cloud-foundation --rebase
 cd community/cloud-foundation
 make clean
 sudo make prerequisites
