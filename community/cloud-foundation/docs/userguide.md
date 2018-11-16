@@ -361,7 +361,6 @@ Proceed as follows:
 ```shell
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 cd deploymentmanager-samples/
-git checkout cloud-foundation  # CFT is in a branch for now
 ```
 
 ### Installing the CFT
