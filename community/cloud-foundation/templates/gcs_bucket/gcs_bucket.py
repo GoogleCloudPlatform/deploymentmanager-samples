@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Creates a cloud storage bucket. """
+""" This template creates a Google Cloud Storage bucket. """
 
 
 def generate_config(context):
@@ -19,7 +19,7 @@ def generate_config(context):
 
     resources = []
     project_id = context.env['project']
-    bucket_name = context.properties.get('name') or context.env['name']
+    bucket_name = context.properties.get('name', context.env['name'])
 
     # output variables
     bucket_selflink = '$(ref.{}.selfLink)'.format(bucket_name)
@@ -52,7 +52,7 @@ def generate_config(context):
 
     resources.append(bucket)
 
-    # If IAM policy bindings are defined then those bindings need to be applied
+    # If IAM policy bindings are defined, apply these bindings.
     storage_provider_type = 'gcp-types/storage-v1:storage.buckets.setIamPolicy'
     bindings = context.properties.get('bindings', [])
     if bindings:
@@ -74,11 +74,15 @@ def generate_config(context):
         'outputs':
             [
                 {
-                    'name': 'storageBucketSelfLink',
+                    'name': 'name',
+                    'value': bucket_name
+                },
+                {
+                    'name': 'selfLink',
                     'value': bucket_selflink
                 },
                 {
-                    'name': 'storageBucketURL',
+                    'name': 'url',
                     'value': bucket_uri
                 }
             ]

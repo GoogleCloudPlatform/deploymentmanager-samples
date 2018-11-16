@@ -16,10 +16,10 @@ info:
   title: Healthcheck
   author: Sourced Group Inc.
   description: |
-    Creates a Healthcheck Resouce.
+    Creates a Healthcheck resource.
 
     For more information on this resource:
-    https://cloud.google.com/load-balancing/docs/health-checks
+    https://cloud.google.com/load-balancing/docs/health-checks.
 
 imports:
   - path: healthcheck.py
@@ -101,9 +101,8 @@ properties:
     type: string
     description: |
       The application data to send once the SSL connection has been 
-        established (default value is empty). 
-      If both request and response are empty, the connection establishment 
-        alone will indicate health. 
+      established (the default value is empty). If both request and response
+      are empty, the connection establishment alone indicates health. 
       The request data can only be ASCII
       Note: used only with TCP + SSL.
   response:
@@ -113,26 +112,26 @@ properties:
       If left empty (the default value), any response will indicate health. 
       The response data can only be ASCII.
       Note: Used only with TCP + SSL except in beta. In beta, response is 
-        available to all healthcheck types.
+      available to all healthcheck types.
   portName:
     type: string
     description: |
-      Port name as defined in InstanceGroup#NamedPort#name. If both port and 
-        port_name are defined, port takes precedence.
+      The port name as defined in InstanceGroup#NamedPort#name. If both port
+      and port_name are defined, port takes precedence.
       Note: Used only in beta.
   portSpecification:
     type: string
     description: |
-      Specifies how port is selected for health checking, can be one of
+      Defines how port is selected for health checking. One of the
       following values:
       USE_FIXED_PORT: The port number in {port} is used for health checking.
       USE_NAMED_PORT: The {portName} is used for health checking.
       USE_SERVING_PORT: For NetworkEndpointGroup, the port specified for each
-        network endpoint is used for health checking. 
+      network endpoint is used for health checking. 
       For other backends, the port or named port specified in the Backend 
-        Service is used for health checking.
-      If not specified, health check follows behavior specified in {port} and 
-        {portName} fields
+      Service is used for health checking.
+      If not specified, healthcheck follows behavior specified in the {port}
+      and {portName} fields.
       Used only in beta for all types.
     enum:
       - USE_FIXED_PORT
@@ -143,13 +142,14 @@ outputs:
   properties:
     - name:
         type: string
-        description: Name of the HealthCheck resource.
+        description: The HealthCheck resource name.
     - selfLink:
         type: string
-        description: Deployment Manager defined URL for the resource.
+        description: The Deployment Manager-defined URL for the resource.
     - creationTimestamp:
         type: datetime
-        description: Creation timestamp in RFC3339 text format.
+        description: |
+          The resource creation timestamp in the RFC3339 text format.
 
 documentation:
   - templates/healthcheck/README.md

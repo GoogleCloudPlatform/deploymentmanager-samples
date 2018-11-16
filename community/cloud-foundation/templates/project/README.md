@@ -56,6 +56,8 @@ Following are the prerequisites for creating a project via Deployment Manager. Y
 
 8.  Give the *DM Service Account* the following permissions on the *Billing Account*: `roles/billing.user`. This is visible in Cloud Console's IAM permissions in *Billing -> Billing Account User*.
 
+9.  If the project is a VPC host project, give the *DM Service Account* the following permissions: `roles/compute.xpnAdmin`.
+
 ## Deployment
 
 ### Resources

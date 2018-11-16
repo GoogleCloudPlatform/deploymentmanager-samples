@@ -102,6 +102,27 @@ properties:
           Used when routeType is 'vpntunnel'.
           The region where the VPN tunnel resides.
 
+outputs:
+  properties:
+    routes:
+      type: array
+      description: Array of route information.
+      items:
+        description: |
+          The name of the firewall rule resource. For example, the output can
+          be referenced as: $(ref.<my-routes>.routes.<route-name>.selfLink)
+        patternProperties:
+          ".*":
+            type: object
+            description: Details for a route resource.
+            properties:
+              selfLink:
+                type: string
+                description: The URI (SelfLink) of the firewall rule resource.
+              nextHopNetwork:
+                type: string
+                description: URL to a Network that should handle matching packets.
+
 documentation:
   - templates/route/README.md
 

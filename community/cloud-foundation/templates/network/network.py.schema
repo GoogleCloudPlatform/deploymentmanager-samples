@@ -58,9 +58,9 @@ outputs:
     - name:
         type: string
         description: The network resource name.
-    - networkUrl:
+    - selfLink:
         type: string
-        description: The selfLink URL for the network resource.
+        description: The URI (SelfLink) of the network resource.
 
 documentation:
   - templates/network/README.md

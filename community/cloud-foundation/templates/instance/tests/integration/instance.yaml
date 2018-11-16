@@ -18,8 +18,8 @@ resources:
       diskType: pd-ssd
       canIpForward: true
       network: test-network-${RAND}
+      subnetwork: regions/us-central1/subnetworks/test-subnet-${RAND}
       metadata:
         items:
           - key: startup-script
             value: sudo apt-get update && sudo apt-get install -y nginx
-
