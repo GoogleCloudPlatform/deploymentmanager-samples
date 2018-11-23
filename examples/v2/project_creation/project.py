@@ -25,7 +25,8 @@ def GenerateConfig(context):
 
   if not IsProjectParentValid(context.properties):
     sys.exit(('Invalid [organization-id, parent-folder-id], '
-              'must specify at least one.'))
+              'must specify at least one. If setting up Shared VPC, you '
+              'must specify at least organization-id.'))
 
   parent_type = ''
   parent_id = ''
@@ -216,6 +217,11 @@ def GenerateConfig(context):
 
 def IsProjectParentValid(properties):
   """ A helper function to validate that the project is either under a folder
-      or under an organization
+      or under an organization.
+      If we are setting up Shared VPC, we always need organization-id.
+      If not, we can work with either organization-id or parent-folder-id.
   """
-  return ('organization-id' in properties or 'parent-folder-id' in properties)
+  if ('shared_vpc_service_of' in properties or properties['shared_vpc_host']):
+    return 'organization-id' in properties
+  else:
+    return ('organization-id' in properties or 'parent-folder-id' in properties)

@@ -94,7 +94,8 @@ and their resources. Avoid creating other GCP resources in the Creation project.
 
     *   Set the name of the new project you want to create. It must be unique
         among all project names.
-    *   Set the organization id (or the folder id).
+    *   Set the `organization-id` parameter or the `parent-folder-id`
+        parameter. If both are given, `parent-folder-id` takes precedence.
     *   Set the billing account to use.
     *   Set the APIs to turn on.
     *   Set the service accounts to create.
@@ -119,7 +120,7 @@ For that, you need to add the following permission to the DM Service Account on
 the Organization node:
 
 *   'roles/compute.xpnAdmin'
- *   Visible in the Cloud Console's IAM permissions in Compute Engine -> Compute Shared VPC Admin.
+*   Visible in the Cloud Console's IAM permissions in Compute Engine -> Compute Shared VPC Admin.
 
 You can then create 2 projects with the `config_shared_vpc.yaml` file. One of
 the projects will be the host of the Shared VPC, and the other one will be a
@@ -128,3 +129,7 @@ and create the deployment:
 
     gcloud deployment-manager deployments create YOUR_DEPLOYMENT_NAME \
         --config config_shared_vpc.yaml
+
+**Note:** To configure a Shared VPC, you need to configure *at least* the
+`organization-id` parameter in `config_shared_vpc.yaml`. You can also configure
+the `parent-folder-id` parameter if you want to create the project in a folder.

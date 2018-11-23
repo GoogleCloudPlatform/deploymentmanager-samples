@@ -11,6 +11,8 @@ resources:
         # Change this to your organization ID.
         organization-id: "ORG_ID"
         # You can also create the project in a folder.
+        # If both organization-id and parent-folder-id are provided,
+        # the project will be created in parent-folder-id.
         #parent-folder-id: "FOLDER_ID"
 
         # Change the following to your organization's billing account
