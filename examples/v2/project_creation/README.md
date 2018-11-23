@@ -94,7 +94,7 @@ and their resources. Avoid creating other GCP resources in the Creation project.
 
     *   Set the name of the new project you want to create. It must be unique
         among all project names.
-    *   Set the organization id.
+    *   Set the organization id (or the folder id).
     *   Set the billing account to use.
     *   Set the APIs to turn on.
     *   Set the service accounts to create.

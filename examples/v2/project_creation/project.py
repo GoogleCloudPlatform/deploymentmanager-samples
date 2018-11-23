@@ -25,17 +25,17 @@ def GenerateConfig(context):
 
   if not IsProjectParentValid(context.properties):
     sys.exit(('Invalid [organization-id, parent-folder-id], '
-              'must specify exactly one.'))
+              'must specify at least one.'))
 
   parent_type = ''
   parent_id = ''
 
-  if 'organization-id' in context.properties:
-    parent_type = 'organization'
-    parent_id = context.properties['organization-id']
-  else:
+  if 'parent-folder-id' in context.properties:
     parent_type = 'folder'
     parent_id = context.properties['parent-folder-id']
+  else:
+    parent_type = 'organization'
+    parent_id = context.properties['organization-id']
 
   if 'project-name' in context.properties:
     project_name = context.properties['project-name']
@@ -216,11 +216,6 @@ def GenerateConfig(context):
 
 def IsProjectParentValid(properties):
   """ A helper function to validate that the project is either under a folder
-      or under an organization and not both
+      or under an organization
   """
-  if ('organization-id' not in properties and
-      'parent-folder-id' not in properties):
-    return False
-  if 'organization-id' in properties and 'parent-folder-id' in properties:
-    return False
-  return True
+  return ('organization-id' in properties or 'parent-folder-id' in properties)

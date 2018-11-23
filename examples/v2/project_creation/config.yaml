@@ -10,6 +10,8 @@ resources:
     properties:
         # Change this to your organization ID.
         organization-id: "ORG_ID"
+        # You can also create the project in a folder.
+        #parent-folder-id: "FOLDER_ID"
 
         # Change the following to your organization's billing account
         billing-account-name: billingAccounts/BILLING_ACCOUNT_ID
@@ -65,4 +67,3 @@ resources:
                   # This is already not on the project, but in case it shows up, let's
                   # remove it.
                   - serviceAccount:1234567890@cloudservices.gserviceaccount.com
-
