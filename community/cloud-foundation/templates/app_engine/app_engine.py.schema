@@ -58,6 +58,21 @@ properties:
           'healthCheck' ones. Once the legacy 'healthCheck' behavior is
           deprecated, and this value becomes always True, this setting can be
           removed.
+  defaultCookieExpiration:
+    type: string
+    description: |
+      Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+      Cookie expiration policy for this application.
+      A duration in seconds with up to nine fractional digits, terminated by
+      's'. Example: "3.5s".
+  gcrDomain:
+    type: string
+    description: |
+      The Google Container Registry domain used for storing managed build
+      docker images for this application.
+
+
+
 
 outputs:
   properties:

@@ -28,7 +28,9 @@ def generate_config(context):
         'locationId',
         'servingStatus',
         'authDomain',
-        'featureSettings'
+        'featureSettings',
+        'defaultCookieExpiration',
+        'gcrDomain'
     ]
 
     for prop_name in optional_props:

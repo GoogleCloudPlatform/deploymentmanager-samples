@@ -1,6 +1,6 @@
 # App Engine
 
-This template creates a Google App Engine's App resource.
+This template creates a Google App Engine's App and Version resource.
 
 ## Prerequisites
 
@@ -8,16 +8,23 @@ This template creates a Google App Engine's App resource.
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Enable the App Engine Admin API and the App Engine Flexible Environment API
 - Grant the [appengine.appAdmin](https://cloud.google.com/appengine/docs/admin-api/access-control) and [OWNER](https://cloud.google.com/appengine/docs/standard/python/access-control#primitive_roles) IAM roles to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
+- Please refer to the [App Engine Overview](https://cloud.google.com/appengine/docs/standard/python/an-overview-of-app-engine)
+  for information regarding the structure of an App Engine application
 
 ## Deployment
 
 ### Resources
 
 - [gcp-types/appengine-v1:appengine.apps.create](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps)
+- [appengine.v1.version](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions)
 
 ### Properties
 
 See the `properties` section in the schema file(s):
+
+-  [App Engine](app_engine.py.schema)
+-  [App Engine Version](app_engine_service.py.schema)
+
 
 ### Usage
 
@@ -64,3 +71,5 @@ delete the application is to [shut down the project](https://cloud.google.com/ap
 ## Examples
 
 - [App Engine](examples/app_engine.yaml)
+- [Standard App Engine Environment](examples/standard_app_engine.yaml)
+- [Flexible App Engine Environment](examples/flexible_app_engine.yaml)

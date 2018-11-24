@@ -1,0 +1,40 @@
+# Example of the app engine template usage.
+#
+# In this example, a standard app engine environment is created.
+#
+# Replace the following placeholders with relevant values:
+#   <FIXME:appsId>: Name of the parent resource to create this version under.
+#                   Example: apps/myapp/services/default
+
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+  - path: templates/app_engine/app_engine_version.py
+    name: app_engine_version.py
+
+resources:
+  - name: test-app-engine
+    type: app_engine.py
+    properties:
+      locationId: us-east1
+      servingStatus: SERVING
+      featureSettings:
+        splitHealthChecks: True
+
+  - name: test-app-engine-standard-${RAND}
+    type: app_engine.py
+    properties:
+      servicesId: default
+      appsId: <FIXME:appsId>
+      deployment:
+        files:
+          main.py:
+            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
+      handlers:
+        - script:
+            scriptPath: main.app
+          securityLevel: SECURE_OPTIONAL
+          urlRegex: /
+      runtime: python27
+      threadsafe: true

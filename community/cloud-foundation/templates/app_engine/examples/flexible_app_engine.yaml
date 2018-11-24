@@ -1,4 +1,11 @@
-# Test of the App Engine template.
+# Example of the app engine template usage.
+#
+# In this example, a standard app engine environment is created.
+#
+# Replace the following placeholders with relevant values:
+#   <FIXME:appsId>: Name of the parent resource to create this version under.
+#                   Example: apps/myapp/services/default
+
 
 imports:
   - path: templates/app_engine/app_engine.py
@@ -7,7 +14,7 @@ imports:
     name: app_engine_version.py
 
 resources:
-  - name: test-app-engine-${RAND}
+  - name: test-app-engine
     type: app_engine.py
     properties:
       locationId: us-east1
@@ -15,28 +22,11 @@ resources:
       featureSettings:
         splitHealthChecks: True
 
-  - name: test-app-engine-standard-${RAND}
-    type: app_engine_version.py
-    properties:
-      servicesId: default
-      appsId: ${CLOUD_FOUNDATION_PROJECT_ID}
-      deployment:
-        files:
-          main.py:
-            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
-      handlers:
-        - script:
-            scriptPath: main.app
-          securityLevel: SECURE_OPTIONAL
-          urlRegex: /
-      runtime: python27
-      threadsafe: true
-
   - name: test-app-engine-flexible-${RAND}
-    type: app_engine_version.py
+    type: app_engine.py
     properties:
       servicesId: default
-      appsId: ${CLOUD_FOUNDATION_PROJECT_ID}
+      appsId: <FIXME:appsId>
       deployment:
         files:
           main.py:
@@ -56,5 +46,5 @@ resources:
         memoryGb: 1
         volumes:
           - name: ramdisk1
-            volumeType: tmpfs
-            sizeGb: 0.5
+            volume_type: tmpfs
+            size_gb: 0.5
