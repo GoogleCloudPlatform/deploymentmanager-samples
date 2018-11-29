@@ -65,6 +65,10 @@ def generate_config(context):
         {
             'name': 'gcrDomain',
             'value': '$(ref.{}.gcrDomain)'.format(name)
+        },
+        {
+            'name': 'id',
+            'value': '$(ref.{}.id)'.format(name)
         }
     ]
 

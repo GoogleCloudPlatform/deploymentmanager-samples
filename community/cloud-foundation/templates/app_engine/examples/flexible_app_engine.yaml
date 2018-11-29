@@ -23,10 +23,10 @@ resources:
         splitHealthChecks: True
 
   - name: test-app-engine-flexible
-    type: app_engine.py
+    type: app_engine_version.py
     properties:
       servicesId: default
-      appsId: <FIXME:appsId>
+      appsId: $(ref.test-app-engine-${RAND}.id)
       deployment:
         files:
           main.py:

@@ -102,6 +102,13 @@ outputs:
         description: |
           The Google Container Registry domain used for storing managed build
           Docker images for the Application.
+    - id:
+        type: string
+        description: |
+          Identifier of the Application resource. This identifier is the
+          project ID of the Google Cloud Platform project where you want
+          to deploy your application.
+
 
 documentation:
   - templates/app_engine/README.md

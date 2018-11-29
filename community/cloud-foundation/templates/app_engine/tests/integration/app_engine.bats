@@ -86,23 +86,6 @@ function teardown() {
     [[ "$output" =~ "instances: 5" ]]
 }
 
-@test "Deleting deployment" {
-    run gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" -q \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-
-    run gcloud app versions list --filter="version:test-app-engine-standard-${RAND}" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ ! "$output" =~ "test-app-engine-standard-${RAND}" ]]
-    [[ ! "$output" =~ "test-app-engine-flexible-${RAND}" ]]
-
-    run gcloud app instances list --filter="version:test-app-engine-flexible-${RAND}" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ ! "$output" =~ "test-app-engine-flexible-${RAND}" ]]
-}
-
 ########### NOTE ##################
 # GAE Applications cannot be deleted once they had been created.
 # Refer to README.md for additional information.
