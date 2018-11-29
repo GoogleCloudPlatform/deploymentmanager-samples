@@ -22,7 +22,7 @@ resources:
       featureSettings:
         splitHealthChecks: True
 
-  - name: test-app-engine-standard-${RAND}
+  - name: test-app-engine-standard
     type: app_engine.py
     properties:
       servicesId: default
