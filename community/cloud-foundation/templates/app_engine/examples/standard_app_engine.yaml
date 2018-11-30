@@ -2,10 +2,6 @@
 #
 # In this example, a standard app engine environment is created.
 #
-# Replace the following placeholders with relevant values:
-#   <FIXME:appsId>: Name of the parent resource to create this version under.
-#                   Example: apps/myapp/services/default
-
 
 imports:
   - path: templates/app_engine/app_engine.py
