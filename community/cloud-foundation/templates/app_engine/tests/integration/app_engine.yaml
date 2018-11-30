@@ -15,11 +15,12 @@ resources:
       featureSettings:
         splitHealthChecks: True
 
-  - name: test-app-engine-flexible-${RAND}
+  - name: test-ae-std-${RAND}
     type: app_engine_version.py
     properties:
-      servicesId: default
+      servicesId: std-${RAND}
       appsId: $(ref.test-app-engine-${RAND}.id)
+      env: standard
       deployment:
         files:
           main.py:
@@ -30,6 +31,24 @@ resources:
           securityLevel: SECURE_OPTIONAL
           urlRegex: /
       runtime: python27
+      threadsafe: true
+
+  - name: test-ae-flex-${RAND}
+    type: app_engine_version.py
+    properties:
+      servicesId: flex-${RAND}
+      appsId: $(ref.test-app-engine-${RAND}.id)
+      env: flexible
+      deployment:
+        files:
+          main.py:
+            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
+      handlers:
+        - script:
+            scriptPath: main.app
+          securityLevel: SECURE_OPTIONAL
+          urlRegex: /
+      runtime: python
       threadsafe: true
       manualScaling:
         instances: 5

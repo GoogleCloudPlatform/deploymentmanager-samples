@@ -32,7 +32,7 @@ properties:
       Part of `parent`. Name of the parent resource to create this version
       under. This is the `project ID` or the `app self link` for example apps/project-id/services/default."
       Note that when creating a app version resource along with a app engine resource one should 
-      reference the ID of the resource to stablish dependency relationship for DM. Example: `$(ref.test-app-engine.id)`
+      reference the ID of the resource to establish dependency relationship for DM. Example: `$(ref.test-app-engine.id)`
   id:
     type: string
     description: |

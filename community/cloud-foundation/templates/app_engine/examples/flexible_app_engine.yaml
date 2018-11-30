@@ -24,6 +24,7 @@ resources:
     properties:
       servicesId: default
       appsId: $(ref.test-app-engine.id)
+      env: flexible
       deployment:
         files:
           main.py:

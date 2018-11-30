@@ -55,10 +55,9 @@ function teardown() {
 @test "Creating deployment ${DEPLOYMENT_NAME} from ${CONFIG}" {
     run gcloud deployment-manager deployments create "${DEPLOYMENT_NAME}" \
         --config "${CONFIG}" --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
 }
 
-@test "Verifying resource was created in deployment ${DEPLOYMENT_NAME}" {
+@test "Verifying app resource was created in deployment ${DEPLOYMENT_NAME}" {
     run gcloud app describe --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "id: ${CLOUD_FOUNDATION_PROJECT_ID}" ]]
@@ -66,24 +65,39 @@ function teardown() {
     [[ "$output" =~ "servingStatus: SERVING" ]]
 }
 
-@test "Verifying that flexible app engine resource were created in deployment ${DEPLOYMENT_NAME}" {
-    run gcloud app versions list --filter="version:test-app-engine-flexible-${RAND}" \
+@test "Verifying standard app engine resource were created in deployment ${DEPLOYMENT_NAME}" {
+    run gcloud app versions list --filter="version:test-ae-std-${RAND}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "test-app-engine-flexible-${RAND}" ]]
+    [[ "$output" =~ "test-ae-std-${RAND}" ]]
 
-    run gcloud app instances list --filter="version:test-app-engine-flexible-${RAND}" \
-        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "test-app-engine-flexible-${RAND}" ]]
-
-    run gcloud app versions describe "test-app-engine-flexible-${RAND}" \
+    run gcloud app versions describe "test-ae-std-${RAND}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-        --service=default
+        --service="std-${RAND}"
     [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "test-app-engine-flexible-${RAND}" ]]
+    [[ "$output" =~ "test-ae-std-${RAND}" ]]
+    [[ "$output" =~ "env: standard" ]]
+}
+
+@test "Verifying flex app engine resource were created in deployment ${DEPLOYMENT_NAME}" {
+    run gcloud app versions list --filter="version:test-ae-flex-${RAND}" \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "test-ae-flex-${RAND}" ]]
+
+    run gcloud app instances list --filter="version:test-ae-flex-${RAND}" \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "test-ae-flex-${RAND}" ]]
+
+    run gcloud app versions describe "test-ae-flex-${RAND}" \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
+        --service="flex-${RAND}"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" =~ "test-ae-flex-${RAND}" ]]
     [[ "$output" =~ "manualScaling:" ]]
     [[ "$output" =~ "instances: 5" ]]
+    [[ "$output" =~ "env: flexible" ]]
 }
 
 ########### NOTE ##################
