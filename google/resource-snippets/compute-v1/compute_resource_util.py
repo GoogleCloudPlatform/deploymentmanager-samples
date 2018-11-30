@@ -37,6 +37,11 @@ class Resource(object):
   def SelfLink(self):
     return self.Ref('selfLink')
 
+  def __setitem__(self, name, value):
+    self.properties[name] = value
+
+  def __getitem__(self, name):
+    return self.properties[name]
 
 class ComputeResource(Resource):
   """Wrapper for compute resources."""

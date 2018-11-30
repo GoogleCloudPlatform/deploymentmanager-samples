@@ -1,3 +1,4 @@
+
 # Cloud Foundation Toolkit - User Guide
 
 <!-- TOC -->
@@ -361,7 +362,6 @@ Proceed as follows:
 ```shell
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 cd deploymentmanager-samples/
-git checkout cloud-foundation  # CFT is in a branch for now
 ```
 
 ### Installing the CFT
@@ -388,7 +388,6 @@ sudo make uninstall
 To update CFT to a newer version, proceed as follows:
 
 ```shell
-git pull origin cloud-foundation --rebase
 cd community/cloud-foundation
 make clean
 sudo make prerequisites

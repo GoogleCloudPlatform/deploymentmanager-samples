@@ -48,7 +48,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+        sourceImage: https://www.googleapis.com/compute/v1/projects/{{ properties["instanceosfamily"] }}-cloud/global/images/family/{{ properties["instanceosfamily"] }}-{{ properties["instanceosversion"] }}
     networkInterfaces:
     - network: $(ref.condor-network.selfLink)
       accessConfigs:
@@ -64,8 +64,9 @@ resources:
     metadata:
       items:
         - key: startup-script
+          {% set startupscript = "startup-master-" + properties["instanceosfamily"] + ".sh" %}
           value: |
-            {{ imports["startup-master.sh"]|indent(12)|replace("EMAIL",properties["email"]) }}
+            {{ imports[startupscript]|indent(12)|replace("EMAIL",properties["email"])|replace("CONDOR_VERSION=\"CONDORVERSION","CONDOR_VERSION=\""+properties["condorversion"])|replace("OS_VERSION=\"OSVERSION","OS_VERSION=\""+(properties["instanceosversion"]|string)) }}
 - name: condor-submit
   type: compute.v1.instance
   properties:
@@ -77,7 +78,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+        sourceImage: https://www.googleapis.com/compute/v1/projects/{{ properties["instanceosfamily"] }}-cloud/global/images/family/{{ properties["instanceosfamily"] }}-{{ properties["instanceosversion"] }}
     networkInterfaces:
     - network: $(ref.condor-network.selfLink)
       accessConfigs:
@@ -87,14 +88,21 @@ resources:
       - email: "default"
         scopes:
         - "https://www.googleapis.com/auth/logging.write"
+        - "https://www.googleapis.com/auth/compute"
+        - "https://www.googleapis.com/auth/servicecontrol"
+        - "https://www.googleapis.com/auth/service.management.readonly"
+        - "https://www.googleapis.com/auth/monitoring.write"
+        - "https://www.googleapis.com/auth/trace.append"
+        - "https://www.googleapis.com/auth/devstorage.read_only"
     tags:
       items:
         - condor-submit
     metadata:
       items:
         - key: startup-script
+          {% set startupscript = "startup-submit-" + properties["instanceosfamily"] + ".sh" %}
           value: |
-            {{ imports["startup-submit.sh"]|indent(12)|replace("EMAIL",properties["email"]) }}
+            {{ imports[startupscript]|indent(12)|replace("EMAIL",properties["email"])|replace("CONDOR_VERSION=\"CONDORVERSION","CONDOR_VERSION=\""+properties["condorversion"])|replace("OS_VERSION=\"OSVERSION","OS_VERSION=\""+(properties["instanceosversion"]|string)) }}
 - name: condor-compute
   type: compute.v1.instanceTemplate
   properties:
@@ -107,7 +115,7 @@ resources:
         boot: true
         autoDelete: true
         initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+          sourceImage: https://www.googleapis.com/compute/v1/projects/{{ properties["instanceosfamily"] }}-cloud/global/images/family/{{ properties["instanceosfamily"] }}-{{ properties["instanceosversion"] }}
       networkInterfaces:
       - network: $(ref.condor-network.selfLink)
         accessConfigs:
@@ -125,8 +133,9 @@ resources:
       metadata:
         items:
         - key: startup-script
+          {% set startupscript = "startup-compute-" + properties["instanceosfamily"] + ".sh" %}
           value: |
-            {{ imports["startup-compute.sh"]|indent(12)|replace("EMAIL",properties["email"]) }}
+            {{ imports[startupscript]|indent(12)|replace("EMAIL",properties["email"])|replace("CONDOR_VERSION=\"CONDORVERSION","CONDOR_VERSION=\""+properties["condorversion"])|replace("OS_VERSION=\"OSVERSION","OS_VERSION=\""+(properties["instanceosversion"]|string)) }}
 - name: condor-compute-igm
   type: compute.v1.instanceGroupManagers
   properties:
@@ -134,6 +143,8 @@ resources:
     instanceTemplate: $(ref.condor-compute.selfLink)
     targetSize: {{ properties["count"] }}
     zone: {{ properties["zone"] }}
+
+{% if properties['setup_autoscaler'] %}
 - name: condor-compute-as
   type: compute.v1.autoscaler
   properties:
@@ -142,6 +153,8 @@ resources:
     autoscalingPolicy:
       minNumReplicas: {{ properties["count"] }}
       maxNumReplicas: {{ properties["count"] }}
+{% endif %}
+
 outputs:
 - name: condor-submit-host-ip,
   value: \$(ref.condor-submit.networkInterfaces[0].accessConfigs[0].natIP)
