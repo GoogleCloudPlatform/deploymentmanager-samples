@@ -315,10 +315,9 @@ class Deployment(DM_API):
         self._config = config
 
         # Regex search/replace before loading the yaml
-        self.config = self.yaml.load(
-            DM_OUTPUT_QUERY_REGEX.sub(self.get_dm_output,
-                                      config.as_string)
-        )
+        self.config = self.yaml.load(config.as_string)
+        self.yaml_walk(self.config)
+
         self.config['project'] = self._config.project
         self.config['name'] = self._config.deployment
 
@@ -326,6 +325,27 @@ class Deployment(DM_API):
 
         LOG.debug('==> %s', self.config)
         self.current = None
+
+    def yaml_walk(self, yaml_tree):
+        if isinstance(yaml_tree, dict):
+            for k, v in yaml_tree.items():  ## Walk each element in Hashmap
+                if isinstance(v, str):  ##Replace value of map item if its a string with match
+                    match = DM_OUTPUT_QUERY_REGEX.match(v)
+                    if match is not None:
+                        yaml_tree[k] = self.get_dm_output(match)
+                else:
+                    self.yaml_walk(v)  ## Not string, recursive walk
+        elif isinstance(yaml_tree, list):
+            for i, v in enumerate(yaml_tree):  ## Walk each element in list
+                if isinstance(v, str):
+                    match = DM_OUTPUT_QUERY_REGEX.match(v)
+                    if match is not None:
+                        yaml_tree[i] = self.get_dm_output(match)
+                else:
+                    self.yaml_walk(v)  ## Not string, recursive walk
+        elif (not isinstance(yaml_tree, bool)) and (not isinstance(yaml_tree, int)) and (not isinstance(yaml_tree, float)):
+            ## ignoring bool, integer values, since those can't be token matches
+            raise ValueError('got type %s walking yaml' % type(yaml_tree))      # Something is really bad
 
     def get_dm_output(self, match):
         """ Custom function for the regex.sub()
