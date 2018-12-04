@@ -336,21 +336,22 @@ class Deployment(DM_API):
         """
         if isinstance(yaml_tree, dict):
             for k, v in yaml_tree.items():  ## Walk each element in dictionary
-                self.yaml_replace(yaml_tree,k,v)
+                yaml_tree[k] = self.yaml_replace(v)
         elif isinstance(yaml_tree, list):
             for i, v in enumerate(yaml_tree):  ## Walk each element in list
-                self.yaml_replace(yaml_tree,i,v)
+                yaml_tree[i] = self.yaml_replace(v)
         elif (not isinstance(yaml_tree, bool)) and (not isinstance(yaml_tree, int)) and (not isinstance(yaml_tree, float)):
             ## ignoring bool, integer values, since those can't be token matches
             raise ValueError('got type %s walking yaml' % type(yaml_tree))      # Something is really bad
 
-    def yaml_replace(self, yaml_tree, k, v):
+    def yaml_replace(self, v):
         if isinstance(v, str):
             match = DM_OUTPUT_QUERY_REGEX.match(v)
             if match is not None:
-                yaml_tree[k] = self.get_dm_output(match)
+                return self.get_dm_output(match)
         else:
             self.yaml_walk(v)  ## Not string, recursive walk
+        return v
 
     def get_dm_output(self, match):
         """ Custom function for the regex.match()
