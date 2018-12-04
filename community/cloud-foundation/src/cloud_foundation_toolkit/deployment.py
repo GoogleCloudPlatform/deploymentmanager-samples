@@ -315,10 +315,9 @@ class Deployment(DM_API):
         self._config = config
 
         # Regex search/replace before loading the yaml
-        self.config = self.yaml.load(
-            DM_OUTPUT_QUERY_REGEX.sub(self.get_dm_output,
-                                      config.as_string)
-        )
+        self.config = self.yaml.load(config.as_string)
+        self.yaml_walk(self.config)
+
         self.config['project'] = self._config.project
         self.config['name'] = self._config.deployment
 
@@ -327,8 +326,32 @@ class Deployment(DM_API):
         LOG.debug('==> %s', self.config)
         self.current = None
 
+    def yaml_walk(self, yaml_tree):
+        """ Custom function for walking through the config and checking every string if its a regexp match
+
+        In place walk over the config yaml. In case of a string togen it replaces the token with the complex
+        YAML value of the reference.
+
+        The function is able to walk through lists and dictionarries. It ignores boolm, int and double values.
+        """
+        if isinstance(yaml_tree, dict):
+            for k, v in yaml_tree.items():  ## Walk each element in dictionary
+                yaml_tree[k] = self.yaml_replace(v)
+        elif isinstance(yaml_tree, list):
+            for i, v in enumerate(yaml_tree):  ## Walk each element in list
+                yaml_tree[i] = self.yaml_replace(v)
+
+    def yaml_replace(self, v):
+        if isinstance(v, str):
+            match = DM_OUTPUT_QUERY_REGEX.match(v)
+            if match is not None:
+                return self.get_dm_output(match)
+        else:
+            self.yaml_walk(v)  ## Not string, recursive walk
+        return v
+
     def get_dm_output(self, match):
-        """ Custom function for the regex.sub()
+        """ Custom function for the regex.match()
 
         This function gets executed everytime there's a match on one
         tokens used to represent the cross-deployment references (
