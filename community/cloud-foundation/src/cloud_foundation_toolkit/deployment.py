@@ -340,9 +340,6 @@ class Deployment(DM_API):
         elif isinstance(yaml_tree, list):
             for i, v in enumerate(yaml_tree):  ## Walk each element in list
                 yaml_tree[i] = self.yaml_replace(v)
-        #elif (not isinstance(yaml_tree, bool)) and (not isinstance(yaml_tree, int)) and (not isinstance(yaml_tree, float)):
-        #    ## ignoring bool, integer values, since those can't be token matches
-        #    raise ValueError('got type %s walking yaml' % type(yaml_tree))      # Something is really bad
 
     def yaml_replace(self, v):
         if isinstance(v, str):
