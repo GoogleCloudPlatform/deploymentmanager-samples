@@ -327,28 +327,38 @@ class Deployment(DM_API):
         self.current = None
 
     def yaml_walk(self, yaml_tree):
+        """ Custom function for walking through the config and checking every string if its a regexp match
+
+        In place walk over the config yaml. In case of a string togen it replaces the token with the complex
+        YAML value of the reference.
+
+        The function is able to walk through lists and dictionarries. It ignores boolm, int and double values.
+        """
         if isinstance(yaml_tree, dict):
-            for k, v in yaml_tree.items():  ## Walk each element in Hashmap
+            for k, v in yaml_tree.items():  ## Walk each element in dictionary
                 if isinstance(v, str):  ##Replace value of map item if its a string with match
-                    match = DM_OUTPUT_QUERY_REGEX.match(v)
-                    if match is not None:
-                        yaml_tree[k] = self.get_dm_output(match)
+                    yaml_tree[k] = self.yaml_replace(v, yaml_tree[k])
                 else:
                     self.yaml_walk(v)  ## Not string, recursive walk
         elif isinstance(yaml_tree, list):
             for i, v in enumerate(yaml_tree):  ## Walk each element in list
                 if isinstance(v, str):
-                    match = DM_OUTPUT_QUERY_REGEX.match(v)
-                    if match is not None:
-                        yaml_tree[i] = self.get_dm_output(match)
+                    yaml_tree[i] = self.yaml_replace(v, yaml_tree[i])
                 else:
                     self.yaml_walk(v)  ## Not string, recursive walk
         elif (not isinstance(yaml_tree, bool)) and (not isinstance(yaml_tree, int)) and (not isinstance(yaml_tree, float)):
             ## ignoring bool, integer values, since those can't be token matches
             raise ValueError('got type %s walking yaml' % type(yaml_tree))      # Something is really bad
 
+    def yaml_replace(self, v, current):
+        match = DM_OUTPUT_QUERY_REGEX.match(v)
+        if match is not None:
+            return self.get_dm_output(match)
+        else:
+            return current
+
     def get_dm_output(self, match):
-        """ Custom function for the regex.sub()
+        """ Custom function for the regex.match()
 
         This function gets executed everytime there's a match on one
         tokens used to represent the cross-deployment references (
