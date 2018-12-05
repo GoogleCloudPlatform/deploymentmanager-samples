@@ -18,13 +18,13 @@ resources:
   - name: test-ae-std-${RAND}
     type: app_engine_version.py
     properties:
-      servicesId: std-${RAND}
+      servicesId: default
       appsId: $(ref.test-app-engine-${RAND}.id)
       env: standard
       deployment:
         files:
           main.py:
-            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
+            sourceUrl: https://storage.googleapis.com/test-bucket-${RAND}/src/standard/main.py
       handlers:
         - script:
             scriptPath: main.app
@@ -32,31 +32,3 @@ resources:
           urlRegex: /
       runtime: python27
       threadsafe: true
-
-  - name: test-ae-flex-${RAND}
-    type: app_engine_version.py
-    properties:
-      servicesId: flex-${RAND}
-      appsId: $(ref.test-app-engine-${RAND}.id)
-      env: flexible
-      deployment:
-        files:
-          main.py:
-            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
-      handlers:
-        - script:
-            scriptPath: main.app
-          securityLevel: SECURE_OPTIONAL
-          urlRegex: /
-      runtime: python
-      threadsafe: true
-      manualScaling:
-        instances: 5
-      resources:
-        cpu: 1
-        diskGb: 0.5
-        memoryGb: 1
-        volumes:
-          - name: ramdisk1
-            volumeType: tmpfs
-            sizeGb: 0.5

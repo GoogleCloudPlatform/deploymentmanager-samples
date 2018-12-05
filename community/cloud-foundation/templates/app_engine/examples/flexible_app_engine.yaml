@@ -1,8 +1,10 @@
 # Example of the app engine template usage.
 #
-# In this example, a standard app engine environment is created.
+# In this example, a flexible app engine environment is created.
 #
-
+# Replace the following with valid values:
+# <FIXME:bucketName>: the name of your gcs bucket which contains the
+#                     deployment files
 
 imports:
   - path: templates/app_engine/app_engine.py
@@ -24,18 +26,16 @@ resources:
     properties:
       servicesId: default
       appsId: $(ref.test-app-engine.id)
-      env: flexible
+      env: flex
       deployment:
         files:
           main.py:
-            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
-      handlers:
-        - script:
-            scriptPath: main.app
-          securityLevel: SECURE_OPTIONAL
-          urlRegex: /
-      runtime: python27
-      threadsafe: true
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/main.py
+          app.yaml:
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/app.yaml
+          requirements.txt:
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName/requirements.txt
+      runtime: python
       manualScaling:
         instances: 5
       resources:
@@ -44,5 +44,5 @@ resources:
         memoryGb: 1
         volumes:
           - name: ramdisk1
-            volume_type: tmpfs
-            size_gb: 0.5
+            volumeType: tmpfs
+            sizeGb: 0.5

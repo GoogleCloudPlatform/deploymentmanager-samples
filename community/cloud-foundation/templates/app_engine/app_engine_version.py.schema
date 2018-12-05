@@ -266,15 +266,13 @@ properties:
                 Regular expression that matches the file paths for all files that
                 should be referenced by this handler.
             httpHeaders:
-              type: array
+              type: object
               description: |
                 HTTP headers to use for all responses from these URLs.
                 An object containing a list of "key": value pairs.
                 Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
-              items:
-                type: object
-                additionalProperties:
-                  type: string
+              additionalProperties:
+                type: string
             mimeType:
               type: string
               description: |
@@ -364,15 +362,13 @@ properties:
           type: string
           description: Version of the library to select, or "latest".
   envVariables:
-    type: array
+    type: object
     description: |
       Environment variables available to the application.
       An object containing a list of "key": value pairs.
       Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
-    items:
-      type: object
-      additionalProperties:
-        type: string
+    additionalProperties:
+      type: string
   defaultExpiration:
     type: string
     description: |
@@ -544,10 +540,8 @@ properties:
           Example: { "main.py":
               {"sourceUrl": https://storage.googleapis.com/example/example.py}
           }.
-        items:
-          type: object
-          additionalProperties:
-            $ref: '#/definitions/FileInfo'
+        additionalProperties:
+          $ref: '#/definitions/FileInfo'
       container:
         type: object
         description:

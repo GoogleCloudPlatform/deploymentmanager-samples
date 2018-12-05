@@ -1,0 +1,1 @@
+entrypoint: gunicorn -b :$PORT main:app
