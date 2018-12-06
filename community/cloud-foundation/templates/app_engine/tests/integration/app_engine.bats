@@ -96,7 +96,7 @@ function teardown() {
 
     run gcloud app versions describe "test-ae-std-${RAND}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
-        --service="std-${RAND}"
+        --service="default"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "test-ae-std-${RAND}" ]]
     [[ "$output" =~ "env: standard" ]]
