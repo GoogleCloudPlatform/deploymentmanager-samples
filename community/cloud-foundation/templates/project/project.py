@@ -221,7 +221,7 @@ def create_service_accounts(context, project_id):
     """ Create Service Accounts and grant project IAM permissions. """
 
     resources = []
-    network_list = []
+    network_list = ['serviceAccount:$(ref.project.projectNumber)@cloudservices.gserviceaccount.com'] # pylint: disable=line-too-long
     service_account_dep = []
     policies_to_add = []
 
@@ -272,7 +272,7 @@ def create_service_accounts(context, project_id):
         iam = create_project_iam(service_account_dep, policies_to_add)
         resources.extend(iam)
 
-    if network_list and not context.properties.get('sharedVPCHost'):
+    if not context.properties.get('sharedVPCHost'):
         # Create the shared VPC subnet IAM permissions.
         resources.extend(
             create_shared_vpc_subnet_iam(
