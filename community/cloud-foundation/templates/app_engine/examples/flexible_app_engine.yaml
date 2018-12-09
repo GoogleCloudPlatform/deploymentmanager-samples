@@ -2,6 +2,11 @@
 #
 # In this example, a flexible app engine environment is created.
 #
+# Pre-requisites: 
+# to run this example ensure you have a bucket created with the required application
+# code to be deployed. A good starting point is the "hello world" sample at:
+# https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/hello_world
+#
 # Replace the following with valid values:
 # <FIXME:bucketName>: the name of your gcs bucket which contains the
 #                     deployment files
@@ -34,7 +39,7 @@ resources:
           app.yaml:
             sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/app.yaml
           requirements.txt:
-            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName/requirements.txt
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/requirements.txt
       runtime: python
       manualScaling:
         instances: 5
