@@ -1,0 +1,34 @@
+# Test of the App Engine template.
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+  - path: templates/app_engine/app_engine_version.py
+    name: app_engine_version.py
+
+resources:
+  - name: test-ae-flex-${RAND}
+    type: app_engine_version.py
+    properties:
+      servicesId: flex-${RAND}
+      appsId: ${CLOUD_FOUNDATION_PROJECT_ID}
+      env: flex
+      deployment:
+        files:
+          main.py:
+            sourceUrl: https://storage.googleapis.com/test-bucket-${RAND}/src/flexible/main.py
+          app.yaml:
+            sourceUrl: https://storage.googleapis.com/test-bucket-${RAND}/src/flexible/app.yaml
+          requirements.txt:
+            sourceUrl: https://storage.googleapis.com/test-bucket-${RAND}/src/flexible/requirements.txt
+      runtime: python
+      manualScaling:
+        instances: 5
+      resources:
+        cpu: 1
+        diskGb: 0.5
+        memoryGb: 1
+        volumes:
+          - name: ramdisk1
+            volumeType: tmpfs
+            sizeGb: 0.5

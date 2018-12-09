@@ -1,0 +1,37 @@
+# Example of the app engine template usage.
+#
+# In this example, a standard app engine environment is created.
+#
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+  - path: templates/app_engine/app_engine_version.py
+    name: app_engine_version.py
+
+resources:
+  - name: test-app-engine
+    type: app_engine.py
+    properties:
+      locationId: us-east1
+      servingStatus: SERVING
+      featureSettings:
+        splitHealthChecks: True
+
+  - name: test-app-engine-standard
+    type: app_engine_version.py
+    properties:
+      servicesId: default
+      appsId: $(ref.test-app-engine.id)
+      env: standard
+      deployment:
+        files:
+          main.py:
+            sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
+      handlers:
+        - script:
+            scriptPath: main.app
+          securityLevel: SECURE_OPTIONAL
+          urlRegex: /
+      runtime: python27
+      threadsafe: true

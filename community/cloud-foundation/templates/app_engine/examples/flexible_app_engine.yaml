@@ -1,0 +1,53 @@
+# Example of the app engine template usage.
+#
+# In this example, a flexible app engine environment is created.
+#
+# Pre-requisites: 
+# to run this example ensure you have a bucket created with the required application
+# code to be deployed. A good starting point is the "hello world" sample at:
+# ../../tests/integration/src/flexible
+#
+# Replace the following with valid values:
+# <FIXME:bucketName>: the name of your gcs bucket which contains the
+#                     deployment files
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+  - path: templates/app_engine/app_engine_version.py
+    name: app_engine_version.py
+
+resources:
+  - name: test-app-engine
+    type: app_engine.py
+    properties:
+      locationId: us-east1
+      servingStatus: SERVING
+      featureSettings:
+        splitHealthChecks: True
+
+  - name: test-app-engine-flexible
+    type: app_engine_version.py
+    properties:
+      servicesId: default
+      appsId: $(ref.test-app-engine.id)
+      env: flex
+      deployment:
+        files:
+          main.py:
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/main.py
+          app.yaml:
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/app.yaml
+          requirements.txt:
+            sourceUrl: https://storage.googleapis.com/<FIXME:bucketName>/requirements.txt
+      runtime: python
+      manualScaling:
+        instances: 5
+      resources:
+        cpu: 1
+        diskGb: 0.5
+        memoryGb: 1
+        volumes:
+          - name: ramdisk1
+            volumeType: tmpfs
+            sizeGb: 0.5

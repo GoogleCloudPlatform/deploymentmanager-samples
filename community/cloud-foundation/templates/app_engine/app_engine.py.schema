@@ -1,0 +1,117 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: App Engine
+  author: Sourced Group Inc.
+  description: |
+    Supports creation of a Google App Engine's App resource.
+
+imports:
+  - path: app_engine.py
+
+properties:
+  locationId:
+    type: string
+    default: us-central
+    description: |
+      The location from which the application runs. Application instances run
+      out of the data centers in the specified location, which is also where
+      all of the application's end user content is stored. Supported locations
+      can be found here:
+      https://cloud.google.com/appengine/docs/locations.
+  authDomain:
+    type: string
+    description: |
+      The Google Apps authentication domain that controls which users can
+      access the application. Defaults to open access for any Google Account.
+  servingStatus:
+    type: string
+    description: |
+      The serving status of the application.
+    enum:
+      - UNSPECIFIED
+      - SERVING
+      - USER_DISABLED
+      - SYSTEM_DISABLED
+  featureSettings:
+    type: object
+    description: The feature-specific settings to be used in the application.
+    properties:
+      splitHealthChecks:
+        type: boolean
+        description: |
+          Defines whether split healthchecks should be used instead of the
+          legacy healthchecks. At the app.yaml level, this means defaulting to
+          the 'readinessCheck' and 'livenessCheck' values instead of the
+          'healthCheck' ones. Once the legacy 'healthCheck' behavior is
+          deprecated, and this value becomes always True, this setting can be
+          removed.
+  defaultCookieExpiration:
+    type: string
+    description: |
+      Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+      Cookie expiration policy for this application.
+      A duration in seconds with up to nine fractional digits, terminated by
+      's'. Example: "3.5s".
+  gcrDomain:
+    type: string
+    description: |
+      The Google Container Registry domain used for storing managed build
+      docker images for this application.
+
+
+
+
+outputs:
+  properties:
+    - name:
+        type: string
+        description: |
+          The full path to the Application resource in the API. For example,
+          "apps/myapp".
+    - codeBucket:
+        type: string
+        description: |
+          The Google Cloud Storage bucket that can be used for storing files
+          associated with this Application. This bucket is associated with the
+          Application and can be used by the gcloud deployment commands.
+    - defaultBucket:
+        type: string
+        description: |
+          The Google Cloud Storage bucket that can be used by the Application
+          to store content.
+    - defaultHostName:
+        type: string
+        description: |
+          The hostname used to reach the Application, as resolved by App
+          Engine.
+    - gcrDomain:
+        type: string
+        description: |
+          The Google Container Registry domain used for storing managed build
+          Docker images for the Application.
+    - id:
+        type: string
+        description: |
+          Identifier of the Application resource. This identifier is the
+          project ID of the Google Cloud Platform project where you want
+          to deploy your application.
+
+
+documentation:
+  - templates/app_engine/README.md
+
+examples:
+  - templates/app_engine/examples/app_engine.yaml

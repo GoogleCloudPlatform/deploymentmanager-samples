@@ -1,0 +1,17 @@
+# Example of the App Engine template usage.
+#
+# In this example, a Google App Engine's App resource is created.
+#
+
+imports:
+  - path: templates/app_engine/app_engine.py
+    name: app_engine.py
+
+resources:
+  - name: test-app-engine
+    type: app_engine.py
+    properties:
+      locationId: us-east1
+      servingStatus: SERVING
+      featureSettings:
+        splitHealthChecks: True

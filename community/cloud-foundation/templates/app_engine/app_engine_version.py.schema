@@ -1,0 +1,871 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: App Engine
+  author: Sourced Group Inc.
+  description: |
+    Supports creation of an App Engine resource.
+
+required:
+  - servicesId
+  - appsId
+
+properties:
+  servicesId:
+    type: string
+    description: Part of `parent`. See documentation of `appsId`.
+  appsId:
+    type: string
+    description: |
+      Part of `parent`. Name of the parent resource to create this version
+      under. This is the `project ID` or the `app self link` for example apps/project-id/services/default."
+      Note that when creating a app version resource along with a app engine resource one should 
+      reference the ID of the resource to establish dependency relationship for DM. Example: `$(ref.test-app-engine.id)`
+  id:
+    type: string
+    description: |
+      Relative name of the version within the service. Example: v1. Version
+      names can contain only lowercase letters, numbers, or hyphens.
+      Reserved names: "default", "latest", and any name with the prefix "ah-".
+  inboundServices:
+    type: array
+    description: |
+      Before an application can receive email or XMPP messages, the application
+      must be configured to enable the service.
+    items:
+      type: string
+      description: Available inbound services.
+      enum:
+        - INBOUND_SERVICE_UNSPECIFIED
+        - INBOUND_SERVICE_MAIL
+        - INBOUND_SERVICE_MAIL_BOUNCE
+        - INBOUND_SERVICE_XMPP_ERROR
+        - INBOUND_SERVICE_XMPP_MESSAGE
+        - INBOUND_SERVICE_XMPP_SUBSCRIBE
+        - INBOUND_SERVICE_XMPP_PRESENCE
+        - INBOUND_SERVICE_CHANNEL_PRESENCE
+        - INBOUND_SERVICE_WARMUP
+  instanceClass:
+    type: string
+    description: |
+      Instance class that is used to run this version. Valid values are:
+      AutomaticScaling: F1, F2, F4, F4_1G
+      ManualScaling or BasicScaling: B1, B2, B4, B8, B4_1G
+      Defaults to F1 for AutomaticScaling and B1 for ManualScaling or
+      BasicScaling.
+    enum:
+      - F1
+      - F2
+      - F4
+      - F4_1G
+      - B1
+      - B2
+      - B4
+      - B8
+      - B4_1G
+  network:
+    type: object
+    description: Extra network settings. Only applicable for VM runtimes.
+    properties:
+      forwardedPorts:
+        type: string
+        description: |
+          List of ports, or port pairs, to forward from the virtual machine
+          to the application container.
+      instanceTag:
+        type: string
+        description: Tag to apply to the VM instance during creation.
+      name:
+        type: string
+        description: |
+          Google Cloud Platform network where the virtual machines are created.
+          Specify the short name, not the resource path.
+          Defaults to default.
+      subnetworkName:
+        type: string
+        description: |
+          Google Cloud Platform sub-network where the virtual machines are
+          created. Specify the short name, not the resource path.
+
+          If a subnetwork name is specified, a network name will also be
+          required unless it is for the default network.
+
+          If the network the VM instance is being created in is a Legacy
+          network, then the IP address is allocated from the IPv4Range.
+
+          If the network the VM instance is being created in is an auto Subnet
+          Mode Network, then only network name should be specified (not the
+          subnetworkName) and the IP address is created from the IPCidrRange of
+          the subnetwork that exists in that zone for that network.
+
+          If the network the VM instance is being created in is a custom Subnet
+          Mode Network, then the subnetworkName must be specified and the IP
+          address is created from the IPCidrRange of the subnetwork.
+
+          If specified, the subnetwork must exist in the same region as the Flex app.
+  zones:
+    type: array
+    description: |
+      The Google Compute Engine zones that are supported by this version in the
+      App Engine flexible environment.
+    items:
+      type: string
+  resources:
+    type: object
+    description: Machine resources for a version.
+    properties:
+      cpu:
+        type: number
+        description: Number of CPU cores needed.
+      diskGb:
+        type: number
+        description: Disk size (GB) needed.
+      memoryGb:
+        type: number
+        description: Memory (GB) needed.
+      volumes:
+        type: array
+        description: Volumes mounted within the app container
+        items:
+          type: object
+          description: |
+            Volumes mounted within the app container. Only applicable in the
+            App Engine flexible environment.
+          properties:
+            name:
+              type: string
+              description: Unique name for the volume.
+            volumeType:
+              type: string
+              description: Underlying volume type, e.g. 'tmpfs'.
+            sizeGb:
+              type: number
+              description: Volume size in gigabytes.
+  runtime:
+    type: string
+    description: |
+      Desired runtime. Example: python27.
+  threadsafe:
+    type: boolean
+    description: |
+      Whether multiple requests can be dispatched to this version at once.
+  vm:
+    type: boolean
+    description: |
+      Whether to deploy this version in a container on a virtual machine.
+  env:
+    type: string
+    description: |
+      App Engine execution environment to use for this version.
+      Defaults to 1.
+  servingStatus:
+    type: string
+    description: |
+      Current serving status of this version. Only the versions with a SERVING
+      status create instances and can be billed.
+      SERVING_STATUS_UNSPECIFIED is an invalid value. Defaults to SERVING.
+    enum:
+      - SERVING_STATUS_UNSPECIFIED
+      - SERVING
+      - STOPPED
+  runtimeApiVersion:
+    type: string
+    description: |
+      The version of the API in the given runtime environment. Please see the
+      app.yaml reference for valid values at
+      https://cloud.google.com/appengine/docs/standard//config/appref
+  handlers:
+    type: array
+    description: |
+      An ordered list of URL-matching patterns that should be applied to
+      incoming requests. The first matching URL handles the request and other
+      request handlers are not attempted.
+    items:
+      type: object
+      description: |
+        URL pattern and description of how the URL should be handled. App
+        Engine can handle URLs by executing application code or by serving
+        static files uploaded with the version, such as images, CSS, or
+        JavaScript.
+      properties:
+        urlRegex:
+          type: string
+          description: |
+            URL prefix. Uses regular expression syntax, which means regexp
+            special characters must be escaped, but should not contain groupings.
+            All URLs that begin with this prefix are handled by this handler,
+            using the portion of the URL after the prefix as part of the file
+            path.
+        securityLevel:
+          type: string
+          description: Security (HTTPS) enforcement for this URL.
+          enum:
+            - SECURE_UNSPECIFIED
+            - SECURE_DEFAULT
+            - SECURE_NEVER
+            - SECURE_OPTIONAL
+            - SECURE_ALWAYS
+        login:
+          type: string
+          description: |
+            Level of login required to access this resource. Not supported for
+            Node.js in the App Engine standard environment.
+          enum:
+            - LOGIN_UNSPECIFIED
+            - LOGIN_OPTIONAL
+            - LOGIN_ADMIN
+            - LOGIN_REQUIRED
+        authFailAction:
+          type: string
+          description: |
+            Action to take when users access resources that require
+            authentication. Defaults to redirect.
+          enum:
+            - AUTH_FAIL_ACTION_UNSPECIFIED
+            - AUTH_FAIL_ACTION_REDIRECT
+            - AUTH_FAIL_ACTION_UNAUTHORIZED
+        redirectHttpResponseCode:
+          type: string
+          description: Redirect codes.
+          enum:
+            - REDIRECT_HTTP_RESPONSE_CODE_UNSPECIFIED
+            - REDIRECT_HTTP_RESPONSE_CODE_301
+            - REDIRECT_HTTP_RESPONSE_CODE_302
+            - REDIRECT_HTTP_RESPONSE_CODE_303
+            - REDIRECT_HTTP_RESPONSE_CODE_307
+        staticFiles:
+          type: object
+          description: |
+            If set, script and apiEndpoint cannot be set.
+            Files served directly to the user for a given URL, such as images,
+            CSS stylesheets, or JavaScript source files. Static file handlers
+            describe which files in the application directory are static files,
+            and which URLs serve them.
+          properties:
+            path:
+              type: string
+              description: |
+                Path to the static files matched by the URL pattern, from the
+                application root directory. The path can refer to text matched
+                in groupings in the URL pattern.
+            uploadPathRegex:
+              type: string
+              description: |
+                Regular expression that matches the file paths for all files that
+                should be referenced by this handler.
+            httpHeaders:
+              type: object
+              description: |
+                HTTP headers to use for all responses from these URLs.
+                An object containing a list of "key": value pairs.
+                Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
+              additionalProperties:
+                type: string
+            mimeType:
+              type: string
+              description: |
+                MIME type used to serve all files served by this handler.
+                Defaults to file-specific MIME types, which are derived from each
+                file's filename extension.
+            expiration:
+              type: string
+              description: |
+                Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+                Time a static file served by this handler should be cached by web
+                proxies and browsers.
+                A duration in seconds with up to nine fractional digits,
+                terminated by 's'. Example: "3.5s".
+            requireMatchingFile:
+              type: boolean
+              description: |
+                Whether this handler should match the request if the file
+                referenced by the handler does not exist.
+            applicationReadable:
+              type: boolean
+              description: |
+                Whether files should also be uploaded as code data. By default,
+                files declared in static file handlers are uploaded as static
+                data and are only served to end users; they cannot be read by
+                the application. If enabled, uploads are charged against both
+                your code and static data storage resource quotas.
+        script:
+          type: object
+          description: |
+            If set, staticFiles and apiEndpoint cannot be set.
+            Executes a script to handle the requests that match this URL
+            pattern. Only the auto value is supported for Node.js in the
+            App Engine standard environment, for example "script": "auto".
+          properties:
+            scriptPath:
+              type: string
+              description: |
+                Path to the script from the application root directory.
+        apiEndpoint:
+          type: object
+          description: |
+            If set, staticFiles and script cannot be set.
+            Uses API Endpoints to handle requests.
+          properties:
+            scriptPath:
+              type: string
+              description: |
+                Path to the script from the application root directory.
+  errorHandlers:
+    type: array
+    description: Custom static error pages. Limited to 10KB per page.
+    items:
+      type: object
+      description: Custom static error page to be served when an error occurs.
+      properties:
+        errorCode:
+          type: string
+          description: Error condition this handler applies to.
+          enum:
+            - ERROR_CODE_UNSPECIFIED
+            - ERROR_CODE_DEFAULT
+            - ERROR_CODE_OVER_QUOTA
+            - ERROR_CODE_DOS_API_DENIAL
+            - ERROR_CODE_TIMEOUT
+        staticFile:
+          type: string
+          description: Static file content to be served for this error.
+        mimeType:
+          type: string
+          description: MIME type of file. Defaults to text/html.
+  libraries:
+    type: array
+    description: |
+      Configuration for third-party Python runtime libraries that are required
+      by the application.
+    items:
+      type: object
+      description: |
+        Third-party Python runtime library that is required by the application.
+      properties:
+        name:
+          type: string
+          description: |
+            Name of the library. Example: "django".
+        version:
+          type: string
+          description: Version of the library to select, or "latest".
+  envVariables:
+    type: object
+    description: |
+      Environment variables available to the application.
+      An object containing a list of "key": value pairs.
+      Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
+    additionalProperties:
+      type: string
+  defaultExpiration:
+    type: string
+    description: |
+      Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+      Duration that static files should be cached by web proxies and browsers.
+      Only applicable if the corresponding StaticFilesHandler does not specify
+      its own expiration time.
+      A duration in seconds with up to nine fractional digits, terminated by
+      's'. Example: "3.5s".
+  healthCheck:
+    type: object
+    description: |
+      Configures health checking for instances. Unhealthy instances are stopped
+      and replaced with new instances. Only applicable in the App Engine
+      flexible environment.
+    properties:
+      disableHealthCheck:
+        type: boolean
+        description: Whether to explicitly disable health checks for this instance.
+      host:
+        type: string
+        description: |
+          Host header to send when performing an HTTP health check.
+          Example: "myapp.appspot.com"
+      healthyThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive successful health checks required before
+          receiving traffic.
+      unhealthyThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive failed health checks required before removing
+          traffic.
+      restartThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive failed health checks required before an
+          instance is restarted.
+      checkInterval:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Interval between health checks.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      timeout:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Time before the health check is considered failed.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+  readinessCheck:
+    type: object
+    description: |
+      Configures readiness health checking for instances. Unhealthy instances
+      are not put into the backend traffic rotation.
+    properties:
+      path:
+        type: string
+        description: The request path.
+      host:
+        type: string
+        description: |
+          Host header to send when performing a HTTP Readiness check.
+          Example: "myapp.appspot.com"
+      failureThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive failed checks required before removing traffic.
+      successThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive successful checks required before receiving
+          traffic.
+      checkInterval:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Interval between health checks.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      timeout:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Time before the check is considered failed.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      appStartTimeout:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          A maximum time limit on application initialization, measured from
+          moment the application successfully replies to a healthcheck until it
+          is ready to serve traffic.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+  livenessCheck:
+    type: object
+    description: |
+      Configures liveness health checking for instances. Unhealthy instances
+      are stopped and replaced with new instances.
+    properties:
+      path:
+        type: string
+        description: The request path.
+      host:
+        type: string
+        description: |
+          Host header to send when performing a HTTP Readiness check.
+          Example: "myapp.appspot.com"
+      failureThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive failed checks required before removing traffic.
+      successThreshold:
+        type: number
+        format: uint32
+        description: |
+          Number of consecutive successful checks required before receiving
+          traffic.
+      checkInterval:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Interval between health checks.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      timeout:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Time before the check is considered failed.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      initialDelay:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          The initial delay before starting to execute the checks.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+  nobuildFilesRegex:
+    type: string
+    description: |
+      Files that match this pattern will not be built into this version. Only
+      applicable for Go runtimes.
+  deployment:
+    type: object
+    description: |
+      Code and application artifacts that make up this version.
+    properties:
+      files:
+        type: object
+        description: |
+          Manifest of the files stored in Google Cloud Storage that are
+          included as part of this version. All files must be readable
+          using the credentials supplied with this call.
+          An object containing a list of "key": value pairs.The "value"
+          is an object of type FileInfo.
+          Example: { "main.py":
+              {"sourceUrl": https://storage.googleapis.com/example/example.py}
+          }.
+        additionalProperties:
+          $ref: '#/definitions/FileInfo'
+      container:
+        type: object
+        description:
+          The Docker image for the container that runs the version. Only
+          applicable for instances running in the App Engine flexible
+          environment.
+        properties:
+          image:
+            type: string
+            description: |
+              URI to the hosted container image in Google Container Registry.
+              The URI must be fully qualified and include a tag or digest.
+              Examples: "gcr.io/my-project/image:tag" or
+              "gcr.io/my-project/image@digest"
+      zip:
+        type: object
+        description: |
+          The zip file for this deployment, if this is a zip deployment.
+        properties:
+          sourceUrl:
+            type: string
+            description: |
+              URL of the zip file to deploy from. Must be a URL to a resource
+              in Google Cloud Storage in the form
+              'http(s)://storage.googleapis.com/<bucket>/<object>'.
+          filesCount:
+            type: number
+            description: |
+              An estimate of the number of files in a zip for a zip deployment.
+              If set, must be greater than or equal to the actual number of
+              files. Used for optimizing performance; if not provided,
+              deployment may be slow.
+      cloudBuildOptions:
+        type: object
+        description: |
+          Options for any Google Cloud Build builds created as a part of
+          this deployment.
+          Note that this is orthogonal to the build parameter, where the
+          deployment depends on an already existing cloud build. These
+          options will only be used if a new build is created, such as
+          when deploying to the App Engine flexible environment using
+          files or zip.
+        properties:
+          appYamlPath:
+            type: string
+            description: |
+              Path to the yaml file used in deployment, used to determine
+              runtime configuration details.
+              Required for flexible environment builds.
+              See https://cloud.google.com/appengine/docs/standard/python/config/appref
+              for more details.
+          cloudBuildTimeout:
+            type: string
+            description: |
+              Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+              The Cloud Build timeout used as part of any dependent builds
+              performed by version creation. Defaults to 10 minutes.
+              A duration in seconds with up to nine fractional digits,
+              terminated by 's'. Example: "3.5s".
+  endpointsApiService:
+    type: object
+    description: |
+      Cloud Endpoints configuration.
+      If endpointsApiService is set, the Cloud Endpoints Extensible Service
+      Proxy will be provided to serve the API implemented by the app.
+    properties:
+      name:
+        type: string
+        description: |
+          Endpoints service name which is the name of the "service" resource
+          in the Service Management API.
+          For example "myapi.endpoints.myproject.cloud.goog"
+      configid:
+        type: string
+        description: |
+          Endpoints service configuration ID as specified by the Service
+          Management API. For example "2016-09-19r1".
+
+          By default, the rollout strategy for Endpoints is
+          RolloutStrategy.FIXED. This means that Endpoints starts up with a
+          particular configuration ID. When a new configuration is rolled out,
+
+          Endpoints must be given the new configuration ID. The configId field
+          is used to give the configuration ID and is required in this case.
+
+          Endpoints also has a rollout strategy called RolloutStrategy.MANAGED.
+          When using this, Endpoints fetches the latest configuration and does
+          not need the configuration ID. In this case, configId must be
+          omitted.
+      rolloutStrategy:
+        type: string
+        description: |
+          Endpoints rollout strategy. If FIXED, configId must be specified. If
+          MANAGED, configId must be omitted.
+        enum:
+          - UNSPECIFIED_ROLLOUT_STRATEGY
+          - FIXED
+          - MANAGED
+  entrypoint:
+    type: object
+    description: The entrypoint for the application.
+    properties:
+      shell:
+        type: string
+        description: |
+          The format should be a shell command that can be fed to bash -c.
+  automaticScaling:
+    type: object
+    description: |
+      If set, basicScaling and manualScaling cannot be set.
+      Automatic scaling is based on request rate, response latencies, and
+      other application metrics.
+    properties:
+      coolDownPeriod:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          The time period that the Autoscaler should wait before it starts
+          collecting information from a new instance. This prevents the
+          autoscaler from collecting information when the instance is
+          initializing, during which the collected usage would not be
+          reliable. Only applicable in the App Engine flexible
+          environment.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      cpuUtilization:
+        type: object
+        description: Target scaling by CPU usage.
+        properties:
+          aggregationWindowLength:
+            type: string
+            description: |
+              Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+              Period of time over which CPU utilization is calculated.
+              A duration in seconds with up to nine fractional digits,
+              terminated by 's'. Example: "3.5s".
+          targetUtilization:
+            type: number
+            description: |
+              Target CPU utilization ratio to maintain when scaling. Must be
+              between 0 and 1.
+      maxConcurrentRequests:
+        type: number
+        description: |
+          Number of concurrent requests an automatic scaling instance can
+          accept before the scheduler spawns a new instance.
+          Defaults to a runtime-specific value.
+      maxIdleInstances:
+        type: number
+        description: |
+          Maximum number of idle instances that should be maintained for this
+          version.
+      maxTotalInstances:
+        type: number
+        description: |
+          Maximum number of instances that should be started to handle
+          requests for this version.
+      maxPendingLatency:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Maximum amount of time that a request should wait in the pending
+          queue before starting a new instance to handle it.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      minIdleInstances:
+        type: number
+        description: |
+          Minimum number of idle instances that should be maintained for this
+          version. Only applicable for the default version of a service.
+      minTotalInstances:
+        type: number
+        description: |
+          Minimum number of running instances that should be maintained for
+          this version.
+      minPendingLatency:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Minimum amount of time a request should wait in the pending queue
+          before starting a new instance to handle it.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      requestUtilization:
+        type: object
+        description: Target scaling by request utilization.
+        properties:
+          targetRequestCountPerSecond:
+            type: number
+            description: Target requests per second.
+          targetConcurrentRequests:
+            type: number
+            description: Target number of concurrent requests.
+      diskUtilization:
+        type: object
+        description: Target scaling by disk usage.
+        properties:
+          targetWriteBytesPerSecond:
+            type: number
+            description: Target bytes written per second.
+          targetWriteOpsPerSecond:
+            type: number
+            description: Target ops written per second.
+          targetReadBytesPerSecond:
+            type: number
+            description: Target bytes read per second.
+          targetReadOpsPerSecond:
+            type: number
+            description: Target ops read per seconds.
+      networkUtilization:
+        type: object
+        description: Target scaling by network usage.
+        properties:
+          targetSentBytesPerSecond:
+            type: number
+            description: Target bytes sent per second.
+          targetSentPacketsPerSecond:
+            type: number
+            description: Target packets sent per second.
+          targetReceivedBytesPerSecond:
+            type: number
+            description: Target bytes received per second.
+          targetReceivedPacketsPerSecond:
+            type: number
+            description: Target packets received per second.
+      standardSchedulerSettings:
+        type: object
+        description: Scheduler settings for standard environment.
+        properties:
+          targetCpuUtilization:
+            type: number
+            description: |
+              Target CPU utilization ratio to maintain when scaling.
+          targetThroughputUtilization:
+            type: number
+            description: |
+              Target throughput utilization ratio to maintain when scaling
+          minInstances:
+            type: number
+            description: |
+              Minimum number of instances to run for this version. Set to
+              zero to disable minInstances configuration.
+          maxInstances:
+            type: number
+            description: |
+              Maximum number of instances to run for this version. Set to
+              zero to disable maxInstances configuration.
+  basicScaling:
+    type: object
+    description: |
+      If set, automaticScaling and manualScaling cannot be set.
+      A service with basic scaling will create an instance when the
+      application receives a request. The instance will be turned down when
+      the app becomes idle. Basic scaling is ideal for work that is
+      intermittent or driven by user activity.
+    properties:
+      idleTimeout:
+        type: string
+        description: |
+          Duration format as described at https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration.
+          Duration of time after the last request that an instance must wait
+          before the instance is shut down.
+          A duration in seconds with up to nine fractional digits, terminated
+          by 's'. Example: "3.5s".
+      maxInstances:
+        type: number
+        description: Maximum number of instances to create for this version.
+  manualScaling:
+    type: object
+    description: |
+      If set, automaticScaling and basicScaling cannot be set.
+      A service with manual scaling runs continuously, allowing you to
+      perform complex initialization and rely on the state of its
+      memory over time.
+    properties:
+      instances:
+        type: number
+        description: |
+          Number of instances to assign to the service at the start. This
+          number can later be altered by using the Modules API
+          set_num_instances() function.
+definitions:
+  FileInfo:
+    type: object
+    description: |
+      Single source file that is part of the version to be deployed. Each
+      source file that is deployed must be specified separately.
+    properties:
+      sourceUrl:
+        type: string
+        description: |
+          URL source to use to fetch this file. Must be a URL to a resource
+          in Google Cloud Storage in the form
+          'http(s)://storage.googleapis.com/<bucket>/<object>'.
+      sha1Sum:
+        type: string
+        description: The SHA1 hash of the file, in hex.
+      mimeType:
+        type: string
+        description: |
+          The MIME type of the file. Defaults to the value from Google Cloud
+          Storage.
+outputs:
+  properties:
+    name:
+      type: string
+      description: |
+        Full path to the Version resource in the API.
+        Example: apps/myapp/services/default/versions/v1.
+    createTime:
+      type: string
+      description: |
+        Time that this version was created.
+        A timestamp in RFC3339 UTC "Zulu" format, accurate to nanoseconds.
+        Example: "2014-10-02T15:01:23.045123456Z".
+    versionUrl:
+      type: string
+      description: |
+        Serving URL for this version.
+        Example: "https://myversion-dot-myservice-dot-myapp.appspot.com"
+
+documentation:
+  - templates/app_engine/README.md
+
+examples:
+  - templates/app_engine/examples/standard_app_engine.yaml
+  - templates/app_engine/examples/flexible_app_engine.yaml
