@@ -8,9 +8,10 @@ This template creates a Google App Engine's App and Version resource.
 - Create a [GCP project, set up billing, enable requisite APIs](../project/README.md)
 - Enable the App Engine Admin API
 - Enable the App Engine Flexible Environment API if using the App Engine Flexible environment
+- Enable the App Engine Standard Environment API if using the App Engine Standard environment
 - Grant the [appengine.appAdmin](https://cloud.google.com/appengine/docs/admin-api/access-control) and [OWNER](https://cloud.google.com/appengine/docs/standard/python/access-control#primitive_roles) IAM roles to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
 - Grant the [compute.admin](https://cloud.google.com/compute/docs/access/iam)
-IAM role to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager) if using App Engine Flexible Environment
+IAM role to the [Deployment Manager service account](https://cloud.google.com/deployment-manager/docs/access-control#access_control_for_deployment_manager)
 
 - Please refer to the [App Engine Overview](https://cloud.google.com/appengine/docs/standard/python/an-overview-of-app-engine)
   for information regarding the structure of an App Engine application
