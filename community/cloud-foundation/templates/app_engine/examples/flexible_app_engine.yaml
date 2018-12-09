@@ -5,7 +5,7 @@
 # Pre-requisites: 
 # to run this example ensure you have a bucket created with the required application
 # code to be deployed. A good starting point is the "hello world" sample at:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/hello_world
+# ../../tests/integration/src/flexible
 #
 # Replace the following with valid values:
 # <FIXME:bucketName>: the name of your gcs bucket which contains the
