@@ -23,7 +23,7 @@ resources:
   type: pbs.jinja
   properties:
     cluster_name            : google2
-    static_node_count       : 5
+    static_node_count       : 4
     zone                    : us-west2-b
     region                  : us-west2
     cidr                    : 10.10.0.0/16
@@ -35,12 +35,13 @@ resources:
     default_account         : default
     default_users           : leybzon
 
-    external_network        : true 
-    network                 : pbs-ext
-    service_project         : slurm-var-demo 
-#    prefix                  : test2-
+    external_network        : true
+    network                 : playground-a
+    subnet                  : subnet-a
+    service_project         : hpc-host-net-playground
+    prefix                  : test8-
 
-    compute_public_ips    : false
+    compute_public_ips      : true
 
 
 #  [END cluster_yaml]

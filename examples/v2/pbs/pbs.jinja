@@ -13,9 +13,11 @@
 
 {% if properties['external_network'] %}
   {% set network_reference = 'https://www.googleapis.com/compute/v1/projects/' ~  properties['service_project'] ~ '/global/networks/' ~ properties["network"]  %}
+  {% set subnet_reference = 'projects/' ~  properties['service_project'] ~ '/regions/' ~  properties['region'] ~ '/subnetworks/'~ properties["subnet"]  %}
 {% else %}
   {% set network_reference = '$(ref.' ~ properties['prefix'] ~ 'pbs-network.selfLink)'  %}
 {% endif %}
+
 
 {% if properties['controller_image'] is defined %}
   {% set controller_image_ref  =  properties['controller_image'] %}
@@ -43,12 +45,16 @@ resources:
   properties:
     autoCreateSubnetworks: false
 {% endif %}
+
+
+{% if not properties['external_network'] %}
 - name: {{ properties['prefix'] }}pbs-subnet
   type: compute.v1.subnetwork
   properties:
     network:  {{ network_reference }}
     ipCidrRange: {{ cidr }}
     region: {{ properties["region"] }}
+
 - name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
   type: compute.v1.firewall
   properties:
@@ -69,6 +75,9 @@ resources:
     - IPProtocol: UDP
       ports: ["0-65535"]
     - IPProtocol: ICMP
+
+{% endif %}
+
 
 {% if not properties['compute_public_ips'] %}
 - name: {{ properties['prefix'] }}no-ip-internet-route
@@ -103,7 +112,11 @@ resources:
 {% endif %}
 
     networkInterfaces:
+{% if not properties['external_network'] %}
     - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+{% else %}
+    - subnetwork: {{ subnet_reference }}
+{% endif %}
       accessConfigs:
       - name: {{ properties['prefix'] }}External NAT
         type: ONE_TO_ONE_NAT
@@ -138,6 +151,8 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
             {{ imports["scripts/suspend.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"]) }}
 {% endif %}
 
+
+
 {% for n in range(properties['static_node_count']) %}
 - name: {{ properties['prefix'] }}compute{{ n + 1 }}
   type: compute.v1.instance
@@ -154,7 +169,12 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["compute_disk_type"] }}
         diskSizeGb: {{ properties["compute_disk_size_gb"] }}
     networkInterfaces:
+{% if not properties['external_network'] %}
     - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+{% else %}
+    - subnetwork: {{ subnet_reference }}
+{% endif %}
+
 {% if properties['compute_public_ips'] %}
       accessConfigs:
       - name: {{ properties['prefix'] }}External NAT
@@ -179,4 +199,3 @@ replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
 replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 {% endif %}
 {% endfor %}
-
