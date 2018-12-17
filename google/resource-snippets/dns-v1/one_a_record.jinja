@@ -1,0 +1,18 @@
+resources:
+- name: {{ properties["zoneName"] }}
+  type: gcp-types/dns-{{ properties["version"] }}:managedZones
+  properties:
+    description: >
+      Managed zone for deployment {{ env["deployment"] }}
+        and zone {{ properties["zoneName"] }}
+    dnsName: {{ properties["zoneDnsName"] }}
+- name: {{ properties["rrsetName"] }}
+  type: gcp-types/dns-v1:resourceRecordSets
+  properties:
+    name: {{ properties["rrsetDomain"] }}
+    managedZone: $(ref.{{ properties["zoneName"] }}.name)
+    records:
+    - type: A
+      ttl: 50
+      rrdatas:
+      - 10.40.10.0
