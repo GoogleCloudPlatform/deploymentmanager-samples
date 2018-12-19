@@ -23,7 +23,7 @@ resources:
   type: pbs.jinja
   properties:
     cluster_name            : google2
-    static_node_count       : 4
+    static_node_count       : 5
     zone                    : us-west2-b
     region                  : us-west2
     cidr                    : 10.10.0.0/16
@@ -39,9 +39,9 @@ resources:
     network                 : playground-a
     subnet                  : subnet-a
     service_project         : hpc-host-net-playground
-    prefix                  : test8-
+    prefix                  : test9-
 
-    compute_public_ips      : true
+    compute_public_ips      : false
 
 
 #  [END cluster_yaml]

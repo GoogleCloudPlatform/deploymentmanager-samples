@@ -76,8 +76,6 @@ resources:
       ports: ["0-65535"]
     - IPProtocol: ICMP
 
-{% endif %}
-
 
 {% if not properties['compute_public_ips'] %}
 - name: {{ properties['prefix'] }}no-ip-internet-route
@@ -91,6 +89,8 @@ resources:
   metadata:
     dependsOn:
     - controller
+{% endif %}
+
 {% endif %}
 
 - name: {{ properties['prefix'] }}controller
