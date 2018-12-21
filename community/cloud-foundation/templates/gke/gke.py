@@ -33,8 +33,6 @@ def generate_config(context):
                     {
                         'name':
                             name + '-cluster',
-                        'initialNodeCount':
-                            propc.get('initialNodeCount'),
                         'initialClusterVersion':
                             propc.get('initialClusterVersion')
                     }
@@ -42,6 +40,7 @@ def generate_config(context):
     }
 
     if cluster_type == 'Regional':
+        #TODO: container-v1 was released and this will need to be updated
         provider = 'gcp-types/container-v1beta1:projects.locations.clusters'
         if not properties.get('region'):
             raise KeyError(
@@ -69,7 +68,7 @@ def generate_config(context):
 
     optional_props = [
         'description',
-        'nodeConfig',
+        'nodePools',
         'masterAuth',
         'loggingService',
         'monitoringService',
@@ -128,8 +127,9 @@ def generate_config(context):
             output_obj['value'] = '$(ref.' + name + \
                 '.masterAuth.' + outprop + ')'
         elif outprop == 'instanceGroupUrls':
-            output_obj['value'] = '$(ref.' + name + \
-                '.nodePools[0].' + outprop + ')'
+            for index, _ in enumerate(propc['nodePools']):
+                output_obj['value'] = '$(ref.' + name + \
+                    '.nodePools[' + str(index) + '].' + outprop + ')'
         else:
             output_obj['value'] = '$(ref.' + name + '.' + outprop + ')'
 
