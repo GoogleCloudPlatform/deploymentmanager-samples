@@ -8,37 +8,39 @@ Please note: This software is provided as-is, with no guarantees of support. Thi
 
 ## Configuration
 
-These scripts are configured using the lustre.yaml configuration file. This file has the following fields:
+These scripts are configured using the lustre.yaml configuration file. This file has the following fields. The fields marked with a * are required, all others are optional. The optional fields can be found in the lustre-template.yaml file.
 
-    ### Configuration Field  : < description;                   valid example;  optional? >
-    cluster_name            : < cluster name;                   lustre >
-    zone                    : < GCP zone;                       us-central1-a >
-    region                  : < GCP region;                     us-central1 >
-    cidr                    : < GCP VPC subnet;                 10.20.0.0/16 >
-    external_ips            : < boolean;                        True >
+#### Cluster Configuration
+* *cluster_name* - Name of the Lustre cluster, prepends all deployed resources
+* zone* - Zone to deploy the cluster into
+* region* - Region to deploy the cluster into
+* cidr* - IP range in CIDR format
+* external_ips* - True/False, Lustre nodes have external IP addresses. If false then a Cloud NAT is setup as a NAT gateway
+* vpc_net - Define this field, and the vpc_subnet field, to deploy the Lustre cluster to an existing VPC
+* vpc_subnet - Existing VPC subnet to deploy Lustre cluster to
+* shared_vpc_host_proj - Defien this field, as well as the vpc_net and vpc_subnet fields, to deploy the cluster to a Shared VPC
 
-    ### Filesystem Configuration
-    fs_name                 : < Lustre filesystem name;         lustre;         OPTIONAL >
-    lustre_version          : < Lustre version;                 latest-release; OPTIONAL >
-    e2fs_version            : < E2FSPROGS version;              latest;         OPTIONAL >
+#### Filesystem Configuration
+* fs_name - Lustre filesystem name
+* lustre_version - Lustre version to deploy, use "latest-release" to get the latest branch from downloads.whamcloud.com/public/lustre/
+* e2fs_version - E2fsprogs version to deploy,  use "latest" to get the latest branch from downloads.whamcloud.com/public/e2fsprogs/
 
-    ### MDS/MGS Configuration
-    mds_node_count          : < Num Lustre MDS instances;       1;              OPTIONAL >
-    mds_ip_address          : < MDS IP Address range start;     10.20.0.2;      OPTIONAL >
-    mds_machine_type        : < MDS instance profile;           n1-standard-16; OPTIONAL >
-    mds_disk_type           : < MDS Boot Disk Type;             pd-standard;    OPTIONAL >
-    mds_disk_size_gb        : < MDS Boot Disk Size;             40;             OPTIONAL >
-    mdt_disk_type           : < Metadata Target Disk Type;      pd-ssd >
-    mdt_disk_size_gb        : < MDT Disk Size;                  500 >
+#### MDS/MGS Configuration
+* mds_ip_address - Internal IP Address to specify for MDS/MGS node
+* mds_machine_type - Machine type to use for MDS/MGS node (see (https://cloud.google.com/compute/docs/machine-types)[https://cloud.google.com/compute/docs/machine-types])
+* mds_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard or pd-ssd)
+* mds_disk_size_gb - Size of MDS boot disk in GB
+* mdt_disk_type - Disk type to use for the Metadata Target (MDT) disk
+* mdt_disk_size_gb - Size of MDT disk in GB
 
-    ### OSS Configuration
-    oss_node_count          : < Num Lustre OSS instances;       4 >
-    oss_ip_range_start      : < OSS IP Address range start;     10.20.0.5;      OPTIONAL >
-    oss_machine_type        : < OSS instance profile;           n1-standard-16; OPTIONAL >
-    oss_disk_type           : < OSS Boot Disk Type;             pd-standard;    OPTIONAL >
-    oss_disk_size_gb        : < OSS Boot Disk size;             100;            OPTIONAL >
-    ost_disk_type           : < OST Disk Type;                  pd-ssd >
-    ost_disk_size_gb        : < OST Disk Size;                  100 >
+#### OSS Configuration
+* oss_node_count - Number of Object Storage Server (OSS) nodes to create
+* oss_ip_range_start - Start of the IP range for the OSS node(s). If not specified, use automatic IP assignment
+* oss_machine_type - Machine type to use for OSS node(s)
+* oss_disk_type - Disk type to use for the OSS boot disk
+* oss_disk_size_gb - Size of MDS boot disk in GB
+* ost_disk_type - Disk type to use for the Object Storage Target (OST) disk
+* ost_disk_size_gb - Size of OST disk in GB
 
 ## Launch the Lustre Cluster
 
@@ -46,7 +48,7 @@ Once you've customized the lustre.yaml file and completed all the required field
 
 Use the following command to launch your Lustre cluster.
 
-$ gcloud deployment-manager deployments create lustre --config lustre.yaml
+    gcloud deployment-manager deployments create lustre --config lustre.yaml
 
 Once the cluster is deployed, ssh in to the MDS instance. You may notice a message indicating that the Lustre filesystem is still being installed, and that you will be notified when the process is complete. Please wait until you see a second message reporting the installation complete, and providing the sample mount command for your cluster.
 
@@ -54,11 +56,11 @@ Once the cluster is deployed, ssh in to the MDS instance. You may notice a messa
 
 Once the nodes are installed and the filesystem is online you're ready to mount your clients. Install the [Lustre client software](http://wiki.lustre.org/Installing_the_Lustre_Software#Lustre_Client_Software_Installation) on an instance that is routable to the Lustre cluster's subnet. Once installed, and with the Lustre module loaded, use the following mount command to mount your filesystem:
 
-$ mount -t lustre < MDS #1 Hostname >:< MDS #N Hostname >:/< FS NAME > < LOCAL MOUNT >
+    mount -t lustre < MDS #1 Hostname >:< MDS #N Hostname >:/< FS NAME > < LOCAL MOUNT >
 
 An example would be:
 
-$ mount -t lustre lustre-mds1:/lustre /mnt/lustre
+    mount -t lustre lustre-mds1:/lustre /mnt/lustre
 
 You may use the Lustre Metadata Server (MDS) to test if the clients can mount the filesystem. However, please do not leave the filesystem mounted on the MDS server as it may cause filesystem corruption.
 
@@ -66,7 +68,7 @@ Once the filesystem is mounted you will see no output returned with the mount co
 
 Next, try running a simple fio write test to a single file on the Lustre filesystem. Then, assuming you're using >1 OSS, use the following command to configure a new file with [Lustre File Striping](http://wiki.lustre.org/Configuring_Lustre_File_Striping) to distribute the write across as many Object Storage Servers (OSS) as possible with a stripe count of -1. Then rerun the test to see the increased performance!
 
-$ lfs setstripe -c -1 /mnt/lustre/testfile_stripe_wide
+    lfs setstripe -c -1 /mnt/lustre/testfile_stripe_wide
 
 ## Troubleshooting
 

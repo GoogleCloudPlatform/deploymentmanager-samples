@@ -20,12 +20,17 @@ resources:
 - name: lustre
   type: lustre.jinja
   properties:
-    ## Configuration Field   : < description;                   valid example;  optional? >
-    cluster_name            : < cluster name;                   lustre >
+    ## Cluster Configuration
+    ### Configuration Field : < Description;                    example;        optional? >
+    cluster_name            : < Cluster name;                   lustre >
     zone                    : < GCP zone;                       us-central1-a >
     region                  : < GCP region;                     us-central1 >
     cidr                    : < GCP VPC subnet;                 10.20.0.0/16 >
     external_ips            : < boolean;                        True >
+    ### Complete these fields to deploy in an existing VPC
+    vpc_net                 : < VPC Network Name;               default;        OPTIONAL >
+    vpc_subnet              : < VPC Subnet Name;                default;        OPTIONAL >
+    shared_vpc_host_proj    : < Shared VPC Host Project name;   host-project;   OPTIONAL >
 
     ## Filesystem Configuration
     fs_name                 : < Lustre filesystem name;         lustre;         OPTIONAL >
@@ -37,16 +42,16 @@ resources:
     mds_ip_address          : < MDS IP Address range start;     10.20.0.2;      OPTIONAL >
     mds_machine_type        : < MDS instance profile;           n1-standard-16; OPTIONAL >
     mds_disk_type           : < MDS Boot Disk Type;             pd-standard;    OPTIONAL >
-    mds_disk_size_gb        : < MDS Boot Disk Size;             40;             OPTIONAL >
+    mds_disk_size_gb        : < MDS Boot Disk Size (GB);        40;             OPTIONAL >
     mdt_disk_type           : < Metadata Target Disk Type;      pd-ssd >
-    mdt_disk_size_gb        : < MDT Disk Size;                  500 >
+    mdt_disk_size_gb        : < MDT Disk Size (GB);             500 >
 
     ## OSS Configuration
     oss_node_count          : < Num Lustre OSS instances;           4 >
     oss_ip_range_start      : < OSS IP Address range start;     10.20.0.5;      OPTIONAL >
     oss_machine_type        : < OSS instance profile;           n1-standard-16; OPTIONAL >
     oss_disk_type           : < OSS Boot Disk Type;             pd-standard;    OPTIONAL >
-    oss_disk_size_gb        : < OSS Boot Disk size;             100;            OPTIONAL >
+    oss_disk_size_gb        : < OSS Boot Disk Size (GB);        100;            OPTIONAL >
     ost_disk_type           : < OST Disk Type;                  pd-ssd >
-    ost_disk_size_gb        : < OST Disk Size;                  100 >
+    ost_disk_size_gb        : < OST Disk Size (GB);             100 >
     #  [END cluster_yaml]
