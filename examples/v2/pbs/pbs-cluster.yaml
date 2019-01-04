@@ -26,23 +26,19 @@ resources:
     static_node_count       : 5
     zone                    : us-west2-b
     region                  : us-west2
-    cidr                    : 10.10.0.0/16
 
     controller_machine_type : n1-standard-2
-    compute_machine_type    : n1-standard-2
+    compute_machine_type  : n1-standard-2
 
     pbs_version             : 18.1.2
-    default_account         : default
-    default_users           : leybzon
 
     external_network        : true
-    network                 : playground-a
+    network                 : network-a
     subnet                  : subnet-a
     service_project         : hpc-host-net-playground
-    prefix                  : test9-
+    prefix                  : test10-
 
     compute_public_ips      : false
 
 
 #  [END cluster_yaml]
-

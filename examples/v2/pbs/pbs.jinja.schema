@@ -19,12 +19,10 @@ info:
     Create a PPS cluster in GCP.
 
 imports:
-- path: scripts/resume.py
 - path: scripts/startup-script.py
-- path: scripts/suspend.py
+
 
 required:
-
 - cluster_name
 - compute_machine_type
 - controller_machine_type
