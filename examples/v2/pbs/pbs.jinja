@@ -20,13 +20,13 @@
 
 
 {% if properties['controller_image'] is defined %}
-  {% set controller_image_ref  =  properties['controller_image'] %}
+  {% set controller_image_ref  =  'https://www.googleapis.com/compute/v1/projects/' ~ properties['controller_image'] %}
 {% else %}
   {% set controller_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
 {% endif %}
 
 {% if properties['compute_image'] is defined %}
-  {% set compute_image_ref  =  properties['compute_image'] %}
+  {% set compute_image_ref  =  'https://www.googleapis.com/compute/v1/projects/' ~ properties['compute_image'] %}
 {% else %}
   {% set compute_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
 {% endif %}

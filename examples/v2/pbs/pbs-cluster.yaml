@@ -36,7 +36,10 @@ resources:
     network                 : network-a
     subnet                  : subnet-a
     vpc_hosting_project     : hpc-host-net-playground
-    prefix                  : test10-
+    prefix                  : test11-
+
+    controller_image        : hpc-playground-223721/global/images/controller-9
+    compute_image           : hpc-playground-223721/global/images/compute-9
 
     compute_public_ips      : false
 
