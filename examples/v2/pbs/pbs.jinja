@@ -77,18 +77,18 @@ resources:
     - IPProtocol: ICMP
 
 
-{% if not properties['compute_public_ips'] %}
+{% if not properties['compute_public_ops'] %}
 - name: {{ properties['prefix'] }}no-ip-internet-route
   type: compute.v1.route
   properties:
     network:  {{ network_reference }}
     tags: ["compute"]
     destRange: 0.0.0.0/0
-    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/controller
+    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/{{ properties['prefix'] }}controller
     priority: 800
   metadata:
     dependsOn:
-    - controller
+    - {{ properties['prefix'] }}controller
 {% endif %}
 
 {% endif %}
