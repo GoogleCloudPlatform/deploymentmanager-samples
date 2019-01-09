@@ -11,7 +11,7 @@
 #}
 
 
-{% if properties['existing_network_name'] %}
+{% if properties['existing_network'] %}
   {% set network_reference = 'https://www.googleapis.com/compute/v1/projects/' ~  properties['vpc_hosting_project'] ~ '/global/networks/' ~ properties["network"]  %}
   {% set subnet_reference = 'projects/' ~  properties['vpc_hosting_project'] ~ '/regions/' ~  properties['region'] ~ '/subnetworks/'~ properties["subnet"]  %}
 {% else %}
@@ -39,7 +39,7 @@
 
 
 resources:
-{% if not properties['existing_network_name'] %}
+{% if not properties['existing_network'] %}
 - name: {{ properties['prefix'] }}pbs-network
   type: compute.v1.network
   properties:
@@ -47,7 +47,7 @@ resources:
 {% endif %}
 
 
-{% if not properties['existing_network_name'] %}
+{% if not properties['existing_network'] %}
 - name: {{ properties['prefix'] }}pbs-subnet
   type: compute.v1.subnetwork
   properties:
@@ -84,7 +84,7 @@ resources:
     network:  {{ network_reference }}
     tags: ["compute"]
     destRange: 0.0.0.0/0
-    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/{{ properties['prefix'] }}controller
+    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/{{ properties['prefix'] }}fcontroller
     priority: 800
   metadata:
     dependsOn:
@@ -112,7 +112,7 @@ resources:
 {% endif %}
 
     networkInterfaces:
-{% if not properties['existing_network_name'] %}
+{% if not properties['existing_network'] %}
     - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
 {% else %}
     - subnetwork: {{ subnet_reference }}
@@ -163,7 +163,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["compute_disk_type"] }}
         diskSizeGb: {{ properties["compute_disk_size_gb"] }}
     networkInterfaces:
-{% if not properties['existing_network_name'] %}
+{% if not properties['existing_network'] %}
     - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
 {% else %}
     - subnetwork: {{ subnet_reference }}

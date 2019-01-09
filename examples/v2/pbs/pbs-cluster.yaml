@@ -21,22 +21,23 @@ resources:
 - name: pbs-cluster
   type: pbs.jinja
   properties:
-    cluster_name            : pbs-cluster
+    cluster_name            : google2
     static_node_count       : 5
-    zone                    : us-central1-b
-    region                  : us-central1
-#    cidr                    : 10.10.0.0/16
+    zone                    : us-west2-b
+    region                  : us-west2
 
     controller_machine_type : n1-standard-2
-    compute_machine_type    : n1-standard-2
+    compute_machine_type  : n1-standard-2
 
     pbs_version             : 18.1.2
-    default_account         : default
-    default_users           : garzoglio
+
+    existing_network_name       : true
+    network                 : network-a
+    subnet                  : subnet-a
+    vpc_hosting_project : hpc-host-net-playground
+    prefix                  : test12-
 
     compute_public_ips      : false
-    external_network        : false
 
-    prefix                  : test1-
 
 #  [END cluster_yaml]
