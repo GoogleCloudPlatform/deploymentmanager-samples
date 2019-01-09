@@ -31,11 +31,11 @@ resources:
 
     pbs_version             : 18.1.2
 
-    existing_network_name       : true
+    existing_network       : true
     network                 : network-a
     subnet                  : subnet-a
     vpc_hosting_project : hpc-host-net-playground
-    prefix                  : test12-
+    prefix                  : test14-
 
     compute_public_ips      : false
 

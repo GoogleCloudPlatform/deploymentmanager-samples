@@ -117,10 +117,12 @@ resources:
 {% else %}
     - subnetwork: {{ subnet_reference }}
 {% endif %}
+{% if properties['compute_public_ips'] %}
       accessConfigs:
       - name: {{ properties['prefix'] }}External NAT
         type: ONE_TO_ONE_NAT
-    serviceAccounts:
+{% endif %}
+      serviceAccounts:
       - email: "default"
         scopes:
         - "https://www.googleapis.com/auth/logging.write"
