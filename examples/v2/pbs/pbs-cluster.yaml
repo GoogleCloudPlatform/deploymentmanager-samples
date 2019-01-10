@@ -27,7 +27,6 @@ resources:
     region                  : us-west2
     controller_machine_type : n1-standard-2
     compute_machine_type    : n1-standard-2
-    pbs_version             : 18.1.2
     existing_network        : false 
-    prefix                  : test11-
+    prefix                  : test12-
 #  [END cluster_yaml]
