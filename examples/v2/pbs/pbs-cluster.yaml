@@ -22,22 +22,12 @@ resources:
   type: pbs.jinja
   properties:
     cluster_name            : google2
-    static_node_count       : 5
+    static_node_count       : 2
     zone                    : us-west2-b
     region                  : us-west2
-
     controller_machine_type : n1-standard-2
-    compute_machine_type  : n1-standard-2
-
+    compute_machine_type    : n1-standard-2
     pbs_version             : 18.1.2
-
-    existing_network       : true
-    network                 : network-a
-    subnet                  : subnet-a
-    vpc_hosting_project : hpc-host-net-playground
-    prefix                  : test14-
-
-    compute_public_ips      : false
-
-
+    existing_network        : false 
+    prefix                  : test11-
 #  [END cluster_yaml]

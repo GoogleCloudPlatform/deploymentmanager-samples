@@ -77,7 +77,7 @@ resources:
     - IPProtocol: ICMP
 
 
-{% if not properties['compute_public_ops'] %}
+{% if not properties['compute_public_ips'] %}
 - name: {{ properties['prefix'] }}no-ip-internet-route
   type: compute.v1.route
   properties:
