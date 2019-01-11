@@ -260,7 +260,7 @@ def install_pbs():
     ### file = "pbspro_%s.centos7.zip" % PBS_VERSION
 
     BASE_URL = 'https://s3.amazonaws.com/pbspro/'
-    file =  'pbspro-server-18.1.1-0.x86_64.rpm'
+    file =  'pbspro-server-' + PBS_VERSION + '-0.x86_64.rpm'
 
     print "Will download %s to /tmp/ directory" % file
 
