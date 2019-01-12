@@ -41,6 +41,22 @@ def generate_config(context):
         }
     }
 
+    # build trigger update action
+    build_trigger_update = {
+        'name':
+            name + '-update',
+        'action':
+            'gcp-types/cloudbuild-v1:cloudbuild.projects.triggers.patch',
+        'metadata': {
+            'runtimePolicy': ['UPDATE_ON_CHANGE'],
+        },
+        'properties': {
+            'id': build_trigger_id,
+            'triggerId': build_trigger_id,
+            'triggerTemplate': properties['triggerTemplate']
+        }
+    }
+
     optional_properties = [
         'description',
         'disabled',
@@ -52,13 +68,17 @@ def generate_config(context):
     for prop in optional_properties:
         if prop in properties:
             build_trigger_create['properties'][prop] = properties[prop]
+            build_trigger_update['properties'][prop] = properties[prop]
 
     if build_def:
         build_trigger_create['properties']['build'] = build_def
+        build_trigger_update['properties']['build'] = build_def
     elif build_filename:
         build_trigger_create['properties']['filename'] = build_filename
+        build_trigger_update['properties']['filename'] = build_filename
 
     resources.append(build_trigger_create)
+    resources.append(build_trigger_update)
 
     # build trigger delete action
     build_trigger_delete = {
