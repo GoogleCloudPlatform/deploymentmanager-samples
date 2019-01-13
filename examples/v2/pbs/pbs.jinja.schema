@@ -120,7 +120,7 @@ properties:
     type        : string
     description : |
       The PBS version to install. If none is specified, the latest version will be installed.
-    default     : 18.1.1
+    default     : 18.1.3
 
   prefix:
     type        : string

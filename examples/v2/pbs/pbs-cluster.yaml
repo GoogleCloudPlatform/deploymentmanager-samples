@@ -28,5 +28,6 @@ resources:
     controller_machine_type : n1-standard-2
     compute_machine_type    : n1-standard-2
     existing_network        : false 
-    prefix                  : test12-
+    pbs_version             : 18.1.2
+    prefix                  : cluster14-
 #  [END cluster_yaml]

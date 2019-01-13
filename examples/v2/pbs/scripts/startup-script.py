@@ -254,24 +254,24 @@ def expand_machine_type():
 def install_pbs():
     #Ex. Source http://wpc.23a7.iotacdn.net/8023A7/origin2/rl/PBS-Open/pbspro_18.1.2.centos7.zip
     #Ex2: https://s3.amazonaws.com/pbspro/pbspro-server-18.1.1-0.x86_64.rpm
+    #Ex3: https://github.com/PBSPro/pbspro/releases/download/v18.1.3/pbspro_18.1.3.centos7.zip
 
-    
-    ### BASE_URL = 'http://wpc.23a7.iotacdn.net/8023A7/origin2/rl/PBS-Open/'
-    ### file = "pbspro_%s.centos7.zip" % PBS_VERSION
-
-    BASE_URL = 'https://s3.amazonaws.com/pbspro/'
-    file =  'pbspro-server-' + PBS_VERSION + '-0.x86_64.rpm'
+    BASE_URL = 'https://github.com/PBSPro/pbspro/releases/download/'
+    file = 'v' + PBS_VERSION + '/pbspro_' + PBS_VERSION + '.centos7.zip'
 
     print "Will download %s to /tmp/ directory" % file
 
-    urllib.urlretrieve(BASE_URL + file, '/tmp/' + file)
+    urllib.urlretrieve(BASE_URL + file, '/tmp/pbs.zip')
 
     prev_path = os.getcwd()
 
+
     os.chdir('/tmp')
     pkgPbs = "/tmp/" + file 
+    subprocess.call(['unzip', '-o', 'pbs.zip'])
+    os.chdir('/tmp/pbspro_' + PBS_VERSION + '.centos7')
+    subprocess.call(['yum', 'install', '-y', 'pbspro-server-' + PBS_VERSION + '-0.x86_64.rpm'])
 
-    subprocess.call(['yum', 'install', '-y', pkgPbs])
 #END install_pbs()
 
 def install_pbs_tmpfile():
