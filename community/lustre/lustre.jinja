@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Split the subnet CIDR range into octets
 {% set subnet = properties['cidr'].split('/')[0] %}
 {% set subnet_split = subnet.split('.') %}
 
 resources:
+# Create a network for the new cluster
 - name: {{properties["cluster_name"]}}-lustre-network
   type: compute.v1.network
   properties:
     autoCreateSubnetworks: false
 
+# Create a subnet for the new cluster
 - name: {{properties["cluster_name"]}}-lustre-subnet
   type: compute.v1.subnetwork
   properties:
@@ -29,6 +32,7 @@ resources:
     region: {{ properties["region"] }}
     privateIpGoogleAccess: TRUE
 
+# Create a firewall rule to allow SSH to the cluster
 - name: {{properties["cluster_name"]}}-ssh-firewall-rule
   type: compute.v1.firewall
   properties:
@@ -39,6 +43,7 @@ resources:
       ports: ["22"]
     - IPProtocol: ICMP
 
+# Create firewall rule to allow all internal traffic between nodes
 - name: {{properties["cluster_name"]}}-all-internal-firewall-rule
   type: compute.v1.firewall
   properties:
@@ -65,6 +70,7 @@ resources:
 #    - {{properties["cluster_name"]}}-mgs
 #{% endif %}
 
+# If we're not using external IPs or a Shared VPC, create a Cloud NAT
 {% if (not properties['external_ips'] and not properties['shared_vpc_host_proj']) %}
 - name: {{properties["cluster_name"]}}-router
   type: compute.beta.router
@@ -88,6 +94,7 @@ resources:
         sourceIpRangesToNat: ["PRIMARY_IP_RANGE"]
 {% endif %}
 
+# Create N MDS/MGS nodes
 {% for n in range(properties['mds_node_count']) %}
 - name: {{properties["cluster_name"]}}-mds{{ n + 1 }}
   type: compute.v1.instance
@@ -128,6 +135,7 @@ resources:
       - name: External NAT
         type: ONE_TO_ONE_NAT
   {% endif %}
+# If the MDS IP is specified, use that
 {% if properties["mds_ip_address"] %}
       networkIP: {{ properties["mds_ip_address"] }}
 #{% else %}
@@ -145,6 +153,7 @@ resources:
             {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS") }}
 {% endfor %}
 
+# Create N OSS nodes
 {% for n in range(properties['oss_node_count']) %}
 - name: {{properties["cluster_name"]}}-oss{{ n + 1 }}
   type: compute.v1.instance
@@ -182,6 +191,7 @@ resources:
       - name: External NAT
         type: ONE_TO_ONE_NAT
   {% endif %}
+# Create OSS nodes with consistently sequential IPs
 {% if properties['oss_ip_range_start'] %}
 {% set oss_ip_split = properties['oss_ip_range_start'].split('.')[3] | int %}
 {% set oss_ip_uniq = oss_ip_split + n %}
