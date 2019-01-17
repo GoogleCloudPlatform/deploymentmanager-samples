@@ -62,7 +62,7 @@ concerns. The configuration, however, may work well in lab scenarios where ease
 of deployment and convenience of ssh connectivity to all nodes are important
 considerations.
 
-![Standalone network with public IP addresses](images/standalone-public-ips.png?raw=true "Img. 1")
+![Standalone network with public IP addresses](https://raw.githubusercontent.com/leybzon/deploymentmanager-samples/master/examples/v2/pbs/images/standalone-public-ips.png "Img. 1")
 
 *Diagram of a PBS deployment in a single project within a stand-alone VPC and
 public IPs for all resources.*
@@ -83,7 +83,7 @@ A Cloud NAT deployed in the same region provides connectivity to the public
 Internet for all nodes. That access is used for PBS software installation and
 updates as well as potentially for job accessing data from the internet.
 
-![](media/742f46caa3d9a4f776223985899f4fee.png)
+![Standalone with private IPs](https://raw.githubusercontent.com/leybzon/deploymentmanager-samples/master/examples/v2/pbs/images/standalone-private-ips.png "Img 2.")
 
 *Diagram of a PBS deployment in a single project within a stand-alone VPC and
 private IPs for all resources. Access to the internet is achieved through a
@@ -116,7 +116,7 @@ In general, the controller can be accessed via one of the methods described in
 [this
 guide](https://cloud.google.com/compute/docs/instances/connecting-advanced#sshbetweeninstances).
 
-![](media/590d557d4c78f79c2d85708ef8add117.png)
+![Shared VPC with private IPs](https://raw.githubusercontent.com/leybzon/deploymentmanager-samples/master/examples/v2/pbs/images/shared-vpc.png "Img 3.")
 
 *Diagram of a PBS deployment in a shared VPC configuration. The PBS resources
 are deployed in a service project. The project is a user of the subnet
