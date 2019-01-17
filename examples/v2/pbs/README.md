@@ -196,35 +196,26 @@ This yaml configuration example is used to deploy the PBS cluster in a stand
 alone VPC network, automatically provisioned. All nodes in the cluster will have
 public IP addresses.
 
-\# [START cluster_yaml]
+```yaml
 
 imports:
-
-\- path: pbs.jinja
+- path: pbs.jinja
 
 resources:
+- name: pbs-cluster
+  type: pbs.jinja
+  properties:
+    cluster_name            : google
+    static_node_count    : 2
+    zone                         : us-west2-b
+    region                       : us-west2
 
-\- name: pbs-cluster
+    controller_machine_type : n1-standard-2
+    compute_machine_type  : n1-standard-2
+    pbs_version             : 18.1.2
 
-type: pbs.jinja
+```
 
-properties:
-
-cluster_name : google
-
-static_node_count : 2
-
-zone : us-west2-b
-
-region : us-west2
-
-controller_machine_type : n1-standard-2
-
-compute_machine_type : n1-standard-2
-
-pbs_version : 18.1.2
-
-\# [END cluster_yaml]
 
 ### Standalone network, private IPs
 
@@ -282,24 +273,28 @@ Prerequisites" above). In details:
 
 YAML Script Example:
 ```yaml
-
 imports:
 - path: pbs.jinja
 
 resources:
 - name: pbs-cluster
-  type: pbs.jinja
+  type:   pbs.jinja
   properties:
     cluster_name            : google
     static_node_count    : 2
-    zone                         : us-west2-b
-    region                       : us-west2
+    region                       : us-central1
+    zone                         : us-central1-a
 
     controller_machine_type : n1-standard-2
     compute_machine_type  : n1-standard-2
-    pbs_version             : 18.1.2
+    pbs_version              : 18.1.2
 
+    existing_network       : true
+    network                    : pbs-network
+    subnet                      : pbs-subnet
+    vpc_hosting_project  : pbs-project
 
+    compute_public_ips  : false
 ```
 
 ### Shared Network, all private IPs
@@ -384,7 +379,7 @@ imports:
 
 resources:
 - name: pbs-cluster
-  type:   pbs.jinja
+  type: pbs.jinja
   properties:
     cluster_name            : google
     static_node_count    : 2
@@ -393,14 +388,13 @@ resources:
 
     controller_machine_type : n1-standard-2
     compute_machine_type  : n1-standard-2
-    pbs_version              : 18.1.2
+    pbs_version             : 18.1.2
 
-    existing_network       : true
-    network                    : pbs-network
+    existing_network      : true
+    network                    : pbs-host-network
     subnet                      : pbs-subnet
-    vpc_hosting_project  : pbs-project
-
-    compute_public_ips  : false
+    vpc_hosting_project : hpc-host-network-project
+    compute_public_ips : false
 ```
 
 Storage Considerations
