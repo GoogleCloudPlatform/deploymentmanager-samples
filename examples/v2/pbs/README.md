@@ -62,7 +62,7 @@ concerns. The configuration, however, may work well in lab scenarios where ease
 of deployment and convenience of ssh connectivity to all nodes are important
 considerations.
 
-![](media/b2bf8e6ed4a67bd4d23e5f9a1fa0e13c.png)
+![Standalone network with public IP addresses](/images/standalone-public-ips.png)
 
 *Diagram of a PBS deployment in a single project within a stand-alone VPC and
 public IPs for all resources.*
