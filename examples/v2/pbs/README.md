@@ -398,6 +398,7 @@ of PBS on the shared VPC network:
 
 YAML Script Example:
 
+```yaml
 \# [START cluster_yaml]
 
 imports:
@@ -437,6 +438,7 @@ vpc_hosting_project : hpc-host-network-project
 compute_public_ips : false
 
 \# [END cluster_yaml]
+```
 
 Storage Considerations
 ======================
