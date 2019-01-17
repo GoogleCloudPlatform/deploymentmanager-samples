@@ -56,7 +56,7 @@ function start_motd() {
 
 #Set Message of the Day to show Lustre cluster information and declare the Lustre installation complete
 function end_motd() {
-	echo -e "Lustre MDS: $MDS_HOSTNAME\nLustre FS Name: $FS_NAME\nMount Command: mount -t lustre $MDS_HOSTNAME:/$FS_NAME" > /etc/motd
+	echo -e "Welcome to the Google Cloud Lustre Deployment!\nLustre MDS: $MDS_HOSTNAME\nLustre FS Name: $FS_NAME\nMount Command: mount -t lustre $MDS_HOSTNAME:/$FS_NAME <local dir>" > /etc/motd
 	wall -n "*** Lustre installation is complete! *** "
 	wall -n "`cat /etc/motd`"
 }
