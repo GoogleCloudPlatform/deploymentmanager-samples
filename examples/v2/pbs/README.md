@@ -399,7 +399,7 @@ of PBS on the shared VPC network:
 YAML Script Example:
 
 ```yaml
-\# [START cluster_yaml]
+&#35;[START cluster_yaml]
 imports:
 - path: pbs.jinja
 
@@ -422,7 +422,7 @@ resources:
     vpc_hosting_project  : pbs-project
 
     compute_public_ips  : false
-\#  [END cluster_yaml]
+&#35; [END cluster_yaml]
 ```
 
 Storage Considerations
