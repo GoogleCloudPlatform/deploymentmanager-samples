@@ -300,7 +300,7 @@ resources:
     pbs_version             : 18.1.2
 
 
-'''
+```
 
 ### Shared Network, all private IPs
 
@@ -474,6 +474,7 @@ pbsnodes -a
 
 If the nodes are up and the controller can successfully communicate to the
 compute nodes, the command above will produce an output similar to this:
+
 ```
 test9-compute1
 
