@@ -170,12 +170,12 @@ Network Properties
 
 | Property            | Required / Optional | Type    | Description                                                                                                                                                                                                                             |
 |---------------------|---------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cidr                | optional            | String  | RFC1918 subnet to run the PBS instances Default: ‘10.10.0.0/16’                                                                                                                                                                         |
+| cidr                | optional            | String  | RFC1918 subnet to run the PBS instances Default: "10.10.0.0/16"                                                                                                                                                                         |
 | network             | optional            | String  | Name of the external network to be used in the deployment. This parameter is required only if the existing_network parameter below is set to true; ignored otherwise.                                                                   |
-| existing_network    | optional            | Boolean | If set to ‘true’, the cluster will be configured to use an already created network with the name taken from the ‘network’ attribute. If set to ‘false’, a new network will be created for the deployment of the cluster. Default: false |
+| existing_network    | optional            | Boolean | If set to "true", the cluster will be configured to use an already created network with the name taken from the "network" attribute. If set to "false", a new network will be created for the deployment of the cluster. Default: false |
 | vpc_hosting_project | optional            | String  | Name of the project that hosts the network.                                                                                                                                                                                             |
 | subnet              | optional            | String  | External network subnet used for deployment of the PBS nodes. The parameter is used and required only if existing_network is set to true                                                                                                |
-| compute_public_ips  | optional            | Boolean | Whether nodes are assigned public IPs or not. If set to ‘false’, the nodes will use Cloud NAT for Internet access. Default: true                                                                                                        |
+| compute_public_ips  | optional            | Boolean | Whether nodes are assigned public IPs or not. If set to "false", the nodes will use Cloud NAT for Internet access. Default: true                                                                                                        |
 
 Examples of cluster configurations
 ==================================
@@ -240,8 +240,8 @@ as a bastion host in the same subnet as the cluster (e.g. 10.10.0.0/16) and also
 a public IP address. You can then log into the bastion host and create local ssh
 keys with the ssh-keygen command (e.g. ssh-keygen -t rsa -b 4096 -C
 "username\@example.com"). By default, the generated public key is in the file
-\~/.ssh/id_rsa.pub . The content of the public key can be added to the “SSH
-Keys” section of the compute engine metadata for the project (e.g. pbs-project)
+\~/.ssh/id_rsa.pub . The content of the public key can be added to the "SSH
+Keys" section of the compute engine metadata for the project (e.g. pbs-project)
 (note to remove all newline characters if cutting and pasting the public key).
 You can then ssh from the bastion to the controller.
 
@@ -250,8 +250,8 @@ You can then ssh from the bastion to the controller.
 Currently, the deployment script does NOT automatically provision the Cloud NAT.
 The Cloud NAT and the VPC should be provisioned via the console (or SDK) before
 launching the cluster deployment. We assume that a project called pbs-project
-already exist with the appropriate configuration (see sec. “Deployment
-Prerequisites” above). In details:
+already exist with the appropriate configuration (see section "Deployment
+Prerequisites" above). In details:
 
 -   Create a VPC in the pbs-project with the following name, region, and subnet
 
@@ -345,8 +345,8 @@ as a bastion host in the same subnet as the cluster (pbs-subnet) and also a
 public IP address. You can then log into the bastion host and create local ssh
 keys with the ssh-keygen command (e.g. ssh-keygen -t rsa -b 4096 -C
 "username\@example.com"). By default, the generated public key is in the file
-\~/.ssh/id_rsa.pub . The content of the public key can be added to the “SSH
-Keys” section of the compute engine metadata for the service project (e.g.
+\~/.ssh/id_rsa.pub . The content of the public key can be added to the "SSH
+Keys" section of the compute engine metadata for the service project (e.g.
 pbs-project) (note to remove all newline characters if cutting and pasting the
 public key). You can then ssh from the bastion to the controller.
 
@@ -558,7 +558,7 @@ state = free
 
 ...
 
-The state of all nodes should be “free” prior to any jobs submitted to the
+The state of all nodes should be "free" prior to any jobs submitted to the
 cluster.
 
 Software Components and Templates 
