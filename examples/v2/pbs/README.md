@@ -400,44 +400,29 @@ YAML Script Example:
 
 ```yaml
 \# [START cluster_yaml]
-
 imports:
-
-\- path: pbs.jinja
+- path: pbs.jinja
 
 resources:
+- name: pbs-cluster
+  type:   pbs.jinja
+  properties:
+    cluster_name            : google
+    static_node_count    : 2
+    region                       : us-central1
+    zone                         : us-central1-a
 
-\- name: pbs-cluster
+    controller_machine_type : n1-standard-2
+    compute_machine_type  : n1-standard-2
+    pbs_version              : 18.1.2
 
-type: pbs.jinja
+    existing_network       : true
+    network                    : pbs-network
+    subnet                      : pbs-subnet
+    vpc_hosting_project  : pbs-project
 
-properties:
-
-cluster_name : google
-
-static_node_count : 2
-
-region : us-central1
-
-zone : us-central1-a
-
-controller_machine_type : n1-standard-2
-
-compute_machine_type : n1-standard-2
-
-pbs_version : 18.1.2
-
-existing_network : true
-
-network : pbs-host-network
-
-subnet : pbs-subnet
-
-vpc_hosting_project : hpc-host-network-project
-
-compute_public_ips : false
-
-\# [END cluster_yaml]
+    compute_public_ips  : false
+\#  [END cluster_yaml]
 ```
 
 Storage Considerations
