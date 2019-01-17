@@ -281,46 +281,26 @@ Prerequisites" above). In details:
 |   | pbs-network-ssh-firewall-rule | Ingress | Apply to all | IP ranges: 0.0.0.0/0 | tcp:22 icmp       | Allow  | 1000     | pbs-network |
 
 YAML Script Example:
-
-\# [START cluster_yaml]
+```yaml
 
 imports:
-
-\- path: pbs.jinja
+- path: pbs.jinja
 
 resources:
+- name: pbs-cluster
+  type: pbs.jinja
+  properties:
+    cluster_name            : google
+    static_node_count    : 2
+    zone                         : us-west2-b
+    region                       : us-west2
 
-\- name: pbs-cluster
+    controller_machine_type : n1-standard-2
+    compute_machine_type  : n1-standard-2
+    pbs_version             : 18.1.2
 
-type: pbs.jinja
 
-properties:
-
-cluster_name : google
-
-static_node_count : 2
-
-region : us-central1
-
-zone : us-central1-a
-
-controller_machine_type : n1-standard-2
-
-compute_machine_type : n1-standard-2
-
-pbs_version : 18.1.2
-
-existing_network : true
-
-network : pbs-network
-
-subnet : pbs-subnet
-
-vpc_hosting_project : pbs-project
-
-compute_public_ips : false
-
-\# [END cluster_yaml]
+'''
 
 ### Shared Network, all private IPs
 
@@ -399,7 +379,6 @@ of PBS on the shared VPC network:
 YAML Script Example:
 
 ```yaml
-&#35;[START cluster_yaml]
 imports:
 - path: pbs.jinja
 
@@ -422,7 +401,6 @@ resources:
     vpc_hosting_project  : pbs-project
 
     compute_public_ips  : false
-&#35; [END cluster_yaml]
 ```
 
 Storage Considerations
@@ -496,7 +474,7 @@ pbsnodes -a
 
 If the nodes are up and the controller can successfully communicate to the
 compute nodes, the command above will produce an output similar to this:
-
+```
 test9-compute1
 
 Mom = test9-compute1.us-west2-b.c.hpc-playground-223721.internal
@@ -543,7 +521,7 @@ ntype = PBS
 
 state = free
 
-...
+```
 
 The state of all nodes should be "free" prior to any jobs submitted to the
 cluster.
