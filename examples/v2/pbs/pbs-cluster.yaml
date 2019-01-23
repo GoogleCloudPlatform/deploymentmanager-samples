@@ -19,19 +19,17 @@ imports:
 
 resources:
 - name: pbs-cluster
-  type: pbs.jinja
+  type:   pbs.jinja
   properties:
-    cluster_name            : google2
-    static_node_count       : 2
-    zone                    : us-west2-a
-    region                  : us-west2
+    cluster_name            : google
+    static_node_count    : 2
+    region                       : us-central1
+    zone                         : us-central1-a
+
     controller_machine_type : n1-standard-2
-    compute_machine_type    : n1-standard-2
-#    existing_network        : true
-#    vpc_hosting_project     : hpc-playground-2
-#    network                 : cluster23-pbs-network
-#    subnet                  : cluster23-pbs-subnet
-    pbs_version             : 18.1.2
-    compute_public_ips      : true
-    prefix                  : cluster25-
+    compute_machine_type  : n1-standard-2
+    pbs_version              : 18.1.2
+
+    compute_public_ips  : false
+    prefix                  : cluster26-
 #  [END cluster_yaml]

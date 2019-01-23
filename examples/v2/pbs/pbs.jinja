@@ -53,6 +53,7 @@ resources:
     network:  {{ network_reference }}
     ipCidrRange: {{ cidr }}
     region: {{ properties["region"] }}
+    privateIpGoogleAccess: true
 {% endif %}
 
 - name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
