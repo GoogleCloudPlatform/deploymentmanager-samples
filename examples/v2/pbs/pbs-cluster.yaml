@@ -29,9 +29,9 @@ resources:
     compute_machine_type    : n1-standard-2
     existing_network        : true
     vpc_hosting_project     : hpc-playground-2
-    network                 : cluster18-pbs-network
-    subnet                  : cluster18-pbs-subnet
+    network                 : cluster23-pbs-network
+    subnet                  : cluster23-pbs-subnet
     pbs_version             : 18.1.2
     compute_public_ips      : false
-    prefix                  : cluster21-
+    prefix                  : cluster24-
 #  [END cluster_yaml]

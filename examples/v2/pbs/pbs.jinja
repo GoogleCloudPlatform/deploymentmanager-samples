@@ -46,7 +46,6 @@ resources:
     autoCreateSubnetworks: false
 {% endif %}
 
-
 {% if not properties['existing_network'] %}
 - name: {{ properties['prefix'] }}pbs-subnet
   type: compute.v1.subnetwork
@@ -54,6 +53,7 @@ resources:
     network:  {{ network_reference }}
     ipCidrRange: {{ cidr }}
     region: {{ properties["region"] }}
+{% endif %}
 
 - name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
   type: compute.v1.firewall
@@ -64,6 +64,7 @@ resources:
     - IPProtocol: TCP
       ports: ["22"]
     - IPProtocol: ICMP
+
 - name: {{ properties['prefix'] }}pbs-all-internal-firewall-rule
   type: compute.v1.firewall
   properties:
@@ -75,7 +76,6 @@ resources:
     - IPProtocol: UDP
       ports: ["0-65535"]
     - IPProtocol: ICMP
-{% endif %}
 
 {% if not properties['compute_public_ips'] %}
 - name: {{properties["prefix"]}}router
@@ -148,7 +148,6 @@ replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
 replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
 replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 {% endif %}
-
 
 
 {% for n in range(properties['static_node_count']) %}
