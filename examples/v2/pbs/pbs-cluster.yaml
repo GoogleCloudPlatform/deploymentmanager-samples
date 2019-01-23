@@ -23,11 +23,15 @@ resources:
   properties:
     cluster_name            : google2
     static_node_count       : 2
-    zone                    : us-west2-b
+    zone                    : us-west2-a
     region                  : us-west2
     controller_machine_type : n1-standard-2
     compute_machine_type    : n1-standard-2
-    existing_network        : false 
+    existing_network        : true
+    vpc_hosting_project     : hpc-playground-2
+    network                 : cluster18-pbs-network
+    subnet                  : cluster18-pbs-subnet
     pbs_version             : 18.1.2
-    prefix                  : cluster14-
+    compute_public_ips      : false
+    prefix                  : cluster21-
 #  [END cluster_yaml]

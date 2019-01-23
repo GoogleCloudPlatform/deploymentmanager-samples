@@ -75,22 +75,51 @@ resources:
     - IPProtocol: UDP
       ports: ["0-65535"]
     - IPProtocol: ICMP
-
-
-{% if not properties['compute_public_ips'] %}
-- name: {{ properties['prefix'] }}no-ip-internet-route
-  type: compute.v1.route
-  properties:
-    network:  {{ network_reference }}
-    tags: ["compute"]
-    destRange: 0.0.0.0/0
-    nextHopInstance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/{{ properties['prefix'] }}controller
-    priority: 800
-  metadata:
-    dependsOn:
-    - {{ properties['prefix'] }}controller
 {% endif %}
 
+{% if not properties['compute_public_ips'] %}
+- name: {{properties["prefix"]}}router
+  type: compute.beta.router
+  properties:
+    network:  {{ network_reference }}
+    region: {{ properties["region"] }}
+    nats:
+    - name: {{properties["prefix"]}}nat
+      natIpAllocateOption: "AUTO_ONLY"
+      sourceSubnetworkIpRangesToNat: "LIST_OF_SUBNETWORKS"
+      subnetworks:
+ {% if properties['subnet'] %}
+      - name: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["subnet"] }}
+  {% else %}
+      - name: $(ref.{{properties["prefix"]}}pbs-subnet.selfLink)
+  {% endif %}
+{% endif %}
+
+
+- name: {{ properties['prefix'] }}bastion
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      metadata:
+        items:
+          - key: serial-port-enable
+            value: yes
+      accessConfigs:
+      - name: {{ properties['prefix'] }}External NAT
+        type: ONE_TO_ONE_NAT
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+{% if not properties['existing_network'] %}
+    - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+{% else %}
+    - subnetwork: {{ subnet_reference }}
 {% endif %}
 
 - name: {{ properties['prefix'] }}controller
