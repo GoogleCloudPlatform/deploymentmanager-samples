@@ -220,7 +220,7 @@ resources:
 ### Standalone network, private IPs
 
 This yaml configuration example deploys a PBS cluster in a stand alone VPC,
-automatically provisioned. All compute nodes have only private IPs. The compute
+automatically provisioned. All compute nodes have only private IP addresses. Compute
 nodes access the internet through a Cloud NAT configuration.
 
 The PBS controller can be used to submit jobs. In general, it can be accessed
@@ -236,40 +236,6 @@ Keys" section of the compute engine metadata for the project (e.g. pbs-project)
 (note to remove all newline characters if cutting and pasting the public key).
 You can then ssh from the bastion to the controller.
 
-**Prerequisites**
-
-Currently, the deployment script does NOT automatically provision the Cloud NAT.
-The Cloud NAT and the VPC should be provisioned via the console (or SDK) before
-launching the cluster deployment. We assume that a project called pbs-project
-already exist with the appropriate configuration (see section "Deployment
-Prerequisites" above). In details:
-
--   Create a VPC in the pbs-project with the following name, region, and subnet
-
-|   | Name                                                                                                                                                                              | Region      | IP address ranges | Gateway   | Private Google access | Flow logs |
-|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|-------------------|-----------|-----------------------|-----------|
-|   | [pbs-subnet](https://pantheon.corp.google.com/networking/subnetworks/details/us-west2/pbs-subnet?project=service-project-ui&authuser=0&organizationId=1092262720165&orgonly=true) | us-central1 | 10.10.0.0/16      | 10.10.0.1 | On                    | Off       |
-
--   Create a [Cloud NAT](https://cloud.google.com/nat/docs/overview) with the
-    following parameters
-
-    -   Gateway name: pbs-network-central1-nat
-
-    -   VPC network: pbs-network
-
-    -   Region: us-central1
-
-    -   Cloud router: create new accepting the defaults for network and region
-
-    -   NAT mapping section: accept all defaults
-
--   Create [VPC firewall](https://cloud.google.com/vpc/docs/firewalls) rules
-    with the following parameters
-
-|   | Name                          | Type    | Targets      | Filters              | Protocols / ports | Action | Priority | Network     |
-|---|-------------------------------|---------|--------------|----------------------|-------------------|--------|----------|-------------|
-|   | pbs-network-internal          | Ingress | Apply to all | Subnets: pbs-subnet  | all               | Allow  | 1000     | pbs-network |
-|   | pbs-network-ssh-firewall-rule | Ingress | Apply to all | IP ranges: 0.0.0.0/0 | tcp:22 icmp       | Allow  | 1000     | pbs-network |
 
 YAML Script Example:
 ```yaml
@@ -289,12 +255,8 @@ resources:
     compute_machine_type  : n1-standard-2
     pbs_version              : 18.1.2
 
-    existing_network       : true
-    network                    : pbs-network
-    subnet                      : pbs-subnet
-    vpc_hosting_project  : pbs-project
-
     compute_public_ips  : false
+    prefix                  : cluster26-
 ```
 
 ### Shared Network, all private IPs
