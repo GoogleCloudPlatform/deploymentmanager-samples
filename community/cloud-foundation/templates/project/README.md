@@ -7,7 +7,10 @@ This template:
 3. Sets IAM permissions in the new project
 4. Turns on a set of APIs in the new project
 5. Creates service accounts for the new project
-6. Creates an usage export Cloud Storage bucket for the new projec
+6. Creates an usage export Cloud Storage bucket for the new project
+7. Removed default networks, firewalls
+8. Removes default Service Account
+9. Creates VPC host or attached VPC service project
 
 ## Prerequisites
 
