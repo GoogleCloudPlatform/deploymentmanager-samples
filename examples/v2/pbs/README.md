@@ -149,6 +149,7 @@ Cluster Properties
 | zone              | required            | String  | Zone where the PBS instances are provisioned                                                                                                      |
 | static_node_count | required            | Integer | Number of compute nodes created for the cluster                                                                                                   |
 | prefix            | optional            | String  | Prefix of the names of the instances and other resources in the cluster. Used to distinguish different clusters deployed within the same project. |
+| service_account   | optional            | String  | Service account email |
 
 Compute Node Properties
 -----------------------

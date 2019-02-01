@@ -22,7 +22,7 @@ resources:
   type:   pbs.jinja
   properties:
     cluster_name            : google
-    static_node_count    : 2
+    static_node_count    : 4
     region                       : us-central1
     zone                         : us-central1-a
 
@@ -30,6 +30,6 @@ resources:
     compute_machine_type  : n1-standard-2
     pbs_version              : 18.1.2
 
-    compute_public_ips  : false
-    prefix                  : cluster26-
+    compute_public_ips  : true
+    prefix                  : cluster27-
 #  [END cluster_yaml]
