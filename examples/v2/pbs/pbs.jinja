@@ -175,7 +175,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 
 {% if properties['compute_public_ips'] %}
       accessConfigs:
-      - name: {{ properties['prefix'] }}External NAT
+    - name: {{ properties['prefix'] }}External NAT
         type: ONE_TO_ONE_NAT
 {% endif %}
     serviceAccounts:
