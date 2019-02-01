@@ -43,6 +43,7 @@ optional:
 - preemptible_bursting
 - vpc_hosting_project
 - existing_network
+- service_account
 
 properties:
   cidr:
@@ -139,4 +140,9 @@ properties:
   zone:
     type        : string
     description : Zone to run the instances in based on Region.
+
+  service_account:
+    type        : string
+    description : Default service account email
+    default     : default
 

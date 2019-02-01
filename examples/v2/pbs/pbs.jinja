@@ -126,7 +126,7 @@ resources:
         type: ONE_TO_ONE_NAT
 {% endif %}
       serviceAccounts:
-      - email: "default"
+      - email: {{ properties['service_account'] }}
         scopes:
         - "https://www.googleapis.com/auth/logging.write"
         - "https://www.googleapis.com/auth/compute"
@@ -179,7 +179,7 @@ replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
         type: ONE_TO_ONE_NAT
 {% endif %}
     serviceAccounts:
-      - email: "default"
+      - email: {{ properties['service_account'] }}
         scopes:
         - "https://www.googleapis.com/auth/logging.write"
         - "https://www.googleapis.com/auth/compute"
