@@ -1,0 +1,10 @@
+resources:
+- name: redis
+  type: gcp-types/redis-v1beta1:projects.locations.instances
+  properties:
+    parent: projects/isolated-project/locations/us-west1
+    instanceId: YOUR_DEPLOYMENT_NAME
+    authorizedNetwork: projects/isolated-project/global/networks/newer
+    memorySizeGb: 10
+    tier: BASIC
+    displayName: Perritos Bonitos

@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create a network resource"""
+""" This template creates a network, optionally with subnetworks. """
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     name = context.properties.get('name') or context.env['name']
     network_self_link = '$(ref.{}.selfLink)'.format(name)
@@ -36,7 +36,8 @@ def generate_config(context):
         }
     ]
 
-    # Subnetwork Resources
+    # Subnetworks:
+    out = {}
     for subnetwork in context.properties.get('subnetworks', []):
         subnetwork['network'] = network_self_link
         resources.append(
@@ -46,6 +47,16 @@ def generate_config(context):
                 'properties': subnetwork
             }
         )
+
+        out[subnetwork['name']] = {
+            'selfLink': '$(ref.{}.selfLink)'.format(subnetwork['name']),
+            'ipCidrRange': '$(ref.{}.ipCidrRange)'.format(subnetwork['name']),
+            'region': '$(ref.{}.region)'.format(subnetwork['name']),
+            'network': '$(ref.{}.network)'.format(subnetwork['name']),
+            'gatewayAddress': '$(ref.{}.gatewayAddress)'.format(
+                subnetwork['name']
+            )
+        }
 
     return {
         'resources':
@@ -57,8 +68,12 @@ def generate_config(context):
                     'value': name
                 },
                 {
-                    'name': 'networkUrl',
+                    'name': 'selfLink',
                     'value': network_self_link
+                },
+                {
+                    'name': 'subnetworks',
+                    'value': out
                 }
             ]
     }

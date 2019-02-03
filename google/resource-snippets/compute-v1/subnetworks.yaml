@@ -21,7 +21,11 @@ resources:
 - name: subnet
   type: subnetworks.py
   properties:
-    region: REGION_TO_RUN
-    computeVersion: v1
+    region: us-central1
+    computeVersion: beta
     ipCidrRange: 10.10.10.0/24
+    privateIpGoogleAccess: false
+    secondaryIpRanges:
+    - ipCidrRange: 172.16.0.0/12
+      rangeName: my-secondary-range
 

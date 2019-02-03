@@ -1,7 +1,7 @@
-# Example on how to use the network and subnetwork templates
+# Test of the network and subnetwork templates.
 #
 # Variables:
-#   RAND: Just a random string used mostly by the testing suite.
+#   RAND: A random string used by the testing suite.
 #
 
 imports:
@@ -29,14 +29,14 @@ resources:
   - name: test-subnetwork-${RAND}-2
     type: subnetwork.py
     properties:
-      network: $(ref.test-network-${RAND}.networkUrl)
+      network: $(ref.test-network-${RAND}.selfLink)
       region: us-east1
       ipCidrRange: 192.168.0.0/16
   - name: test-subnetwork-${RAND}-3
     type: subnetwork.py
     properties:
       name: test-subnetwork-${RAND}-3
-      network: $(ref.test-network-${RAND}.networkUrl)
+      network: $(ref.test-network-${RAND}.selfLink)
       region: us-east1
       ipCidrRange: 172.16.0.0/24
       privateIpGoogleAccess: false

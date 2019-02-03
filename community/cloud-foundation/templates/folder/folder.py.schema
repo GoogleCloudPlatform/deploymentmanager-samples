@@ -14,7 +14,9 @@
 
 info:
   title: Folder
-  description: Creates a folder under an organization or folder.
+  description: |
+    Creates a folder under an organization or under a parent
+    folder.
 
 imports:
   - path: folder.py
@@ -25,23 +27,23 @@ required:
 properties:
   folders:
     type: array
-    description: Array of folders to create.
+    description: List of folders to create.
     items:
       orgId:
         type: string
         pattern: ^organization\/[0-9]{8,25}$
         description: |
-          The organization ID. If this field is set, the folder will be
+          The organization ID. If this field is set, the folder is
           created under the organization. The value must conform to the
-          format `organizations/<orgId>`. For example
+          format `organizations/<orgId>`. For example,
           `organizations/111122223333`.
       folderId:
         type: string
         pattern: ^folder\/[0-9]{8,25}$
         description: |
-          The folder ID. If this field is set, the folder will be created
-          under the folder specified by the folder ID. The value must conform
-          to the format `folders/<folderId>`. For example
+          The folder ID. If this field is set, the folder is created
+          under the folder specified by the ID. The value must conform
+          to the format `folders/<folderId>`. For example,
           `folders/1234567890`.
       displayName:
         type: string
@@ -51,13 +53,36 @@ properties:
 
 outputs:
   properties:
-    - names:
+    folders:
       type: array
-      description: List of folder resource names.
+      description: Array of folder resource information.
       items:
-        type: string
         description: |
-          Name of the folder resource in the format `folders/<folderID>`.
+          The name of the folder resource. For example, the output can be
+          referenced as: $(ref.<my-folder>.rules.<folder-name>.parent)
+        patternProperties:
+          ".*":
+            type: object
+            description: Details for a folder resource.
+            properties:
+              name:
+                type: string
+                description: |
+                  Name of the folder resource in the format
+                  `folders/<folderID>`.
+              parent:
+                type: string
+                description: |
+                  The resource name of the parent Folder or Organization.
+              displayName:
+                type: string
+                description: The folder's display name.
+              createTime:
+                type: string
+                description: Creation timestamp in RFC3339 text format.
+              lifecycleState:
+                type: string
+                description: The Folder's current lifecycle state.
 
 documentation:
   - templates/folder/README.md

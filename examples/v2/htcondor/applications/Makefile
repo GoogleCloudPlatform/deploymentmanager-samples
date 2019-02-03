@@ -14,13 +14,10 @@
 
 #simple make file for compiling test programs
 
-all:primes simple
+all:primes
 
 primes:
 	gcc -o primes primes.c
 
-simple:
-	gcc -o simple simple.c
-
 clean:
-	rm primes simple
+	rm primes

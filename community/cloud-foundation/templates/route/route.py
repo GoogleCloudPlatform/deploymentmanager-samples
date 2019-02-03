@@ -11,21 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Creates custom Routes."""
+"""This template creates a custom route."""
 
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
-    network_name = generate_network_url(
-        context.env['project'],
-        context.properties['network']
-    )
+    network_name = generate_network_url(context.properties)
 
     resources = []
+    out = {}
     for i, route in enumerate(context.properties['routes'], 1000):
 
-        # Common route properties
+        # Set the common route properties.
         properties = {
             'network': network_name,
             'tags': route['tags'],
@@ -34,7 +32,7 @@ def generate_config(context):
             'destRange': route['destRange']
         }
 
-        # Check the route type and fill the respective fields
+        # Check the route type and fill out the following fields:
         if route['routeType'] == 'ipaddress':
             properties['nextHopIp'] = route.get('nextHopIp')
         elif route['routeType'] == 'instance':
@@ -68,26 +66,51 @@ def generate_config(context):
             }
         )
 
-    return {'resources': resources}
+        out[route['name']] = {
+            'selfLink': '$(ref.' + route['name'] + '.selfLink)',
+            'nextHopNetwork': network_name
+        }
+
+    outputs = [{'name': 'routes', 'value': out}]
+
+    return {'resources': resources, 'outputs': outputs}
 
 
-def generate_network_url(project, network):
-    """Format the resource name to a resource URI"""
-    return 'projects/{}/global/networks/{}'.format(project, network)
+def generate_network_url(properties):
+    """ Gets the network name. """
+
+    network_name = properties.get('network')
+    is_self_link = '/' in network_name or '.' in network_name
+
+    if is_self_link:
+        network_url = network_name
+    else:
+        network_url = 'global/networks/{}'.format(network_name)
+
+    return network_url
 
 
 def generate_instance_url(project, zone, instance):
-    """Format the resource name to a resource URI"""
-    return 'projects/{}/zones/{}/instances/{}'.format(project, zone, instance)
+    """ Format the resource name as a resource URI. """
+
+    is_self_link = '/' in instance or '.' in instance
+
+    if is_self_link:
+        instance_url = instance
+    else:
+        instance_url = 'projects/{}/zones/{}/instances/{}'
+        instance_url = instance_url.format(project, zone, instance)
+
+    return instance_url
 
 
 def generate_gateway_url(project, gateway):
-    """Format the resource name to a resource URI"""
+    """ Format the resource name as a resource URI. """
     return 'projects/{}/global/gateways/{}'.format(project, gateway)
 
 
 def generate_vpn_tunnel_url(project, region, vpn_tunnel):
-    """Format the resource name to a resource URI"""
+    """ Format the resource name as a resource URI. """
     return 'projects/{}/regions/{}/vpnTunnels/{}'.format(
         project,
         region,

@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Creates a topic with subscripions. """
+""" This template creates a Pub/Sub (publish-subscribe) service. """
 
 def create_subscription(resource_name, spec, topic_resource_name, spec_index):
-    """ Create pull/push subscription from simplified spec """
+    """ Create a pull/push subscription from the simplified spec. """
 
     subscription = {
         'name': '{}-subscription-{}'.format(resource_name, spec_index),
@@ -40,7 +40,7 @@ def create_subscription(resource_name, spec, topic_resource_name, spec_index):
     return subscription
 
 def create_iam_policy(bindings_spec):
-    """ Create IAM policy section """
+    """ Create an IAM policy for the resource. """
 
     return {
         'gcpIamPolicy': {
@@ -49,14 +49,14 @@ def create_iam_policy(bindings_spec):
     }
 
 def set_access_control(resource, context):
-    """ If necessary, add access control section to given resource """
+    """ If necessary, define access control for the resource """
 
     access_control = context.get('accessControl')
     if access_control is not None:
         resource['accessControl'] = create_iam_policy(access_control)
 
 def create_pubsub(resource_name, pubsub_spec):
-    """ Create a topic with its subscriptions """
+    """ Create a topic with subscriptions. """
 
     topic_name = pubsub_spec.get('topic', resource_name)
     topic_resource_name = '{}-topic'.format(resource_name)
@@ -78,7 +78,7 @@ def create_pubsub(resource_name, pubsub_spec):
     return [topic] + subscriptions
 
 def create_topic_outputs(topic_resource):
-    """ Create outputs for a topic """
+    """ Create outputs for the topic. """
 
     return [
         {
@@ -88,7 +88,7 @@ def create_topic_outputs(topic_resource):
     ]
 
 def generate_config(context):
-    """ Entry point for the deployment resources """
+    """ Entry point for the deployment resources. """
 
     resource_name = context.env['name']
     pubsub_resources = create_pubsub(resource_name, context.properties)

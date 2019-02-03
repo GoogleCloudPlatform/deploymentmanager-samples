@@ -23,22 +23,26 @@ info:
     Creates one master node, one job submission node, and n compute nodes
     through a managed instance group.
 
-    The base image is Debian 8, and the configuration installs the latest
-    production version of HTCondor.
+    The base image can be chosen between Debian and Centos and the 
+    configuration installs the latest production version of HTCondor.
 
 imports:
-- path: startup-master.sh
-- path: startup-submit.sh
-- path: startup-compute.sh
+- path: startup-master-debian.sh
+- path: startup-submit-debian.sh
+- path: startup-compute-debian.sh
+- path: startup-master-centos.sh
+- path: startup-submit-centos.sh
+- path: startup-compute-centos.sh
 
 required:
 - zone
 - instancetype
 
-
 optional:
 - email
 - count
+- condorversion
+- setup_autoscaler
 
 properties:
   zone:
@@ -55,3 +59,19 @@ properties:
     type: string
     default: "someone@somewhere.com"
     description: email address for administrator (used in htcondor config).
+  instanceosfamily:
+    type: string
+    default: debian
+    description: operating system family i.e. debian or centos
+  instanceosversion:
+    type: integer
+    default: 9
+    description: operating system major version e.g. 9 (for deban) or 7 (for centos)
+  condorversion:
+    type: string
+    default: "CONDORVERSION"
+    description: optional version of HTCondor, among the stable ones. If not provided, the system installs the latest stable version.
+  setup_autoscaler:
+    type: boolean
+    default: true
+    description: optional flag to setup an autoscaler with the MIG, to maintain the machines at the desired count (e.g. if PVM)

@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Create a subnetwork resource"""
+""" This template creates a subnetwork. """
 
 
 def generate_config(context):
-    """Entry point for the deployment resources"""
+    """ Entry point for the deployment resources. """
 
-    name = context.properties.get('name') or context.env['name']
+    name = context.properties.get('name', context.env['name'])
     required_properties = ['network', 'ipCidrRange', 'region']
     optional_properties = [
         'enableFlowLogs',
@@ -25,7 +25,7 @@ def generate_config(context):
         'secondaryIpRanges'
     ]
 
-    # Load required properties, then optional ones if specified
+    # Load the mandatory properties, then the optional ones (if specified).
     properties = {p: context.properties[p] for p in required_properties}
     properties.update(
         {
@@ -43,4 +43,31 @@ def generate_config(context):
         }
     ]
 
-    return {'resources': resources}
+    output = [
+        {
+            'name': 'name',
+            'value': name
+        },
+        {
+            'name': 'selfLink',
+            'value': '$(ref.{}.selfLink)'.format(name)
+        },
+        {
+            'name': 'ipCidrRange',
+            'value': '$(ref.{}.ipCidrRange)'.format(name)
+        },
+        {
+            'name': 'region',
+            'value': '$(ref.{}.region)'.format(name)
+        },
+        {
+            'name': 'network',
+            'value': '$(ref.{}.network)'.format(name)
+        },
+        {
+            'name': 'gatewayAddress',
+            'value': '$(ref.{}.gatewayAddress)'.format(name)
+        }
+    ]
+
+    return {'resources': resources, 'outputs': output}

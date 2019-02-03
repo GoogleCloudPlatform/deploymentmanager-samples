@@ -1,0 +1,58 @@
+resources:
+- name: {{ properties["zoneName"] }}
+  type: gcp-types/dns-{{ properties["version"] }}:managedZones
+  properties:
+    description: >
+      Managed zone for deployment {{ env["deployment"] }}
+        and zone {{ properties["zoneName"] }}
+    dnsName: {{ properties["zoneDnsName"] }}
+- name: {{ properties["rrsetName"] }}
+  type: gcp-types/dns-v1:resourceRecordSets
+  properties:
+    name: "{{ properties["rrsetDomain"] }}"
+    managedZone: $(ref.{{ properties["zoneName"] }}.name)
+    records:
+    - type: A
+      ttl: 30
+      rrdatas:
+      - 10.10.10.0
+    - type: AAAA
+      ttl: 40
+      rrdatas:
+      - 1:2::ffff:101
+    - type: CAA
+      ttl: 50
+      rrdatas:
+      - 0 issue "ca.{{ properties["rrsetDomain"] }}"
+    - type: IPSECKEY
+      ttl: 50
+      rrdatas:
+      - 10 1 2 192.0.2.1 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt==
+    - type: MX
+      ttl: 50
+      rrdatas:
+      - 123 mail.{{ properties["rrsetDomain"] }}
+    - type: NAPTR
+      ttl: 50
+      rrdatas:
+      - 100 10 "u" "sip+E2U" "!^.*$!sip:information@{{ properties["rrsetDomain"] }}!i" .
+    - type: PTR
+      ttl: 50
+      rrdatas:
+      - server-1.{{ properties["rrsetDomain"] }}
+    - type: SRV
+      ttl: 50
+      rrdatas:
+      - 0 1 587 mail.{{ properties["rrsetDomain"] }}
+    - type: SSHFP
+      ttl: 50
+      rrdatas:
+      - 2 1 123456789abcdef67890123456789abcdef67890
+    - type: TLSA
+      ttl: 50
+      rrdatas:
+      - 1 1 2 92003ba34942dc74152e2f2c408d29ec
+    - type: TXT
+      ttl: 50
+      rrdatas:
+      - Hello World!

@@ -13,10 +13,18 @@
 # limitations under the License.
 
 info:
-  title: Log Exports
+  title: Logging Sink
   author: Sourced Group Inc.
   description: |
-    Deploys a log export to a desired destination.
+    Creates a logging sink to export entries to a desired destination.
+
+imports:
+  - path: ../pubsub/pubsub.py
+    name: pubsub.py
+  - path: ../bigquery/bigquery_dataset.py
+    name: bigquery_dataset.py
+  - path: ../gcs_bucket/gcs_bucket.py
+    name: gcs_bucket.py
 
 required:
   - destinationType
@@ -25,19 +33,17 @@ required:
 properties:
   name:
     type: string
-    description: Name of sink resource
+    description: Name of the sink resource.
   destinationName:
     type: string
     description: |
-      Name of the destination resource. Such as: Bucket name,
-      PubSub topic id, BigQuery dataset id.
-      When using a pubsub topic the value must be a topic id.
-      When using a BQ dataset value must be a dataset ID. The ID must
+      An identifier of the destination resource, such as: a name for a Bucket,
+      a topic ID for a PubSub, or a dataset ID for a BigQuery. The IDs must
       contain only letters (a-z, A-Z), numbers (0-9), or underscores (_).
-      The maximum length is 1,024 characters.
+      The maximum ID length is 1,024 characters.
   destinationType:
     type: string
-    description: The resource type of the destination
+    description: The type of the destination resource.
     enum:
       - pubsub
       - storage
@@ -45,19 +51,82 @@ properties:
   uniqueWriterIdentity:
     type: boolean
     description: |
-      Determines the kind of IAM identity returned as writerIdentity in the
-      new sink. When true, the sink is owned by a non-project resource such
-      as an organization. The value of writerIdentity will then be a unique
+      Determines the kind of the IAM identity returned as writerIdentity for the
+      new sink. If "true", the sink is owned by a non-project resource such
+      as an organization. In this case, the writerIdentity value is a unique
       serivce account used only for exports from the new sink.
     default: true
   filter:
     type: string
     description: |
-      An advanced logs filter. Only exports log entries that are in the resource
-      owning the sink and matches the filter.
+      An advanced log filter that limits the export to those log entries that:
+      (a) are in the resource that owns the sink; and
+      (b) matches the filter condition(s).
+  pubsubProperties:
+    type: object
+    description: |
+      Pubsub properties as defined in the `templates/pubsub/pubsub.py.schema`.
+      Example:
+        - name: test-logsink-project-pubsub
+          type: logsink.py
+          properties:
+            destinationName: test-logsink-project-pubsub-dest
+            destinationType: pubsub
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            pubsubProperties:
+              topic: test-logsink-project-pubsub-topic-dest
+              accessControl:
+                - role: roles/pubsub.admin
+                  members:
+                    - user:my-email@email.com
+  storageProperties:
+    type: object
+    description: |
+      Bucket properties as defined in the
+      `templates/gcs_bucket/gcs_bucket.py.schema`.
+      Example:
+        - name: test-logsink-project-storage-create
+          type: logsink.py
+          properties:
+            destinationName: test-logsink-project-storage-dest
+            destinationType: storage
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            storageProperties:
+              location: us-east1
+              bindings:
+                - role: roles/storage.objectViewer
+                  members:
+                    - user:my-email@email.com
+  bqProperties:
+    type: object
+    description: |
+      NOTE: There is a issue where BQ does not accept the uniqueWriter
+      returned by the logsink to be used in the userByEmail property.
+      Until that is resolved, this property is not supported.
+      BigQuery dataset properties as defined in the
+      `templates/bigquery/bigquery_dataset.py.schema`.
+      Example:
+        - name: test-logsink-project-bq-create
+         type: logsink.py
+          properties:
+            # BQ names use underscores
+            destinationName: test_logsink_project_bq_dest
+            destinationType: bigquery
+            projectId: 1234567890
+            uniqueWriterIdentity: true
+            bqProperties:
+              location: US
+              access:
+                - role: OWNER
+                  userByEmail: my-email@email.com
 
 documentation:
   - templates/logsink/README.md
 
 examples:
-  - templates/logsink/examples/logsink.yaml
+  - templates/logsink/examples/org_logsink_pubsub_destination.yaml
+  - templates/logsink/examples/billingaccount_logsink_bucket_destination.yaml
+  - templates/logsink/examples/folder_logsink_bq_destination.yaml
+  - templates/logsink/examples/project_logsink_bucket_destination.yaml
