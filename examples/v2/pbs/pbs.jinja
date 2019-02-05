@@ -54,7 +54,6 @@ resources:
     ipCidrRange: {{ cidr }}
     region: {{ properties["region"] }}
     privateIpGoogleAccess: true
-{% endif %}
 
 - name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
   type: compute.v1.firewall
@@ -77,8 +76,9 @@ resources:
     - IPProtocol: UDP
       ports: ["0-65535"]
     - IPProtocol: ICMP
+{% endif %}
 
-{% if not properties['compute_public_ips'] %}
+{% if not properties['compute_public_ips'] and not properties['existing_network'] %}
 - name: {{properties["prefix"]}}router
   type: compute.beta.router
   properties:
