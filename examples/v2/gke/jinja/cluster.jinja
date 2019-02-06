@@ -59,6 +59,20 @@ resources:
         location: HEADER
         value: >
           $.concat("Bearer ", $.googleOauth2AccessToken())
+      - fieldName: metadata.resourceVersion
+        location: BODY
+        methodMatch: ^(PUT|PATCH)$
+        value: $.resource.self.metadata.resourceVersion
+{% if endpoint is 'api/v1' %}
+    collectionOverrides:
+    - collection: '/api/v1/namespaces/{namespace}/services'
+      options:
+        inputMappings:
+        - fieldName: spec.clusterIP
+          location: BODY
+          methodMatch: ^(PUT|PATCH)$
+          value: $.resource.self.spec.clusterIP
+{% endif %}
     descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/{{ endpoint }}
 {% endfor %}
 
