@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### 0.0.3
 
-- Feature: Cross deployment refference support complex outputs such us hashmap, list and their combination. 
+- Feature: Cross deployment refference support complex outputs such as hashmap, list and their combination. 
 
 ### 0.0.4
 
