@@ -197,3 +197,23 @@ replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
 replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
 {% endif %}
 {% endfor %}
+
+{% if not properties['compute_public_ips'] and not properties['existing_network'] %}
+- name: {{ properties['prefix'] }}bastion
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+      accessConfigs:
+      - name: {{ properties['prefix'] }}External NAT
+        type: ONE_TO_ONE_NAT
+{% endif %}
