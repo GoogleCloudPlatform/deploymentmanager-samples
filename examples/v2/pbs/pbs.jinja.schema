@@ -68,7 +68,7 @@ properties:
 
   compute_disk_size_gb:
     type        : integer
-    default     : 100
+    default     : 10
     minimum     : 10
     maximum     : 64000
     description : Size of disk for compute nodes.
@@ -89,7 +89,7 @@ properties:
 
   controller_disk_size_gb:
     type        : integer
-    default     : 100
+    default     : 10
     minimum     : 10
     maximum     : 64000
     description : Size of disk for the controller.
