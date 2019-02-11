@@ -99,13 +99,20 @@ def parse_dm_output_token(token, project=''):
     else:
         raise ValueError(error_msg)
 
-
 def get_deployment_output(project, deployment, resource, name):
     manifest = get_manifest(project, deployment)
     layout = YAML().load(manifest.layout)
-    for r in layout.get('resources', []):
-        if r['name'] != resource:
-            continue
-        for output in r.get('outputs', []):
-            if output['name'] == name:
-                return output['finalValue']
+    return traverse_resource_output(layout, resource, name)
+
+def traverse_resource_output(layout, resource, name):
+    for _resource in layout.get('resources', []):
+        if _resource['name'] == resource:
+            for output in _resource.get('outputs', []):
+                if output['name'] == name:
+                    return output['finalValue']
+
+        #recursive traversal of complex resources to search for outputs.
+        output = traverse_resource_output(_resource, resource, name)
+        if output != []:
+            return output
+    return []
