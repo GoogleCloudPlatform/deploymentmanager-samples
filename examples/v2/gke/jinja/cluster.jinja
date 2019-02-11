@@ -63,7 +63,7 @@ resources:
         location: BODY
         methodMatch: ^(PUT|PATCH)$
         value: $.resource.self.metadata.resourceVersion
-{% if endpoint is 'api/v1' %}
+    {% if endpoint == 'api/v1' %}
     collectionOverrides:
     - collection: '/api/v1/namespaces/{namespace}/services'
       options:
@@ -72,7 +72,7 @@ resources:
           location: BODY
           methodMatch: ^(PUT|PATCH)$
           value: $.resource.self.spec.clusterIP
-{% endif %}
+    {% endif %}
     descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/{{ endpoint }}
 {% endfor %}
 
