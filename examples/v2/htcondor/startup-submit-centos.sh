@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 CONDOR_VERSION="CONDORVERSION"
 OS_VERSION="OSVERSION"
 
@@ -15,6 +15,7 @@ fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
 
 # Install utilities and condor and configure it
+sleep 2 #Give some time to setup yum info
 cd /tmp
 yum install -y wget curl net-tools vim gcc
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
@@ -32,7 +33,7 @@ ALLOW_WRITE = \$(ALLOW_WRITE), \$(CONDOR_HOST)
 EOF
 mkdir -p /etc/condor/config.d
 mv condor_config.local /etc/condor/config.d
-$CONDOR_STARTUP_CMD
+eval $CONDOR_STARTUP_CMD
 
 # Install Google python API for optional autoscaler installation
 cd /tmp

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 CONDOR_VERSION="CONDORVERSION"
 OS_VERSION="OSVERSION"
@@ -13,6 +13,8 @@ else
    CONDOR_STARTUP_CMD="systemctl start condor;systemctl enable condor"
 fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
+
+sleep 2 #Give it some time to setup yum
 cd /tmp
 yum install -y wget curl net-tools vim
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
@@ -29,7 +31,7 @@ ALLOW_WRITE = \$(ALLOW_WRITE), \$(CONDOR_HOST)
 EOF
 mkdir -p /etc/condor/config.d
 mv condor_config.local /etc/condor/config.d
-$CONDOR_STARTUP_CMD
+eval $CONDOR_STARTUP_CMD
 
 cd /tmp; curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
 bash install-logging-agent.sh
