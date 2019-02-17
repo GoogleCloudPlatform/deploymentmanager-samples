@@ -17,7 +17,7 @@ imports:
 
 resources:
 - name: my-service
-  type: deployment.jinja
+  type: deployment.py
   properties:
     clusterType: dm-gke-cluster-1-provider
     image: nginx

@@ -19,7 +19,7 @@ resources:
 - name: my-agent
   type: daemonset.jinja
   properties:
-    clusterType: dm-gke-cluster-1-provider #<cluster-type>
+    clusterType: dm-gke-cluster-1-provider
     key: <key> ## optional - if your third party agent has a license key
     image: gcr.io/google-samples/cassandra:v8 ## change me
     containerPort: 9042 ## change me
