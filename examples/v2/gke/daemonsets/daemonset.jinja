@@ -13,14 +13,14 @@
 # limitations under the License.
 
 {% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
-{% set DAEMONSETS_COLLECTION = '/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets/{name}' %}
+{% set DAEMONSETS_COLLECTION = '/apis/apps/v1/namespaces/{namespace}/daemonsets/{name}' %}
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
 
 resources:
 - name: {{ NAME_PREFIX }}-daemonset
   type: {{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}
   properties:    
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: DaemonSet
     metadata:
       name: {{ NAME_PREFIX }}-daemonset
@@ -28,6 +28,9 @@ resources:
       labels:
         app: {{ NAME_PREFIX }}-daemonset
     spec:
+      selector:
+        matchLabels:
+            label1: my-label
       template:
         metadata:
           labels:

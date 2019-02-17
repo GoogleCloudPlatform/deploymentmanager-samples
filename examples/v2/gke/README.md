@@ -83,9 +83,9 @@ gcloud deployment-manager deployments create dm-service \
     --template deployment.jinja \
     --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
 
-NAME                                    TYPE                                                                                                              STATE      ERRORS  INTENT
-dm-service-deployment-jinja-deployment  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/extensions/v1beta1/namespaces/{namespace}/deployments/{name}  COMPLETED  []
-dm-service-deployment-jinja-service     mineral-minutia-820/dm-gke-cluster-1-provider:/api/v1/namespaces/{namespace}/services/{name}                      COMPLETED  []
+NAME                                    TYPE                                                                                                   STATE      ERRORS  INTENT
+dm-service-deployment-jinja-deployment  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/apps/v1/namespaces/{namespace}/deployments/{name}  COMPLETED  []
+dm-service-deployment-jinja-service     mineral-minutia-820/dm-gke-cluster-1-provider:/api/v1/namespaces/{namespace}/services/{name}           COMPLETED  []
 ```
 
 or with `python`:
