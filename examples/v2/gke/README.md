@@ -2,113 +2,172 @@
 
 ## Overview
 
-This is a [Google Cloud Deployment
-Manager](https://cloud.google.com/deployment-manager/overview) template which
-deploys a GKE cluster and a Deployment Manager type. The type can be used by
-other deployments to deploy Kubernetes resources into the cluster.
+This is a [Google Cloud Deployment Manager](https://cloud.google.com/deployment-manager/overview) template which deploys a GKE cluster and a [Deployment Manager type provider](https://cloud.google.com/deployment-manager/docs/configuration/type-providers/creating-type-provider). The type can be used by other deployments to manage Kubernetes resources in cluster.
+
+This version uses the [OpenAPI 2.0 endpoint](https://kubernetes.io/docs/concepts/overview/kubernetes-api/#openapi-and-swagger-definitions) (`/openapi/v2`) and allows you to automatically acquire any GKE resource from one type-provider.  For example, once the cluster is created, you can manage any k8s artifact such as `Deployments`, `Services`, `DaemonSets` or even `CustomResourceDefinitions`
 
 ## Getting started
 
 Using Deployment Manager to deploy Kubernetes resources into a new GKE cluster
-is a two step process, as described below.
+is a two step process as described below: 
 
-### Deploy a cluster
+1. Create the GKE Cluster and Type-Provider
+2. Use the Type-Provider to define a collection of the resource type you want to manage.
+
+You can deploy using eihter the `jinja` or `python` Deployment Manager templates for either step.
+
+### 1. Deploy a cluster
 
 When ready, deploy with the following command:
 
-    NAME="your-name"
-    ZONE="your-zone"
+```bash
+NAME="dm-1"
+CLUSTER_NAME="dm-gke-cluster-1"
+ZONE="us-central1-a"
+```
+-  jinja:
+```
+    gcloud deployment-manager deployments create ${NAME} \
+    --template cluster.jinja \
+    --properties clusterName:${CLUSTER_NAME},zone:${ZONE}
+```
+
+or
+
+- python:
+```
     gcloud deployment-manager deployments create ${NAME} \
     --template cluster.py \
-    --properties zone:${ZONE}
+    --properties clusterName:${CLUSTER_NAME},zone:${ZONE}
+```
 
-This will result in two resources:
+For example,
 
-* a GKE cluster named `${NAME}-cluster-py`
-* a Deployment Manager type named `${NAME}-cluster-py-type`
+```bash
+gcloud deployment-manager deployments create ${NAME} \
+    --template cluster.jinja  \
+    --properties clusterName:${CLUSTER_NAME},zone:${ZONE} 
+NAME                       TYPE                                   STATE      ERRORS  INTENT
+dm-gke-cluster-1           container.v1.cluster                   COMPLETED  []
+dm-gke-cluster-1-provider  deploymentmanager.v2beta.typeProvider  COMPLETED  []
 
-The type can now be used in other deployments to deploy kubernetes resources
-using the cluster API.
+OUTPUTS      VALUE
+clusterType  dm-gke-cluster-1-provider
+```
 
-### Deploying Kubernetes resources
+The default `yaml` configuration file has the `Name`,`CLUSTER_NAME`, and `ZONE` predefined with 
+the settings above so as a quickstart, you can just run:
+
+```
+ gcloud deployment-manager deployments create ${NAME} --config cluster.yaml
+```
+
+This will create two resources:
+
+* a GKE cluster named `${CLUSTER_NAME}`
+* a Deployment Manager type-provider named `${CLUSTER_NAME}-provider`
+
+Note the `clusterType` (in this case `dm-gke-cluster-1-provider`).  You can use this type in other deployments to manage kubernetes resources using the cluster API.
+
+### 2. Deploying Kubernetes resources
 
 Using `deployment.yaml`, create a `Deployment` and a `Service`
-to the GKE cluster created in the last step. Fill in the following information
-before deploying:
+to the GKE cluster created in the last step.
 
-* The cluster type created for the GKE cluster deployed previously. This will
-  be `${NAME}-cluster-py-type`, visible in the developers console.
-* Optionally, change the `docker` image to run.
-* Optionally, specify the port exposed by the image.
+with `jinja`
+```bash
+IMAGE=nginx
+PORT=80
 
-When ready, deploy with the following command. When you provide the template, 
-then you must provide all of its properties, e.g.
+gcloud deployment-manager deployments create dm-service \
+    --template deployment.jinja \
+    --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
 
-    IMAGE=gcr.io/deployment-manager-examples/nodejsservicestatic
-    PORT=80
-    gcloud deployment-manager deployments create deployment \
+NAME                                    TYPE                                                                                                              STATE      ERRORS  INTENT
+dm-service-deployment-jinja-deployment  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/extensions/v1beta1/namespaces/{namespace}/deployments/{name}  COMPLETED  []
+dm-service-deployment-jinja-service     mineral-minutia-820/dm-gke-cluster-1-provider:/api/v1/namespaces/{namespace}/services/{name}                      COMPLETED  []
+```
+
+or with `python`:
+
+```bash
+$ gcloud deployment-manager deployments create dm-service \
     --template deployment.py \
-    --properties clusterType:${NAME}-cluster-py-type,image:${IMAGE},port:${PORT}
+    --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
+```
 
-Or:
+As above, you can use the defaults for defined in `deployment.yaml` if you used the defaults `yaml` during cluster creation
 
-    IMAGE=nginx
-    PORT=80
-    gcloud deployment-manager deployments create deployment \
-    --template deployment.py \
-    --properties clusterType:${NAME}-cluster-py-type,image:${IMAGE},port:${PORT}
+```
+   gcloud deployment-manager deployments create dm-service --config deployment.yaml 
+```
 
+### Verifying Kubernetes Resources
 
-### Verifying deployment
+First make your `kubectl` command-line tool is set up to communicate with the cluster you have deployed:
 
-Be sure your `kubectl` command-line tool is set up to communicate with the
-cluster you have deployed:
-
-    gcloud container clusters get-credentials ${NAME}-cluster-py --zone ${ZONE}
+```bash
+gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE}
+```
 
 Now you can see the resources that have been deployed using `kubectl`:
 
-    kubectl get deployments
-    kubectl get services
+```bash
+$ kubectl get deployments,services
+NAME                                                           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+deployment.extensions/dm-service-deployment-jinja-deployment   1         1         1            1           3m
 
-For security reasons, the Kubernetes Service is *not* exposed externally. There are 2
- easy ways to access the Service using port-forwarding:
+NAME                                          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+service/dm-service-deployment-jinja-service   NodePort    10.27.249.72   <none>        80:32028/TCP   3m
+service/kubernetes                            ClusterIP   10.27.240.1    <none>        443/TCP        27m
+```
 
-First, we can use `kubectl` and port-forward from one of the Kubernetes Pods (`${PORT}`)to our localhost (`:9999`). Assuming this is the only Service (and only Pod) deployed to this cluster:
+### Delete Kubernetes Resources
 
-    kubectl port-forward $(\
-      kubectl get pods --output=jsonpath="{.items[0].metadata.name}") \
-      9999:${PORT}
+```
+$ gcloud deployment-manager deployments delete dm-service -q
+Delete operation operation-1550337146155-58205fee0f097-edbb49e0-f337e0df completed successfully.
 
-You may then:
+$ kubectl get deployments
+No resources found.
+```
 
-    curl localhost:9999
+### Delete Cluster
 
-Second, we can use `gcloud compute ssh` to port-forward from one of the Kubernetes Nodes using the Service's `NodePort` to our localhost (`:9999`):
+```
+$ gcloud deployment-manager deployments delete ${NAME} -q
+```
 
-Let's grab one of our cluster's nodes at random:
+## GCP permissions
 
-    NODES=$(kubectl get nodes --output=name | sed 's|node/||g')
-    NODE_HOST=$(shuf -n1 -e ${NODES})
+The default service account `Deployment Manager` runs as is `projectNumber-compute@developer.gserviceaccount.com` with has `Editor` permissions on the project.
+If you manage certain resource types (`ClusterRole`, etc), you will need to grant additional IAM permissions.  Specifically, add
 
-Let's determine the `NodePort` of our Service; it is exposed on every Node:
+ - `roles/container.admin (Kubernetes Engine Admin)`
 
-    NODE_PORT=$(\
-      kubectl get services \
-      --selector=id=deployment-manager \
-      --output=jsonpath="{.items[0].spec.ports[0].nodePort}")
-    echo "From another session, browse or curl http://localhost:${NODE_PORT}"
+to  the service account.
 
-    gcloud compute ssh ${NODE_HOST} --ssh-flag="-L ${NODE_PORT}:localhost:${NODE_PORT}"
+## Deploying other types
 
-From a second session, you may then browse or:
+If you want to deploy any other k8s artifact, create a collection reference and apply the [k8s API specifications](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json) for that resource.
 
-    curl localhost:${NODE_PORT}
+For example, for `CustomResourceDefinitions`,
 
-## Important Note
+```
+$ gcloud deployment-manager deployments create my-crd --template crd.jinja --properties clusterType:${CLUSTER_NAME}-provider
+NAME                  TYPE                                                                                                               STATE      ERRORS  INTENT
+my-crd-crd-jinja-crd  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/{name}  COMPLETED  []
 
-When deploying into a Kubernetes cluster with Deployment Manager, it is
-important to be aware that deleting `Deployment` Kubernetes objects
-**does not delete the underlying pods**, and it is your responsibility to
-manage the destruction of these resources when deleting a
-`Deployment` in your configuration.
+$ kubectl get crd
+NAME                                    AGE
+backendconfigs.cloud.google.com         6m
+crontabs.stable.example.com             19s
+scalingpolicies.scalingpolicy.kope.io   6m
+
+$ gcloud deployment-manager deployments delete my-crd -q
+
+$ kubectl get crd
+NAME                                    AGE
+backendconfigs.cloud.google.com         7m
+scalingpolicies.scalingpolicy.kope.io   7m
+```

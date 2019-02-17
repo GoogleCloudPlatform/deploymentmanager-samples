@@ -16,8 +16,9 @@ imports:
 - path: cluster.py
 
 resources:
-- name: my-cluster
-  type: cluster.py
+- name: dm-1
+  type: cluster.jinja
   properties:
-    zone: ZONE_TO_RUN
+    clusterName: dm-gke-cluster-1
+    zone: us-central1-a
 

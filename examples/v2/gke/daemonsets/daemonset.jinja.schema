@@ -13,15 +13,15 @@
 # limitations under the License.
 
 required:
-- clusterName
+- clusterType
 - key
 - image
 - containerPort
 
 properties:
-  clusterName:
+  clusterType:
     type: string
-    description: Cluster name. Requires that the type "<cluster>-extensions-v1beta1" exists.
+    description: Type for cluster to deploy into.
   key:
     type: string
     description: API (or License) key.

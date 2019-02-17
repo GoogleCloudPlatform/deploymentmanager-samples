@@ -44,8 +44,7 @@ be modifed as per your changes.
 
 To deploy the my-agent, run the following command:
 
-    gcloud deployment-manager deployments create my-agent --config
-    daemonset.yaml
+    gcloud deployment-manager deployments create my-agent --config daemonset.yaml
 
 
 Note that your new deployment is named my-agent.

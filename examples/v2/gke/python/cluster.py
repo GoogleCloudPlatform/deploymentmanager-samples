@@ -17,23 +17,16 @@
 def GenerateConfig(context):
   """Generate YAML resource configuration."""
 
-  name_prefix = context.env['deployment'] + '-' + context.env['name']
-  cluster_name = name_prefix
-  type_name = name_prefix + '-type'
-  k8s_endpoints = {
-      '': 'api/v1',
-      '-apps': 'apis/apps/v1beta1',
-      '-v1beta1-extensions': 'apis/extensions/v1beta1'
-  }
+  clusterName = context.properties['clusterName']
 
   resources = [
       {
-          'name': cluster_name,
+          'name': clusterName,
           'type': 'container.v1.cluster',
           'properties': {
               'zone': context.properties['zone'],
               'cluster': {
-                  'name': cluster_name,
+                  'name': clusterName,
                   'initialNodeCount': context.properties['initialNodeCount'],
                   'nodeConfig': {
                       'oauthScopes': [
@@ -51,9 +44,8 @@ def GenerateConfig(context):
       }
   ]
   outputs = []
-  for type_suffix, endpoint in k8s_endpoints.iteritems():
-    resources.append({
-        'name': type_name + type_suffix,
+  resources.append({
+        'name': clusterName + '-provider',
         'type': 'deploymentmanager.v2beta.typeProvider',
         'properties': {
             'options': {
@@ -64,25 +56,20 @@ def GenerateConfig(context):
                     # https://github.com/kubernetes/kubernetes/issues/2971
                     'schemaValidation': 'IGNORE_WITH_WARNINGS'
                 },
-                # According to kubernetes spec, the path parameter 'name'
-                # should be the value inside the metadata field
-                # https://github.com/kubernetes/community/blob/master
-                # /contributors/devel/api-conventions.md
-                # This mapping specifies that
+                # According to kubernetes spec, the path parameter 'name' and 'namespace'
+                # *must* be set inside the metadata field.
+                # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
+                # The input mappings will map the values to path parameters
                 'inputMappings': [{
                     'fieldName': 'name',
                     'location': 'PATH',
-                    'methodMatch': '^(GET|DELETE|PUT)$',
-                    'value': '$.ifNull('
-                             '$.resource.properties.metadata.name, '
-                             '$.resource.name)'
+                    'methodMatch': '^(get|delete|put|patch|post)$',
+                    'value': '$.resource.properties.metadata.name'
                 }, {
-                    'fieldName': 'metadata.name',
-                    'location': 'BODY',
-                    'methodMatch': '^(PUT|POST)$',
-                    'value': '$.ifNull('
-                             '$.resource.properties.metadata.name, '
-                             '$.resource.name)'
+                    'fieldName': 'namespace',
+                    'location': 'PATH',
+                    'methodMatch': '^(get|delete|put|patch|post)$',
+                    'value': '$.resource.properties.metadata.namespace'
                 }, {
                     'fieldName': 'Authorization',
                     'location': 'HEADER',
@@ -90,16 +77,12 @@ def GenerateConfig(context):
                              '$.googleOauth2AccessToken())'
                 }]
             },
-            'descriptorUrl':
-                ''.join([
-                    'https://$(ref.', cluster_name, '.endpoint)/swaggerapi/',
-                    endpoint
-                ])
+            'descriptorUrl': 'https://$(ref.' + clusterName + '.endpoint)/openapi/v2'
         }
     })
-    outputs.append({
-        'name': 'clusterType' + type_suffix,
-        'value': type_name + type_suffix
-    })
+  outputs.append({
+        'name': 'clusterType',
+        'value': clusterName + '-provider'
+  })
 
   return {'resources': resources, 'outputs': outputs}

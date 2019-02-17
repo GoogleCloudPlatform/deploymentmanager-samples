@@ -13,31 +13,13 @@
 # limitations under the License.
 
 info:
-  title: GKE cluster
+  description: A simple CustomResourceDefinition in a Kubernetes cluster.
   author: Google, Inc.
-  description: |
-    Creates a GKE cluster and associated type for use in DM. The type can be
-    used in other DM configurations in the following manner:
-
-    "type: {NAME}-{clusterName}-provider"
 
 required:
-- zone
-- clusterName
+- clusterType
 
 properties:
-  zone:
-    type: string
-    description: Zone in which the cluster should run.
-  initialNodeCount:
-    type: integer
-    description: Initial number of nodes desired in the cluster.
-    default: 3
-  clusterName:
-    type: string
-    description: Name of the GKE Cluster to create.
-
-outputs:
   clusterType:
-    description: The name of the type provider which can create resources from the Kubernetes v1 API in your cluster.
     type: string
+    description: Type for cluster to deploy into.

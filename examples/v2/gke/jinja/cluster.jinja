@@ -12,18 +12,13 @@ limitations under the License.
 #}
 
 
-{% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
-{% set CLUSTER_NAME = NAME_PREFIX %}
-{% set TYPE_NAME = NAME_PREFIX + '-type' %}
-{% set K8S_ENDPOINTS = {'': 'api/v1', '-apps': 'apis/apps/v1beta1', '-v1beta1-extensions': 'apis/extensions/v1beta1'} %}
-
 resources:
-- name: {{ CLUSTER_NAME }}
+- name: {{ properties['clusterName'] }}
   type: container.v1.cluster
   properties:
     zone: {{ properties['zone'] }}
     cluster:
-      name: {{ CLUSTER_NAME }}
+      name: {{ properties['clusterName'] }}
       initialNodeCount: {{ properties['initialNodeCount'] }}
       nodeConfig:
         oauthScopes:
@@ -31,8 +26,8 @@ resources:
         - https://www.googleapis.com/auth/devstorage.read_only
         - https://www.googleapis.com/auth/logging.write
         - https://www.googleapis.com/auth/monitoring
-{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
-- name: {{ TYPE_NAME }}{{ typeSuffix }}
+
+- name: {{ properties['clusterName'] }}-provider
   type: deploymentmanager.v2beta.typeProvider
   properties:
     options:
@@ -42,29 +37,25 @@ resources:
         # Deployment Manager.
         # https://github.com/kubernetes/kubernetes/issues/2971
         schemaValidation: IGNORE_WITH_WARNINGS
-      # According to kubernetes spec, the path parameter 'name'
-      # should be the value inside the metadata field
-      # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md
-      # This mapping specifies that
+      # According to kubernetes spec, the path parameter 'name' and 'namespace`
+      # *must* be set inside the metadata field.
+      # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
+      # The input mappings will map the values to path parameters
       inputMappings:
       - fieldName: name
         location: PATH
-        methodMatch: ^(GET|DELETE|PUT)$
-        value: $.ifNull($.resource.properties.metadata.name, $.resource.name)
-      - fieldName: metadata.name
-        location: BODY
-        methodMatch: ^(PUT|POST)$
-        value: $.ifNull($.resource.properties.metadata.name, $.resource.name)
+        methodMatch: ^(get|delete|put|patch|post)$
+        value: $.resource.properties.metadata.name
+      - fieldName: namespace
+        location: PATH
+        methodMatch: ^(get|delete|put|patch|post)$
+        value: $.resource.properties.metadata.namespace   
       - fieldName: Authorization
         location: HEADER
         value: >
           $.concat("Bearer ", $.googleOauth2AccessToken())
-    descriptorUrl: https://$(ref.{{ CLUSTER_NAME }}.endpoint)/swaggerapi/{{ endpoint }}
-{% endfor %}
+    descriptorUrl: https://$(ref.{{ properties['clusterName'] }}.endpoint)/openapi/v2
 
 outputs:
-{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
-- name: clusterType{{ typeSuffix }}
-  value: {{ TYPE_NAME }}{{ typeSuffix }}
-{% endfor %}
-
+- name: clusterType
+  value: {{ properties['clusterName'] }}-provider

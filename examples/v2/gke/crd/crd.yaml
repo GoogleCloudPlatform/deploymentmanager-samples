@@ -1,0 +1,8 @@
+imports:
+- path: crd.jinja
+
+resources:
+- name: my-crd
+  type: crd.jinja
+  properties:
+    clusterType: dm-gke-cluster-1-provider

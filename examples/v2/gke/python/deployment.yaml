@@ -17,7 +17,8 @@ imports:
 
 resources:
 - name: my-service
-  type: deployment.py
+  type: deployment.jinja
   properties:
-    clusterType: <cluster-type>
-    image: gcr.io/deployment-manager-examples/nodejsservicestatic
+    clusterType: dm-gke-cluster-1-provider
+    image: nginx
+    port: 80

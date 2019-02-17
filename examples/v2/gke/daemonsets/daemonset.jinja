@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
+{% set DAEMONSETS_COLLECTION = '/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets/{name}' %}
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
-{% set CLUSTER_TYPE = env['project'] + '/cluster-' + properties['clusterName'] + '-type-v1beta1-extensions' %}
-{% set DAEMONSETS_COLLECTION = '/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets' %}
 
 resources:
-- name: {{ NAME_PREFIX }}-ds
-  type: "{{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}"
-  properties:
-    namespace: default
+- name: {{ NAME_PREFIX }}-daemonset
+  type: {{ CLUSTER_TYPE }}:{{ DAEMONSETS_COLLECTION }}
+  properties:    
     apiVersion: extensions/v1beta1
     kind: DaemonSet
     metadata:
-      name: {{ NAME_PREFIX }}
+      name: {{ NAME_PREFIX }}-daemonset
+      namespace: default
       labels:
-        app: {{ NAME_PREFIX }}
+        app: {{ NAME_PREFIX }}-daemonset
     spec:
       template:
         metadata:

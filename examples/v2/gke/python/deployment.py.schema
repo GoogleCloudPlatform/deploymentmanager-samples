@@ -26,7 +26,8 @@ properties:
   image:
     type: string
     description: Docker image to run.
+    default: nginx
   port:
     type: integer
     description: Port on which service runs.
-    default: 8080
+    default: 80

@@ -1,0 +1,26 @@
+{% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
+{% set CRD_COLLECTION =  '/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/{name}' %}
+{% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
+
+resources:
+- name: {{ NAME_PREFIX }}-crd
+  type: {{ CLUSTER_TYPE }}:{{ CRD_COLLECTION }}
+  properties:
+    apiVersion: apiextensions.k8s.io/v1beta1
+    kind: CustomResourceDefinition
+    metadata:
+      name: crontabs.stable.example.com
+      namespace: default
+    spec:
+      group: stable.example.com
+      versions:
+        - name: v1
+          served: true
+          storage: true
+      scope: Namespaced
+      names:
+        plural: crontabs
+        singular: crontab
+        kind: CronTab
+        shortNames:
+        - ct

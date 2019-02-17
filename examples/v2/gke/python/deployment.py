@@ -26,13 +26,12 @@ def GenerateConfig(context):
       'Service': ''.join([
           cluster_types_root,
           ':',
-          '/api/v1/namespaces/{namespace}/services'
+          '/api/v1/namespaces/{namespace}/services/{name}'
           ]),
       'Deployment': ''.join([
           cluster_types_root,
-          '-apps',
           ':',
-          '/apis/apps/v1beta1/namespaces/{namespace}/deployments'
+          '/apis/extensions/v1beta1/namespaces/{namespace}/deployments/{name}'
           ])
   }
 
@@ -40,39 +39,17 @@ def GenerateConfig(context):
   port = context.properties['port']
 
   resources = [{
-      'name': name_prefix + '-service',
-      'type': cluster_types['Service'],
-      'properties': {
-          'apiVersion': 'v1',
-          'kind': 'Service',
-          'namespace': 'default',
-          'metadata': {
-              'name': name_prefix + '-service',
-              'labels': {
-                  'id': 'deployment-manager'
-              }
-          },
-          'spec': {
-              'type': 'NodePort',
-              'ports': [{
-                  'port': port,
-                  'targetPort': port,
-                  'protocol': 'TCP'
-              }],
-              'selector': {
-                  'app': name_prefix
-              }
-          }
-      }
-  }, {
       'name': name_prefix + '-deployment',
       'type': cluster_types['Deployment'],
       'properties': {
-          'apiVersion': 'apps/v1beta1',
+          'apiVersion': 'extensions/v1beta1',
           'kind': 'Deployment',
-          'namespace': 'default',
           'metadata': {
-              'name': name_prefix + '-deployment'
+              'name': name_prefix + '-deployment',
+              'namespace': 'default',
+              'labels': {
+                  'id': 'deployment-manager'
+              }
           },
           'spec': {
               'replicas': 1,
@@ -92,6 +69,31 @@ def GenerateConfig(context):
                           }]
                       }]
                   }
+              }
+          }
+      }
+  }, {
+      'name': name_prefix + '-service',
+      'type': cluster_types['Service'],
+      'properties': {
+          'apiVersion': 'v1',
+          'kind': 'Service',
+          'metadata': {
+              'name': name_prefix + '-service',
+              'namespace': 'default',
+              'labels': {
+                  'id': 'deployment-manager'
+              }
+          },
+          'spec': {
+              'type': 'NodePort',
+              'ports': [{
+                 'port': port,
+                 'targetPort': port,
+                 'protocol': 'TCP'
+              }],
+              'selector':{
+                'app': name_prefix
               }
           }
       }
