@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START cluster_yaml]
 imports:
 - path: pbs.jinja
@@ -22,14 +23,15 @@ resources:
   type:   pbs.jinja
   properties:
     cluster_name            : google
-    static_node_count    : 4
+    static_node_count    : 2
     region                       : us-central1
     zone                         : us-central1-a
 
     controller_machine_type : n1-standard-2
+    controller_disk_size_gb : 1000
     compute_machine_type  : n1-standard-2
     pbs_version              : 18.1.2
 
     compute_public_ips  : true
-    prefix                  : cluster27-
+    prefix                  : cluster36-
 #  [END cluster_yaml]
