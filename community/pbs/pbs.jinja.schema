@@ -13,10 +13,10 @@
 # limitations under the License.
 
 info:
-  title: A template for creating a PPS cluster.
+  title: A template for creating a PBS cluster.
   author: SchedMD LLC, Gene Leybzon
   description: |
-    Create a PPS cluster in GCP.
+    Create a PBS cluster in GCP.
 
 imports:
 - path: scripts/startup-script.py
