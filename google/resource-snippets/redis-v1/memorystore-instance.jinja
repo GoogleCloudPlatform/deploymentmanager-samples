@@ -11,11 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-imports:
-- path: memorystore-instance.jinja
 
 resources:
-- name: redis-test
-  type: memorystore-instance.jinja
+- name: {{ env["deployment"] }}-redis
+  type: gcp-types/redis-v1:projects.locations.instances
   properties:
-    region: us-west1
+    parent: projects/{{ env["project"] }}/locations/{{ properties["region"] }}
+    instanceId: redis-test
+    authorizedNetwork: projects/{{ env["project"] }}/global/networks/default
+    memorySizeGb: 10
+    tier: BASIC
+    displayName: Perritos Bonitos
