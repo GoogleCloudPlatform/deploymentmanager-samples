@@ -1,0 +1,219 @@
+{# Copyright 2018 Google Inc. All rights reserved.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+#}
+
+
+{% if properties['existing_network'] %}
+  {% set network_reference = 'https://www.googleapis.com/compute/v1/projects/' ~  properties['vpc_hosting_project'] ~ '/global/networks/' ~ properties["network"]  %}
+  {% set subnet_reference = 'projects/' ~  properties['vpc_hosting_project'] ~ '/regions/' ~  properties['region'] ~ '/subnetworks/'~ properties["subnet"]  %}
+{% else %}
+  {% set network_reference = '$(ref.' ~ properties['prefix'] ~ 'pbs-network.selfLink)'  %}
+{% endif %}
+
+
+{% if properties['controller_image'] is defined %}
+  {% set controller_image_ref  =  'https://www.googleapis.com/compute/v1/projects/' ~ properties['controller_image'] %}
+{% else %}
+  {% set controller_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
+{% endif %}
+
+{% if properties['compute_image'] is defined %}
+  {% set compute_image_ref  =  'https://www.googleapis.com/compute/v1/projects/' ~ properties['compute_image'] %}
+{% else %}
+  {% set compute_image_ref = 'https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7'  %}
+{% endif %}
+
+{% if properties["cidr"] is defined %}
+  {% set cidr = properties["cidr"] %}
+{% else %}
+  {% set cidr = "10.10.0.0/16" %}
+{% endif %}
+
+
+resources:
+{% if not properties['existing_network'] %}
+- name: {{ properties['prefix'] }}pbs-network
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+{% endif %}
+
+{% if not properties['existing_network'] %}
+- name: {{ properties['prefix'] }}pbs-subnet
+  type: compute.v1.subnetwork
+  properties:
+    network:  {{ network_reference }}
+    ipCidrRange: {{ cidr }}
+    region: {{ properties["region"] }}
+    privateIpGoogleAccess: true
+
+- name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
+  type: compute.v1.firewall
+  properties:
+    network:  {{ network_reference }}
+    sourceRanges: ["0.0.0.0/0"]
+    allowed:
+    - IPProtocol: TCP
+      ports: ["22"]
+    - IPProtocol: ICMP
+
+- name: {{ properties['prefix'] }}pbs-all-internal-firewall-rule
+  type: compute.v1.firewall
+  properties:
+    network:  {{ network_reference }}
+    sourceRanges: [{{ cidr }}]
+    allowed:
+    - IPProtocol: TCP
+      ports: ["0-65535"]
+    - IPProtocol: UDP
+      ports: ["0-65535"]
+    - IPProtocol: ICMP
+{% endif %}
+
+{% if not properties['compute_public_ips'] and not properties['existing_network'] %}
+- name: {{properties["prefix"]}}router
+  type: compute.beta.router
+  properties:
+    network:  {{ network_reference }}
+    region: {{ properties["region"] }}
+    nats:
+    - name: {{properties["prefix"]}}nat
+      natIpAllocateOption: "AUTO_ONLY"
+      sourceSubnetworkIpRangesToNat: "LIST_OF_SUBNETWORKS"
+      subnetworks:
+ {% if properties['subnet'] %}
+      - name: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["subnet"] }}
+  {% else %}
+      - name: $(ref.{{properties["prefix"]}}pbs-subnet.selfLink)
+  {% endif %}
+{% endif %}
+
+- name: {{ properties['prefix'] }}controller
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/{{ properties["controller_machine_type"] }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: {{ controller_image_ref }}
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["controller_disk_type"] }}
+        diskSizeGb: {{ properties["controller_disk_size_gb"] }}
+{% if not properties['compute_public_ips'] %}
+    canIpForward: true
+{% endif %}
+
+    networkInterfaces:
+{% if not properties['existing_network'] %}
+    - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+{% else %}
+    - subnetwork: {{ subnet_reference }}
+{% endif %}
+{% if properties['compute_public_ips'] %}
+      accessConfigs:
+      - name: {{ properties['prefix'] }}External NAT
+        type: ONE_TO_ONE_NAT
+{% endif %}
+      serviceAccounts:
+      - email: {{ properties['service_account'] }}
+        scopes:
+        - "https://www.googleapis.com/auth/logging.write"
+        - "https://www.googleapis.com/auth/compute"
+        - "https://www.googleapis.com/auth/servicecontrol"
+        - "https://www.googleapis.com/auth/service.management.readonly"
+        - "https://www.googleapis.com/auth/monitoring.write"
+        - "https://www.googleapis.com/auth/trace.append"
+        - "https://www.googleapis.com/auth/devstorage.read_only"
+    tags:
+      items:
+        - controller
+{% if properties['controller_image'] is not defined %}
+    metadata:
+      items:
+        - key: startup-script
+          value: |
+            {{ imports["scripts/startup-script.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@INSTANCE_TYPE@","controller")|replace("@MUNGE_KEY@",properties["munge_key"])|replace("@PBS_VERSION@",properties["pbs_version"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|replace("@CLUSTER_NAME@",properties["cluster_name"])|
+replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@INSTANCE_TYPE@","compute")|replace("@MUNGE_KEY@",properties["munge_key"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|replace("@CLUSTER_NAME@",properties["cluster_name"])|
+replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
+replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
+replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
+{% endif %}
+
+
+{% for n in range(properties['static_node_count']) %}
+- name: {{ properties['prefix'] }}compute{{ n + 1 }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/{{ properties["compute_machine_type"] }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: {{ compute_image_ref }}
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["compute_disk_type"] }}
+        diskSizeGb: {{ properties["compute_disk_size_gb"] }}
+    networkInterfaces:
+{% if not properties['existing_network'] %}
+    - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+{% else %}
+    - subnetwork: {{ subnet_reference }}
+{% endif %}
+
+{% if properties['compute_public_ips'] %}
+      accessConfigs:
+      - name: {{ properties['prefix'] }}External NAT
+        type: ONE_TO_ONE_NAT
+{% endif %}
+    serviceAccounts:
+      - email: {{ properties['service_account'] }}
+        scopes:
+        - "https://www.googleapis.com/auth/logging.write"
+        - "https://www.googleapis.com/auth/compute"
+    tags:
+      items:
+        - compute
+{% if properties['compute_image'] is not defined %}
+    metadata:
+      items:
+        - key: startup-script
+          value: |
+            {{ imports["scripts/startup-script.py"]|indent(12)|replace("@PROJECT@",env["project"])|replace("@ZONE@",properties["zone"])|replace("@INSTANCE_TYPE@","compute")|replace("@MUNGE_KEY@",properties["munge_key"])|replace("@PBS_VERSION@",properties["pbs_version"])|replace("@MACHINE_TYPE@",properties["compute_machine_type"])|
+replace("@INSTANCE_NAME_PREFIX@",properties["prefix"])|
+replace("@STATIC_NODE_COUNT@",properties["static_node_count"])|
+replace("@COMPUTE_PUBLIC_IPS@",properties["compute_public_ips"]) }}
+{% endif %}
+{% endfor %}
+
+{% if not properties['compute_public_ips'] and not properties['existing_network'] %}
+- name: {{ properties['prefix'] }}bastion
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - subnetwork: $(ref.{{ properties['prefix'] }}pbs-subnet.selfLink)
+      accessConfigs:
+      - name: {{ properties['prefix'] }}External NAT
+        type: ONE_TO_ONE_NAT
+{% endif %}
