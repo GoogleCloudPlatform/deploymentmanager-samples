@@ -26,7 +26,7 @@ CLUSTER_NAME="dm-gke-cluster-1"
 ZONE="us-central1-a"
 ```
 -  jinja:
-```
+```bash
     gcloud deployment-manager deployments create ${NAME} \
     --template cluster.jinja \
     --properties clusterName:${CLUSTER_NAME},zone:${ZONE}
@@ -35,7 +35,7 @@ ZONE="us-central1-a"
 or
 
 - python:
-```
+```bash
     gcloud deployment-manager deployments create ${NAME} \
     --template cluster.py \
     --properties clusterName:${CLUSTER_NAME},zone:${ZONE}
@@ -58,7 +58,7 @@ clusterType  dm-gke-cluster-1-provider
 The default `yaml` configuration file has the `Name`,`CLUSTER_NAME`, and `ZONE` predefined with 
 the settings above so as a quickstart, you can just run:
 
-```
+```bash
  gcloud deployment-manager deployments create ${NAME} --config cluster.yaml
 ```
 
@@ -92,13 +92,21 @@ or with `python`:
 
 ```bash
 $ gcloud deployment-manager deployments create dm-service \
-    --template deployment.py \
+    --template deployment.apiVersion: "stable.example.com/v1" 
+kind: CronTab 
+metadata:
+  name: my-new-cron-object 
+  finalizers: 
+  - finalizer.stable.example.com
+spec: 
+  cronSpec: "* * * * /5"
+  image: my-awesome-cron-imagepy \
     --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
 ```
 
 As above, you can use the defaults for defined in `deployment.yaml` if you used the defaults `yaml` during cluster creation
 
-```
+```bash
    gcloud deployment-manager deployments create dm-service --config deployment.yaml 
 ```
 
@@ -124,7 +132,7 @@ service/kubernetes                            ClusterIP   10.27.240.1    <none> 
 
 ### Delete Kubernetes Resources
 
-```
+```bash
 $ gcloud deployment-manager deployments delete dm-service -q
 Delete operation operation-1550337146155-58205fee0f097-edbb49e0-f337e0df completed successfully.
 
@@ -134,7 +142,7 @@ No resources found.
 
 ### Delete Cluster
 
-```
+```bash
 $ gcloud deployment-manager deployments delete ${NAME} -q
 ```
 
@@ -151,9 +159,9 @@ to  the service account.
 
 If you want to deploy any other k8s artifact, create a collection reference and apply the [k8s API specifications](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json) for that resource.
 
-For example, for `CustomResourceDefinitions`,
+For example, to _define_  `CustomResourceDefinitions`,
 
-```
+```bash
 $ gcloud deployment-manager deployments create my-crd --template crd.jinja --properties clusterType:${CLUSTER_NAME}-provider
 NAME                  TYPE                                                                                                               STATE      ERRORS  INTENT
 my-crd-crd-jinja-crd  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/{name}  COMPLETED  []
@@ -171,3 +179,5 @@ NAME                                    AGE
 backendconfigs.cloud.google.com         7m
 scalingpolicies.scalingpolicy.kope.io   7m
 ```
+
+>> **However**, kubernetes currently (2/19/19) does not update the `/openapi/v2` endpoint with the CRDs that get defined (see limitations of CRDs defined [here](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#advanced-features-and-flexibility)).  The implication of not having an updated swagger definition of CRDs is that Deployment Manager cannot create a CRD _instance_  (DM can define the CRD but not the instance).  You can define instances by any other means (eg, `kubectl`, k8s API, etc)
