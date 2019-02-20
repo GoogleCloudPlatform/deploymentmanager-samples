@@ -92,16 +92,7 @@ or with `python`:
 
 ```bash
 $ gcloud deployment-manager deployments create dm-service \
-    --template deployment.apiVersion: "stable.example.com/v1" 
-kind: CronTab 
-metadata:
-  name: my-new-cron-object 
-  finalizers: 
-  - finalizer.stable.example.com
-spec: 
-  cronSpec: "* * * * /5"
-  image: my-awesome-cron-imagepy \
-    --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
+    --template deployment.apiVersion: "stable.example.com/v1"
 ```
 
 As above, you can use the defaults for defined in `deployment.yaml` if you used the defaults `yaml` during cluster creation
@@ -181,3 +172,4 @@ scalingpolicies.scalingpolicy.kope.io   7m
 ```
 
 >> **However**, kubernetes currently (2/19/19) does not update the `/openapi/v2` endpoint with the CRDs that get defined (see limitations of CRDs defined [here](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#advanced-features-and-flexibility)).  The implication of not having an updated swagger definition of CRDs is that Deployment Manager cannot create a CRD _instance_  (DM can define the CRD but not the instance).  You can define instances by any other means (eg, `kubectl`, k8s API, etc)
+Please see [design doc](https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/00xx-publish-crd-openapi.md) and [PR](https://github.com/kubernetes/kubernetes/pull/71192) to dynamically add CRDs to `/openapi/v2`.
