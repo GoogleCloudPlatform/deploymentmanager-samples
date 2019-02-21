@@ -1,5 +1,4 @@
 # Test of the healthcheck template.
-#
 
 imports:
 - path: templates/healthcheck/healthcheck.py

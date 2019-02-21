@@ -1,5 +1,4 @@
 # Example of the healthcheck template usage.
-#
 
 imports:
 - path: templates/healthcheck/healthcheck.py

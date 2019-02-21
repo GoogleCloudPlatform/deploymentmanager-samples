@@ -7,8 +7,6 @@
 imports:
 - path: templates/ip_reservation/ip_reservation.py
   name: ip_reservation.py
-- path: templates/ip_reservation/ip_address.py
-  name: ip_address.py
 
 resources:
 - name: allmyips-${RAND}
@@ -24,7 +22,7 @@ resources:
         description: 'my us-central1 static external ip'
       - name: test-myinternal-${RAND}
         ipType: INTERNAL
-        ipAddress: 10.100.0.111
-        subnet: projects/${CLOUD_FOUNDATION_PROJECT_ID}/regions/us-central1/subnetworks/subnet-${RAND}
+        address: 10.100.0.111
+        subnetwork: projects/${CLOUD_FOUNDATION_PROJECT_ID}/regions/us-central1/subnetworks/subnet-${RAND}
         region: us-central1
         description: 'my us-central1 internal ip'

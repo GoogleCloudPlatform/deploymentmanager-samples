@@ -7,7 +7,10 @@ This template:
 3. Sets IAM permissions in the new project
 4. Turns on a set of APIs in the new project
 5. Creates service accounts for the new project
-6. Creates an usage export Cloud Storage bucket for the new projec
+6. Creates an usage export Cloud Storage bucket for the new project
+7. Removed default networks, firewalls
+8. Removes default Service Account
+9. Creates VPC host or attached VPC service project
 
 ## Prerequisites
 
@@ -55,6 +58,8 @@ Following are the prerequisites for creating a project via Deployment Manager. Y
 7.  Create/find the *Billing Account* associated with the Organization. See: https://cloud.google.com/support/billing/. Take note of the *Billing Account*'s ID, which is formatted as follows:`00E12A-0AB8B2-078CE8`.
 
 8.  Give the *DM Service Account* the following permissions on the *Billing Account*: `roles/billing.user`. This is visible in Cloud Console's IAM permissions in *Billing -> Billing Account User*.
+
+9.  If the project is a VPC host project, give the *DM Service Account* the following permissions: `roles/compute.xpnAdmin`.
 
 ## Deployment
 

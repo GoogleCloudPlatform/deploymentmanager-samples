@@ -49,15 +49,32 @@ def get_network(properties):
     """
 
     network_name = properties.get('network')
-    return {
-        'network': 'global/networks/{}'.format(network_name),
-        'accessConfigs': [
-            {
-                'name': 'External NAT',
-                'type': 'ONE_TO_ONE_NAT'
-            }
-        ]
+
+    if not '.' in network_name and not '/' in network_name:
+        network_name = 'global/networks/{}'.format(network_name)
+
+    network_interfaces = {
+        'network': network_name,
     }
+
+    if properties['hasExternalIp']:
+        access_configs = {
+            'name': 'External NAT',
+            'type': 'ONE_TO_ONE_NAT'
+        }
+
+        if 'natIP' in properties:
+            access_configs['natIP'] = properties['natIP']
+
+        network_interfaces['accessConfigs'] = [access_configs]
+
+    netif_optional_props = ['subnetwork', 'networkIP']
+    for prop in netif_optional_props:
+        if prop in properties:
+            network_interfaces[prop] = properties[prop]
+
+    return network_interfaces
+
 
 def generate_config(context):
     """ Entry point for the deployment resources. """
@@ -80,27 +97,30 @@ def generate_config(context):
         }
     }
 
-    for name in ['metadata', 'serviceAccounts', 'canIpForward']:
+    for name in ['metadata', 'serviceAccounts', 'canIpForward', 'tags']:
         set_optional_property(instance['properties'], context.properties, name)
 
-    return {
-        'resources': [instance],
-        'outputs': [
-            {
-                'name': 'internalIp',
-                'value': '$(ref.{}.networkInterfaces[0].networkIP)'.format(vm_name) # pylint: disable=line-too-long
-            },
+    outputs = [
+        {
+            'name': 'internalIp',
+            'value': '$(ref.{}.networkInterfaces[0].networkIP)'.format(vm_name) # pylint: disable=line-too-long
+        },
+        {
+            'name': 'name',
+            'value': '$(ref.{}.name)'.format(vm_name)
+        },
+        {
+            'name': 'selfLink',
+            'value': '$(ref.{}.selfLink)'.format(vm_name)
+        }
+    ]
+
+    if context.properties['hasExternalIp']:
+        outputs.append(
             {
                 'name': 'externalIp',
                 'value': '$(ref.{}.networkInterfaces[0].accessConfigs[0].natIP)'.format(vm_name) # pylint: disable=line-too-long
-            },
-            {
-                'name': 'name',
-                'value': '$(ref.{}.name)'.format(vm_name)
-            },
-            {
-                'name': 'selfLink',
-                'value': '$(ref.{}.selfLink)'.format(vm_name)
             }
-        ]
-    }
+        )
+
+    return {'resources': [instance], 'outputs': outputs}

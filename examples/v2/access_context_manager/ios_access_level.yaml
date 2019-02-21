@@ -1,0 +1,8 @@
+imports:
+- path: ios_access_level.jinja
+
+resources:
+- name: access-levels-template
+  type: ios_access_level.jinja
+  properties:
+    level: level_name

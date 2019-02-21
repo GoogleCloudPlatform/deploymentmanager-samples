@@ -16,10 +16,9 @@ info:
   title: BigQuery Dataset
   author: Sourced Group Inc.
   description: |
-    Deploys a BigQuery Dataset.
-
-    For more information on this resource:
-    https://cloud.google.com/bigquery/docs/
+    Creates a BigQuery dataset.
+    For information on this resource:
+    https://cloud.google.com/bigquery/docs/.
 
 imports:
   - path: bigquery_dataset.py
@@ -30,13 +29,13 @@ required:
 properties:
   name:
     type: string
-    description: The name of the resource.
+    description: The resource name.
   location:
     type: string
     description: |
-      The geographic location where the dataset should reside.
+      The geographic location where the dataset resides.
       The default value is US. See details at
-      https://cloud.google.com/bigquery/docs/dataset-locations
+      https://cloud.google.com/bigquery/docs/dataset-locations.
     default: 'US'
     enum:
       - Asia
@@ -47,21 +46,21 @@ properties:
     description: |
       An array of objects that define dataset access for one or more
       entities. You can set this property when inserting or updating
-      a dataset in order to control who is allowed to access the data.
-      If unspecified at dataset creation time, BigQuery adds default
+      the dataset to control who is allowed to access the data. If not 
+      specified at the dataset creation time, BigQuery defines default
       dataset access for the following entities:
-        access.specialGroup: projectReaders; access.role: READER;
-        access.specialGroup: projectWriters; access.role: WRITER;
-        access.specialGroup: projectOwners; access.role: OWNER;
-        access.userByEmail: [dataset creator email]; access.role: OWNER;
+        access.specialGroup: projectReaders; access.role: READER
+        access.specialGroup: projectWriters; access.role: WRITER
+        access.specialGroup: projectOwners; access.role: OWNER
+        access.userByEmail: [dataset creator email]; access.role: OWNER
     items:
       role:
         type: string
         description: |
-          Describes the rights granted to the user specified by the other
+          The role (rights) granted to the user specified by the other
           member of the access object. The following string values are
-          supported: READER, WRITER, OWNER.
-          See details at https://cloud.google.com/bigquery/docs/access-control
+          supported: READER, WRITER, OWNER. See details at 
+          https://cloud.google.com/bigquery/docs/access-control.
         enum:
           - READER
           - WRITER
@@ -70,46 +69,45 @@ properties:
         - domain:
           type: string
           description: |
-            A domain to grant access to. Any users signed in with the domain
-            specified will be granted the specified access.
+            The domain to grant access to. All users signed in with the 
+            specified domain are granted the corresponding access.
             Example: "example.com".
         - userByEmail:
           type: string
           description: |
-            An email address of a user to grant access to. For example:
+            The email address of a user to grant access to. For example:
             fred@example.com.
         - groupByEmail:
           type: string
-          description: An email address of a Google Group to grant access to.
+          description: The email address of a Google Group to grant access to.
         - specialGroup:
           type: string
           description: |
-            A special group to grant access to.
-            Possible values include:
-              projectOwners: Owners of the enclosing project.
-              projectReaders: Readers of the enclosing project.
-              projectWriters: Writers of the enclosing project.
-              allAuthenticatedUsers: All authenticated BigQuery users.
+            The special group to grant access to. Possible values include:
+              projectOwners: owners of the enclosing project
+              projectReaders: readers of the enclosing project
+              projectWriters: writers of the enclosing project
+              allAuthenticatedUsers: all authenticated BigQuery users
         - view:
           type: object
           description: |
             A view from a different dataset to grant access to. Queries
-            executed against that view will have read access to tables in this
-            dataset. The role field is not required when this field is set. If
-            that view is updated by any user, access to the view needs to be
-            granted again via an update operation.
+            executed against that view have the Read access to tables in that
+            dataset. The Role value is not required when this field is set. If
+            the view is updated, access to that view must be granted again 
+            via an Update operation.
           properties:
             datasetId:
               type: string
-              description: The ID of the dataset containing this table.
+              description: The ID of the dataset containing the table.
             projectId:
               type: string
-              description: The ID fo the project containing this table.
+              description: The ID fo the project containing the table.
             tableId:
               type: string
               pattern: ^[0-9a-zA-Z][0-9a-zA-Z_]{4,1023}$
               description: |
-                The ID of the table. The ID must contain only letters
+                The table ID. The ID must contain only letters
                 (a-z, A-Z), numbers (0-9), or underscores (_). The maximum
                 length is 1,024 characters.
   description:
@@ -119,21 +117,21 @@ properties:
     type: boolean
     default: False
     description: |
-      A boolean flag if set indicating that the default project service
-      will be granted IAM owner permissions.
+      Defines whether the default project service is granted the IAM owner 
+      permissions.
   defaultTableExpirationMs:
     type: string
     format: int64
     description: |
       The default lifetime of all tables in the dataset, in milliseconds. The
       minimum value is 3600000 milliseconds (one hour). Once this property is
-      set, all newly-created tables in the dataset will have an expirationTime
-      property set to the creation time plus the value in this property, and
-      changing the value will only affect new tables, not existing ones. When
-      the expirationTime for a given table is reached, that table will be
-      deleted automatically. If a table's expirationTime is modified or
+      set, all newly-created tables in the dataset get their expirationTime
+      property set to the creation time plus the value of this property. 
+      Changes to the value affect only new tables, not the existing ones. When
+      expirationTime for a given table is reached, that table is deleted 
+      automatically. If a table's expirationTime is modified or
       removed before the table expires, or if you provide an explicit
-      expirationTime when creating a table, that value takes precedence over
+      expirationTime while creating the table, that value takes precedence over
       the default expiration time indicated by this property.
     minimum: 3600000
 
@@ -144,18 +142,18 @@ outputs:
         description: The URI of the created resource.
     - etag:
         type: string
-        description: A has of the resource.
+        description: The hash of the resource.
     - creationTime:
         type: string
         description: |
-          The time when this dataset was created, in milliseconds since
-          epoch. For example, 1535739430
+          The time when the dataset was created, in milliseconds since
+          epoch. For example, 1535739430.
     - lastModifiedTime:
         type: string
         description: |
-          The time when this dataset or any of its tables was last
+          The time when the dataset or any of its tables was last
           modified, in milliseconds since the epoch. For example,
-          1535739430
+          1535739430.
 
 documentation:
   - templates/bigquery/README.md

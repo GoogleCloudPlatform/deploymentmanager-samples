@@ -1,0 +1,12 @@
+resources:
+{% for role in properties["roles"] %}
+{% for serviceAccount in properties["serviceAccounts"] %}
+- name: project-{{ role }}-{{ serviceAccount }}
+  type: gcp-types/cloudresourcemanager-v1:virtual.projects.iamMemberBinding
+  properties:
+    resource: {{ env["project"] }}
+    member: serviceAccount:{{ serviceAccount }}@isolated-project.iam.gserviceaccount.com
+    role: {{ role }}
+{% endfor %}
+{% endfor %}
+
