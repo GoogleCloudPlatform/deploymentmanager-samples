@@ -322,6 +322,8 @@ of PBS on the shared VPC network:
     -   Cloud router: create new accepting the defaults for network and region
 
     -   NAT mapping section: accept all defaults
+	
+	For the convinience of deploying network resources on the shared VPC, a separate GCP [deployment script](host-network/) can be used. 
 
 -   [VPC Firewall](https://cloud.google.com/vpc/docs/firewalls) should be
     configured to enable port 22 ingress access in order to connect to the
