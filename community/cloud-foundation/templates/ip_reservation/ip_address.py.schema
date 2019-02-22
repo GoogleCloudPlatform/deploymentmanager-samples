@@ -43,14 +43,14 @@ properties:
     type: string
     description: |
       Descriptive information for the reserved IP.
-  ipAddress:
+  address:
     type: string
     description: |
       [OPTIONAL] If the field value (IP address) is provided, Deployment
       Manager tries to reserve the specified IP address. If the field is
       not set, Deployment Manager reserves an internal IP address that
       is part of the subnet definition.
-  subnet:
+  subnetwork:
     type: string
     description: |
       [REQUIRED FOR INTERNAL ADDRESSES] The subnet from whose range the

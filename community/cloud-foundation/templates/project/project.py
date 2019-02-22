@@ -21,8 +21,8 @@ import copy
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    project_id = context.env['name']
-    project_name = context.properties.get('name', project_id)
+    project_id = context.properties.get('projectId', context.env['name'])
+    project_name = context.properties.get('name', context.env['name'])
 
     # Ensure that the parent ID is a string.
     context.properties['parent']['id'] = str(context.properties['parent']['id'])
@@ -54,7 +54,7 @@ def generate_config(context):
 
     api_resources, api_names_list = activate_apis(context.properties)
     resources.extend(api_resources)
-    resources.extend(create_service_accounts(context))
+    resources.extend(create_service_accounts(context, project_id))
     resources.extend(create_bucket(context.properties))
     resources.extend(create_shared_vpc(project_id, context.properties))
 
@@ -82,6 +82,12 @@ def generate_config(context):
                         'serviceAccountDisplayName',
                     'value':
                         '$(ref.project.projectNumber)@cloudservices.gserviceaccount.com'  # pylint: disable=line-too-long
+                },
+                {
+                    'name':
+                        'resources',
+                    'value':
+                        [resource['name'] for resource in resources]
                 }
             ]
     }
@@ -211,20 +217,20 @@ def create_shared_vpc_subnet_iam(context, dependencies, members_list):
     return resources
 
 
-def create_service_accounts(context):
+def create_service_accounts(context, project_id):
     """ Create Service Accounts and grant project IAM permissions. """
 
     resources = []
-    network_list = []
+    network_list = ['serviceAccount:$(ref.project.projectNumber)@cloudservices.gserviceaccount.com'] # pylint: disable=line-too-long
     service_account_dep = []
     policies_to_add = []
 
     for service_account in context.properties['serviceAccounts']:
         account_id = service_account['accountId']
-        display_name = service_account.get('accountId', account_id)
+        display_name = service_account.get('displayName', account_id)
         sa_name = 'serviceAccount:{}@{}.iam.gserviceaccount.com'.format(
             account_id,
-            context.env['name']
+            project_id
         )
 
         # Check if the member needs shared VPC permissions. Put in
@@ -262,9 +268,11 @@ def create_service_accounts(context):
             policies_to_add.append({'role': role, 'members': [group_name]})
 
     # Create the project IAM permissions.
-    resources.extend(create_project_iam(service_account_dep, policies_to_add))
+    if policies_to_add:
+        iam = create_project_iam(service_account_dep, policies_to_add)
+        resources.extend(iam)
 
-    if network_list and not context.properties.get('sharedVPCHost'):
+    if not context.properties.get('sharedVPCHost'):
         # Create the shared VPC subnet IAM permissions.
         resources.extend(
             create_shared_vpc_subnet_iam(

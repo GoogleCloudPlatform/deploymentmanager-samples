@@ -45,7 +45,7 @@ def generate_config(context):
         'resourceType': 'addresses',
     }
 
-    optional_properties = ['subnet', 'ipAddress', 'description', 'region']
+    optional_properties = ['subnetwork', 'address', 'description', 'region']
 
     for prop in optional_properties:
         if prop in context.properties:

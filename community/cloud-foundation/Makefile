@@ -1,91 +1,51 @@
-#
-# The correct way to setup a dev environment:
-#
-# $ sudo make virtualenv-requirements
-# $ make virtualenv
-# $ source virtualenv/bin/activate
-# $ make development
-#
-
-# And the correct way of deleting the dev environment:
-# 
-# $ deactivate
-# $ make clean-venv (or make clean-all)
-#
-
-PACKAGE := cloud_foundation
-TESTDIR := tests
-PYTHON  := python2.7
+PYTHON  ?= python
 SHELL   := /bin/bash
+PACKAGE =  cloud_foundation_toolkit
 
 help:
-	@echo "virtualenv     Create a virtualenv"
-	@echo "development    Install dependencies and install package in editable mode"
-	@echo "style          Run style checks and coverage: "
-	@echo "test           Run tests"
-	@echo "clean clean-all  Clean up and clean up removing virtualenv"
+	@echo "cft-prerequisites         Installs prerequisites for CFT python utility development"
+	@echo "cft-venv                  Creates the virtual environment called 'venv' for development"
+	@echo "cft-clean-venv            Deletes the development environment"
+	@echo "cft-test                  Runs all unit tests from outside of the venv (for CI tools)"
+	@echo "cft-test-venv             Runs all unit tests from withing the venv (for active development)"
+	@echo "template-prerequisites    Install prerequisites for template development"
+	@echo "build                     Builds the package"
+	@echo "install                   Installs the package system wide"
+	@echo "uninstall                 Uninstalls the package"
+	@echo "clean                     Cleanup build/test/cache files"
+
 
 .ONESHELL:
-.PHONY: clean clean-all clean-virtualenv development development-requirements virtualenv
-#.PHONY: check check-style check-coverage test dist develop install clean-all clean clean-venv ci-build ci-test ci-upload ci-cleanup install-test-requirements clean-pip-dependencies
+.PHONY: cft-prerequisites cft-venv cft-clean-venv cft-test cft-test-venv template-prerequisites
 
+prerequisites:
+	${PYTHON} -m pip install -r requirements/prerequisites.txt
 
-virtualenv-requirements:
-	${PYTHON} -m pip install --upgrade pip
-	${PYTHON} -m pip install --upgrade virtualenv
+cft-venv:
+	${PYTHON} -m tox -e venv
 
-development-requirements:
-	${PYTHON} -m pip install --upgrade pip
-	${PYTHON} -m pip install -r requirements/development.txt
+cft-clean-venv:
+	rm -rf venv
 
-#
-# Configure virtual + dev environment
-#
+cft-test:
+	${PYTHON} -m tox
 
-# install virtual environment
-# IMPORTANT: activate venv after running this
-virtualenv:
-	${PYTHON} -m virtualenv $@
-	@echo "===> IMPORTANT: Activate your virtual environment if you're developing locally:"
-	@echo "========># source $@/bin/activate"
-	@touch $@
+cft-test-venv:
+	${PYTHON} -m pytest -v
 
-# install package in develoment mode (for local dev only!)
-development:
-#	${PYTHON} -m pip install -e .
-	${PYTHON} -m pip install -r requirements/development.txt
-	${PYTHON} -m pip install -r requirements/install.txt
-	git clone https://github.com/sstephenson/bats.git && cd bats && ./install.sh ../virtualenv
+template-prerequisites:
+	rm -rf bats && git clone https://github.com/sstephenson/bats.git && ./bats/install.sh venv && rm -rf bats
 
+build:
+	${PYTHON} setup.py sdist bdist_wheel
 
+install:
+	${PYTHON} -m pip install dist/${PACKAGE}-$$(cat VERSION)-py2.py3-none-any.whl
 
+uninstall:
+	${PYTHON} -m pip uninstall ${PACKAGE} -y
 
-#
-# style, coverage and tests
-#
-
-# checks code style
-style:
-	${PYTHON} -m yapf -r templates -i
-#	${PYTHON} -m pylint
-
-# tests the tool
-#test: 
-#	${PYTHON} -m pytest
-
-
-#
-# cleanup
-#
-clean-all: clean-virtualenv clean
-
-# cleans up python compiled files, built packages, tests results, caches, etc
 clean:
-	find . \( -path '*__pycache__/*' -o -name __pycache__ \) -delete
+	find src/${PACKAGE} \( -path '*__pycache__/*' -o -name __pycache__ \) -delete
+	find tests \( -path '*__pycache__/*' -o -name __pycache__ \) -delete
 	rm -rf build dist *.egg-info .cache .eggs .coverage
-
-# cleans up a python virtual environment.
-# IMPORTANT: deactivate virtualenv prior to running this!
-clean-virtualenv:
-	rm -rf virtualenv
-

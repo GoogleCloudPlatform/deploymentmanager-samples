@@ -27,7 +27,7 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     export MACHINE_TYPE="n1-standard-1"
     export NODE_COUNT="1"
     export LOCALSSD_COUNT="1"
-    export CLUSTER_VERSION="1.9.7-gke.6"
+    export CLUSTER_VERSION="latest"
     export LOGGING_SERVICE="logging.googleapis.com"
     export MONITORING_SERVICE="monitoring.googleapis.com"
     export MASTERIPV4_CIDRBLOCK="172.16.0.0/28"
@@ -91,13 +91,6 @@ function teardown() {
         --region ${REGION} --format="value(name)"
     [[ "$status" -eq 0 ]]
     [[ "$output" =~ "${CLUSTER_NAME}" ]]
-}
-
-@test "Cluster ${CLUSTER_NAME} has ClusterVersion = ${CLUSTER_VERSION}" {
-    run gcloud container clusters describe "${CLUSTER_NAME}" \
-        --region ${REGION} --format="value(initialClusterVersion)"
-    [[ "$status" -eq 0 ]]
-    [[ "$output" =~ "${CLUSTER_VERSION}" ]]
 }
 
 @test "Cluster ${CLUSTER_NAME} is deployed to network ${NETWORK_NAME}" {

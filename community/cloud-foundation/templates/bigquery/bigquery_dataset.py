@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This template creates a BigQuery Dataset."""
+""" This template creates a BigQuery dataset. """
 
 
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    # You can modify the roles you wish to whitelist here
+    # You can modify the roles you wish to whitelist.
     whitelisted_roles = ['READER', 'WRITER', 'OWNER']
 
     name = context.properties['name']
@@ -38,7 +38,7 @@ def generate_config(context):
             properties[prop] = context.properties[prop]
 
     if 'access' in context.properties:
-        # Validate the access roles
+        # Validate access roles.
         for access_role in context.properties['access']:
             if 'role' in access_role:
                 role = access_role['role']
@@ -55,11 +55,11 @@ def generate_config(context):
         properties['access'] = context.properties['access']
 
         if 'setDefaultOwner' in context.properties:
-            # build default owner for dataset
+            # Build the default owner for the dataset.
             base = '@cloudservices.gserviceaccount.com'
             default_dataset_owner = context.env['project_number'] + base
 
-            # build default access for owner
+            # Build the default access for the owner.
             owner_access = {
                 'role': 'OWNER',
                 'userByEmail': default_dataset_owner

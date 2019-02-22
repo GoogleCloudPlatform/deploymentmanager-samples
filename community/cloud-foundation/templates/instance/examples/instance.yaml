@@ -20,4 +20,6 @@ resources:
         items:
           - key: startup-script
             value: sudo apt-get update && sudo apt-get install -y nginx
-
+      tags:
+        items:
+          - your-tag

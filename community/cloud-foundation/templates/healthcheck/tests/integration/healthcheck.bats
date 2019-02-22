@@ -64,7 +64,7 @@ function teardown() {
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
 }
 
-@test "http healthcheck was created" {
+@test "HTTP healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-legacy-http
     run gcloud compute http-health-checks describe ${RESOURCE_NAME} \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -76,7 +76,7 @@ function teardown() {
     [[ "$output" =~ "port: ${PORT_80}" ]]
 }
 
-@test "https healthcheck was created" {
+@test "HTTPS healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-legacy-https
     run gcloud compute https-health-checks describe ${RESOURCE_NAME}\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -88,7 +88,7 @@ function teardown() {
     [[ "$output" =~ "port: 443" ]]
 }
 
-@test "tcp healthcheck was created" {
+@test "TCP healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-tcp
     run gcloud compute health-checks describe ${RESOURCE_NAME} \
          --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -101,7 +101,7 @@ function teardown() {
     [[ "$output" =~ "type: TCP" ]]
 }
 
-@test "ssl healthcheck was created" {
+@test "SSL healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-ssl
     run gcloud compute health-checks describe ${RESOURCE_NAME} \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -114,7 +114,7 @@ function teardown() {
     [[ "$output" =~ "type: SSL" ]]
 }
 
-@test "request path healthcheck was created" {
+@test "Request path healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-requestpath-https
     run gcloud compute https-health-checks describe ${RESOURCE_NAME}\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -142,7 +142,7 @@ function teardown() {
     [[ "$output" =~ "response: response-data" ]]
 }
 
-@test "http healthcheck was created" {
+@test "HTTP healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-beta-http
     run gcloud beta compute http-health-checks describe ${RESOURCE_NAME}\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -154,7 +154,7 @@ function teardown() {
     [[ "$output" =~ "port: ${PORT_80}" ]]
 }
 
-@test "https healthcheck was created" {
+@test "HTTPS healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-beta-https
     run gcloud beta compute https-health-checks describe ${RESOURCE_NAME}\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -166,7 +166,7 @@ function teardown() {
     [[ "$output" =~ "port: 443" ]]
 }
 
-@test "https healthcheck was created" {
+@test "HTTPS healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-beta-http2
     run gcloud beta compute health-checks describe ${RESOURCE_NAME}\
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -178,7 +178,7 @@ function teardown() {
     [[ "$output" =~ "port: ${PORT_80}" ]]
 }
 
-@test "tcp healthcheck was created" {
+@test "TCP healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-beta-tcp
     run gcloud beta compute health-checks describe ${RESOURCE_NAME} \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -191,7 +191,7 @@ function teardown() {
     [[ "$output" =~ "type: TCP" ]]
 }
 
-@test "ssl healthcheck was created" {
+@test "SSL healthcheck was created" {
     RESOURCE_NAME=${RESOURCE_NAME_PREFIX}-beta-ssl
     run gcloud beta compute health-checks describe ${RESOURCE_NAME} \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
@@ -204,7 +204,7 @@ function teardown() {
     [[ "$output" =~ "type: SSL" ]]
 }
 
-@test "Deployment Delete" {
+@test "Deleting deployment" {
     run gcloud deployment-manager deployments delete "${DEPLOYMENT_NAME}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" -q
     [[ "$status" -eq 0 ]]

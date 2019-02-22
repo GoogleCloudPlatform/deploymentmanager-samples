@@ -40,6 +40,7 @@ function setup() {
             --description "integration test ${RAND}" \
             --subnet-mode custom
         gcloud compute networks subnets create subnet-${RAND} \
+        --project "${CLOUD_FOUNDATION_PROJECT_ID}" \
         --network=network-${RAND} --region=us-central1 \
         --range=10.100.0.0/23
         create_config

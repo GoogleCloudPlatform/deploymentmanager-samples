@@ -28,10 +28,10 @@ See the `properties` section in the schema file(s):
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
 ```
 
-2. Go to the [community/cloud-foundation](../../) directory:
+2. Go to the [deploymentmanager-samples/community/cloud-foundation](../../) directory:
 
 ```
-    cd community/cloud-foundation
+    cd deploymentmanager-samples/community/cloud-foundation
 ```
 
 3. Copy the example DM config to be used as a model for the deployment; in this case, [examples/cloud_router.yaml](examples/cloud_router.yaml):

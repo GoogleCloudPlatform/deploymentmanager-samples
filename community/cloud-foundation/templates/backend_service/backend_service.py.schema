@@ -125,6 +125,7 @@ properties:
       - HTTP
       - HTTPS
       - TCP
+      - UDP
       - SSL
   portName:
     type: string
@@ -190,7 +191,7 @@ properties:
           includeProtocol:
             type: boolean
             description: |
-              Defines whether teh HTTP and HTTPS requests are cached separately.
+              Defines whether the HTTP and HTTPS requests are cached separately.
           includeHost:
             type: boolean
             description: |
@@ -200,7 +201,7 @@ properties:
             description: |
               If True, includes query string parameters in the cache key
               according to queryStringWhitelist and queryStringBlacklist. If
-              neither of teh two is set, the entire query string is included. If
+              neither of the two is set, the entire query string is included. If
               False, the query string is excluded from the cache key entirely.
           queryStringWhitelist:
             type: array

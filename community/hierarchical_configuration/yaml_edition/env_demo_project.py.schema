@@ -1,0 +1,13 @@
+# All the files has to be listed here which will be referenced at any point during the execution of the deployment
+# Workaround: Composite Types can be directly referenced without importing them here.
+
+imports:
+#- path: templates/simple_frontend.py
+#  name: simple_frontend.py
+
+# Helper classes
+- path: helper/*.py
+
+# Configuration files
+- path: configs/*.yaml
+- path: configs/*/*.py
