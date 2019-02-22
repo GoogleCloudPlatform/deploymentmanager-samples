@@ -21,14 +21,12 @@ resources:
 - name: pbs-cluster-host
   type:   pbs-host.jinja
   properties:
-    cluster_name         : google
     region               : us-central1
-    zone                 : us-central1-a
     cidr                 : 10.8.0.0/14
 
     network              : shared-vpc-host-network
     subnet               : pbs-subnet
     vpc_hosting_project  : hpc-host-net-playground-2
 
-    prefix               : cluster37-
+    prefix               : cluster38-
 #  [END cluster-host_yaml]
