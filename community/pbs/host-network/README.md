@@ -9,12 +9,12 @@ Deployment Prerequisites
 
 Before starting the deployment of PBS, set up the following:
 
-1.  [Create Organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization)
-    unless one created already.
+1.  [Create Organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization) for the host project
+    unless organization was already created.
 	
-2.  Designate Organization Admin and the owner of the project
+2.  [Designate Organization Admin](https://cloud.google.com/resource-manager/docs/creating-managing-organization#adding_an_organization_admin) and the owner of the project
 
-3.  Setup a billing account in GCP
+3.  [Setup a billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) for the Organization
 
 4.  Activate necessary APIs:
 
@@ -24,7 +24,7 @@ Before starting the deployment of PBS, set up the following:
 
     3.  gcloud services enable servicemanagement.googleapis.com
 
-5.  Define Cloud identities for users who need access to the cluster
+5.  Define [Cloud identities](https://cloud.google.com/identity/) for users who need access to the cluster
 
 6.  Identify [cloud service
     account](https://cloud.google.com/resource-manager/docs/access-control-proj)
@@ -44,13 +44,11 @@ Configuration options
 
 | Property          | Required / Optional | Type    | Description                                                                                                                                       |
 |-------------------|---------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| cluster_name      | required            | String  | Name of the cluster                                      
-| region            | required            | String  | Region where the PBS instances are provisioned                                                                                                    |
-| zone              | required            | String  | Zone where the PBS instances are provisioned                                                                                                   |
+| region            | required            | String  | Region where the PBS instances will be provisioned                                                                                                    |
+      |
 | prefix            | optional            | String  | Prefix of the names of the instances and other resources in the cluster. Used to distinguish different clusters deployed within the same project. |
-| service_account   | optional            | String  | Service account email 
 | cidr              | optional            | String  | RFC1918 subnet to run the PBS instances Default: "10.10.0.0/16"                                                                                |
-| network           | requred             | String  | Name of the external network to be used in the deployment.                                                                                          |
+| network           | requred             | String  | Name of the network to be used in the deployment.                                                                                          |
 | vpc_hosting_project | requred           | String  | Name of the project that hosts the VPC network (current project).                                                                                   |
 
 Example of configuration file
