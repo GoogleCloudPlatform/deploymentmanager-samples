@@ -9,10 +9,9 @@ Deployment Prerequisites
 
 Before starting the deployment of PBS, set up the following:
 
-1.  [Create Organization and VPC
-    Project](https://cloud.google.com/resource-manager/docs/creating-managing-organization)
-    within that organization
-
+1.  [Create Organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization)
+    unless one created already.
+	
 2.  Designate Organization Admin and the owner of the project
 
 3.  Setup a billing account in GCP
@@ -32,7 +31,7 @@ Before starting the deployment of PBS, set up the following:
     that defines the identity of the nodes (by default in the form
     \<PROJECT-NUMBER\>\@cloudservices.gserviceaccount.com e.g.
     116634650567\@cloudservices.gserviceaccount.com)
-6. Provision VPC in the host project as described in [Provisioning Shared VPC documentation](https://cloud.google.com/vpc/docs/provisioning-shared-vpc)
+6. Provision VPC and subnet in the host project as described in [Provisioning Shared VPC documentation](https://cloud.google.com/vpc/docs/provisioning-shared-vpc)
 
 Deployment Steps
 ================
