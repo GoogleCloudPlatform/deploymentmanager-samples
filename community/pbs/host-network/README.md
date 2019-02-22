@@ -24,7 +24,7 @@ Before starting the deployment of PBS, set up the following:
 
     3.  gcloud services enable servicemanagement.googleapis.com
 
-5.  Define [Cloud identities](https://cloud.google.com/identity/) for users who need access to the cluster
+5.  Define [cloud identities](https://cloud.google.com/identity/) for users who need access to the cluster
 
 6.  Identify [cloud service
     account](https://cloud.google.com/resource-manager/docs/access-control-proj)
@@ -44,12 +44,11 @@ Configuration options
 
 | Property          | Required / Optional | Type    | Description                                                                                                                                       |
 |-------------------|---------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| region            | required            | String  | Region where the PBS instances will be provisioned                                                                                                    |
-      |
+| region            | required            | String  | Region where the PBS instances will be provisioned                                                                                                |
 | prefix            | optional            | String  | Prefix of the names of the instances and other resources in the cluster. Used to distinguish different clusters deployed within the same project. |
-| cidr              | optional            | String  | RFC1918 subnet to run the PBS instances Default: "10.10.0.0/16"                                                                                |
-| network           | requred             | String  | Name of the network to be used in the deployment.                                                                                          |
-| vpc_hosting_project | requred           | String  | Name of the project that hosts the VPC network (current project).                                                                                   |
+| cidr              | optional            | String  | RFC1918 subnet to run the PBS instances Default: "10.10.0.0/16"                                                                                   |
+| network           | requred             | String  | Name of the network to be used in the deployment.                                                                                                 |
+| vpc_hosting_project | requred           | String  | Name of the project that hosts the VPC network (current project).                                                                                 |
 
 Example of configuration file
 ==================================
