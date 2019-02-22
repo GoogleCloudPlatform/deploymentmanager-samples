@@ -12,7 +12,7 @@
 
 
 {% if properties["cidr"] is defined %}
-  {% set cidr = properties["cidr"] %}
+  {% set cider = properties["cidr"] %}
 {% else %}
   {% set cidr = "10.10.0.0/16" %}
 {% endif %}
@@ -20,16 +20,7 @@
 {% set network_reference = 'https://www.googleapis.com/compute/v1/projects/' ~  properties['vpc_hosting_project'] ~ '/global/networks/' ~ properties["network"]  %}
 
 resources:
-- name: {{ properties['prefix'] }}pbs-subnet2
-  type: compute.v1.subnetwork
-  properties:
-    network:  {{ network_reference }}
-    ipCidrRange: {{ cidr }}
-    region: {{ properties["region"] }}
-    privateIpGoogleAccess: true
-
-
-- name: {{ properties['prefix'] }}pbs-ssh-firewall-rule
+- name: {{ properties['prefix'] }}bbs-ssh-firewall-rule
   type: compute.v1.firewall
   properties:
     network:  {{ network_reference }}
