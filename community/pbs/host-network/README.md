@@ -69,14 +69,14 @@ resources:
 
     network              : shared-vpc-host-network
     subnet               : pbs-subnet
-    vpc_hosting_project  : hpc-host-net-playground-2
+    vpc_hosting_project  : host-net-project
 
-    prefix               : cluster37-
+    prefix               : cluster01-
 ```
 
 
 Example of deployent command
 ==================================
 ```
-gcloud deployment-manager deployments  --project=hpc-host-net-playground-2  create pbs-312 --config pbs-cluster-host.yaml
+gcloud deployment-manager deployments  --project=host-net-project  create deployment1 --config pbs-cluster-host.yaml
 ```
