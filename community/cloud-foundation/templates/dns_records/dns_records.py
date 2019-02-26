@@ -21,7 +21,7 @@ def generate_config(context):
     """ Entry point for the deployment resources.
     For each ResourceRecordSet, create a resource with an action to
     create, and another resource with an action to delete.
-    To ensure that the action name is unique, 
+    To ensure that the action name is unique,
     create a random string and append it to the field value.
     """
 

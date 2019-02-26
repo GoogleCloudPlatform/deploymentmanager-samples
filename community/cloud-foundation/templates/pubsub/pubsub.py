@@ -71,7 +71,8 @@ def create_pubsub(resource_name, pubsub_spec):
     set_access_control(topic, pubsub_spec)
 
     subscription_specs = pubsub_spec.get('subscriptions', [])
-    subscriptions = [create_subscription(resource_name, spec, topic_resource_name, index)
+    subscriptions = [create_subscription(resource_name, spec,
+                                         topic_resource_name, index)
                      for (index, spec)
                      in enumerate(subscription_specs, 1)]
 

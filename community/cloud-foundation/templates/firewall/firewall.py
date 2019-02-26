@@ -54,7 +54,8 @@ def generate_config(context):
 
         out[rule['name']] = {
             'selfLink': '$(ref.' + rule['name'] + '.selfLink)',
-            'creationTimestamp': '$(ref.' + rule['name'] + '.creationTimestamp)',
+            'creationTimestamp': '$(ref.' + rule['name']
+                                 + '.creationTimestamp)',
         }
 
     outputs = [{'name': 'rules', 'value': out}]

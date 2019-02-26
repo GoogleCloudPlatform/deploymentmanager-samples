@@ -56,11 +56,11 @@ def generate_config(context):
             [
                 {
                     'name': 'name',
-                    'value': name
+                    'value': context.env['name']
                 },
                 {
                     'name': 'selfLink',
-                    'value': '$(ref.{}.selfLink)'.format(name)
+                    'value': '$(ref.{}.selfLink)'.format(context.env['name'])
                 }
             ]
     }

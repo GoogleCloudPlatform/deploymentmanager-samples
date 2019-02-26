@@ -17,7 +17,7 @@
 def create_pubsub(context, logsink_name):
     """ Create the pubsub destination. """
 
-    dest_properties = {}
+    dest_properties = []
     if 'pubsubProperties' in context.properties:
         dest_prop = context.properties['pubsubProperties']
         access_control = dest_prop.get('accessControl', [])
@@ -43,7 +43,7 @@ def create_pubsub(context, logsink_name):
 def create_bq_dataset(context, logsink_name):
     """ Create the BQ dataset destination. """
 
-    dest_properties = {}
+    dest_properties = []
     if 'bqProperties' in context.properties:
         dest_prop = context.properties['bqProperties']
         dest_prop['name'] = context.properties['destinationName']
@@ -70,7 +70,7 @@ def create_bq_dataset(context, logsink_name):
 def create_storage(context, logsink_name):
     """ Create the bucket destination. """
 
-    dest_properties = {}
+    dest_properties = []
     if 'storageProperties' in context.properties:
         bucket_name = context.properties['destinationName']
         dest_prop = context.properties['storageProperties']
@@ -141,7 +141,7 @@ def generate_config(context):
 
     properties['parent'] = '{}/{}'.format(source_type, source_id)
 
-    dest_properties = {}
+    dest_properties = []
     if context.properties['destinationType'] == 'pubsub':
         dest_properties = create_pubsub(context, name)
         destination = 'pubsub.googleapis.com/projects/{}/topics/{}'.format(
