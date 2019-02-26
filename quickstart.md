@@ -50,9 +50,12 @@ virtual machine instance with the following properties:
 + A randomly assigned external IP address
 
 In the configuration file, replace these placeholders:
+
 * `[MY_PROJECT]` with your project ID
 * `[FAMILY_NAME]` with the image family `debian-9`
-
+* `[IMAGE_PROJECT]` with the project that has the VM image, such as
+  `debian-cloud`.
+ 
 To save your changes, from the **File** menu, click **Save**.
 
 ## Deploy the resources
