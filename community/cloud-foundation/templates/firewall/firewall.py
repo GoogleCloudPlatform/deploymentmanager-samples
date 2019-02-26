@@ -32,7 +32,6 @@ def get_network(properties):
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    project = context.env['project']
     network = context.properties.get('network')
 
     resources = []
