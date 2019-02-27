@@ -15,7 +15,10 @@
 
 
 def generate_queue_name(context):
-    if 'projects/' in context.properties['queueId'] or '$(ref.' in context.properties['queueId']:
+    """ Create queue name based on input. """
+
+    if ('projects/' in context.properties['queueId'] or
+            '$(ref.' in context.properties['queueId']):
         # Full queue name or reference
         queue_name = context.properties['queueId']
     else:

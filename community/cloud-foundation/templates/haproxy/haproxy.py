@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" This template creates a Compute Instance with an HAProxy installed 
+""" This template creates a Compute Instance with an HAProxy installed
     and configured to load-balance traffic between instance groups.
 """
 

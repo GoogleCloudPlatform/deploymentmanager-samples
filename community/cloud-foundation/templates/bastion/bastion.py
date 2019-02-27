@@ -54,10 +54,10 @@ def disable_sudo(bastion_props):
 
 
 def get_ssh_firewall_rule(
-    name,
-    optional_properties,
-    output_name,
-    output_self_link
+        name,
+        optional_properties,
+        output_name,
+        output_self_link
 ):
     """ Creates a new firewall rule with outputs. """
 
