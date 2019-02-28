@@ -54,7 +54,7 @@ def generate_config(context):
 
         properties['access'] = context.properties['access']
 
-        if 'setDefaultOwner' in context.properties:
+        if context.properties.get('setDefaultOwner', False):
             # Build the default owner for the dataset.
             base = '@cloudservices.gserviceaccount.com'
             default_dataset_owner = context.env['project_number'] + base
