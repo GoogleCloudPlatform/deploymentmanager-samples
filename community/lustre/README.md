@@ -91,5 +91,4 @@ To request features, provide feedback, or report bugs please use [this form](htt
 - Local SSD support
 - Multiple MDS node support
 - MDS IP Range support
-- Remove region field
 - Add auth server field
