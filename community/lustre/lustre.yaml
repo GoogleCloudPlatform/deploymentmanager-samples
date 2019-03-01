@@ -23,7 +23,6 @@ resources:
     ## Cluster Configuration
     cluster_name            : lustre
     zone                    : us-central1-f
-    region                  : us-central1
     cidr                    : 10.20.0.0/16
     external_ips            : True
     ### Use these fields to deploy Lustre in an existing VPC, Subnet, and/or Shared VPC

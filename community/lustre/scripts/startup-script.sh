@@ -140,9 +140,6 @@ function main() {
 			# Once the network is up, make the lustre filesystem on the MDT
 			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
 
-			# Disable the authentication upcall by default, change if using auth
-			echo NONE > /proc/fs/lustre/mdt/lustre-MDT0000/identity_upcall
-			
 			# Make the MDT mount and mount the device
 			mkdir /mdt
 			mount -t lustre /dev/sdb /mdt
@@ -152,6 +149,9 @@ function main() {
 				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre /dev/sdb /mnt", or reboot this node."
 				exit 1
 			fi
+
+			# Disable the authentication upcall by default, change if using auth
+			echo NONE > /proc/fs/lustre/mdt/lustre-MDT0000/identity_upcall
 		# If the local node running this script is a Lustre OSS, install the OSS software
 		elif [ "$NODE_ROLE" == "OSS" ]; then
 			# Do LCTL ping to the OSS nodes and sleep until LNET is up and we get a response 
