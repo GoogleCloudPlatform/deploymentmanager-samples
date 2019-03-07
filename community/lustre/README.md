@@ -2,7 +2,7 @@
 
 This is a Deployment Manager script to deploy a Lustre parallel file system cluster on Google Cloud Platform. This tool deploys the open source Lustre RPMs available on whamcloud.com.
 
-This script deploys MDS/MGS combined node(s), and N OSS nodes. On both node types the IP addresses, machine type, disk type, and disk size are all configurable in the lustre.yaml file.
+This script deploys a MDS/MGS combined node, and N OSS nodes. On both node types the IP addresses, machine type, disk type, and disk size are all configurable in the lustre.yaml file.
 
 Please note: This software is provided as-is, with no guarantees of support. This is an example script, and should be used as such.
 
@@ -13,7 +13,6 @@ These scripts are configured using the lustre.yaml configuration file. This file
 #### Cluster Configuration
 * **cluster_name** - Name of the Lustre cluster, prepends all deployed resources
 * **zone** - Zone to deploy the cluster into
-* **region** - Region to deploy the cluster into
 * **cidr** - IP range in CIDR format
 * **external_ips** - True/False, Lustre nodes have external IP addresses. If false then a Cloud NAT is setup as a NAT gateway
 * vpc_net - Define this field, and the vpc_subnet field, to deploy the Lustre cluster to an existing VPC
@@ -92,5 +91,4 @@ To request features, provide feedback, or report bugs please use [this form](htt
 - Local SSD support
 - Multiple MDS node support
 - MDS IP Range support
-- Remove region field
 - Add auth server field

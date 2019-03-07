@@ -12,24 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Determine region
+{% set region_ext = properties['zone'].split('-')[0] ~ '-' ~ properties['zone'].split('-')[1] %}
+
 # Split the subnet CIDR range into octets
 {% set subnet = properties['cidr'].split('/')[0] %}
 {% set subnet_split = subnet.split('.') %}
 
 resources:
+# If we're not using an existing VPC, create a VPC, subnet and firewall rules
+{% if not properties['vpc_net'] %}
 # Create a network for the new cluster
 - name: {{properties["cluster_name"]}}-lustre-network
   type: compute.v1.network
   properties:
     autoCreateSubnetworks: false
+{% endif %}
 
+{% if not properties['vpc_subnet'] %}
 # Create a subnet for the new cluster
 - name: {{properties["cluster_name"]}}-lustre-subnet
   type: compute.v1.subnetwork
   properties:
     network: $(ref.{{properties["cluster_name"]}}-lustre-network.selfLink)
     ipCidrRange: {{ properties["cidr"]}}
-    region: {{ properties["region"] }}
+    region: {{ region_ext }}
     privateIpGoogleAccess: TRUE
 
 # Create a firewall rule to allow SSH to the cluster
@@ -55,6 +62,7 @@ resources:
     - IPProtocol: UDP
       ports: ["0-65535"]
     - IPProtocol: ICMP
+{% endif %}
 
 #{% if not properties['external_compute_ips'] %}
 #- name: {{properties["cluster_name"]}}-no-ip-internet-route
@@ -70,27 +78,19 @@ resources:
 #    - {{properties["cluster_name"]}}-mgs
 #{% endif %}
 
-# If we're not using external IPs or a Shared VPC, create a Cloud NAT
-{% if (not properties['external_ips'] and not properties['shared_vpc_host_proj']) %}
+# If we're not using external IPs or an existing VPC, create a Cloud NAT
+{% if (not properties['external_ips'] and not properties['vpc_net']) %}
 - name: {{properties["cluster_name"]}}-router
   type: compute.beta.router
   properties:
-  {% if properties['vpc_net'] %}
-    network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/{{ properties["vpc_net"]}}
-  {% else %}
     network: $(ref.{{properties["cluster_name"]}}-lustre-network.selfLink)
-  {% endif %}
-    region: {{ properties["region"] }}
+    region: {{ region_ext }}
     nats:
     - name: {{properties["cluster_name"]}}-nat
       natIpAllocateOption: "AUTO_ONLY"
       sourceSubnetworkIpRangesToNat: "LIST_OF_SUBNETWORKS"
       subnetworks:
-  {% if properties['vpc_net'] %}
-      - name: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% else %}
       - name: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
-  {% endif %}
         sourceIpRangesToNat: ["PRIMARY_IP_RANGE"]
 {% endif %}
 
@@ -120,12 +120,12 @@ resources:
 {% if not properties['external_ips'] %}
     canIpForward: true
 {% endif %}
-  {% if (properties ['vpc_subnet'] and properties ['shared_vpc_host_proj'])  %}
+  {% if (properties ['vpc_net'] and properties ['vpc_subnet'] and properties ['shared_vpc_host_proj'])  %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% elif properties ['vpc_subnet'] %}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["vpc_subnet"] }}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
   {% else %}
     networkInterfaces:
     - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
@@ -138,6 +138,8 @@ resources:
 # If the MDS IP is specified, use that
 {% if properties["mds_ip_address"] %}
       networkIP: {{ properties["mds_ip_address"] }}
+# If no MDS IP is specified, use DHCP
+# This code used to hardcode the MDS IP as X.X.X.2
 #{% else %}
 #{% set mds_ip = subnet_split[0] ~ '.' ~ subnet_split[1] ~ '.' ~ subnet_split[2] ~ '.2' %}
 #      networkIP: {{ mds_ip }}
@@ -147,6 +149,8 @@ resources:
         scopes:
         - "https://www.googleapis.com/auth/cloud-platform"
     metadata:
+      dependsOn:
+        - {{properties["cluster_name"]}}-mds1
       items:
         - key: startup-script
           value: |
@@ -176,12 +180,12 @@ resources:
         diskName: {{properties["cluster_name"]}}-ost{{ n + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
         diskSizeGb: {{ properties["ost_disk_size_gb"] }}
-  {% if (properties ['vpc_subnet'] and properties ['shared_vpc_host_proj'])  %}
+  {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% elif properties ['vpc_subnet'] %}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ properties["region"] }}/subnetworks/{{ properties ["vpc_subnet"] }}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
   {% else %}
     networkInterfaces:
     - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
@@ -191,7 +195,7 @@ resources:
       - name: External NAT
         type: ONE_TO_ONE_NAT
   {% endif %}
-# Create OSS nodes with consistently sequential IPs
+# If the range start is set, create OSS nodes with consistently sequential IPs. Otherwise use DHCP
 {% if properties['oss_ip_range_start'] %}
 {% set oss_ip_split = properties['oss_ip_range_start'].split('.')[3] | int %}
 {% set oss_ip_uniq = oss_ip_split + n %}

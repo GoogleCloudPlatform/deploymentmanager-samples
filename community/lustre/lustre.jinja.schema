@@ -24,7 +24,6 @@ imports:
 required:
 - cluster_name
 - zone
-- region
 - cidr
 - oss_node_count
 - mds_disk_type
@@ -151,10 +150,6 @@ properties:
   oss_node_count:
     type        : integer
     description : Number of OSS node instances to run.
-
-  region:
-    type        : string
-    description : Region to run the instances in.
 
   zone:
     type        : string

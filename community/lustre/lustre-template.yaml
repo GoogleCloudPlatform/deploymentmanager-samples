@@ -24,7 +24,6 @@ resources:
     ### Configuration Field : < Description;                    example;        optional? >
     cluster_name            : < Cluster name;                   lustre >
     zone                    : < GCP zone;                       us-central1-a >
-    region                  : < GCP region;                     us-central1 >
     cidr                    : < GCP VPC subnet;                 10.20.0.0/16 >
     external_ips            : < boolean;                        True >
     ### Complete these fields to deploy in an existing VPC
