@@ -62,7 +62,7 @@ Module level overwrite of Service Name           FrontendApache
 Full dump of aggregated context aware properties 
 {  
    'ProjectOwner':'Me, myself and I',
-   'ProjectAbrevation':'SNP',
+   'ProjectAbbrevation':'SNP',
    'BackupBucket':'gs://backupbucket1',
    'ProjectId':'qwerty123456',
    'Department_name':'Department of silly walks',
