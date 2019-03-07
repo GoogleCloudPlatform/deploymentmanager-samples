@@ -33,21 +33,26 @@ properties:
     type: string
     description: The cluster location.
     enum:
-      - northamerica-northeast1
-      - us-central1
-      - us-east1
-      - us-east4
-      - us-west1
-      - us-west2
-      - europe-north1
-      - europe-west1
-      - europe-west4
-      - asia-south1
-      - asia-east1
-      - asia-northeast1
-      - asia-southeast1
-      - nam3
+      - eur3
       - nam-eur-asia1
+      - nam3
+      - nam6
+      - regional-asia-east1
+      - regional-asia-east2
+      - regional-asia-northeast1
+      - regional-asia-south1
+      - regional-asia-southeast1
+      - regional-australia-southeast1
+      - regional-europe-north1
+      - regional-europe-west1
+      - regional-europe-west2
+      - regional-europe-west4
+      - regional-northamerica-northeast1
+      - regional-us-central1
+      - regional-us-east1
+      - regional-us-east4
+      - regional-us-west1
+      - regional-us-west2
   bindings:
     type: array
     description: IAM policies applied at the CLUSTER level.
