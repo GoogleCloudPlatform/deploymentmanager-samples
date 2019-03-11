@@ -118,8 +118,8 @@ def generate_config(context):
             }
         },
         {
-            # An action that is executed after the vpn_tunnel function. It calls the
-            # method patch by ID on the descriptor document
+            # An action that is executed after the vpn_tunnel function.
+            # It calls the method patch by ID on the descriptor document
             # https://www.googleapis.com/discovery/v1/apis/compute/v1/rest.
             'name': router_vpn_binding,
             'action': 'gcp-types/compute-v1:compute.routers.patch',

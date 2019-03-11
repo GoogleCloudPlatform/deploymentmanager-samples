@@ -1,6 +1,8 @@
 # Example of the Cloud Router template usage.
 #
-# Replace `test-network` with your network's name.
+# Replace the following placeholders with valid values:
+#   <FIXME:network_name>: the name the network to which the router belongs
+#
 
 imports:
   - path: templates/cloud_router/cloud_router.py
@@ -11,6 +13,6 @@ resources:
     type: cloud_router.py
     properties:
       name: cloud-router
-      network: test-network
+      network: <FIXME:network_name>
       region: us-east1
       asn: 65001

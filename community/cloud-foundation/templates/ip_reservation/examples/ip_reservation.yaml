@@ -10,8 +10,6 @@
 imports:
   - path: templates/ip_reservation/ip_reservation.py
     name: ip_reservation.py
-  - path: templates/ip_reservation/ip_address.py
-    name: ip_address.py
 
 resources:
   - name: allmyips
@@ -28,7 +26,7 @@ resources:
         - name: myinternal
           ipType: internal
           # This IP address must be within the subnet range.
-          ipAddress: 10.128.1.111
-          subnet: projects/<FIXME:project_id>/regions/<FIXME:region>/subnetworks/<FIXME:subnet>
+          address: 10.128.1.111
+          subnetwork: projects/<FIXME:project_id>/regions/<FIXME:region>/subnetworks/<FIXME:subnet>
           region: <FIXME:region>
           description: 'my internal ip'

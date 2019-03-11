@@ -14,7 +14,7 @@ This template creates a load balancer healthcheck.
 
 ### Resources
 
-Depending on the type of healthcheck specified:
+Depend on the specified healthcheck type.
 
 #### Legacy Healthchecks
 
@@ -39,41 +39,41 @@ See the `properties` section in the schema file(s):
 
 1. Clone the [Deployment Manager Samples repository](https://github.com/GoogleCloudPlatform/deploymentmanager-samples):
 
-  ```shell
+```shell
     git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples
-  ```
+```
 
-1. Go to the [community/cloud-foundation](../../) directory:
+2. Go to the [community/cloud-foundation](../../) directory:
 
-  ```shell
+```shell
     cd community/cloud-foundation
-  ```
+```
 
-1. Copy the example DM config to be used as a model for the deployment;
+3. Copy the example DM config to be used as a model for the deployment;
  in this case, [examples/healthcheck.yaml](examples/healthcheck.yaml):
 
-  ```shell
+```shell
     cp templates/healthcheck/examples/healthcheck.yaml my_healthcheck.yaml
-  ```
+```
 
-1. Change the values in the config file to match your specific GCP setup:
+4. Change the values in the config file to match your specific GCP setup:
 
-  ```shell
+```shell
     vim my_healthcheck.yaml  # <== change values to match your GCP setup
-  ```
+```
 
-1. Create your deployment:
+5. Create your deployment:
 
-  ```shell
+```shell
     gcloud deployment-manager deployments create <YOUR_DEPLOYMENT_NAME> \
-    --config my_healthcheck.yaml
-  ```
+        --config my_healthcheck.yaml
+```
 
-1. In case you need to delete your deployment:
+6. In case you need to delete your deployment:
 
-  ```shell
+```shell
     gcloud deployment-manager deployments delete <YOUR_DEPLOYMENT_NAME>
-  ```
+```
 
 ## Examples
 

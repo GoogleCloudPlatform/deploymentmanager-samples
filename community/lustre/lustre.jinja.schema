@@ -1,0 +1,173 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: A template for creating an open source Lustre cluster in GCP.
+  author: Google
+  description: |
+    Create an open source Lustre cluster in GCP.
+
+imports:
+- path: scripts/startup-script.sh
+
+required:
+- cluster_name
+- zone
+- cidr
+- oss_node_count
+- mds_disk_type
+- mds_disk_size_gb
+- mdt_disk_size_gb
+- mdt_disk_type
+- ost_disk_size_gb
+- ost_disk_type
+- external_ips
+
+optional:
+- fs_name
+- lustre_version
+- e2fs_version
+- mds_node_count
+- oss_disk_type
+- oss_disk_size_gb
+- oss_machine_type
+- mds_machine_type
+#- mgs_machine_type
+- mds_ip_address
+- oss_ip_range_start
+- vpc_net
+- vpc_subnet
+- shared_vpc_host_proj
+
+properties:
+  cidr:
+    type        : string
+    description : RFC1918 subnet to run instances in, eg. 10.10.0.0/16.
+
+  mds_ip_address:
+    type        : string
+    description : IP address for the MDS node.
+
+  oss_ip_range_start:
+    type        : string
+    description : IP address range start for the OSS nodes.
+
+  cluster_name:
+    type        : string
+    description : Name of the Lustre cluster.
+
+  lustre_version:
+    type        : string
+    default     : latest-release
+    description : Version of Lustre to download from whamcloud.com
+
+  e2fs_version:
+    type        : string
+    default     : latest
+    description : Version of E2FSPROGS to download from whamcloud.com
+
+  mds_machine_type:
+    type        : string
+    default     : n1-standard-8 
+    description : |
+      Machine type to use for MDS node instances, eg. n1-standard-4.
+
+  oss_machine_type:
+    type        : string
+    default     : n1-standard-8 
+    description : |
+      Machine type to use for OSS node instances, eg. n1-standard-4.
+
+  mds_disk_type:
+    enum        : ["pd-ssd", "pd-standard"]
+    default     : pd-standard
+    description : Disk type (pd-ssd or pd-standard) for the MDS boot disk.
+
+  mds_disk_size_gb:
+    type        : integer
+    default     : 100
+    minimum     : 10
+    maximum     : 64000
+    description : Size of disk for the MDS boot disk.
+
+  mdt_disk_type:
+    enum        : ["pd-ssd", "pd-standard"]
+    default     : pd-standard
+    description : Disk type (pd-ssd or pd-standard) for MDT disks.
+
+  mdt_disk_size_gb:
+    type        : integer
+    default     : 100
+    minimum     : 10
+    maximum     : 64000
+    description : Size of disk for MDTs.
+
+  oss_disk_type:
+    enum        : ["pd-ssd", "pd-standard"]
+    default     : pd-standard
+    description : Disk type (pd-ssd or pd-standard) for OSS boot disk.
+
+  oss_disk_size_gb:
+    type        : integer
+    default     : 100
+    minimum     : 10
+    maximum     : 64000
+    description : Size of disk for the OSS boot disk.
+
+  ost_disk_type:
+    enum        : ["pd-ssd", "pd-standard"]
+    default     : pd-standard
+    description : Disk type (pd-ssd or pd-standard) for OST disks.
+
+  ost_disk_size_gb:
+    type        : integer
+    default     : 1000
+    minimum     : 10
+    maximum     : 64000
+    description : Size of disk for the OST disks.
+
+  external_ips:
+    type        : boolean
+    description : |
+      Whether Lustre nodes are assigned external IPs or not.
+
+  mds_node_count:
+    type        : integer
+    default     : 1
+    description : Number of MDS node instances to run.
+
+  oss_node_count:
+    type        : integer
+    description : Number of OSS node instances to run.
+
+  zone:
+    type        : string
+    description : Zone to run the instances in based on Region.
+
+  fs_name:
+    type        : string
+    default     : lustre
+    description : Filesystem name.
+
+  vpc_net:
+    type        : string
+    description : Name of an existing VPC Network to deploy Lustre into. Requires vpc_subnet.
+
+  vpc_subnet:
+    type        : string
+    description : Name of the existing VPC subnet in vpc_net to deploy Lustre into.
+
+  shared_vpc_host_proj:
+    type        : string
+    description : Name of the host project containing the Shared VPC specified in vpc_net to deploy Lustre into. Requires vpc_net.

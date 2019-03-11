@@ -1,11 +1,10 @@
-# Example on how to use the storage bucket template
+# Test of the Cloud Storage bucket template.
 #
 # Variables (declared in the gcs_bucket.bats file):
-#   RAND: Just a random string used mostly by the testing suite.
-#   BUCKET_NAME: Globally Unique cloud storage bucket name
-#   ROLE: role to be assigned to member(s) e.g. roles/storage.objectViewer
-#   SA_FQDN: ServiceAccount FQDN serviceAccount:<sa_account>
-#
+#   RAND: a random string used by the testing suite
+#   BUCKET_NAME: a globally unique Cloud Storage bucket name
+#   ROLE: a role to be assigned to member(s); e.g., roles/storage.objectViewer
+#   SA_FQDN: a ServiceAccount FQDN serviceAccount:<sa_account>
 
 imports:
   - path: templates/gcs_bucket/gcs_bucket.py

@@ -45,14 +45,16 @@ virtual machine instance with the following properties:
 
 + Machine type: `f1-micro`
 + Image family: `debian-9`
-+ Zone: `us-central1-f`cd ~/deploymentmanager-samples/v2/
++ Zone: `us-central1-f`
 + Root persistent disk: `boot`
 + A randomly assigned external IP address
 
 In the configuration file, replace these placeholders:
+
 * `[MY_PROJECT]` with your project ID
 * `[FAMILY_NAME]` with the image family `debian-9`
-
+* `[IMAGE_PROJECT]` with `debian-cloud`.
+ 
 To save your changes, from the **File** menu, click **Save**.
 
 ## Deploy the resources

@@ -1,0 +1,60 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START cluster_yaml]
+imports:
+- path: lustre.jinja
+
+resources:
+- name: lustre
+  type: lustre.jinja
+  properties:
+    ## Cluster Configuration
+    cluster_name            : lustre
+    zone                    : us-central1-f
+    cidr                    : 10.20.0.0/16
+    external_ips            : True
+    ### Use these fields to deploy Lustre in an existing VPC, Subnet, and/or Shared VPC
+    #vpc_net                 : < VPC Network Name >
+    #vpc_subnet              : < VPC Subnet Name >
+    #shared_vpc_host_proj    : < Shared VPC Host Project name >
+
+    ## Filesystem Configuration
+    fs_name                 : lustre
+    ### Review https://downloads.whamcloud.com/public/ to determine version naming
+    lustre_version          : latest-release
+    e2fs_version            : latest
+
+    ## Lustre MDS/MGS Node Configuration
+    #mds_node_count          : 1
+    mds_ip_address          : 10.20.0.2
+    mds_machine_type        : n1-standard-32
+    ### MDS/MGS Boot disk
+    mds_disk_type           : pd-standard
+    mds_disk_size_gb        : 10
+    ### Lustre MetaData Target disk
+    mdt_disk_type           : pd-ssd
+    mdt_disk_size_gb        : 100
+
+    ## Lustre OSS Configuration
+    oss_node_count          : 4
+    oss_ip_range_start      : 10.20.0.5
+    oss_machine_type        : n1-standard-16
+    ### OSS Boot disk
+    oss_disk_type           : pd-standard
+    oss_disk_size_gb        : 10
+    ### Lustre Object Storage Target disk
+    ost_disk_type           : pd-standard
+    ost_disk_size_gb        : 1000
+    #  [END cluster_yaml]

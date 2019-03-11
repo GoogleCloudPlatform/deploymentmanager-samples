@@ -1,0 +1,17 @@
+resources:
+- name: access-level-1-{{ env["deployment"] }}
+  type: gcp-types/accesscontextmanager-v1beta:accessPolicies.accessLevels
+  properties:
+    name: accessPolicies/1088137466931/accessLevels/{{ properties["level"] }}
+    parent: accessPolicies/1088137466931
+    title: access-level-1-title-{{ env["deployment"] }}
+    description: Sample access level using IP and OS constraints.
+    basic:
+      combiningFunction: AND
+      conditions:
+      - ipSubnetworks:
+        - 192.0.2.0/24
+      - devicePolicy:
+          osConstraints:
+          - osType: {{ properties["osType"] }}
+            minimumVersion: 10.10.0

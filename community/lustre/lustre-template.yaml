@@ -1,0 +1,56 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START cluster_yaml]
+imports:
+- path: lustre.jinja
+
+resources:
+- name: lustre
+  type: lustre.jinja
+  properties:
+    ## Cluster Configuration
+    ### Configuration Field : < Description;                    example;        optional? >
+    cluster_name            : < Cluster name;                   lustre >
+    zone                    : < GCP zone;                       us-central1-a >
+    cidr                    : < GCP VPC subnet;                 10.20.0.0/16 >
+    external_ips            : < boolean;                        True >
+    ### Complete these fields to deploy in an existing VPC
+    vpc_net                 : < VPC Network Name;               default;        OPTIONAL >
+    vpc_subnet              : < VPC Subnet Name;                default;        OPTIONAL >
+    shared_vpc_host_proj    : < Shared VPC Host Project name;   host-project;   OPTIONAL >
+
+    ## Filesystem Configuration
+    fs_name                 : < Lustre filesystem name;         lustre;         OPTIONAL >
+    lustre_version          : < Lustre version;                 latest-release; OPTIONAL >
+    e2fs_version            : < E2FSPROGS version;              latest;         OPTIONAL >
+
+    ## MDS/MGS Configuration
+    mds_node_count          : < Num Lustre MDS instances;       1;              OPTIONAL >
+    mds_ip_address          : < MDS IP Address range start;     10.20.0.2;      OPTIONAL >
+    mds_machine_type        : < MDS instance profile;           n1-standard-16; OPTIONAL >
+    mds_disk_type           : < MDS Boot Disk Type;             pd-standard;    OPTIONAL >
+    mds_disk_size_gb        : < MDS Boot Disk Size (GB);        40;             OPTIONAL >
+    mdt_disk_type           : < Metadata Target Disk Type;      pd-ssd >
+    mdt_disk_size_gb        : < MDT Disk Size (GB);             500 >
+
+    ## OSS Configuration
+    oss_node_count          : < Num Lustre OSS instances;           4 >
+    oss_ip_range_start      : < OSS IP Address range start;     10.20.0.5;      OPTIONAL >
+    oss_machine_type        : < OSS instance profile;           n1-standard-16; OPTIONAL >
+    oss_disk_type           : < OSS Boot Disk Type;             pd-standard;    OPTIONAL >
+    oss_disk_size_gb        : < OSS Boot Disk Size (GB);        100;            OPTIONAL >
+    ost_disk_type           : < OST Disk Type;                  pd-ssd >
+    ost_disk_size_gb        : < OST Disk Size (GB);             100 >
+    #  [END cluster_yaml]

@@ -1,0 +1,54 @@
+# Copyright 2018 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+info:
+  title: Template to facilitate creation of host network resources to support PBS deployment
+  author: Gene Leybzon
+  description: Host network resource creation template
+    
+
+required:
+- region
+- network 
+- subnet
+- vpc_hosting_project
+
+optional:
+- cidr
+- prefix 
+
+properties:
+  cidr:
+    type        : string
+    description : RFC1918 subnet to run instances in, eg. 10.10.0.0/16.
+
+  network:
+    type        : string
+    description : Name of the host network to be used in the deployment.
+
+  subnet:
+    type        : string
+    description : Network subnet allocated for deployment of PBS nodes.
+
+  region:
+    type        : string
+    description : Region to run the instances in.
+
+  vpc_hosting_project:
+    type        : string
+    description : Name of the project that hosts the network
+ 
+  prefix:
+    type        : string
+    description : Prefix of the names of the instances and other resources in the cluster. Used to distinguish different clusters deployed within the same project.
