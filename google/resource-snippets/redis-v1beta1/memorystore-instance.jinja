@@ -17,8 +17,10 @@ resources:
   type: gcp-types/redis-v1beta1:projects.locations.instances
   properties:
     parent: projects/{{ env["project"] }}/locations/{{ properties["region"] }}
-    instanceId: redis-test
+    instanceId: {{ env["deployment"] }}-redis
     authorizedNetwork: projects/{{ env["project"] }}/global/networks/default
     memorySizeGb: 10
     tier: BASIC
-    displayName: Perritos Bonitos
+    {% if properties["displayName"] %}
+    displayName: {{ properties["displayName"] }}
+    {% endif %}
