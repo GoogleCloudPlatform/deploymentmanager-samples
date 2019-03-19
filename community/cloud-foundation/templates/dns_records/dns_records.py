@@ -13,13 +13,10 @@
 # limitations under the License.
 """This template creates DNS records for a managed zone."""
 
-import string
-import random
-
-
 def generate_config(context):
-    """ Entry point for the deployment resources.
-    DNS RecordSet is natively supported since 2019.
+    """ 
+        Entry point for the deployment resources.
+        DNS RecordSet is natively supported since 2019.
     """
     
     recordset = {
