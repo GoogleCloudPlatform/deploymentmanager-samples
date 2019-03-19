@@ -259,8 +259,6 @@ function teardown() {
     run gcloud dns record-sets list --zone="${CLOUDDNS_ZONE_NAME}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" --format=flattened
     [[ "$status" -eq 0 ]]
-    [[ ! "$output" =~ "${A_RECORD_NAME}" ]]
-    [[ ! "$output" =~ "${AAAA_RECORD_NAME}" ]]
     [[ ! "$output" =~ "${A_RECORD_IP}" ]]
     [[ ! "$output" =~ "${AAAA_RECORD_IP}" ]]
 }
