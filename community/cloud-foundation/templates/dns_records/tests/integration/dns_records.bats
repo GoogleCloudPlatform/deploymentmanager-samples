@@ -22,19 +22,19 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     # test specific variables
     export CLOUDDNS_ZONE_NAME="test-managedzone-${RAND}"
     export CLOUDDNS_DNS_NAME="${RAND}.com."
-    export A_RECORD_NAME="www.${CLOUDDNS_DNS_NAME}"
-    export AAAA_RECORD_NAME="www.${CLOUDDNS_DNS_NAME}"
+    export A_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
+    export AAAA_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export A_RECORD_IP="192.0.1.1"
     export AAAA_RECORD_IP="1002:db8::8bd:2001"
-    export MX_RECORD_NAME="mail.${CLOUDDNS_DNS_NAME}"
+    export MX_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export MX_RECORD="25 smtp.mail.${CLOUDDNS_DNS_NAME}"
-    export TXT_RECORD_NAME="txt.${CLOUDDNS_DNS_NAME}"
+    export TXT_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export TXT_RECORD="'\"my super awesome text record\"'"
-    export PTR_RECORD_NAME="2.1.0.10.${CLOUDDNS_DNS_NAME}"
+    export PTR_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export PTR_RECORD="server.${CLOUDDNS_DNS_NAME}"
     export SPF_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export SPF_RECORD="'\"v=spf1 mx:${RAND}.com -all\"'"
-    export SRV_RECORD_NAME="sip.${CLOUDDNS_DNS_NAME}"
+    export SRV_RECORD_NAME="${CLOUDDNS_DNS_NAME}"
     export SRV_RECORD="0 5 5060 ${SRV_RECORD_NAME}"
 
 fi
@@ -259,8 +259,6 @@ function teardown() {
     run gcloud dns record-sets list --zone="${CLOUDDNS_ZONE_NAME}" \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}" --format=flattened
     [[ "$status" -eq 0 ]]
-    [[ ! "$output" =~ "${A_RECORD_NAME}" ]]
-    [[ ! "$output" =~ "${AAAA_RECORD_NAME}" ]]
     [[ ! "$output" =~ "${A_RECORD_IP}" ]]
     [[ ! "$output" =~ "${AAAA_RECORD_IP}" ]]
 }
