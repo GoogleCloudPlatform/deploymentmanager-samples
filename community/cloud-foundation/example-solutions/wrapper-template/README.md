@@ -1,7 +1,7 @@
 # Wrapper Templates
 
 Using wrapper templates is a clean way to extend or restrict already existing templates without modifying them.
-This is a common practice when using templates from external sources like the Cloud Foundation Toolkit templates.
+This is a common practice when using templates from external sources for example from the Cloud Foundation Toolkit.
 
 ## Flexible solutions
 
@@ -16,18 +16,18 @@ should be calculated by a helper function, implemented in a shared helper class.
 
 ### Schema file of the wrapper
 
-In case there is a wrapper class for a specific template ( in this case for the CFT Folders template), the Schema file can be
+If the wrapper class is for a specific template ( in this case for the CFT Folders template), a Schema file can be
 used for the following:
 
- - Importing the target template makes the YAML easier and states the template dependency
- - Copying the required and optional property deffinition from the target template enforces the property validation in an earlier 
- stage. ( Unfortunately referencing to an other Schema file is not possible today.)
+ - Importing the target template makes the YAML easier and explicitly states the template dependency
+ - Copying the required and optional property definition from the target template enforces the property validation in an earlier 
+ stage. ( Unfortunately referencing to another Schema file is not possible today.)
  - Comments in the Schema file explains the usage and the purpose of it.
 
  ## Generic wrapper
 
  Using a generic wrapper fits into the concept of hierarchical configuration management when the configuration properties
- of the deployment is coming from multiple external files, not only the starting YAML. (See ../../hierarchical_configuration) 
+ of the deployment are coming from multiple external files, not only the starting YAML. (See ../../hierarchical_configuration) 
  The generic wrapper is able to inject the context aware properties and pass them to the target template which is defined in
  the starting YAML.
 
