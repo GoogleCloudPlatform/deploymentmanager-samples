@@ -13,23 +13,22 @@
 # limitations under the License.
 """This template creates DNS records for a managed zone."""
 
-import string
-import random
-
 
 def generate_config(context):
-    """ Entry point for the deployment resources.
-    DNS RecordSet is natively supported since 2019.
+    """ 
+        Entry point for the deployment resources.
+        DNS RecordSet is natively supported since 2019.
     """
-    
+
     recordset = {
         'name': context.env['name'],
         'type': 'gcp-types/dns-v1:resourceRecordSets',
         'properties':
-            {   'name': context.properties['dnsName']
-                'managedZone': context.properties['zoneName']
+            {
+                'name': context.properties['dnsName'],
+                'managedZone': context.properties['zoneName'],
                 'records': context.properties['resourceRecordSets']
-            }  
+            }
     }
-    
+
     return {'resources': [recordset]}
