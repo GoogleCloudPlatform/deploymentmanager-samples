@@ -22,8 +22,8 @@ def GenerateConfig(context):
     module = "frontend"
     cc = config_merger.ConfigContext(context.properties, module)
 
-    name_prefix = cc.configs["Org_Name"] + cc.configs["ProjectAbrevation"] + context.properties["envName"] + module
-    i_name_prefix = cc.configs["Org_Name"] + "-" + cc.configs["ProjectAbrevation"] + "-" + context.properties["envName"] + module
+    name_prefix = cc.configs["Org_Name"] + cc.configs["ProjectAbbreviation"] + context.properties["envName"] + module
+    i_name_prefix = cc.configs["Org_Name"] + "-" + cc.configs["ProjectAbbreviation"] + "-" + context.properties["envName"] + module
 
     instance = {
         'zone':
