@@ -17,20 +17,30 @@
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    project_id = context.properties.get('projectID', context.env['project'])
+    # Applying the IAM binding on the highest level it is possible
+    if 'orgID' in context.properties:
+        resource_id = context.properties['orgID']
+        type = 'gcp-types/cloudresourcemanager-v1:virtual.organization.iamMemberBinding'
+    elif 'folderID' in context.properties:
+        resource_id = context.properties['folderID']
+        type = 'gcp-types/cloudresourcemanager-v1:virtual.folder.iamMemberBinding'
+    else:
+        # projectID is optional, it can be picked up from context.
+        resource_id = context.properties.get('projectID', context.env['project'])
+        type = 'gcp-types/cloudresourcemanager-v1:virtual.projects.iamMemberBinding'
 
     resources = []
-    for ii, role in  enumerate(context.properties['roles']):
+    for ii, role in enumerate(context.properties['roles']):
         for i, member in enumerate(role['members']):
             policy_get_name = 'get-iam-policy-{}-{}-{}'.format(context.env['name'], ii, i)
 
             resources.append(
                 {
                     'name': policy_get_name,
-                    'type': 'gcp-types/cloudresourcemanager-v1:virtual.projects.iamMemberBinding',
+                    'type': type,
                     'properties':
                     {
-                        'resource': project_id,
+                        'resource': resource_id,
                         'role': role['role'],
                         'member': member
                     }
