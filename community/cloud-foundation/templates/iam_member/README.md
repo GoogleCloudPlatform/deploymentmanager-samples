@@ -12,8 +12,8 @@ This template grants IAM roles for a project.
 
 ### Resources
 
-- [projects.setIamPolicy](https://cloud.google.com/resource-manager/reference/rest/v1/projects/setIamPolicy)
-- [projects.getIamPolicy](https://cloud.google.com/resource-manager/reference/rest/v1/projects/getIamPolicy)
+- [virtual.projects.iamMemberBinding](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/blob/master/google/resource-snippets/cloudresourcemanager-v1/policies.jinja)
+    - This virtual endpoint implements projects.getIamPolicy and projects.setIamPolicy internally with proper concurancy handling.
 
 ### Properties
 

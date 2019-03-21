@@ -18,61 +18,22 @@ def generate_config(context):
     """ Entry point for the deployment resources. """
 
     project_id = context.env['project']
-    policy_get_name = 'get-iam-policy-{}'.format(project_id)
-    policy_add_name = 'add-iam-policy-{}'.format(project_id)
-    policy_remove_name = 'remove-iam-policy-{}'.format(project_id)
 
-    policies_to_add = []
+    resources = []
     for role in context.properties['roles']:
-        policies_to_add.append(
-            {
-                'role': role['role'],
-                'members': role['members']
-            }
-        )
-
-    resources = [
-        {
-            # Get the IAM policy first to avoid removing existing bindings.
-            'name': policy_get_name,
-            'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy',  # pylint: disable=line-too-long
-            'properties': {
-                'resource': project_id,
-            }
-        },
-        {
-            # Set the IAM policy by patching the existing policy with the
-            # config contents.
-            'name': policy_add_name,
-            'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',  # pylint: disable=line-too-long
-            'properties':
+        for i, member in enumerate(role['members']):
+            policy_get_name = 'get-iam-policy-{}-{}'.format(project_id, i)
+            resources.append(
                 {
-                    'resource': project_id,
-                    'policy': '$(ref.' + policy_get_name + ')',
-                    'gcpIamPolicyPatch': {
-                        'add': policies_to_add,
+                    'name': policy_get_name,
+                    'type': 'gcp-types/cloudresourcemanager-v1:virtual.projects.iamMemberBinding',
+                    'properties':
+                    {
+                        'resource': project_id,
+                        'role': role['role'],
+                        'member': member
                     }
                 }
-        },
-        {
-            'name': policy_remove_name,
-            'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy',  # pylint: disable=line-too-long
-            'metadata':
-                {
-                    # The policy is removed when the resource is deleted.
-                    'runtimePolicy': ['DELETE'],
-                },
-            'properties':
-                {
-                    'resource': project_id,
-                    'policy': '$(ref.' + policy_add_name + ')',
-                    'gcpIamPolicyPatch':
-                        {
-                            # Remove the previously created roles.
-                            'remove': policies_to_add
-                        }
-                }
-        }
-    ]
+            )
 
     return {"resources": resources}
