@@ -23,6 +23,7 @@ def generate_config(context):
     for ii, role in  enumerate(context.properties['roles']):
         for i, member in enumerate(role['members']):
             policy_get_name = 'get-iam-policy-{}-{}-{}'.format(context.env['name'], ii, i)
+
             resources.append(
                 {
                     'name': policy_get_name,
