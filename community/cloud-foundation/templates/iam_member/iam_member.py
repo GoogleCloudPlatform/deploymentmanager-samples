@@ -20,9 +20,9 @@ def generate_config(context):
     project_id = context.properties.get('projectID', context.env['project'])
 
     resources = []
-    for role in context.properties['roles']:
+    for ii, role in  enumerate(context.properties['roles']):
         for i, member in enumerate(role['members']):
-            policy_get_name = 'get-iam-policy-{}-{}'.format(project_id, i)
+            policy_get_name = 'get-iam-policy-{}-{}-{}'.format(context.env['name'], ii, i)
             resources.append(
                 {
                     'name': policy_get_name,
