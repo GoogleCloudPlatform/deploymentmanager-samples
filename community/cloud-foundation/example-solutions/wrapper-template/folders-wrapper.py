@@ -9,7 +9,7 @@ def generate_config(context):
     # Manipulate context.properties #
 
     for folder in context.properties["folders"]:
-        folder["displayName"] = global_prefic + folder["displayName"]
+        folder["displayName"] = global_prefix + folder["displayName"]
 
     # Passing values forward to CFT template
 
