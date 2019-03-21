@@ -24,7 +24,7 @@ required:
   - roles
 
 properties:
-  projectID:
+  projectId:
     type: string
     description:  |
      Overwrite of project ID in case IAM bindings are referencing to
