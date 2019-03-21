@@ -4,15 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## CFT Templates
 
+### 21.03.2019
+
+- *Templates/iam_member*: The template is now using virtual.projects.iamMemberBinding which is and advanced
+endpoint to manage IAM membership. This is a fix for concurrent IAM changes error.
+   - This change should be 100% backwards compatible
+   - This template should solve concurrency error with built in retries
+
 ### 20.03.2019
 
- - Example Solutions: The first exmaple demonstrate how to use Wrapper templates.
-   - Specific wrapper template to modify the behaviour of an external template such as a CFT template
-   - Generic Wrapper template to inject configuration for every template regardless of it's behaviour.
+ - *Example Solutions*: The first exmaple demonstrate how to use Wrapper templates.
+   - *Specific wrapper* template to modify the behaviour of an external template such as a CFT template
+   - *Generic Wrapper* template to inject configuration for every template regardless of it's behaviour.
 
 ### 19.03.2019
 
- - CloudDNS: Changed CloudDNS Record set from actions to use gcp-types which gives native support for the API.
+ - *CloudDNS*: Changed CloudDNS Record set from actions to use gcp-types which gives native support for the API.
 
 ## CFT CLI
 
