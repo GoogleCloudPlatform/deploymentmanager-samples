@@ -141,7 +141,6 @@ def activate_apis(properties):
 def create_project_iam(dependencies, role_member_list):
     """ Grant the shared project IAM permissions. """
 
-    policies_to_add = role_member_list
     resources = [
         {
             # Get the IAM policy first, so as not to remove
@@ -149,8 +148,14 @@ def create_project_iam(dependencies, role_member_list):
             'name': 'project-iam-policy',
             'type': 'cft-iam_project_member.py',
             'properties': {
-                'resource': '$(ref.project.projectId)'
-            }
+                'projectID': '$(ref.project.projectId)',
+                'roles': role_member_list
+            },
+            'metadata':
+                {
+                    'dependsOn': dependencies,
+                    'runtimePolicy': ['UPDATE_ALWAYS']
+                }
         }
     ]
 
