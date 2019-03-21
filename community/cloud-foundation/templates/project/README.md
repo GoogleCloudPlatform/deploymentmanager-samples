@@ -69,7 +69,7 @@ Following are the prerequisites for creating a project via Deployment Manager. Y
 - [deploymentmanager.v2.virtual.projectBillingInfo](https://cloud.google.com/billing/reference/rest/v1/projects/updateBillingInfo)
 - [iam.v1.serviceAccount](https://cloud.google.com/iam/reference/rest/v1/projects.serviceAccounts)
 - [deploymentmanager.v2.virtual.enableService](https://cloud.google.com/service-management/reference/rest/v1/services/enable)
-- [gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy](https://cloud.google.com/deployment-manager/docs/configuration/supported-gcp-types)
+- [../iam_member CFT temaplet](../iam_member/README.md)
 - [gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy](https://cloud.google.com/deployment-manager/docs/configuration/supported-gcp-types)
 - [gcp-types/storage-v1:buckets](https://cloud.google.com/deployment-manager/docs/configuration/supported-gcp-types)
 - [gcp-types/compute-v1:compute.projects.setUsageExportBucket](https://cloud.google.com/deployment-manager/docs/configuration/supported-gcp-types)
