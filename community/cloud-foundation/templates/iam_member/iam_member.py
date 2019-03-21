@@ -17,7 +17,7 @@
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    project_id = context.env['project']
+    project_id = context.properties.get('projectID', context.env['project'])
 
     resources = []
     i = 0

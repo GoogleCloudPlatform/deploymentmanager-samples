@@ -146,31 +146,11 @@ def create_project_iam(dependencies, role_member_list):
         {
             # Get the IAM policy first, so as not to remove
             # any existing bindings.
-            'name': 'get-iam-policy',
-            'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.getIamPolicy', # pylint: disable=line-too-long
+            'name': 'project-iam-policy',
+            'type': 'cft-iam_project_member.py',
             'properties': {
                 'resource': '$(ref.project.projectId)'
-            },
-            'metadata':
-                {
-                    'dependsOn': dependencies,
-                    'runtimePolicy': ['UPDATE_ALWAYS']
-                }
-        },
-        {
-            # Set the IAM policy patching the existing policy
-            # with whatever is currently in the config.
-            'name': 'patch-iam-policy',
-            'action': 'gcp-types/cloudresourcemanager-v1:cloudresourcemanager.projects.setIamPolicy', # pylint: disable=line-too-long
-            'properties':
-                {
-                    'resource': '$(ref.project.projectId)',
-                    'policy': '$(ref.get-iam-policy)',
-                    'gcpIamPolicyPatch':
-                        {
-                            'add': policies_to_add
-                        }
-                }
+            }
         }
     ]
 
