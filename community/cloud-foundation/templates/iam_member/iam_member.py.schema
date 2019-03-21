@@ -24,6 +24,11 @@ required:
   - roles
 
 properties:
+  projectId:
+    type: string
+    description:  |
+     Overwrite of project ID in case IAM bindings are referencing to
+     a different project.
   roles:
     type: array
     description: An array of roles and members.

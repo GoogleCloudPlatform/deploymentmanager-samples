@@ -20,6 +20,10 @@ info:
     billing account attached, permissions altered, APIs activated, and 
     service accounts created.
 
+imports:
+- path: ../iam_member/iam_member.py
+  name: cft-iam_project_member.py
+
 required:
   - billingAccountId
 

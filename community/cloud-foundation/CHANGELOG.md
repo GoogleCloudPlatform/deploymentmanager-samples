@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 endpoint to manage IAM membership. This is a fix for concurrent IAM changes error.
    - This change should be 100% backwards compatible
    - This template should solve concurrency error with built in retries
+ - *Templates/project*: This template had  concurrent IAM changes error. This update utilizes the iam_member 
+ CFT template, which is referenced in the project.py.schema file. No more concurancy error!
 
 ### 20.03.2019
 
