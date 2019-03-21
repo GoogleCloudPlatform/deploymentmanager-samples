@@ -35,6 +35,5 @@ def generate_config(context):
                     }
                 }
             )
-            i += 1
 
     return {"resources": resources}
