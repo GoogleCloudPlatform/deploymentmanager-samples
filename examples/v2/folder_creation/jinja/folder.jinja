@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% set FOLDER_NAME = env["name"] %}
-
-
 resources:
-  - name: my-folder
+  - name: {{ env["name"] }}
     type: gcp-types/cloudresourcemanager-v2:folders
     properties:
-      parent: {{ properties["folderParent"] }}
-      displayName: {{ FOLDER_NAME }}
+      parent: folders/{{ properties["folderParent"] }}
+      displayName: {{ properties["folderDisplayName"] }}
