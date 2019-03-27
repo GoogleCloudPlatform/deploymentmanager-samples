@@ -148,7 +148,7 @@ def create_project_iam(dependencies, role_member_list):
             'name': 'project-iam-policy',
             'type': 'cft-iam_project_member.py',
             'properties': {
-                'projectID': '$(ref.project.projectId)',
+                'projectId': '$(ref.project.projectId)',
                 'roles': role_member_list
             },
             'metadata':
