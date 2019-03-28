@@ -19,14 +19,15 @@ def generate_config(context):
 
     resources = []
     project_id = context.env['project']
-    bucket_name = context.properties.get('name', context.env['name'])
+    bucket_name = context.properties.get('bucketName', context.env['name'])
+    bucket_resource_name = context.env['name'] + '-bucket'
 
     # output variables
-    bucket_selflink = '$(ref.{}.selfLink)'.format(bucket_name)
+    bucket_selflink = '$(ref.{}.selfLink)'.format(bucket_resource_name)
     bucket_uri = 'gs://' + bucket_name + '/'
 
     bucket = {
-        'name': bucket_name,
+        'name': bucket_resource_name,
         'type': 'storage.v1.bucket',
         'properties': {
             'project': project_id,
@@ -57,11 +58,11 @@ def generate_config(context):
     bindings = context.properties.get('bindings', [])
     if bindings:
         iam_policy = {
-            'name': bucket_name + '-iampolicy',
+            'name': bucket_resource_name + '-iampolicy',
             'action': (storage_provider_type),
             'properties':
                 {
-                    'bucket': '$(ref.' + bucket_name + '.name)',
+                    'bucket': '$(ref.' + bucket_resource_name + '.name)',
                     'project': project_id,
                     'bindings': bindings
                 }

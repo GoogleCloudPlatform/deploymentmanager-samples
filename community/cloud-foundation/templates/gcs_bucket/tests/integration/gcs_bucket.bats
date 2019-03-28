@@ -21,6 +21,7 @@ if [[ -e "${RANDOM_FILE}" ]]; then
     CONFIG=".${DEPLOYMENT_NAME}.yaml"
     # Test specific variables:
     export BUCKET_NAME="test-bucket-${RAND}"
+    export BUCKET_RESOURCE_NAME=${BUCKET_NAME}
     export SA_NAME="${BUCKET_NAME}@${CLOUD_FOUNDATION_PROJECT_ID}.iam.gserviceaccount.com"
     export SA_FQDN="serviceAccount:${SA_NAME}"
     export ROLE="roles/storage.objectViewer"

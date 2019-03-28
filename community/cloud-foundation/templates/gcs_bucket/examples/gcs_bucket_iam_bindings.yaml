@@ -8,6 +8,7 @@
 # IAM Policies are also applied with the `bindings` section.
 #
 # Replace the following placeholders with the relevant values:
+#   <FIXME:bucket_resource_name>: a unique name for the bucket resource within Deployment Manager
 #   <FIXME:bucket_name>: a globally unique storage bucket name
 #   <FIXME:user_account_email_address>: a valid user account
 #   <FIXME:service_account_email_address>: a valid service account email
@@ -21,10 +22,10 @@ imports:
     name: gcs_bucket.py
 
 resources:
-  - name: <FIXME:bucket_name>
+  - name: <FIXME:bucket_resource_name>
     type: gcs_bucket.py
     properties:
-      name: <FIXME:bucket_name>
+      bucketName: <FIXME:bucket_name>
       location: us-east1
       versioning:
         enabled: True

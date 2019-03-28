@@ -2,6 +2,7 @@
 #
 # Variables (declared in the gcs_bucket.bats file):
 #   RAND: a random string used by the testing suite
+#   BUCKET_RESOURCE_NAME: a unique (within the deployment) name for the bucket resource
 #   BUCKET_NAME: a globally unique Cloud Storage bucket name
 #   ROLE: a role to be assigned to member(s); e.g., roles/storage.objectViewer
 #   SA_FQDN: a ServiceAccount FQDN serviceAccount:<sa_account>
@@ -11,10 +12,10 @@ imports:
     name: gcs_bucket.py
 
 resources:
-  - name: ${BUCKET_NAME}
+  - name: ${BUCKET_RESOURCE_NAME}
     type: gcs_bucket.py
     properties:
-      name: ${BUCKET_NAME}
+      bucketName: ${BUCKET_NAME}
       location: us-east1
       versioning:
         enabled: True
