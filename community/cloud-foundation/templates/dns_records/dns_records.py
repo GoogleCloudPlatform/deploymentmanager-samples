@@ -13,63 +13,22 @@
 # limitations under the License.
 """This template creates DNS records for a managed zone."""
 
-import string
-import random
-
 
 def generate_config(context):
-    """ Entry point for the deployment resources.
-    For each ResourceRecordSet, create a resource with an action to
-    create, and another resource with an action to delete.
-    To ensure that the action name is unique,
-    create a random string and append it to the field value.
+    """ 
+        Entry point for the deployment resources.
+        DNS RecordSet is natively supported since 2019.
     """
 
-    resources = []
-    random_string_len = 10
+    recordset = {
+        'name': context.env['name'],
+        'type': 'gcp-types/dns-v1:resourceRecordSets',
+        'properties':
+            {
+                'name': context.properties['dnsName'],
+                'managedZone': context.properties['zoneName'],
+                'records': context.properties['resourceRecordSets']
+            }
+    }
 
-    zonename = context.properties['zoneName']
-    for resource_recordset in context.properties['resourceRecordSets']:
-        deployment_name = generate_unique_string(random_string_len)
-        recordset_create = {
-            'name': deployment_name + '-create',
-            'action': 'gcp-types/dns-v1:dns.changes.create',
-            'metadata': {
-                'runtimePolicy': [
-                    'CREATE',
-                ],
-            },
-            'properties':
-                {
-                    'managedZone': zonename,
-                    'additions': [resource_recordset]
-                },
-        }
-        recordset_delete = {
-            'name': deployment_name + '-delete',
-            'action': 'gcp-types/dns-v1:dns.changes.create',
-            'metadata': {
-                'runtimePolicy': [
-                    'DELETE',
-                ],
-            },
-            'properties':
-                {
-                    'managedZone': zonename,
-                    'deletions': [resource_recordset]
-                },
-        }
-
-        resources.append(recordset_create)
-        resources.append(recordset_delete)
-
-    return {'resources': resources}
-
-
-def generate_unique_string(num_chars):
-    """ Generate a random alphanumeric string.
-    The length of the returned string is num_chars
-    """
-
-    chars = string.ascii_letters + string.digits
-    return ''.join(random.choice(chars) for x in range(num_chars))
+    return {'resources': [recordset]}
