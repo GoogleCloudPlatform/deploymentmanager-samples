@@ -45,7 +45,7 @@ These scripts are configured using the lustre.yaml configuration file. This file
 
 Once you've customized the lustre.yaml file and completed all the required fields, and ensured you have adequate [resource quota](https://cloud.google.com/compute/quotas), you are ready to launch your Lustre cluster.
 
-Use the following command to launch your Lustre cluster.
+Use the following command to launch your Lustre cluster:
 
     gcloud deployment-manager deployments create lustre --config lustre.yaml
 
@@ -63,11 +63,26 @@ An example would be:
 
 You may use the Lustre Metadata Server (MDS) to test if the clients can mount the filesystem. However, please do not leave the filesystem mounted on the MDS server as it may cause filesystem corruption.
 
-Once the filesystem is mounted you will see no output returned with the mount command. You can verify the filesystem is mounted by checking the "mount" command, and by running "lctl dl".
+Once the filesystem is mounted you will see no output returned with the mount command. You can verify the filesystem is mounted by checking the "mount" command, and by running "sudo lfs df".
 
-Next, try running a simple fio write test to a single file on the Lustre filesystem. Then, assuming you're using >1 OSS, use the following command to configure a new file with [Lustre File Striping](http://wiki.lustre.org/Configuring_Lustre_File_Striping) to distribute the write across as many Object Storage Servers (OSS) as possible with a stripe count of -1. Then rerun the test to see the increased performance!
+Next, try running a simple fio write test to a single file on the Lustre filesystem. Then, assuming you're using >1 OSS, use the following command to configure a new file with [Lustre File Striping](http://wiki.lustre.org/Configuring_Lustre_File_Striping) to distribute the write across as many Object Storage Servers (OSS) as possible with a stripe count of -1:
 
     lfs setstripe -c -1 /mnt/lustre/testfile_stripe_wide
+
+Now rerun the test to see the increased performance!
+
+### Expanding the Lustre cluster
+Expanding your existing Lustre cluster is a simple process. First, update your lustre.yaml file to the new Lustre configuration by increasing the number of OSS instances in the oss_node_count field. Changing disk size, instance profile, disk type, or reducing the oss_node_count is not tested or supported.
+
+Next, run this command to update the deployment:
+
+    gcloud deployment-manager deployments update lustre --config lustre.yaml
+
+Your additional OSS instances will come online and install and configure Lustre themselves through the startup-script. They will then add themselves to the Lustre cluster, and will become visible to the clients. You can see the new OSS is online by running the following command:
+
+    sudo lfs df
+
+Once you add an OSS and it's OSTs, the new storage space will become available, and any files or directories with a stripecount equal to -1 will automatically begin writing new data to the new storage space. However, data written to the initial OSS instances will not migrate to the new space. Data can be migrated manually by making a copy of the data and deleting the old copy.
 
 ## Troubleshooting
 
@@ -91,4 +106,4 @@ To request features, provide feedback, or report bugs please use [this form](htt
 - Local SSD support
 - Multiple MDS node support
 - MDS IP Range support
-- Add auth server field
+- Add auth field
