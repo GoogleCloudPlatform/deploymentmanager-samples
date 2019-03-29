@@ -24,7 +24,7 @@ imports:
   - path: gcs_bucket.py
 
 required:
-  - name
+  - bucketName
 
 properties:
   bucketName:
