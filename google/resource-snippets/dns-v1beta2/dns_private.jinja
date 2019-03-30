@@ -1,0 +1,44 @@
+# Copyright 2019 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- name: network-1-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:networks
+- name: {{ properties["zoneName"] }}
+  type: gcp-types/dns-{{ properties["version"] }}:managedZones
+  properties:
+    description: >
+      Managed zone for deployment {{ env["deployment"] }}
+        and zone {{ properties["zoneName"] }}
+    dnsName: {{ properties["zoneDnsName"] }}
+    visibility: private
+    privateVisibilityConfig:
+      networks:
+        - networkUrl: $(ref.network-1-{{ env["deployment"] }}.selfLink)
+- name: {{ properties["rrsetName"] }}
+  type: gcp-types/dns-v1:resourceRecordSets
+  properties:
+    name: {{ properties["rrsetDomain"] }}
+    managedZone: $(ref.{{ properties["zoneName"] }}.name)
+    records:
+    - type: A
+      ttl: 50
+      rrdatas:
+      - 10.40.10.0
+    {% if properties['aaaa_record'] == 'true' %}
+    - type: AAAA
+      ttl: 40
+      rrdatas:
+      - 1:2::ffff:101
+    {% endif %}
