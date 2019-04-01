@@ -1,0 +1,14 @@
+resources:
+- name: access-level-1-{{ env["deployment"] }}
+  type: gcp-types/accesscontextmanager-v1beta:accessPolicies.accessLevels
+  properties:
+    name: accessPolicies/1088137466931/accessLevels/{{ properties["level"] }}
+    parent: accessPolicies/1088137466931
+    title: test-update-access-level-{{ env["deployment"] }}
+    description: Sample access level using OS constraints.
+    basic:
+      conditions:
+      - devicePolicy:
+          osConstraints:
+          - osType: DESKTOP_CHROME_OS
+            minimumVersion: 11.1.0
