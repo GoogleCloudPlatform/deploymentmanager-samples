@@ -6,9 +6,19 @@ This script deploys a MDS/MGS combined node, and N OSS nodes. On both node types
 
 Please note: This software is provided as-is, with no guarantees of support. This is an example script, and should be used as such.
 
+## Planning and Design
+
+Before beginning to configure these deployment manager scripts, plan your Lustre cluster by evaluating your requirements, including: How many files do you need to store, how many open/stat/close operations will you perform per second, how much data capacity you require, and how much read/write throughput you need to that data.
+
+When configuring the Metadata Server, you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by network throttling. When configuring the Metadata Target (MDT), plan for 4KB of capacity per file (inode). See more details on planning for inodes (here)[http://wiki.lustre.org/Lustre_Tuning]. Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See (this page)[https://cloud.google.com/compute/docs/disks/performance] for detailed disk performance characteristics.
+
+When configuring the Object Storage Server (OSS), you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by the network. With n1-standard-8 Object Storage Server instances the Lustre file system can achieve 80-95% of the underlying disk performance. When sizing the Object Storage Targets (OST) ensure that you have sufficient capacity for your data. Total file system capacity grows linearly with the number of Object Storage Servers; so two OSSs, each with the same size OST disk, will have exactly twice as much capacity as a single OSS. Performance in nearly linear, with 95-100% linear performance on GCP as you scale up. Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See (this page)[https://cloud.google.com/compute/docs/disks/performance] for detailed disk performance characteristics.
+
 ## Configuration
 
-These scripts are configured using the lustre.yaml configuration file. This file has the following fields. The fields in bold are required, all others are optional. A short description and example inputs can also be found in the lustre-template.yaml file.
+The Lustre cluster to be deployed is configured using the lustre.yaml configuration file. This file is designed to maximize flexibility. In many cases you may not need to change many of these fields.
+
+The lustre.yaml file has the following fields. The fields in bold are required, all others are optional. A short description and example inputs can also be found in the lustre-template.yaml file.
 
 #### Cluster Configuration
 * **cluster_name** - Name of the Lustre cluster, prepends all deployed resources
@@ -27,18 +37,18 @@ These scripts are configured using the lustre.yaml configuration file. This file
 #### MDS/MGS Configuration
 * mds_ip_address - Internal IP Address to specify for MDS/MGS node
 * mds_machine_type - Machine type to use for MDS/MGS node (see (https://cloud.google.com/compute/docs/machine-types)[https://cloud.google.com/compute/docs/machine-types])
-* mds_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard or pd-ssd)
-* mds_disk_size_gb - Size of MDS boot disk in GB
-* **mdt_disk_type** - Disk type to use for the Metadata Target (MDT) disk
+* mds_boot_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard, pd-ssd)
+* mds_boot_disk_size_gb - Size of MDS boot disk in GB 
+* **mdt_disk_type** - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-ssd, local-ssd)
 * **mdt_disk_size_gb** - Size of MDT disk in GB
 
 #### OSS Configuration
 * **oss_node_count** - Number of Object Storage Server (OSS) nodes to create
 * oss_ip_range_start - Start of the IP range for the OSS node(s). If not specified, use automatic IP assignment
 * oss_machine_type - Machine type to use for OSS node(s)
-* oss_disk_type - Disk type to use for the OSS boot disk
-* oss_disk_size_gb - Size of MDS boot disk in GB
-* **ost_disk_type** - Disk type to use for the Object Storage Target (OST) disk
+* oss_boot_disk_type - Disk type to use for the OSS boot disk (pd-standard, pd-ssd)
+* oss_boot_disk_size_gb - Size of MDS boot disk in GB
+* **ost_disk_type** - Disk type to use for the Object Storage Target (OST) disk (pd-standard, pd-ssd, local-ssd)
 * **ost_disk_size_gb** - Size of OST disk in GB
 
 ## Launch the Lustre Cluster
@@ -103,7 +113,6 @@ To ask questions or post customizations to the community, please use the [Google
 To request features, provide feedback, or report bugs please use [this form](https://docs.google.com/forms/d/e/1FAIpQLSfoyL6MneXmUiTV5DFdXeJZ8N9pR3o-GmbFjduKW0DfOOIQdA/viewform?usp=sf_link).
 
 ## To Do
-- Local SSD support
 - Multiple MDS node support
 - MDS IP Range support
 - Add auth field

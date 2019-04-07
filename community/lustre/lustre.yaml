@@ -41,8 +41,8 @@ resources:
     mds_ip_address          : 10.20.0.2
     mds_machine_type        : n1-standard-32
     ### MDS/MGS Boot disk
-    mds_disk_type           : pd-standard
-    mds_disk_size_gb        : 10
+    mds_boot_disk_type      : pd-standard
+    mds_boot_disk_size_gb   : 10
     ### Lustre MetaData Target disk
     mdt_disk_type           : pd-ssd
     mdt_disk_size_gb        : 100
@@ -52,8 +52,8 @@ resources:
     oss_ip_range_start      : 10.20.0.5
     oss_machine_type        : n1-standard-16
     ### OSS Boot disk
-    oss_disk_type           : pd-standard
-    oss_disk_size_gb        : 10
+    oss_boot_disk_type      : pd-standard
+    oss_boot_disk_size_gb   : 10
     ### Lustre Object Storage Target disk
     ost_disk_type           : pd-standard
     ost_disk_size_gb        : 1000

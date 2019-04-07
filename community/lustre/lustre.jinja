@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -108,8 +108,21 @@ resources:
       autoDelete: true
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
-        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mds_disk_type"] }}
-        diskSizeGb: {{ properties["mds_disk_size_gb"] }}
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mds_boot_disk_type"] }}
+        diskSizeGb: {{ properties["mds_boot_disk_size_gb"] }}
+    {% if properties ["mdt_disk_type"] == "local-ssd" %}
+    {% set num_mdt_local_ssds = (properties['mdt_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
+    {% if num_mdt_local_ssds > 8 %}
+        {% set num_mdt_local_ssds = 8 %}
+    {% endif %}
+    {% for i in range(num_mdt_local_ssds) %}
+    - type: SCRATCH
+      autoDelete: true
+      interface: NVME
+      initializeParams:
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
+    {% endfor %}
+    {% else %}
     - deviceName: mdt
       type: PERSISTENT
       autoDelete: true
@@ -117,6 +130,7 @@ resources:
         diskName: {{properties["cluster_name"]}}-mdt{{ n + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
         diskSizeGb: {{ properties["mdt_disk_size_gb"] }}
+    {% endif %}
 {% if not properties['external_ips'] %}
     canIpForward: true
 {% endif %}
@@ -171,8 +185,21 @@ resources:
       autoDelete: true
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
-        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["oss_disk_type"] }}
-        diskSizeGb: {{ properties["oss_disk_size_gb"] }}
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["oss_boot_disk_type"] }}
+        diskSizeGb: {{ properties["oss_boot_disk_size_gb"] }}
+    {% if properties ["ost_disk_type"] == "local-ssd" %}
+    {% set num_ost_local_ssds = (properties['ost_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
+    {% if num_ost_local_ssds > 8 %}
+        {% set num_ost_local_ssds = 8 %}
+    {% endif %}
+    {% for i in range(num_ost_local_ssds) %}
+    - type: SCRATCH
+      autoDelete: true
+      interface: NVME
+      initializeParams:
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
+    {% endfor %}
+    {% else %}
     - deviceName: ost
       type: PERSISTENT
       autoDelete: true
@@ -180,6 +207,7 @@ resources:
         diskName: {{properties["cluster_name"]}}-ost{{ n + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
         diskSizeGb: {{ properties["ost_disk_size_gb"] }}
+    {% endif %}
   {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
     networkInterfaces:
     - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
