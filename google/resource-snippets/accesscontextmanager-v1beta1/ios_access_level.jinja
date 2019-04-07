@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc. All rights reserved.
+# Copyright 2019 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: folder.jinja
 resources:
-- name: new-folder
-  type: folder.jinja
+- name: access-level-1-{{ env["deployment"] }}
+  type: gcp-types/accesscontextmanager-v1beta:accessPolicies.accessLevels
   properties:
-    folderParent: replaceMe # see folder.create documentation for proper parent ID formatting
+    name: accessPolicies/1088137466931/accessLevels/{{ properties["level"] }}
+    parent: accessPolicies/1088137466931
+    title: test-update-access-level-{{ env["deployment"] }}
+    description: Sample access level using OS constraints.
+    basic:
+      conditions:
+      - devicePolicy:
+          osConstraints:
+          - osType: DESKTOP_CHROME_OS
+            minimumVersion: 11.1.0
