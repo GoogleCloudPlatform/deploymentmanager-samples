@@ -27,7 +27,7 @@ The lustre.yaml file has the following fields. The fields with a \* following th
 * external_ips\* - True/False, Lustre nodes have external IP addresses. If false then a Cloud NAT is setup as a NAT gateway
 * vpc_net - Define this field, and the vpc_subnet field, to deploy the Lustre cluster to an existing VPC
 * vpc_subnet - Existing VPC subnet to deploy Lustre cluster to
-* shared_vpc_host_proj - Defien this field, as well as the vpc_net and vpc_subnet fields, to deploy the cluster to a Shared VPC
+* shared_vpc_host_proj - Define this field, as well as the vpc_net and vpc_subnet fields, to deploy the cluster to a Shared VPC
 
 #### Filesystem Configuration
 * fs_name - Lustre filesystem name
@@ -53,7 +53,7 @@ The lustre.yaml file has the following fields. The fields with a \* following th
 
 ## Launch the Lustre Cluster
 
-Once you've customized the lustre.yaml file and completed all the required fields, and ensured you have adequate [resource quota](https://cloud.google.com/compute/quotas), you are ready to launch your Lustre cluster.
+Once you've customized the lustre.yaml file and completed all the required fields, and ensure you have adequate [resource quota](https://cloud.google.com/compute/quotas), you are ready to launch your Lustre cluster.
 
 Use the following command to launch your Lustre cluster:
 
