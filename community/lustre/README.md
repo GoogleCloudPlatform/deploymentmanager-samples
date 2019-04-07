@@ -18,13 +18,13 @@ When configuring the Object Storage Server (OSS), you must size the instance to 
 
 The Lustre cluster to be deployed is configured using the lustre.yaml configuration file. This file is designed to maximize flexibility. In many cases you may not need to change many of these fields.
 
-The lustre.yaml file has the following fields. The fields in bold are required, all others are optional. A short description and example inputs can also be found in the lustre-template.yaml file.
+The lustre.yaml file has the following fields. The fields with a \* following their name are required (such as cluster_name below), all others are optional. A short description and example inputs can also be found in the lustre-template.yaml file.
 
 #### Cluster Configuration
-* **cluster_name** - Name of the Lustre cluster, prepends all deployed resources
-* **zone** - Zone to deploy the cluster into
-* **cidr** - IP range in CIDR format
-* **external_ips** - True/False, Lustre nodes have external IP addresses. If false then a Cloud NAT is setup as a NAT gateway
+* cluster_name\* - Name of the Lustre cluster, prepends all deployed resources
+* zone\* - Zone to deploy the cluster into
+* cidr\* - IP range in CIDR format
+* external_ips\* - True/False, Lustre nodes have external IP addresses. If false then a Cloud NAT is setup as a NAT gateway
 * vpc_net - Define this field, and the vpc_subnet field, to deploy the Lustre cluster to an existing VPC
 * vpc_subnet - Existing VPC subnet to deploy Lustre cluster to
 * shared_vpc_host_proj - Defien this field, as well as the vpc_net and vpc_subnet fields, to deploy the cluster to a Shared VPC
@@ -39,17 +39,17 @@ The lustre.yaml file has the following fields. The fields in bold are required, 
 * mds_machine_type - Machine type to use for MDS/MGS node (see [https://cloud.google.com/compute/docs/machine-types](https://cloud.google.com/compute/docs/machine-types))
 * mds_boot_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard, pd-ssd)
 * mds_boot_disk_size_gb - Size of MDS boot disk in GB 
-* **mdt_disk_type** - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-ssd, local-ssd)
-* **mdt_disk_size_gb** - Size of MDT disk in GB
+* mdt_disk_type\* - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-ssd, local-ssd)
+* mdt_disk_size_gb\* - Size of MDT disk in GB
 
 #### OSS Configuration
-* **oss_node_count** - Number of Object Storage Server (OSS) nodes to create
+* oss_node_count\* - Number of Object Storage Server (OSS) nodes to create
 * oss_ip_range_start - Start of the IP range for the OSS node(s). If not specified, use automatic IP assignment
 * oss_machine_type - Machine type to use for OSS node(s)
 * oss_boot_disk_type - Disk type to use for the OSS boot disk (pd-standard, pd-ssd)
 * oss_boot_disk_size_gb - Size of MDS boot disk in GB
-* **ost_disk_type** - Disk type to use for the Object Storage Target (OST) disk (pd-standard, pd-ssd, local-ssd)
-* **ost_disk_size_gb** - Size of OST disk in GB
+* ost_disk_type\* - Disk type to use for the Object Storage Target (OST) disk (pd-standard, pd-ssd, local-ssd)
+* ost_disk_size_gb\* - Size of OST disk in GB
 
 ## Launch the Lustre Cluster
 
