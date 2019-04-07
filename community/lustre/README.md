@@ -10,9 +10,9 @@ Please note: This software is provided as-is, with no guarantees of support. Thi
 
 Before beginning to configure these deployment manager scripts, plan your Lustre cluster by evaluating your requirements, including: How many files do you need to store, how many open/stat/close operations will you perform per second, how much data capacity you require, and how much read/write throughput you need to that data.
 
-When configuring the Metadata Server, you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by network throttling. When configuring the Metadata Target (MDT), plan for 4KB of capacity per file (inode). See more details on planning for inodes (here)[http://wiki.lustre.org/Lustre_Tuning]. Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See (this page)[https://cloud.google.com/compute/docs/disks/performance] for detailed disk performance characteristics.
+When configuring the Metadata Server, you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by network throttling. When configuring the Metadata Target (MDT), plan for 4KB of capacity per file (inode). See more details on planning for inodes [here](http://wiki.lustre.org/Lustre_Tuning). Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See [this page](https://cloud.google.com/compute/docs/disks/performance) for detailed disk performance characteristics.
 
-When configuring the Object Storage Server (OSS), you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by the network. With n1-standard-8 Object Storage Server instances the Lustre file system can achieve 80-95% of the underlying disk performance. When sizing the Object Storage Targets (OST) ensure that you have sufficient capacity for your data. Total file system capacity grows linearly with the number of Object Storage Servers; so two OSSs, each with the same size OST disk, will have exactly twice as much capacity as a single OSS. Performance in nearly linear, with 95-100% linear performance on GCP as you scale up. Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See (this page)[https://cloud.google.com/compute/docs/disks/performance] for detailed disk performance characteristics.
+When configuring the Object Storage Server (OSS), you must size the instance to provide the necessary performance. Nodes under 8 cores will be limited by the network. With n1-standard-8 Object Storage Server instances the Lustre file system can achieve 80-95% of the underlying disk performance. When sizing the Object Storage Targets (OST) ensure that you have sufficient capacity for your data. Total file system capacity grows linearly with the number of Object Storage Servers; so two OSSs, each with the same size OST disk, will have exactly twice as much capacity as a single OSS. Performance in nearly linear, with 95-100% linear performance on GCP as you scale up. Local-ssd provides the highest level of performance, but it's size is limited to a total of 3TB across 8 Local SSD devices. If you specify more than 3TB, the capacity will be limited to 3TB. See [this page](https://cloud.google.com/compute/docs/disks/performance) for detailed disk performance characteristics.
 
 ## Configuration
 
@@ -31,12 +31,12 @@ The lustre.yaml file has the following fields. The fields in bold are required, 
 
 #### Filesystem Configuration
 * fs_name - Lustre filesystem name
-* lustre_version - Lustre version to deploy, use "latest-release" to get the latest branch from downloads.whamcloud.com/public/lustre/
-* e2fs_version - E2fsprogs version to deploy,  use "latest" to get the latest branch from downloads.whamcloud.com/public/e2fsprogs/
+* lustre_version - Lustre version to deploy, use "latest-release" to get the latest branch from [https://downloads.whamcloud.com/public/lustre/](https://downloads.whamcloud.com/public/lustre/)
+* e2fs_version - E2fsprogs version to deploy,  use "latest" to get the latest branch from [https://downloads.whamcloud.com/public/e2fsprogs/](https://downloads.whamcloud.com/public/e2fsprogs/)
 
 #### MDS/MGS Configuration
 * mds_ip_address - Internal IP Address to specify for MDS/MGS node
-* mds_machine_type - Machine type to use for MDS/MGS node (see (https://cloud.google.com/compute/docs/machine-types)[https://cloud.google.com/compute/docs/machine-types])
+* mds_machine_type - Machine type to use for MDS/MGS node (see [https://cloud.google.com/compute/docs/machine-types](https://cloud.google.com/compute/docs/machine-types))
 * mds_boot_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard, pd-ssd)
 * mds_boot_disk_size_gb - Size of MDS boot disk in GB 
 * **mdt_disk_type** - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-ssd, local-ssd)
