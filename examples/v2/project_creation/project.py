@@ -212,6 +212,49 @@ def GenerateConfig(context):
             ],
         }
       })
+  if context.properties.get('delete-default-vpc'):
+    default_vpc = 'default'
+    default_firewalls = [
+        'default-allow-icmp',
+        'default-allow-internal',
+        'default-allow-rdp',
+        'default-allow-ssh'
+    ]
+
+    firewall_format = 'delete-{}'
+    for firewall in default_firewalls:
+        resources.append({
+            'name': firewall_format.format(firewall),
+            'action': 'gcp-types/compute-beta:compute.firewalls.delete',
+            'properties': {
+                'project': project_id,
+                'firewall': firewall
+            },
+            'metadata': {
+                'dependsOn': [
+                    ApiResourceName(project_id, 'compute.googleapis.com'),
+                    project_id
+                ],
+                'runtimePolicy': ['CREATE']
+            }
+        })
+
+    resources.append({
+        'name': 'delete-default-vpc',
+        'action': 'gcp-types/compute-beta:compute.networks.delete',
+        'properties': {
+            'project': project_id,
+            'network': default_vpc
+        },
+        'metadata': {
+            'dependsOn': [
+                ApiResourceName(project_id, 'compute.googleapis.com'),
+                project_id,
+                firewall_format.format(default_firewalls[-1])
+            ],
+            'runtimePolicy': ['CREATE']
+        }
+    })
 
   return {'resources': resources}
 

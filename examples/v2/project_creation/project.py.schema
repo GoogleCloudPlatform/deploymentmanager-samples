@@ -158,3 +158,8 @@ properties:
       If used, this will enable this project as a service project for
       the configured Shared VPC.
     type: string
+  delete-default-vpc:
+    description: >
+      Whether you want to delete the project's default VPC or not.
+    type: boolean
+    default: False
