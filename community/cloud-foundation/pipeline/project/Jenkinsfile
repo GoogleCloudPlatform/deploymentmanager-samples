@@ -7,7 +7,7 @@
 def config_dir = "pipeline/project" // relative to ${cft_dir}
 
 def env = "~/pipeline-vars"
-def repo = "https://github.com/sourced/deploymentmanager-samples"
+def repo = "https://github.com/GoogleCloudPlatform/deploymentmanager-samples"
 def branch = "pipeline"
 def git_dir = "cft"
 def cft_dir = "community/cloud-foundation"
