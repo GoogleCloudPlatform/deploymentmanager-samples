@@ -131,6 +131,17 @@ function main() {
 		else
 			let host_index=host_index-1
 		fi
+
+		# Determine if the OST/MDT disk is PD or Local SSD
+        num_local_ssds=`lsblk | grep -c nvme`
+        if [ ${num_local_ssds} -gt 1 ]; then
+	        lustre_device="/dev/md0"
+	        sudo mdadm --create ${lustre_device} --level=0 --raid-devices=${num_local_ssds} /dev/nvme0n*
+        elif [ $num_local_ssds -eq 1 ]; then
+	        lustre_device="/dev/nvme0n1"
+        else
+	        lustre_device="/dev/sdb"
+        fi
 		
 		# If the local node running this script is a Lustre MDS, install the MDS/MGS software
 		if [ "$NODE_ROLE" == "MDS" ]; then
@@ -139,21 +150,10 @@ function main() {
 				sleep 10
 			done
 
-			# Determine if the OST is PD or Local SSD
-			num_mdt_local_ssds=`lsblk | grep -c nvme`
-			if [ $num_mdt_local_ssds -gt 1 ]; then
-				mdt_device="/dev/md0"
-				sudo mdadm --create $mdt_device --level=0 --raid-devices=$num_mdt_local_ssds /dev/nvme0n*
-			elif [ $num_mdt_local_ssds -eq 1 ]; then
-				mdt_device="/dev/nvme0n1"
-			else
-				mdt_device="/dev/sdb"
-			fi
-
 			# Make the MDT mount and mount the device
 			mkdir $mdt_mount_point
-			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $mdt_device
-			echo "$mdt_device	$mdt_mount_point	lustre" >> /etc/fstab
+			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+			echo "$lustre_device	$mdt_mount_point	lustre" >> /etc/fstab
 			mount -a
 
 			# Once the network is up, make the lustre filesystem on the MDT
@@ -165,7 +165,7 @@ function main() {
 			
 			# Check for a successful mount, and fail otherwise.
 			if [ `mount | grep -c $mdt_mount_point` -eq 0 ]; then
-				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $mdt_device $mdt_mount_point", or reboot this node."
+				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $lustre_device $mdt_mount_point", or reboot this node."
 				exit 1
 			fi
 
@@ -182,26 +182,15 @@ function main() {
 			# Sleep 60 seconds to give MDS/MGS time to come up before the OSS. More robust communication would be good.
 			sleep 60
 
-			# Determine if the OST is PD or Local SSD
-			num_ost_local_ssds=`lsblk | grep -c nvme`
-			if [ $num_ost_local_ssds -gt 1 ]; then
-				ost_device="/dev/md0"
-				sudo mdadm --create $ost_device --level=0 --raid-devices=$num_ost_local_ssds /dev/nvme0n*
-			elif [ $num_ost_local_ssds -eq 1 ]; then
-				ost_device="/dev/nvme0n1"
-			else
-				ost_device="/dev/sdb"
-			fi
-
 			# Make the directory to mount the OST, and mount the OST
 			mkdir $ost_mount_point
-			mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $ost_device
-			echo "$ost_device	$ost_mount_point	lustre" >> /etc/fstab
+			mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+			echo "$lustre_device	$ost_mount_point	lustre" >> /etc/fstab
 			mount -a
 			
 			# Check for a successful mount, and fail otherwise.
 			if [ `mount | grep -c $ost_mount_point` -eq 0 ]; then
-				echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $ost_device $ost_mount_point\", or reboot this node."
+				echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $lustre_device $ost_mount_point\", or reboot this node."
 				exit 1
 			fi
 		fi
