@@ -133,15 +133,15 @@ function main() {
 		fi
 
 		# Determine if the OST/MDT disk is PD or Local SSD
-        num_local_ssds=`lsblk | grep -c nvme`
-        if [ ${num_local_ssds} -gt 1 ]; then
-	        lustre_device="/dev/md0"
-	        sudo mdadm --create ${lustre_device} --level=0 --raid-devices=${num_local_ssds} /dev/nvme0n*
-        elif [ $num_local_ssds -eq 1 ]; then
-	        lustre_device="/dev/nvme0n1"
-        else
-	        lustre_device="/dev/sdb"
-        fi
+        	num_local_ssds=`lsblk | grep -c nvme`
+        	if [ ${num_local_ssds} -gt 1 ]; then
+	        	lustre_device="/dev/md0"
+	        	sudo mdadm --create ${lustre_device} --level=0 --raid-devices=${num_local_ssds} /dev/nvme0n*
+        	elif [ $num_local_ssds -eq 1 ]; then
+	        	lustre_device="/dev/nvme0n1"
+        	else
+	        	lustre_device="/dev/sdb"
+        	fi
 		
 		# If the local node running this script is a Lustre MDS, install the MDS/MGS software
 		if [ "$NODE_ROLE" == "MDS" ]; then
