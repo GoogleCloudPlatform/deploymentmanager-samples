@@ -169,6 +169,8 @@ resources:
         - key: startup-script
           value: |
             {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS") }}
+        - key: enable-oslogin
+          value: "TRUE"
 {% endfor %}
 
 # Create N OSS nodes
