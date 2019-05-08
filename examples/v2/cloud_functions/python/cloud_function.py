@@ -25,7 +25,7 @@ def GenerateConfig(ctx):
   function_name = ctx.env['deployment'] + 'cf'
   zip_file = zipfile.ZipFile(
       in_memory_output_file, mode='w', compression=zipfile.ZIP_DEFLATED)
-  for imp in ctx.imports:
+  for imp in sorted(ctx.imports):
     if imp.startswith(ctx.properties['codeLocation']):
       zip_file.writestr(imp[len(ctx.properties['codeLocation']):],
                         ctx.imports[imp])
