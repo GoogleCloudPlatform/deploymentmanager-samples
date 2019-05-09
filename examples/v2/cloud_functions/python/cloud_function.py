@@ -84,7 +84,9 @@ def GenerateConfig(ctx):
           'timeout':
               ctx.properties['timeout'],
           'availableMemoryMb':
-              ctx.properties['availableMemoryMb']
+              ctx.properties['availableMemoryMb'],
+          'runtime':
+              ctx.properties['runtime']
       },
       'metadata': {
           'dependsOn': ['upload-function-code']

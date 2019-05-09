@@ -23,6 +23,7 @@ resources:
     function: my-{{ env['deployment'] }}
     sourceArchiveUrl: gs://$(ref.{{ BUCKET }}.name)/my-function
     entryPoint: {{ properties['entryPoint'] }}
+    runtime: {{ properties['runtime'] }}
     eventTrigger:
       resource: $(ref.my-topic.name)
       eventType: providers/cloud.pubsub/eventTypes/topic.publish
