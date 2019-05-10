@@ -62,7 +62,7 @@ def generate_config(context):
             'action': (storage_provider_type),
             'properties':
                 {
-                    'bucket': '$(ref.' + bucket_resource_name + '.name)',
+                    'bucket': '$(ref.' + bucket_resource_name + '.bucketName)',
                     'project': project_id,
                     'bindings': bindings
                 }
