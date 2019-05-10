@@ -12,22 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+imports:
+- path: global_address.jinja
+
 resources:
-- type: gcp-types/compute-v1:globalAddresses
-  name: globaladdress-{{ env["deployment"] }}
+- name: globaladdress
+  type: global_address.jinja
   properties:
-  {% if "address" in properties %}
-    address: {{ properties["address"] }}
-  {% endif %}
-  {% if "addressType" in properties %}
-    addressType: {{ properties["addressType"] }}
-  {% endif %}
-  {% if "network" in properties %}
-    network: {{ properties["network"] }}
-  {% endif %}
-  {% if "prefixLength" in properties %}
-    prefixLength: {{ properties["prefixLength"] }}
-  {% endif %}
-  {% if "purpose" in properties %}
-    purpose: {{ properties["purpose"] }}
-  {% endif %}
+    address: 10.118.64.0
+    prefixLength: 20
+    addressType: INTERNAL
+    purpose: VPC_PEERING
+    network: DEFAULT_NETWORK
