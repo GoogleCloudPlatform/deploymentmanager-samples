@@ -5,7 +5,8 @@
 # For bucket and object naming guidelines,
 # refer to https://cloud.google.com/storage/docs/naming.
 #
-# Replaxe the <FIXME:bucket_resource_name> placeholder with a unique name for the bucket resource within Deployment Manager
+# Replace the <FIXME:bucket_resource_name> placeholder with a name for the
+# deployment manager resource representing the bucket
 # Replace the <FIXME:bucket_name> placeholder with a globally unique storage
 # bucket name. For details, refer to
 # https://cloud.google.com/storage/docs/json_api/v1/buckets.
