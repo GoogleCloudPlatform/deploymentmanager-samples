@@ -82,7 +82,7 @@ def generate_config(context):
         'legacyAbac',
         'networkPolicy',
         'ipAllocationPolicy',
-        'masterAuthorizedNetworksConfig'
+        'masterAuthorizedNetworksConfig',
         'maintenancePolicy',
         'podSecurityPolicyConfig',
         'privateCluster',
