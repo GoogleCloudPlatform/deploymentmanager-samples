@@ -501,7 +501,7 @@ properties:
                 description: |
                   Defines whether the NetworkPolicy add-on is enabled for
                   the cluster.
-          IstioConfig:
+          istioConfig:
             type: object
             description: |
               The configuration for the IstioConfig add-on. 
@@ -518,7 +518,7 @@ properties:
                 enum:
                   - AUTH_NONE
                   - AUTH_MUTUAL_TLS 
-          CloudRunConfig:
+          cloudRunConfig:
             type: object
             description: |
               The configuration for the CloudRunConfig add-on.
