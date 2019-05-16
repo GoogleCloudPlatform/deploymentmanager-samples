@@ -504,12 +504,12 @@ properties:
           istioConfig:
             type: object
             description: |
-              The configuration for the IstioConfig add-on. 
+              The configuration for the Istio add-on. 
             properties:
               disabled:
                 type: boolean
                 description: |
-                  Defines whether the IstioConfig add-on is enabled for
+                  Defines whether the Istio add-on is enabled for
                   the cluster.
               auth:
                 type: string
