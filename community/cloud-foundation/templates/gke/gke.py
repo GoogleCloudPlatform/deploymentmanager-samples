@@ -125,6 +125,10 @@ def generate_config(context):
         output_obj['name'] = outprop
         ma_props = ['clusterCaCertificate', 'clientCertificate', 'clientKey']
         if outprop in ma_props:
+            if outprop in ['clientCertificate', 'clientKey']:
+                if not properties.get('cluster',{}).get('masterAuth',{}).get(
+                           'clientCertificateConfig',{}).get('issueClientCertificate'):
+                    continue
             output_obj['value'] = '$(ref.' + name + \
                 '.masterAuth.' + outprop + ')'
         elif outprop == 'instanceGroupUrls':
