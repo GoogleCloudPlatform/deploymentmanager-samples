@@ -70,7 +70,6 @@ def generate_config(context):
     optional_props = [
         'description',
         'nodeConfig',
-        'masterAuth',
         'loggingService',
         'monitoringService',
         'clusterIpv4Cidr',
@@ -123,11 +122,7 @@ def generate_config(context):
     for outprop in output_props:
         output_obj = {}
         output_obj['name'] = outprop
-        ma_props = ['clusterCaCertificate', 'clientCertificate', 'clientKey']
-        if outprop in ma_props:
-            output_obj['value'] = '$(ref.' + name + \
-                '.masterAuth.' + outprop + ')'
-        elif outprop == 'instanceGroupUrls':
+        if outprop == 'instanceGroupUrls':
             output_obj['value'] = '$(ref.' + name + \
                 '.nodePools[0].' + outprop + ')'
         else:
