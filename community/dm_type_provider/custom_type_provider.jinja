@@ -1,12 +1,14 @@
-
+# [START dm_custom_type_provider]
 {% set RC_TYPE_PROVIDER = env['project'] + '/tasks-type-provider:/todos/{id}' %}
 
 resources:
+# [START dm_custom_type_provider_declaration]
 - name: tasks-type-provider
   type: deploymentmanager.v2beta.typeProvider
   properties:
     descriptorUrl: {{ properties["swagger_url"] }}
     options:
+    # [START dm_custom_type_provider_inputmapping]
       inputMappings:
       - fieldName: id
         location: PATH
@@ -17,6 +19,8 @@ resources:
         location: HEADER
         value: >
           $.concat("{{ properties["API_KEY"] }}")
+    # [END dm_custom_type_provider_inputmapping]
+# [END dm_custom_type_provider_declaration]
 
 - name: add-task
   action: {{ RC_TYPE_PROVIDER }}
@@ -39,9 +43,11 @@ resources:
   properties:
     id: {{ properties["id"] }}
 
-
+# [START dm_custom_type_provider_outputs]
 outputs:
 - name: taskID
   value: $(ref.add-task.id)
 - name: task
   value: $(ref.add-task.task)
+# [END dm_custom_type_provider_outputs]
+# [END dm_custom_type_provider]
