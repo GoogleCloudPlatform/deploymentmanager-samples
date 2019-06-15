@@ -1,37 +1,75 @@
 {#
-  20180716 - ohammami <osm.hammami@gmail.com>
-  version 0.1
+  title: CloudSQL
+  author: osm.hammami@gmail.com
+  description: |
+    Creates a CloudSQL deployment
+  version: 0.2
 #}
 
 {% set ID = env['name'] %}
+{% set MASTER = ID %}
+{% set FAILOVER = ID + '-failover' %}
+
+
+{%- macro dbDependencyList(failover='', databases='', dbusers='') -%}
+  {% if failover %}
+    - {{ FAILOVER }}
+  {% endif %}
+  {% for i in range(databases| length) %}
+    - {{ ID }}-db-{{ properties['databases'][i]['name'] }}
+  {% endfor %}
+  {% for i in range(dbusers| length) %}
+    - {{ ID }}-dbuser-{{ properties['dbusers'][i]['user'] }}
+  {% endfor %}
+{%- endmacro %}
+
+{% set usersDeps = dbDependencyList(properties['failover'],  properties['databases']) %}
+{% set importDeps = dbDependencyList(properties['failover'],  properties['databases'], properties['dbusers']) %}
 
 resources:
-- name: {{ ID }}-master
+- name: {{ MASTER }}
   type: sqladmin.v1beta4.instance
   properties:
     backendType: SECOND_GEN
     instanceType: CLOUD_SQL_INSTANCE
-    databaseVersion: MYSQL_5_7
+    databaseVersion: {{ properties['cloudsql']['databaseVersion'] }}
     region: {{ properties['region'] }}
     settings:
-      tier: {{ properties['machinetype'] }}
-      dataDiskSizeGb: {{ properties['dataDiskSizeGb'] }}
-      dataDiskType: PD_SSD
+      tier: {{ properties['cloudsql']['tier'] }}
+      dataDiskSizeGb: {{ properties['cloudsql']['dataDiskSizeGb'] }}
+      dataDiskType: {{ properties['cloudsql']['dataDiskType'] }}
       storageAutoResize: true
+      replicationType: SYNCHRONOUS
       locationPreference:
         zone: {{ properties['zone'] }}
+      {% if properties['databaseFlags'] %}
+      databaseFlags: {{ properties['databaseFlags'] }}
+      {% endif %}
       activationPolicy: ALWAYS
       backupConfiguration:
         enabled: true
         binaryLogEnabled: true
-        startTime: 00:00
-{% if properties['authorization'] %}
+        startTime: {{ properties['cloudsql']['backupStartTime'] }}
+        replicationLogArchivingEnabled: false
       ipConfiguration:
-        authorizedNetworks:
-  {% for i in range(properties['authorization']| length) %}
-          - name: {{ properties['authorization'][i]['name'] }}
-            value: {{ properties['authorization'][i]['network'] }}
-  {% endfor %}
+        privateNetwork: projects/{{ env['project'] }}/global/networks/{{ properties['cloudsql']['privateNetwork'] }}
+        ipv4Enabled: true
+        requireSsl: false
+        authorizedNetworks: {{ properties['cloudsql']['authorizedNetworks'] }}
+
+{% if properties['failover'] %}
+- name: {{ FAILOVER }}
+  type: sqladmin.v1beta4.instance
+  properties:
+    backendType: SECOND_GEN
+    instanceType: READ_REPLICA_INSTANCE
+    databaseVersion: {{ properties['cloudsql']['databaseVersion'] }}
+    region: {{ properties['region'] }}
+    masterInstanceName: $(ref.{{ MASTER }}.name)
+    replicaConfiguration:
+      failoverTarget: true
+    settings:
+      tier: {{ properties['cloudsql']['tier'] }}
 {% endif %}
 
 {% if properties['databases'] %}
@@ -40,79 +78,73 @@ resources:
   type: sqladmin.v1beta4.database
   properties:
     name: {{ properties['databases'][i]['name'] }}
-    instance: $(ref.{{ ID }}-master.name)
-    {% if properties['databases'][i]['charset'] %}
+    instance: $(ref.{{ MASTER }}.name)
     charset: {{ properties['databases'][i]['charset'] }}
-    {% else %}
-    charset: utf8
+  metadata:
+    dependsOn: 
+    - {{ MASTER }}
+    {% if properties['failover'] %}
+    - {{ FAILOVER }}
     {% endif %}
-    {% if (i - 1) >= 0 %}
-  metadata:
-    dependsOn:
-      - {{ ID }}-db-{{ properties['databases'][i - 1]['name'] }}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-- name: {{ ID }}-user-root
-  type: sqladmin.v1beta4.user
-  properties:
-    name: root
-    host: "%" 
-    instance: $(ref.{{ ID }}-master.name)
-    password: {{ properties['rootpass'] }}
-{% if properties['databases'] %}
-  metadata:
-    dependsOn:
-      - {{ ID }}-db-{{ properties['databases'][(properties['databases']| length) - 1]['name'] }}
-{% endif %}
-
-{% if properties['users'] %}
-  {% for i in range(properties['users']| length) %}
-- name: {{ ID }}-user-{{ properties['users'][i]['name'] }}
-  type: sqladmin.v1beta4.user
-  properties:
-    name: {{ properties['users'][i]['name'] }}
-{% if properties['users'][i]['host'] %}
-    host: "{{ properties['users'][i]['host'] }}"
-{% else %}
-    host: "%"
-{% endif %}
-    instance: $(ref.{{ ID }}-master.name)
-    password: {{ properties['users'][i]['password']  }}
-  metadata:
-    dependsOn:
-    {% if (i - 1) >= 0 %}
-      - {{ ID }}-user-{{ properties['users'][i - 1]['name'] }}
-    {% else %}
-      - {{ ID }}-user-root
+    {% if i %}
+    - {{ ID }}-db-{{ properties['databases'][i - 1]['name'] }}
     {% endif %}
   {% endfor %}
 {% endif %}
 
-{% if properties['sqlimportstructure'] %}
+{% if properties['dbusers'] %}
+  {% for i in range(properties['dbusers']| length) %}
+- name: {{ ID }}-dbuser-{{ properties['dbusers'][i]['user'] }}
+  type: sqladmin.v1beta4.user
+  properties:
+    name: {{ properties['dbusers'][i]['user'] }}
+    host:  "{{ properties['dbusers'][i]['host'] }}"
+    instance: $(ref.{{ MASTER }}.name)
+    password: {{ properties['dbusers'][i]['password'] }}
+  metadata:
+    dependsOn:
+      {{ usersDeps }}
+      {% if i %}
+    - {{ ID }}-dbuser-{{ properties['dbusers'][i - 1]['user'] }}
+      {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if properties['sqlimport'] %}
+{# write permissions to the bucket; entity -> env[username] and read access to the file; entity -> ref[username] #}
+- name: {{ ID }}-acl-{{ properties['sqlimport']['bucket'] + '-' + properties['sqlimport']['file'] }}
+  action: gcp-types/storage-v1:storage.objectAccessControls.insert
+  properties:
+    bucket: {{ properties['sqlimport']['bucket'] }}
+    object: {{ properties['sqlimport']['file'] }}
+    entity: user-$(ref.{{ MASTER }}.serviceAccountEmailAddress)
+    role: READER
+
 - name: {{ ID }}-import-structure
   action: gcp-types/sqladmin-v1beta4:sql.instances.import
   properties:
-    instance: {{ ID }}-master
-    project: {{ env['project'] }}
+    instance: {{ MASTER }}
     importContext:
-      kind: sql#importContext
       fileType: SQL
-      uri: {{ properties['sqlimportstructure'] }}
+      uri: gs://{{ properties['sqlimport']['bucket']  }}/{{ properties['sqlimport']['file']  }}
   metadata:
     dependsOn:
-  {% if properties['users'] %}
-      - {{ ID }}-user-{{ properties['users'][(properties['users']| length) - 1]['name'] }}
-  {% else %}
-      - {{ ID }}-user-root
-  {% endif %}
+    - {{ ID }}-acl-{{ properties['sqlimport']['bucket'] + '-' + properties['sqlimport']['file'] }}
+      {{ importDeps }}
 {% endif %}
 
 outputs:
-  - name: {{ ID }}-master-ip
-    value: $(ref.{{ ID }}-master.ipAddresses[0].ipAddress)
-  - name: {{ ID }}-master-connectionName
-    value: $(ref.{{ ID }}-master.connectionName)
-  - name: {{ ID }}-master-serviceAccount
-    value:  $(ref.{{ ID }}-master.serviceAccountEmailAddress)
+  - name: {{ MASTER }}-private-ip
+    value: $(ref.{{ MASTER }}.ipAddresses[1].ipAddress)
+  - name: {{ MASTER }}-ip
+    value: $(ref.{{ MASTER }}.ipAddresses[0].ipAddress)
+  - name: {{ MASTER }}-connectionName
+    value: $(ref.{{ MASTER }}.connectionName)
+  - name: {{ MASTER }}-serviceAccount
+    value:  $(ref.{{ MASTER }}.serviceAccountEmailAddress)
+  {% if properties['failover'] %} 
+  - name: {{ FAILOVER }}-ip
+    value: $(ref.{{ FAILOVER }}.ipAddresses[0].ipAddress)
+  - name: {{ FAILOVER }}-connectionName
+    value: $(ref.{{ FAILOVER }}.connectionName)
+  {% endif %}
