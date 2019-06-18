@@ -44,6 +44,18 @@ properties:
             The maximum time to acknowledge a message receipt before retry.
           minimum: 10
           maximum: 600
+        expirationPolicy:
+          type: object
+          description: |
+            A policy that specifies the conditions for this subscription's expiration.
+          required:
+            - ttl
+          properties:
+            ttl:
+              type: string
+              description: |
+                Time-to-live duration in seconds. The subscription expires if it is not active
+                for a period of ttl.
         accessControl:
           type: array
           description: |

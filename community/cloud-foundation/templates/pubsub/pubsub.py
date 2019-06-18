@@ -35,6 +35,10 @@ def create_subscription(resource_name, spec, topic_resource_name, spec_index):
     if ack_deadline_seconds is not None:
         subscription['properties']['ackDeadlineSeconds'] = ack_deadline_seconds
 
+    expiration_policy = spec.get('expirationPolicy')
+    if expiration_policy is not None:
+        subscription['properties']['expirationPolicy'] = expiration_policy
+
     set_access_control(subscription, spec)
 
     return subscription

@@ -96,7 +96,7 @@ function teardown() {
 @test "Verifying that second-subscription-${RAND}'s ackDeadlineSeconds was set" {
     run gcloud pubsub subscriptions describe second-subscription-${RAND} \
         --project "${CLOUD_FOUNDATION_PROJECT_ID}"
-    [[ "$output" =~ "ackDeadlineSeconds: 15" ]]
+    [[ "$output" =~ "ttl: 86400s" ]]
 }
 
 @test "Deleting deployment" {
