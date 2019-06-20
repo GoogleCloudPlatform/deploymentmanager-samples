@@ -58,8 +58,8 @@ resources:
         autoscaling:
           enabled: {{ properties["autoscaling"] }}
           {% if properties["autoscaling"] %}
-          minNodeCount: 3
-          maxNodeCount: 4
+          minNodeCount: 1
+          maxNodeCount: 2
           {% endif %}
         management:
           autoUpgrade: {{ properties["autoUpgrade"] }}
