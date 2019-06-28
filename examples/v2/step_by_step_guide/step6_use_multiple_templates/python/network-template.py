@@ -24,8 +24,8 @@ def GenerateConfig(unused_context):
       'properties': {
           'routingConfig': {
               'routingMode': 'REGIONAL'
-          }
-          'autoCreateSubnetworks': true
+          },
+          'autoCreateSubnetworks': True
       }
   }]
   return {'resources': resources}
