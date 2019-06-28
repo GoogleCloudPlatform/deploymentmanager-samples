@@ -13,14 +13,14 @@
 # limitations under the License.
 
 imports:
-- path: vm-template.jinja
-- path: vm-template-2.jinja
+- path: vm-template.py
+- path: vm-template-2.py
 
 resources:
 - name: vm-1
-  type: vm-template.jinja
+  type: vm-template.py
 - name: vm-2
-  type: vm-template-2.jinja
+  type: vm-template-2.py
 - name: a-new-network
   type: compute.v1.network
   properties:
