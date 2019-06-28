@@ -13,15 +13,17 @@
 # limitations under the License.
 
 imports:
-- path: vm-template.py
-- path: vm-template-2.py
+- path: vm-template.jinja
+- path: vm-template-2.jinja
 
 resources:
 - name: vm-1
-  type: vm-template.py
+  type: vm-template.jinja
 - name: vm-2
-  type: vm-template-2.py
+  type: vm-template-2.jinja
 - name: a-new-network
   type: compute.v1.network
   properties:
-    IPv4Range: 10.0.0.0/16
+    routingConfig:
+      routingMode: REGIONAL
+    autoCreateSubnetworks: true
