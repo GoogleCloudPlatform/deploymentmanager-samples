@@ -22,7 +22,10 @@ def GenerateConfig(unused_context):
       'name': 'a-new-network',
       'type': 'compute.v1.network',
       'properties': {
-          'IPv4Range': '10.0.0.0/16'
+          'routingConfig': {
+              'routingMode': 'REGIONAL'
+          },
+          'autoCreateSubnetworks': True
       }
   }]
   return {'resources': resources}
