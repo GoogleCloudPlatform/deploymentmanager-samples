@@ -1,10 +1,13 @@
 resources:
+{% set resource = properties.get("resource", env["project"]) %}
+{% set type = resource.split("/", 1)[0] if "/" in resource else "projects" %}
+{% set apiVersion = "v2" if type == "folders" else "v1" %}
 {% for role in properties["roles"] %}
 {% for serviceAccount in properties["serviceAccounts"] %}
-- name: project-{{ role }}-{{ serviceAccount }}
-  type: gcp-types/cloudresourcemanager-v1:virtual.projects.iamMemberBinding
+- name: {{ type }}-{{ role }}-{{ serviceAccount }}
+  type: gcp-types/cloudresourcemanager-{{ apiVersion }}:virtual.{{ type }}.iamMemberBinding
   properties:
-    resource: {{ env["project"] }}
+    resource: {{ resource }}
     member: serviceAccount:{{ serviceAccount }}@isolated-project.iam.gserviceaccount.com
     role: {{ role }}
 {% endfor %}
