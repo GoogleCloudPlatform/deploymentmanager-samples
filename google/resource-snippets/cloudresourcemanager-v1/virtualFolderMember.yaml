@@ -1,0 +1,17 @@
+imports:
+- path: policies.jinja
+
+resources:
+- name: policies
+  type: policies.jinja
+  properties:
+    resource: MY_FOLDER # folder in format of "folders/0123456"
+    roles:
+    - roles/cloudprivatecatalog.catalogConsumer
+    - roles/file.serviceAgent
+    - roles/genomics.serviceAgent
+    serviceAccounts:
+    - concurrent-test-1
+    - concurrent-test-2
+    - concurrent-test-3
+    - concurrent-test-4
