@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,14 @@
 # limitations under the License.
 
 imports:
-- path: empty_bucket_in_function.jinja
+- path: global_address.jinja
 
 resources:
-- name: my-function
-  type: empty_bucket_in_function.jinja
+- name: globaladdress
+  type: global_address.jinja
   properties:
-     region: REGION_TO_RUN
-     entryPoint: handler
-     runtime: nodejs8
+    address: 10.118.64.0
+    prefixLength: 20
+    addressType: INTERNAL
+    purpose: VPC_PEERING
+    network: DEFAULT_NETWORK

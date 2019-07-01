@@ -21,7 +21,7 @@ resources:
   type: condor.jinja
   properties:
     count: 2
-    setup_autoscaler: true
+    setup_autoscaler: false
     zone: us-central1-f
     email: someone@somewhere.com
     instancetype: n1-standard-4

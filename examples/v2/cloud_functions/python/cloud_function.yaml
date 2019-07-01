@@ -14,6 +14,7 @@ resources:
     codeBucketObject: function.zip
     location: us-central1
     timeout: 60s
+    runtime: nodejs8
     availableMemoryMb: 256
     entryPoint: handler
 - name: function-call

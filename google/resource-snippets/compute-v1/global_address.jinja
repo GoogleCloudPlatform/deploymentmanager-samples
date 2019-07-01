@@ -15,3 +15,19 @@
 resources:
 - type: gcp-types/compute-v1:globalAddresses
   name: globaladdress-{{ env["deployment"] }}
+  properties:
+  {% if "address" in properties %}
+    address: {{ properties["address"] }}
+  {% endif %}
+  {% if "addressType" in properties %}
+    addressType: {{ properties["addressType"] }}
+  {% endif %}
+  {% if "network" in properties %}
+    network: {{ properties["network"] }}
+  {% endif %}
+  {% if "prefixLength" in properties %}
+    prefixLength: {{ properties["prefixLength"] }}
+  {% endif %}
+  {% if "purpose" in properties %}
+    purpose: {{ properties["purpose"] }}
+  {% endif %}

@@ -19,6 +19,8 @@ CLUSTER_NAME="@CLUSTER_NAME@"
 MDS_HOSTNAME="@CLUSTER_NAME@-mds1"
 FS_NAME="@FS_NAME@"
 NODE_ROLE="@NODE_ROLE@"
+ost_mount_point="/mnt/ost"
+mdt_mount_point="/mnt/mdt"
 
 LUSTRE_VERSION="@LUSTRE_VERSION@"
 LUSTRE_URL="https://downloads.whamcloud.com/public/lustre/${LUSTRE_VERSION}/el7/server/RPMS/x86_64/"
@@ -44,7 +46,7 @@ E2FS_RPMS=("e2fsprogs-1*.rpm"
 # Install updates and minimum packages to install Lustre
 function yum_install() {
 	yum update -y
-	yum install -y net-snmp-libs expect patch dkms gcc libyaml-devel 
+	yum install -y net-snmp-libs expect patch dkms gcc libyaml-devel mdadm epel-release pdsh 
 }
 
 # Set Message of the Day declaring that Lustre is being installed
@@ -129,6 +131,17 @@ function main() {
 		else
 			let host_index=host_index-1
 		fi
+
+		# Determine if the OST/MDT disk is PD or Local SSD
+        	num_local_ssds=`lsblk | grep -c nvme`
+        	if [ ${num_local_ssds} -gt 1 ]; then
+	        	lustre_device="/dev/md0"
+	        	sudo mdadm --create ${lustre_device} --level=0 --raid-devices=${num_local_ssds} /dev/nvme0n*
+        	elif [ $num_local_ssds -eq 1 ]; then
+	        	lustre_device="/dev/nvme0n1"
+        	else
+	        	lustre_device="/dev/sdb"
+        	fi
 		
 		# If the local node running this script is a Lustre MDS, install the MDS/MGS software
 		if [ "$NODE_ROLE" == "MDS" ]; then
@@ -137,16 +150,22 @@ function main() {
 				sleep 10
 			done
 
+			# Make the MDT mount and mount the device
+			mkdir $mdt_mount_point
+			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+			echo "$lustre_device	$mdt_mount_point	lustre" >> /etc/fstab
+			mount -a
+
 			# Once the network is up, make the lustre filesystem on the MDT
-			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
+			#mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
 
 			# Make the MDT mount and mount the device
-			mkdir /mdt
-			mount -t lustre /dev/sdb /mdt
+			#mkdir /mdt
+			#mount -t lustre /dev/sdb /mdt
 			
 			# Check for a successful mount, and fail otherwise.
-			if [ `mount | grep -c /mdt` -eq 0 ]; then
-				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre /dev/sdb /mnt", or reboot this node."
+			if [ `mount | grep -c $mdt_mount_point` -eq 0 ]; then
+				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $lustre_device $mdt_mount_point", or reboot this node."
 				exit 1
 			fi
 
@@ -160,17 +179,18 @@ function main() {
 			done
 
 			# Make the Lustre OST
-			mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
-			
 			# Sleep 60 seconds to give MDS/MGS time to come up before the OSS. More robust communication would be good.
 			sleep 60
+
 			# Make the directory to mount the OST, and mount the OST
-			mkdir /ost
-			mount -t lustre /dev/sdb /ost
+			mkdir $ost_mount_point
+			mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+			echo "$lustre_device	$ost_mount_point	lustre" >> /etc/fstab
+			mount -a
 			
 			# Check for a successful mount, and fail otherwise.
-			if [ `mount | grep -c /ost` -eq 0 ]; then
-				echo "OST mount has failed. Please try mounting manually with \"mount -t lustre /dev/sdb /ost\", or reboot this node."
+			if [ `mount | grep -c $ost_mount_point` -eq 0 ]; then
+				echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $lustre_device $ost_mount_point\", or reboot this node."
 				exit 1
 			fi
 		fi
@@ -181,15 +201,15 @@ function main() {
 		# Run the cleanup function to remove RPMs
 		cleanup
 	# If install.log shows stage 2, then Lustre is installed and just needs to be started
-	else
+	#else
 		# If it's an MDS/MGS, mount the MDT
-		if [ "$NODE_ROLE" == "MDS" ]; then
-			mount -t lustre /dev/sdb /mdt
+	#	if [ "$NODE_ROLE" == "MDS" ]; then
+	#		mount -t lustre /dev/sdb /mdt
 		# If it's an OSS, sleep to let the MDT mount, and then mount the OST
-		elif [ "$NODE_ROLE" == "OSS" ]; then
-			sleep 20
-			mount -t lustre /dev/sdb /ost
-		fi
+	#	elif [ "$NODE_ROLE" == "OSS" ]; then
+	#		sleep 20
+	#		mount -t lustre /dev/sdb $ost_mount_point
+	#	fi
 	fi
 }
 

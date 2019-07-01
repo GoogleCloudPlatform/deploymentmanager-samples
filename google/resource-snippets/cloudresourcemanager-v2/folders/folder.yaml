@@ -13,9 +13,15 @@
 # limitations under the License.
 
 imports:
-- path: folder.jinja
+  - path: folder.jinja
 resources:
-- name: new-folder
-  type: folder.jinja
-  properties:
-    folderParent: replaceMe # see folder.create documentation for proper parent ID formatting
+  - name: replaceMe # Resource name
+    type: folder.jinja
+    properties:
+      folderDisplayName: replaceMe # Folder name
+      folderParent: replaceMe # see folder.create documentation for proper parent ID formatting
+  - name: replaceMe # Resource name
+    type: folder.jinja
+    properties:
+      folderDisplayName: replaceMe # Folder name
+      folderParent: replaceMe # see folder.create documentation for proper parent ID formatting

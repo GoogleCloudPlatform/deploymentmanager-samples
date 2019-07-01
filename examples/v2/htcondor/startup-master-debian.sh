@@ -17,6 +17,7 @@ cat <<EOF > condor_config.local
 DISCARD_SESSION_KEYRING_ON_STARTUP=False
 DAEMON_LIST = MASTER, COLLECTOR, NEGOTIATOR
 CONDOR_ADMIN=EMAIL
+CONDOR_HOST=condor-master
 ALLOW_WRITE = \$(ALLOW_WRITE),10.240.0.0/16
 EOF
 mv condor_config.local /etc/condor/config.d/

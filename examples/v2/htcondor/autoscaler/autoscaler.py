@@ -144,16 +144,17 @@ credentials = GoogleCredentials.get_application_default()
 service = discovery.build('compute', 'v1', credentials=credentials)
 
 # Get total number of jobs in the queue that includes number of jos waiting as well as number of jobs already assigned to nodes
-queue_length_req = 'condor_q -totals | tail -n 1'
+queue_length_req = 'condor_q -totals -format "%d " Jobs -format "%d " Idle -format "%d " Held'
 queue_length_resp = os.popen(queue_length_req).read().split()
 
 if len(queue_length_resp) > 1:
     queue = int(queue_length_resp[0])
-    idle_jobs = int(queue_length_resp[6])
-    on_hold_jobs = int(queue_length_resp[10])
+    idle_jobs = int(queue_length_resp[1])
+    on_hold_jobs = int(queue_length_resp[2])
 else:
     queue = 0
     idle_jobs = 0
+    on_hold_jobs = 0
 
 print 'Total queue length: ' + str(queue)
 print 'Idle jobs: ' + str(idle_jobs)
@@ -224,9 +225,13 @@ if size < currentTarget:
         if len(name_status) > 1:
             name = name_status[0]
             status = name_status[1]
+            slot = "NO-SLOT"
             slot_server = name.split('@')
-            slot = slot_server[0]
-            server = slot_server[1].split('.')[0]
+            if len(slot_server) > 1:
+                slot = slot_server[0]
+                server = slot_server[1].split('.')[0]
+            else:
+                server = slot_server[0].split('.')[0]
 
             if debug > 0:
                 print slot + ', ' + server + ', ' + status + '\n'

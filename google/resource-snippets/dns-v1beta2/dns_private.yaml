@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All rights reserved.
+# Copyright 2019 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
 # limitations under the License.
 
 imports:
-- path: empty_bucket_in_function.jinja
+- path: dns_private.jinja
 
 resources:
-- name: my-function
-  type: empty_bucket_in_function.jinja
+- name: rrset-template-1
+  type: dns_private.jinja
   properties:
-     region: REGION_TO_RUN
-     entryPoint: handler
-     runtime: nodejs8
+    rrsetDomain: dm-testing-a-record.com
+    rrsetName: dm_testing_rrset_1
+    zoneDnsName: dm-testing-a-record.com
+    zoneName: dm_testing_zone_1
+    version: v1
+    aaaa_record: true

@@ -22,7 +22,10 @@ def GenerateConfig(context):
       'name': context.env['name'],
       'type': 'compute.v1.network',
       'properties': {
-          'IPv4Range': '10.0.0.0/16'
+          'routingConfig': {
+              'routingMode': 'REGIONAL'
+          },
+          'autoCreateSubnetworks': True
       }
   }]
   return {'resources': resources}

@@ -26,8 +26,8 @@ required:
 - zone
 - cidr
 - oss_node_count
-- mds_disk_type
-- mds_disk_size_gb
+- mds_boot_disk_type
+- mds_boot_disk_size_gb
 - mdt_disk_size_gb
 - mdt_disk_type
 - ost_disk_size_gb
@@ -39,8 +39,8 @@ optional:
 - lustre_version
 - e2fs_version
 - mds_node_count
-- oss_disk_type
-- oss_disk_size_gb
+- oss_boot_disk_type
+- oss_boot_disk_size_gb
 - oss_machine_type
 - mds_machine_type
 #- mgs_machine_type
@@ -89,12 +89,12 @@ properties:
     description : |
       Machine type to use for OSS node instances, eg. n1-standard-4.
 
-  mds_disk_type:
+  mds_boot_disk_type:
     enum        : ["pd-ssd", "pd-standard"]
     default     : pd-standard
     description : Disk type (pd-ssd or pd-standard) for the MDS boot disk.
 
-  mds_disk_size_gb:
+  mds_boot_disk_size_gb:
     type        : integer
     default     : 100
     minimum     : 10
@@ -102,7 +102,7 @@ properties:
     description : Size of disk for the MDS boot disk.
 
   mdt_disk_type:
-    enum        : ["pd-ssd", "pd-standard"]
+    enum        : ["pd-ssd", "pd-standard", "local-ssd"]
     default     : pd-standard
     description : Disk type (pd-ssd or pd-standard) for MDT disks.
 
@@ -113,12 +113,12 @@ properties:
     maximum     : 64000
     description : Size of disk for MDTs.
 
-  oss_disk_type:
+  oss_boot_disk_type:
     enum        : ["pd-ssd", "pd-standard"]
     default     : pd-standard
     description : Disk type (pd-ssd or pd-standard) for OSS boot disk.
 
-  oss_disk_size_gb:
+  oss_boot_disk_size_gb:
     type        : integer
     default     : 100
     minimum     : 10
@@ -126,7 +126,7 @@ properties:
     description : Size of disk for the OSS boot disk.
 
   ost_disk_type:
-    enum        : ["pd-ssd", "pd-standard"]
+    enum        : ["pd-ssd", "pd-standard", "local-ssd"]
     default     : pd-standard
     description : Disk type (pd-ssd or pd-standard) for OST disks.
 
