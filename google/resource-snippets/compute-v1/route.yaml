@@ -21,7 +21,7 @@ resources:
   type: route.jinja
   properties:
     zone: ZONE_TO_RUN
-    next_hop_ip: 10.0.0.0
+    next_hop_ip: 10.172.0.0
     use_custom_network: true
 - name: network
   type: network.jinja
