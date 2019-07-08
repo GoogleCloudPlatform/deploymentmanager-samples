@@ -276,17 +276,19 @@ def create_bucket(properties):
     resources = []
     if properties.get('usageExportBucket'):
         bucket_name = '$(ref.project.projectId)-usage-export'
-
+        # The following allows any bucket policy to be set on the export
+        # bucket, while also overwritting any change to name/ project.
+        policy = properties.get('usageExportBucketPolicy')
+        if not policy:
+            policy = {}
+        policy['name'] = bucket_name
+        policy['project'] = '$(ref.project.projectId)'
         # Create the bucket.
         resources.append(
             {
                 'name': 'create-usage-export-bucket',
                 'type': 'gcp-types/storage-v1:buckets',
-                'properties':
-                    {
-                        'project': '$(ref.project.projectId)',
-                        'name': bucket_name
-                    },
+                'properties': policy,
                 'metadata':
                     {
                         'dependsOn': ['api-storage-component.googleapis.com']
