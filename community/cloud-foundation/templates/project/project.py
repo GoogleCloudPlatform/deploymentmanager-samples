@@ -275,14 +275,13 @@ def create_bucket(properties):
 
     resources = []
     if properties.get('usageExportBucket'):
-        bucket_name = '$(ref.project.projectId)-usage-export'
         # The following allows any bucket policy to be set on the export
-        # bucket, while also overwritting any change to name/ project.
-        policy = properties.get('usageExportBucketPolicy')
-        if not policy:
-            policy = {}
-        policy['name'] = bucket_name
-        policy['project'] = '$(ref.project.projectId)'
+        # bucket. This allows specifying a bucket in another project.
+        policy = properties.get('usageExportBucketPolicy',{})
+        if 'name' not in policy.keys():
+            policy['name'] = '$(ref.project.projectId)-usage-export'
+        if 'project' not in policy.keys():
+            policy['project'] = '$(ref.project.projectId)'
         # Create the bucket.
         resources.append(
             {

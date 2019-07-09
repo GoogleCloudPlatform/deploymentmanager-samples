@@ -79,6 +79,8 @@ properties:
       Defines a bucket policy based on 
       https://cloud.google.com/storage/docs/json_api/v1/buckets/insert
       This is useful for setting ACLs, region or StorageClass.
+      If usageExportBucket is not set or set to false this setting will
+      be ignored.
   serviceAccounts:
     type: array
     default: []
