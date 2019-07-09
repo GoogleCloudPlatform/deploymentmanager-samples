@@ -166,6 +166,7 @@ def create_shared_vpc_subnet_iam(context, dependencies, members_list):
     """ Grant the shared VPC subnet IAM permissions to Service Accounts. """
 
     resources = []
+    dependencies.append('api-compute.googleapis.com')
     if (
             context.properties.get('sharedVPCSubnets') and
             context.properties.get('sharedVPC')
