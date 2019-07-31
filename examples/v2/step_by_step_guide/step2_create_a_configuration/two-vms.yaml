@@ -17,7 +17,7 @@ resources:
   type: compute.v1.instance
   properties:
     zone: us-central1-f
-    machineType: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/zones/us-central1-f/machineTypes/f1-micro
+    machineType: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/zones/us-central1-f/machineTypes/f1-micro
     disks:
     - deviceName: boot
       type: PERSISTENT
@@ -26,7 +26,7 @@ resources:
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
-    - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default
+    - network: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/global/networks/default
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
@@ -34,7 +34,7 @@ resources:
   type: compute.v1.instance
   properties:
     zone: us-central1-f
-    machineType: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/zones/us-central1-f/machineTypes/g1-small
+    machineType: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/zones/us-central1-f/machineTypes/g1-small
     disks:
     - deviceName: boot
       type: PERSISTENT
@@ -43,7 +43,7 @@ resources:
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
-    - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default
+    - network: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/global/networks/default
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
