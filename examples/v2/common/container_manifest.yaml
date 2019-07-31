@@ -21,8 +21,7 @@ metadata:
 spec:
   containers:
     - name: simple-echo
-      image: gcr.io/google-containers/busybox
-      command: ['nc', '-p', '8080', '-l', '-l', '-e', 'echo', 'hello world!']
+      image: gcr.io/google-samples/hello-app:2.0
       imagePullPolicy: Always
       ports:
         - containerPort: 8080
