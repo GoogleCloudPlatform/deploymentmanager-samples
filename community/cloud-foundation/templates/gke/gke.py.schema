@@ -328,7 +328,7 @@ properties:
           https://kubernetes.io/docs/concepts/services-networking/networkpolicies/
         properties:
           provider:
-            type: array
+            type: string
             description: The selected network policy provider.
             items:
               type: string
