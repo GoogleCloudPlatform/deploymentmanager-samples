@@ -121,20 +121,6 @@ Add the second instance by adding the following lines to the end of the file. Th
 At the end, your YAML file should look like this:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 resources:  
 - name: the-first-vm  
   type: compute.v1.instance  
@@ -259,20 +245,6 @@ networkInterfaces:
 Save your changes. Your configuration should look like this:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 resources:  
 - name: the-first-vm  
   type: compute.v1.instance  
@@ -357,20 +329,6 @@ Your next task is to create a Python template using the contents of the configur
 Create a new file called `vm-template.py` with the following code:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the virtual machine."""
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -414,21 +372,6 @@ def GenerateConfig(unused_context):
 Create a file named `vm-template-2.py` with the following code:
 
 ```sh  
-  {% include "cloud/_docwidgets/_github_include.html" with project="deploymentmanager-samples" file="examples/v2/step_by_step_guide/step5_create_a_template/python/vm-template-2.py" %}  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the virtual machine."""
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -472,20 +415,6 @@ def GenerateConfig(unused_context):
 Open the configuration you created earlier in the tutorial, `two-vms.yaml`. At the top of the file, import the templates by adding the `imports` string, followed by the relative path to the template file. Next, replace the properties of your resources with the names of the templates. 
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 imports:  
 - path: vm-template.py  
 - path: vm-template-2.py
@@ -540,20 +469,6 @@ After this step, your configuration only needs to call a single template to crea
 Create a new template file named `network-template.py` with the following network definition:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the network."""
 
 def GenerateConfig(unused_context):  
@@ -577,20 +492,6 @@ def GenerateConfig(unused_context):
 Create a template for a new firewall rule that allows TCP traffic from port 80. Call the file `firewall-template.py`:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the firewall."""
 
 def GenerateConfig(unused_context):  
@@ -656,20 +557,6 @@ def GenerateConfig(unused_context):
 Now, create a configuration that uses the templates you created. Make a file named `config-with-many-templates.yaml` and add the following content to the configuration:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 imports:  
 - path: vm-template.py  
 - path: vm-template-2.py  
@@ -772,20 +659,6 @@ Replace `$(ref.a-new-network.selfLink)` with:
 After these steps, your `vm-template.py` file should look like this:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the virtual machine."""
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -831,20 +704,6 @@ def GenerateConfig(context):
 Open `two-vms.yaml`. Remove the line importing `vm-template-2.py`. Your configuration should look like this:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 imports:  
 - path: vm-template.py
 
@@ -880,20 +739,6 @@ In this step, you will add a Python helper script that names a virtual machine g
 Create a helper file called `common.py` with the following code:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Generates name of a VM."""
 
 def GenerateMachineName(prefix, suffix):  
@@ -915,20 +760,6 @@ In the `resources` section, change the `name` listing to:
 Your `vm-template.py` file should look like this:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
 """Creates the virtual machine."""
 
 {% import 'common.py' as common %}
@@ -974,21 +805,7 @@ def GenerateConfig(context):
 Next, edit your configuration file to import the helper script. Open `two-vms.yaml` and change it to the following:
 
 ```sh  
-# Copyright 2016 Google Inc. All rights reserved.  
-#  
-# Licensed under the Apache License, Version 2.0 (the "License");  
-# you may not use this file except in compliance with the License.  
-# You may obtain a copy of the License at  
-#  
-#     http://www.apache.org/licenses/LICENSE-2.0  
-#  
-# Unless required by applicable law or agreed to in writing, software  
-# distributed under the License is distributed on an "AS IS" BASIS,  
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
-# See the License for the specific language governing permissions and  
-# limitations under the License.
-
-Imports:  
+imports:  
 - path: common.py  
 - path: vm-template.py
 
@@ -1063,14 +880,14 @@ Then, add a new resource:
 If you want to preview your updated configuration before committing changes, run the following command:
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-template-module  \  
+gcloud deployment-manager deployments update deployment-with-helper-script  \  
   --config two-vms.yaml --preview  
 ```
 
 ### Committing the update
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-template-module  
+gcloud deployment-manager deployments update deployment-with-helper-script  
 ```
 
 ### Deleting the deployment
@@ -1078,7 +895,7 @@ gcloud deployment-manager deployments update deployment-with-template-module
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
 ```sh  
-gcloud deployment-manager deployments delete deployment-with-template-module  
+gcloud deployment-manager deployments delete deployment-with-helper-script  
 ```
 
 ### Next: Wrapping up
