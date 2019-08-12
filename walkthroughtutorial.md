@@ -1063,14 +1063,14 @@ Then, add a new resource:
 If you want to preview your updated configuration before committing changes, run the following command:
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-template-module  \  
+gcloud deployment-manager deployments update deployment-with-helper-script  \  
   --config two-vms.yaml --preview  
 ```
 
 ### Committing the update
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-template-module  
+gcloud deployment-manager deployments update deployment-with-helper-script  
 ```
 
 ### Deleting the deployment
@@ -1078,7 +1078,7 @@ gcloud deployment-manager deployments update deployment-with-template-module
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
 ```sh  
-gcloud deployment-manager deployments delete deployment-with-template-module  
+gcloud deployment-manager deployments delete deployment-with-helper-script  
 ```
 
 ### Next: Wrapping up
