@@ -339,7 +339,7 @@ Once again, you will want to delete the deployment to avoid charges. Run the fol
 gcloud deployment-manager deployments delete deployment-with-many-templates  
 ```
 
-### Looking forward: exploring template potential
+### Looking ahead: exploring template potential
 
 Next, you will learn how to maximize template features such as custom properties to benefit your application development. 
 
