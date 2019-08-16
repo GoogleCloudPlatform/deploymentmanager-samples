@@ -1,3 +1,11 @@
+imports:
+- path: common.py
+- path: vm-template.py
+
+resources:
+- name: vm-1
+  type: vm-template.py
+# A new resource is added below.
 - name: a-new-vm
   type: compute.v1.instance
   properties:
