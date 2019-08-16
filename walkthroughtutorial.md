@@ -284,7 +284,9 @@ cloudshell edit firewall-template.py
 
 ## Exploring a template that uses multiple templates
 
-The template in the following example creates the Compute Engine with the network and firewall from the previous templates. Its resources include `vm-template.py`, `vm-template-2.py`, `network-template.py`, and `firewall-template.py`. 
+The template in the following example creates the Compute Engine with the network and firewall from the previous templates. 
+
+Its resources include `vm-template.py`, `vm-template-2.py`, `network-template.py`, and `firewall-template.py`. 
 
 To view this template, run the following command:
 
@@ -330,10 +332,6 @@ gcloud deployment-manager deployments delete deployment-with-many-templates
 ### Looking forward: exploring template potential
 
 Next, you will learn how to maximize template features such as custom properties to benefit your application development. 
-
-## Setting template properties and using environment variables
-
-Next, you will learn about the benefits of template properties and environment variables. Then, you will view template properties and environment variables in a configuration.
 
 ## Learning about template properties
 
@@ -443,7 +441,9 @@ To view the changes, open the `vm-template.py` file:
 cloudshell edit vm-template.py  
 ```
 
-The template contains code comments highlighting the changes made. Notice that `common.py` is imported at the top of the file. Also, the `name` listing in the `resources` section is changed to use the script.
+The template contains code comments highlighting the changes made. 
+
+Notice that `common.py` is imported at the top of the file. Also, the `name` listing in the `resources` section is changed to use the script.
 
 ## Changing your configuration
 
