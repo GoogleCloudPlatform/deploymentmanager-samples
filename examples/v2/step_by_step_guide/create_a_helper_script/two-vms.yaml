@@ -1,0 +1,8 @@
+imports:
+- path: common.py
+- path: vm-template.py
+
+resources:
+- name: vm-1
+  type: vm-template.py
+
