@@ -1,0 +1,35 @@
+imports:
+- path: common.py
+- path: vm-template.py
+
+resources:
+- name: vm-1
+  type: vm-template.py
+  # Metadata is added to vm-1 below.
+  metadata:
+      items:
+      - key: 'foo'
+        value: 'bar'
+      - key: 'dev'
+        value: 'vm'
+# A new resource is added below.
+- name: a-new-vm
+  type: compute.v1.instance
+  properties:
+    zone: us-central1-a
+    machineType: machine-type-url
+      - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: false
+      initializeParams:
+        diskName: a-new-vm-disk
+        sourceImage: image-url
+    networkInterfaces:
+    - network: network-url
+
+
+
+
+
+
