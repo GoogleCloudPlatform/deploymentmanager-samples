@@ -118,18 +118,18 @@ With references, you can access properties that are not defined until the resour
 
 Next, you will examine an updated `two-vms.yaml` that contains a network, as well as virtual machine instances that reference the network. 
 
-## Viewing the new `two-vms.yaml`
+## Exploring the new `two-vms.yaml`
 
-Return to the root directory using the following command:
+First, run the following command:
 
 ```sh  
-cd -  
+cd  
 ```
 
 To open the new `two-vms.yaml` file with the network and references, first use the following command:
 
 ```sh  
-cd examples/v2/step_by_step_guide/step4_use_references  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step4_use_references  
 ```
 
 Then, open the `two-vms.yaml` file:
@@ -178,18 +178,18 @@ You can use Python or Jinja2 to create templates for Deployment Manager. We reco
 
 Your next task is to create a Python template using the contents of the configuration you created earlier in this tutorial. 
 
-## Viewing a template
+## Examining a template
 
-Return to the root directory using the following command:
+First, run the following command:
 
 ```sh  
-cd -  
+cd  
 ```
 
-To view the template file, first use the following command:
+Next, change directories with the following command:
 
 ```sh  
-cd examples/v2/step_by_step_guide/step5_create_a_template/python  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step5_create_a_template/python  
 ```
 
 Then, open the `vm-template.py` file:
@@ -254,16 +254,16 @@ After incorporating these templates, your configuration only needs to call a sin
 
 ## Viewing a template for a network
 
-Return to the root directory using the following command:
+First, use the following command:
 
 ```sh  
-cd -  
+cd  
 ```
 
-To view the network template, first use the following command:
+To view the network template, use the following command:
 
 ```sh  
-cd examples/v2/step_by_step_guide/step6_use_multiple_templates/python  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step6_use_multiple_templates/python  
 ```
 
 Then, open the `network-template.py` file:
@@ -282,7 +282,7 @@ To view the `firewall-template.py` file, run the following command:
 cloudshell edit firewall-template.py  
 ```
 
-## Viewing a template that uses multiple templates
+## Exploring a template that uses multiple templates
 
 The template in the following example creates the Compute Engine with the network and firewall from the previous templates. Its resources include `vm-template.py`, `vm-template-2.py`, `network-template.py`, and `firewall-template.py`. 
 
@@ -292,7 +292,7 @@ To view this template, run the following command:
 cloudshell edit compute-engine-template.py  
 ```
 
-## Viewing a configuration that uses many templates
+## Importing many templates into a configuration 
 
 Now, you will explore a configuration that uses all the templates you previously viewed. 
 
@@ -357,20 +357,20 @@ Reference an environment variable using this syntax:
     context.env['variable-name']  
 ```
 
-## Viewing template properties and environment variables
+## Using template properties and environment variables in a template
 
 In this step, `vm-template.py` is converted to utilize the benefits of template properties and environment variables.
 
-To view the new `vm-template.py`, first return to the root directory using the following command:
+To view the new `vm-template.py`, first use the following command:
 
 ```sh  
-cd -  
+cd  
 ```
 
 Next, run the following command:
 
 ```sh  
-cd examples/v2/step_by_step_guide/step7_use_environment_variables/python  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step7_use_environment_variables/python  
 ```
 
 Then, open the `vm-template.py` file:
@@ -381,12 +381,18 @@ cloudshell edit vm-template.py
 
 Various parts of the file have been replaced with template properties and environment variables. For example, `the-first-vm` has been replaced with `context.env['name']`. Read the file comments to learn about other changes in the file.
 
-## Viewing the updated configuration file
+## Deploying your configuration
+
+If you would like to view the configuration file for this deployment, run the following command:
+
+```sh  
+cloudshell edit vm-config.yaml  
+```
 
 Save your changes and redeploy your configuration to confirm the variables work.
 
 ```sh  
-    gcloud deployment-manager deployments create deployment-with-template-properties --config config-with-many-templates.yaml  
+    gcloud deployment-manager deployments create deployment-with-template-properties --config vm-config.yaml  
 ```
 
 ### Deleting the deployment
@@ -401,91 +407,51 @@ gcloud deployment-manager deployments delete deployment-with-template-properties
 
 Next, you will learn how to use helper scripts to efficiently perform repeated tasks.
 
-## Creating a helper script
+## Exploring helper scripts
 
 **Helper scripts** are helper files that make your templates more efficient by performing specific functions. Helper scripts can be used to interpret resource metadata, create files, and launch services. 
 
-In this step, you will add a Python helper script that names a virtual machine given a prefix and a suffix.
+You will now explore a Python helper script that names a virtual machine, given a prefix and a suffix.
 
-Create a helper file called `common.py` with the following code:
+## Viewing the helper script
 
-```py  
-"""Generates name of a VM."""
+The helper script in this example generates the name for a virtual machine. To view the helper script, first run the following command:
 
-def GenerateMachineName(prefix, suffix):  
-  return prefix + "-" + suffix  
+```sh  
+cd  
 ```
 
-Open the `vm-template.py` file. Import `common.py` at the top of the file:
+Next, change to this directory: 
 
-```py  
-{% import 'common.py' as common %}  
+```sh  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/create_a_helper_script  
 ```
 
-In the `resources` section, change the `name` listing to:
+Then, open `common.py`:
 
-```py  
-{{ common.GenerateMachineName("myfrontend", "prod") }}  
+```sh  
+cloudshell edit common.py  
 ```
 
-Your `vm-template.py` file should look like this:
+## Using helper scripts in templates
 
-```py  
-"""Creates the virtual machine."""
+To use `common.py` in `vm-template.py`, several changes must be made to the template.
 
-{% import 'common.py' as common %}
+To view the changes, open the `vm-template.py` file:
 
-COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
-
-def GenerateConfig(context):  
-  """Creates the virtual machine with environment variables."""
-
-  resources = [{  
-      'name': {{ common.GenerateMachineName("myfrontend", "prod") }},  
-      'type': 'compute.v1.instance',  
-      'properties': {  
-          'zone': context.properties['zone'],  
-          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',  
-                                  context.env['project'], '/zones/',  
-                                  context.properties['zone'], '/machineTypes/',  
-                                  context.properties['machineType']]),  
-          'disks': [{  
-              'deviceName': 'boot',  
-              'type': 'PERSISTENT',  
-              'boot': True,  
-              'autoDelete': True,  
-              'initializeParams': {  
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',  
-                                          'debian-cloud/global/',  
-                                          'images/family/debian-9'])  
-              }  
-          }],  
-          'networkInterfaces': [{  
-              'network': '$(ref.' + context.properties['network']  
-                         + '.selfLink)',  
-              'accessConfigs': [{  
-                  'name': 'External NAT',  
-                  'type': 'ONE_TO_ONE_NAT'  
-              }]  
-          }]  
-      }  
-  }]  
-  return {'resources': resources}  
+```sh  
+cloudshell edit vm-template.py  
 ```
 
-Next, edit your configuration file to import the helper script. Open `two-vms.yaml` and change it to the following:
+The template contains code comments highlighting the changes made. Notice that `common.py` is imported at the top of the file. Also, the `name` listing in the `resources` section is changed to use the script.
 
-```yaml  
-imports:  
-- path: common.py  
-- path: vm-template.py
+## Changing your configuration
 
-resources:  
-- name: vm-1  
-  type: vm-template.py  
+The configuration must also be changed to import the helper script. To view this change, open `two-vms.yaml`:
+
+```sh  
+cloudshell edit two-vms.yaml  
 ```
-
-## Deploying your configuration
 
 Deploy your configuration to confirm the changes work:
 
@@ -512,41 +478,33 @@ Once you have created a deployment, you can update it as your application change
 +   Adding or removing resources from a deployment
 +   Updating the properties of existing resources in a deployment
 
-In this step, you will update a deployment by adding custom metadata to an existing resource and creating a new virtual machine resource.
+You will now update a deployment by adding custom metadata to an existing resource and creating a new virtual machine resource.
 
 ## Viewing the updated configuration file
 
-Open `two-vms.yaml`. Add the following metadata to "vm-1" in the `resources:` section:
+In this example, a new resource is also added to the configuration file `two-vms.yaml`.
 
-```yaml  
-metadata:  
-      items:  
-      - key: 'foo'  
-        value: 'bar'  
-      - key: 'dev'  
-        value: 'vm'  
+To view these changes, first run the following command:
+
+```sh  
+cd  
 ```
 
-Then, add a new resource:
+Next, change to this directory: 
 
-```yaml  
-- name: a-new-vm  
-  type: compute.v1.instance  
-  properties:  
-    zone: us-central1-a  
-    machineType: machine-type-url  
-      - deviceName: boot  
-      type: PERSISTENT  
-      boot: true  
-      autoDelete: false  
-      initializeParams:  
-        diskName: a-new-vm-disk  
-        sourceImage: image-url  
-    networkInterfaces:  
-    - network: network-url  
+```sh  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step9_update_a_deployment/python  
 ```
 
-### Previewing your updated configuration
+Then, open `two-vms.yaml`:
+
+```sh  
+cloudshell edit two-vms.yaml  
+```
+
+## Committing the update
+
+### Previewing the configuration
 
 If you want to preview your updated configuration before committing changes, run the following command:
 
@@ -555,7 +513,9 @@ gcloud deployment-manager deployments update deployment-with-helper-script  \
   --config two-vms.yaml --preview  
 ```
 
-### Committing the update
+### Updating the configuration
+
+To commit the update, run the following command:
 
 ```sh  
 gcloud deployment-manager deployments update deployment-with-helper-script  
@@ -563,7 +523,7 @@ gcloud deployment-manager deployments update deployment-with-helper-script
 
 ### Deleting the deployment
 
-Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
+You will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
 ```sh  
 gcloud deployment-manager deployments delete deployment-with-helper-script  
