@@ -1,4 +1,5 @@
 imports:
+# common.py is imported below.
 - path: common.py
 - path: vm-template.py
 
