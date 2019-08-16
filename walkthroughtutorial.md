@@ -18,6 +18,8 @@ After completing this tutorial, you can apply these techniques to carry out task
 
 This tutorial assumes that you are familiar with YAML syntax and are comfortable running commands in a Linux terminal. 
 
+### Select a project
+
 Select a GCP Console project to use for this tutorial. 
 
 <walkthrough-project-setup></walkthrough-project-setup>
@@ -36,11 +38,13 @@ Enable the Compute Engine and Deployment Manager APIs, which you will need for t
 gcloud services enable compute.googleapis.com deploymentmanager.googleapis.com  
 ```
 
-## Understanding Configurations
+## Understanding configurations
 
 A **configuration** defines the structure of a deployment. You must specify a configuration to create a deployment.
 
 In this step, you will access a configuration that creates a deployment with two instances. 
+
+## Access a configuration
 
 To access the configuration, first use the following command:
 
@@ -56,11 +60,15 @@ cloudshell edit two-vms.yaml
 
 You will now be able to view your configuration file, which has two resources: `the-first-vm` and `the-second-vm`.  Note that each resource has a `name`, `type`, and `properties` field.
 
+### Looking ahead: deploying resources
+
 You can use this configuration file to create a deployment. To learn how to deploy the resources in your configuration, continue to the next step. 
 
 ## Deploying your resources
 
 A **deployment** creates a set of resources defined in a configuration. Since a deployment contains the resources defined in the configuration, your deployment in this tutorial will have two virtual machine instances.
+
+## Deploying the configuration
 
 Run this command to deploy your configuration:
 
@@ -78,13 +86,15 @@ the-first-vm   compute.v1.instance  COMPLETED  []
 the-second-vm  compute.v1.instance  COMPLETED  []  
 ```
 
+## Viewing a deployment
+
 Run the following command to view the deployment. You will see a list of each resource in the deployment, along with the resource type, unique resource ID, resource name, and resource creation status:
 
 ```sh  
 gcloud deployment-manager deployments describe deployment-with-2-vms  
 ```
 
-## Viewing resources of a deployment
+### Viewing deployment resources
 
 You can view a list of resources to quickly see which resource might be causing the issue.
 
@@ -94,7 +104,7 @@ To get a list of deployment resources, run:
 gcloud deployment-manager resources list --deployment deployment-with-2-vms  
 ```
 
-### Deleting your deployment
+## Deleting your deployment
 
 You won't use this deployment for the remainder of the tutorial. Since Compute Engine resources incur charges, you should delete this deployment. Deleting a deployment also deletes all the resources in a deployment. 
 
@@ -154,7 +164,7 @@ If you would like to view your deployment, you can use the following command:
 gcloud deployment-manager deployments describe deployment-with-references  
 ```
 
-### Deleting Your Deployment
+## Deleting Your Deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -214,7 +224,7 @@ cloudshell edit two-vms.yaml
 
 In this updated file, the templates are imported at the top of the file. The properties of the resources are replaced with the names of the templates. 
 
-### Naming resources
+## Naming resources
 
 When you use a template, your resource names are defined using the `name` field provided in the template, not the name in the configuration file.
 
@@ -234,7 +244,7 @@ To view your deployment, run the following command:
  gcloud deployment-manager deployments describe deployment-with-templates  
 ```
 
-### Deleting the deployment
+## Deleting the deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -321,7 +331,7 @@ To view your deployment, run the following command:
 gcloud deployment-manager deployments describe deployment-with-many-templates  
 ```
 
-### Deleting Your Deployment
+## Deleting Your Deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -377,6 +387,8 @@ Then, open the `vm-template.py` file:
 cloudshell edit vm-template.py  
 ```
 
+### Exploring the changes
+
 Various parts of the file have been replaced with template properties and environment variables. For example, `the-first-vm` has been replaced with `context.env['name']`. Read the file comments to learn about other changes in the file.
 
 ## Deploying your configuration
@@ -393,7 +405,7 @@ Save your changes and redeploy your configuration to confirm the variables work.
     gcloud deployment-manager deployments create deployment-with-template-properties --config vm-config.yaml  
 ```
 
-### Deleting the deployment
+## Deleting the deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -443,6 +455,8 @@ cloudshell edit vm-template.py
 
 The template contains code comments highlighting the changes made. 
 
+### Exploring the changes
+
 Notice that `common.py` is imported at the top of the file. Also, the `name` listing in the `resources` section is changed to use the script.
 
 ## Changing your configuration
@@ -458,6 +472,8 @@ Deploy your configuration to confirm the changes work:
 ```sh  
 gcloud deployment-manager deployments create deployment-with-helper-script --config two-vms.yaml  
 ```
+
+## Viewing your deployment
 
 View your deployment with the following command:
 
@@ -521,7 +537,7 @@ To commit the update, run the following command:
 gcloud deployment-manager deployments update deployment-with-helper-script  
 ```
 
-### Deleting the deployment
+## Deleting the deployment
 
 You will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
