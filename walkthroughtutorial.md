@@ -84,7 +84,7 @@ Run the following command to view the deployment. You will see a list of each re
 gcloud deployment-manager deployments describe deployment-with-2-vms  
 ```
 
-### Viewing resources of a deployment
+## Viewing resources of a deployment
 
 You can view a list of resources to quickly see which resource might be causing the issue.
 
@@ -96,7 +96,7 @@ gcloud deployment-manager resources list --deployment deployment-with-2-vms
 
 ### Deleting your deployment
 
-You won't use this deployment for  remainder of the tutorial. Since Compute Engine resources incur charges, you should delete this deployment. Deleting a deployment also deletes all the resources in a deployment. 
+You won't use this deployment for the remainder of the tutorial. Since Compute Engine resources incur charges, you should delete this deployment. Deleting a deployment also deletes all the resources in a deployment. 
 
 **If you don't delete the deployment, you will run into conflicts with future examples.**
 
@@ -110,44 +110,37 @@ gcloud deployment-manager deployments delete deployment-with-2-vms
 
 Next, use references to improve troubleshooting and to access properties that are undefined until a resource is created.
 
-## Using references
+## Understanding reference benefits
 
 You can use **references** to define the properties of your configuration or templates instead of directly providing values.
 
 With references, you can access properties that are not defined until the resource is created. For example, when you define a virtual machine in your configuration, you do not know its IP address. However, you can create a reference to the IP address.
 
-In this step, `two-vms.yaml` contains a network, and the virtual machine instances reference the network. 
+Next, you will examine an updated `two-vms.yaml` that contains a network, as well as virtual machine instances that reference the network. 
 
-### Adding the network definition
+## Viewing the new `two-vms.yaml`
 
 Return to the root directory using the following command:
 
-```  
+```sh  
 cd -  
 ```
 
-To open the new `two-vms.yaml` file with the network and references, first change to this directory:
+To open the new `two-vms.yaml` file with the network and references, first use the following command:
 
-```  
+```sh  
 cd examples/v2/step_by_step_guide/step4_use_references  
 ```
 
 Then, open the `two-vms.yaml` file:
 
-```  
+```sh  
 cloudshell edit two-vms.yaml  
 ```
 
-### Replacing the networks in the virtual machine properties with references
-
-In the properties section of both your virtual machine instances, replace the value of `network` with a reference to the new network's `selfLink` property, so that the network interface property looks like this:
-
-```yaml  
-networkInterfaces:  
-- network: $(ref.a-new-network.selfLink)  
-```
-
 You can see that in the properties section of both of your virtual machine instances, the value of `network` is replaced with a reference to the new network's `selfLink` property.
+
+## Deploying your new configuration
 
 Deploy your configuration with the following command: 
 
@@ -171,13 +164,13 @@ gcloud deployment-manager deployments delete deployment-with-references
 
 ### Looking ahead
 
-To maximize efficiency while building large configurations, follow best practices such as using variables and templates. In the next step, you will learn to create templates and explore why templates enable flexible, dynamic configurations. 
+To maximize efficiency while building large configurations, follow best practices such as using variables and templates. 
 
-## Creating a Template
+In the next step, you will learn about templates and how they enable flexible, dynamic configurations. 
 
-### The power of templates
+## Exploring the power of templates
 
-Previously, you wrote a basic configuration file, which is sufficient for simple workloads. However, while developing an application, you will most likely require complex architectures. Therefore, we recommend that you break your configuration into templates. 
+While developing an application, you will most likely require complex architectures. Therefore, we recommend that you break your configuration into templates. 
 
 A **template** is a separate file that defines a set of resources. You can reuse templates across different deployments, which creates consistency across complex deployments.
 
@@ -185,107 +178,41 @@ You can use Python or Jinja2 to create templates for Deployment Manager. We reco
 
 Your next task is to create a Python template using the contents of the configuration you created earlier in this tutorial. 
 
-## Viewing your template
+## Viewing a template
 
-Create a new file called `vm-template.py` with the following code:
+Return to the root directory using the following command:
 
-```python  
-"""Creates the virtual machine."""
-
-COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
-
-def GenerateConfig(unused_context):  
-  """Creates the first virtual machine."""
-
-  resources = [{  
-      'name': 'the-first-vm',  
-      'type': 'compute.v1.instance',  
-      'properties': {  
-          'zone': 'us-central1-f',  
-          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/{{project-id}}',  
-                                  '/zones/us-central1-f/',  
-                                  'machineTypes/f1-micro']),  
-          'disks': [{  
-              'deviceName': 'boot',  
-              'type': 'PERSISTENT',  
-              'boot': True,  
-              'autoDelete': True,  
-              'initializeParams': {  
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',  
-                                          'debian-cloud/global/',  
-                                          'images/family/debian-9'])  
-              }  
-          }],  
-          'networkInterfaces': [{  
-              'network': '$(ref.a-new-network.selfLink)',  
-              'accessConfigs': [{  
-                  'name': 'External NAT',  
-                  'type': 'ONE_TO_ONE_NAT'  
-              }]  
-          }]  
-      }  
-  }]  
-  return {'resources': resources}  
+```sh  
+cd -  
 ```
 
-### Creating a second template
+To open the new `two-vms.yaml` file with the network and references, first use the following command:
 
-Create a file named `vm-template-2.py` with the following code:
-
-```py  
-"""Creates the virtual machine."""
-
-COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
-
-def GenerateConfig(unused_context):  
-  """Creates the second virtual machine."""
-
-  resources = [{  
-      'name': 'the-second-vm',  
-      'type': 'compute.v1.instance',  
-      'properties': {  
-          'zone': 'us-central1-f',  
-          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/{{project-id}}',  
-                                  '/zones/us-central1-f/',  
-                                  'machineTypes/g1-small']),  
-          'disks': [{  
-              'deviceName': 'boot',  
-              'type': 'PERSISTENT',  
-              'boot': True,  
-              'autoDelete': True,  
-              'initializeParams': {  
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',  
-                                          'debian-cloud/global',  
-                                          '/images/family/debian-9'])  
-              }  
-          }],  
-          'networkInterfaces': [{  
-              'network': '$(ref.a-new-network.selfLink)',  
-              'accessConfigs': [{  
-                  'name': 'External NAT',  
-                  'type': 'ONE_TO_ONE_NAT'  
-              }]  
-          }]  
-      }  
-  }]  
-  return {'resources': resources}  
+```sh  
+cd examples/v2/step_by_step_guide/step5_create_a_template/python  
 ```
 
-### Importing the templates
+Then, open the `vm-template.py` file:
 
-Open the configuration you created earlier in the tutorial, `two-vms.yaml`. At the top of the file, import the templates by adding the `imports` string, followed by the relative path to the template file. Next, replace the properties of your resources with the names of the templates. 
-
-```yaml  
-imports:  
-- path: vm-template.py  
-- path: vm-template-2.py
-
-resources:  
-- name: vm-1  
-  type: vm-template.py  
-- name: vm-2  
-  type: vm-template-2.py  
+```sh  
+cloudshell edit vm-template.py  
 ```
+
+There is a second template in this directory called `vm-template-2.py`. Like `vm-template.py`, `vm-template-2.py` creates a virtual machine. If you would like to view `vm-template-2.py`, run the following command:
+
+```sh  
+cloudshell edit vm-template-2.py  
+``` 
+
+## Importing templates
+
+Open the `two-vms.yaml` file in this directory with the following command:
+
+```sh  
+cloudshell edit two-vms.yaml  
+```
+
+In this updated file, the templates are imported at the top of the file. The properties of the resources are replaced with the names of the templates. 
 
 ### Naming resources
 
@@ -293,7 +220,7 @@ When you use a template, your resource names are defined using the `name` field 
 
 For example, in this case, the virtual machine instances are created using the names in the templates you created, "the-first-vm" and "the-second-vm." The values "vm-1" and "vm-2," defined in the configuration, are used to name an instantiation of the template, but are not resource names, unless you decide to use environment variables to set both names to be the same.
 
-### Viewing the deployment
+## Viewing the deployment
 
 Save your configuration and deploy it: 
 
@@ -321,11 +248,11 @@ Next, combine templates so that your configuration only calls one template to de
 
 ## Using multiple templates
 
-In this step, you will create a template that imports another template. You will further deconstruct `two-vms.yaml` and create a template for a network and a template for a firewall rule to allow incoming traffic on port 80.
+In this step, you will explore a template that imports another template. You will examine a template for a network and a template for a firewall rule to allow incoming traffic on port 80.
 
 After this step, your configuration only needs to call a single template to create a deployment with all of these resources.
 
-### Creating a template for a network
+## Viewing a template for a network
 
 Create a new template file named `network-template.py` with the following network definition:
 
@@ -348,7 +275,7 @@ def GenerateConfig(unused_context):
   return {'resources': resources}  
 ```
 
-### Creating a template for a firewall
+## Viewing a template for a firewall
 
 Create a template for a new firewall rule that allows TCP traffic from port 80. Call the file `firewall-template.py`:
 
@@ -373,7 +300,7 @@ def GenerateConfig(unused_context):
   return {'resources': resources}  
 ```
 
-### Creating a template that uses the network, firewall, and virtual machine templates
+## Viewing a template that uses multiple templates
 
 Create a file named `compute-engine-template.py` with the following code: 
 
@@ -399,7 +326,7 @@ def GenerateConfig(unused_context):
   return {'resources': resources}  
 ```
 
-### Creating the configuration
+## Creating a configuration that uses many templates
 
 Now, create a configuration that uses the templates you created. Make a file named `config-with-many-templates.yaml` and add the following content to the configuration:
 
@@ -445,7 +372,9 @@ Next, you will learn how to maximize template features such as custom properties
 
 ## Setting template properties and using environment variables
 
-### About template properties
+Next, you will learn about the benefits of template properties and environment variables. Then, you will view template properties and environment variables in a configuration.
+
+## Learning about template properties
 
 An advantage of using templates is the ability to create and define custom properties, which enable the reuse of templates across zones, regions, and projects.
 
@@ -457,7 +386,7 @@ To reference an arbitrary value, use this syntax in a template:
     context.properties["property-name"]  
 ```
 
-### About environment variables
+## Learning about environment variables
 
 Environment variables are predefined variables that populate particular pieces of information from your deployment. Use environment variables in templates to get unique information about your deployment. 
 
@@ -467,7 +396,7 @@ Reference an environment variable using this syntax:
     context.env['variable-name']  
 ```
 
-### Using template properties and environment variables
+## Using template properties and environment variables
 
 You can convert the template you created in the previous step to utilize the benefits of template properties and environment variables.
 
@@ -546,7 +475,7 @@ def GenerateConfig(context):
   return {'resources': resources}  
 ```
 
-### Updating the configuration file
+## Viewing the updated configuration file
 
 Open `two-vms.yaml`. Remove the line importing `vm-template-2.py`. Your configuration should look like this:
 
@@ -661,7 +590,7 @@ resources:
   type: vm-template.py  
 ```
 
-### Deploying your configuration
+## Deploying your configuration
 
 Deploy your configuration to confirm the changes work:
 
@@ -690,7 +619,7 @@ Once you have created a deployment, you can update it as your application change
 
 In this step, you will update a deployment by adding custom metadata to an existing resource and creating a new virtual machine resource.
 
-### Making changes to your configuration file
+## Viewing the updated configuration file
 
 Open `two-vms.yaml`. Add the following metadata to "vm-1" in the `resources:` section:
 
@@ -772,4 +701,4 @@ Here are some areas to explore as you learn more details about specific Deployme
 +   [Learn about Compute Engine startup scripts](https://cloud.google.com/compute/docs/startupscript)
 +   [Read about importing Python libraries](https://cloud.google.com/deployment-manager/docs/configuration/templates/import-python-libraries)
 +   [Understand guidelines for preparing updates](https://cloud.google.com/deployment-manager/docs/deployments/updating-deployments)
-+   [Explore more complex tutorials](https://cloud.google.com/deployment-manager/docs/tutorials) 
++   [Explore more complex tutorials](https://cloud.google.com/deployment-manager/docs/tutorials)
