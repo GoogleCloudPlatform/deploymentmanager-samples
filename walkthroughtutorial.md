@@ -20,11 +20,13 @@ This tutorial assumes that you are familiar with YAML syntax and are comfortable
 
 ### Select a project
 
-Select a GCP Console project to use for this tutorial. 
+Select a GCP Console project to use for this tutorial.
 
 <walkthrough-project-setup></walkthrough-project-setup>
 
 ## Setup
+
+Enable billing
 
 Every command requires a project ID. Set a default project ID so you do not need to provide it every time. 
 
@@ -68,7 +70,7 @@ You can use this configuration file to create a deployment. To learn how to depl
 
 A **deployment** creates a set of resources defined in a configuration. Since a deployment contains the resources defined in the configuration, your deployment in this tutorial will have two virtual machine instances.
 
-## Deploying the configuration
+## Deploy the configuration
 
 Run this command to deploy your configuration:
 
@@ -86,7 +88,7 @@ the-first-vm   compute.v1.instance  COMPLETED  []
 the-second-vm  compute.v1.instance  COMPLETED  []  
 ```
 
-## Viewing a deployment
+## View the deployment
 
 Run the following command to view the deployment. You will see a list of each resource in the deployment, along with the resource type, unique resource ID, resource name, and resource creation status:
 
@@ -94,7 +96,7 @@ Run the following command to view the deployment. You will see a list of each re
 gcloud deployment-manager deployments describe deployment-with-2-vms  
 ```
 
-### Viewing deployment resources
+### View deployment resources
 
 You can view a list of resources to quickly see which resource might be causing the issue.
 
@@ -104,7 +106,7 @@ To get a list of deployment resources, run:
 gcloud deployment-manager resources list --deployment deployment-with-2-vms  
 ```
 
-## Deleting your deployment
+## Delete your deployment
 
 You won't use this deployment for the remainder of the tutorial. Since Compute Engine resources incur charges, you should delete this deployment. Deleting a deployment also deletes all the resources in a deployment. 
 
@@ -118,9 +120,9 @@ gcloud deployment-manager deployments delete deployment-with-2-vms
 
 ### Looking ahead: references
 
-Next, use references to improve troubleshooting and to access properties that are undefined until a resource is created.
+Next, use references to improve troubleshooting and to access properties of other resources in your deployment.
 
-## Understanding reference benefits
+## Understanding the benefits of references
 
 You can use **references** to define the properties of your configuration or templates instead of directly providing values.
 
@@ -130,7 +132,7 @@ Next, you will examine an updated `two-vms.yaml` that contains a network, as wel
 
 ## Exploring the new `two-vms.yaml`
 
-First, run the following command:
+First, run the following command to open your home directory:
 
 ```sh  
 cd  
@@ -148,9 +150,9 @@ Then, open the `two-vms.yaml` file:
 cloudshell edit two-vms.yaml  
 ```
 
-You can see that in the properties section of both of your virtual machine instances, the value of `network` is replaced with a reference to the new network's `selfLink` property.
+In the properties section of both of your virtual machine instances, the value of `network` is replaced with a reference to the new network's `selfLink` property.
 
-## Deploying your new configuration
+## Deploy your new configuration
 
 Deploy your configuration with the following command: 
 
@@ -158,13 +160,13 @@ Deploy your configuration with the following command:
 gcloud deployment-manager deployments create deployment-with-references --config two-vms.yaml  
 ```
 
-If you would like to view your deployment, you can use the following command: 
+To view your deployment, use the following command: 
 
 ```sh  
 gcloud deployment-manager deployments describe deployment-with-references  
 ```
 
-## Deleting Your Deployment
+## Delete Your Deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -190,7 +192,7 @@ Your next task is to create a Python template using the contents of the configur
 
 ## Examining a template
 
-First, run the following command:
+First, run the following command to open your home directory:
 
 ```sh  
 cd  
@@ -208,11 +210,16 @@ Then, open the `vm-template.py` file:
 cloudshell edit vm-template.py  
 ```
 
-There is a second template in this directory called `vm-template-2.py`. Like `vm-template.py`, `vm-template-2.py` creates a virtual machine. If you would like to view `vm-template-2.py`, run the following command:
+## Editing a second template
+
+There is a second template in this directory called `vm-template-2.py`. Like `vm-template.py`, `vm-template-2.py` creates a virtual machine. 
+
+To view `vm-template-2.py`, run the following command:
 
 ```sh  
 cloudshell edit vm-template-2.py  
-``` 
+```  
+ 
 
 ## Importing templates
 
@@ -230,7 +237,7 @@ When you use a template, your resource names are defined using the `name` field 
 
 For example, in this case, the virtual machine instances are created using the names in the templates you created, "the-first-vm" and "the-second-vm." The values "vm-1" and "vm-2," defined in the configuration, are used to name an instantiation of the template, but are not resource names, unless you decide to use environment variables to set both names to be the same.
 
-## Viewing the deployment
+## View the deployment
 
 Save your configuration and deploy it: 
 
@@ -244,7 +251,7 @@ To view your deployment, run the following command:
  gcloud deployment-manager deployments describe deployment-with-templates  
 ```
 
-## Deleting the deployment
+## Delete the deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -264,7 +271,7 @@ After incorporating these templates, your configuration only needs to call a sin
 
 ## Viewing a template for a network
 
-First, use the following command:
+First, use the following command to open your home directory:
 
 ```sh  
 cd  
@@ -316,7 +323,7 @@ cloudshell edit config-with-many-templates.yaml
 
 Notice that the configuration did not directly call the other templates. However, the other templates are imported because `compute-engine-template.py` depends on the other templates to be valid.
 
-## Deploying your configuration
+## Deploy your configuration
 
 Save your configuration and deploy it:
 
@@ -331,7 +338,7 @@ To view your deployment, run the following command:
 gcloud deployment-manager deployments describe deployment-with-many-templates  
 ```
 
-## Deleting Your Deployment
+## Delete your deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -367,9 +374,9 @@ Reference an environment variable using this syntax:
 
 ## Using template properties and environment variables in a template
 
-In this step, `vm-template.py` is converted to utilize the benefits of template properties and environment variables.
+In this step, `vm-template.py` shows the benefits of template properties and environment variables.
 
-To view the new `vm-template.py`, first use the following command:
+To view the new `vm-template.py`, first use the following command to open your home directory:
 
 ```sh  
 cd  
@@ -389,11 +396,11 @@ cloudshell edit vm-template.py
 
 ### Exploring the changes
 
-Various parts of the file have been replaced with template properties and environment variables. For example, `the-first-vm` has been replaced with `context.env['name']`. Read the file comments to learn about other changes in the file.
+Various parts of the file have been replaced with template properties and environment variables. For example, the project ID is replaced with `context.env[`project`]`. Read the file comments to learn about other changes in the file.
 
-## Deploying your configuration
+## Deploy your configuration
 
-If you would like to view the configuration file for this deployment, run the following command:
+To view the configuration file for this deployment, run the following command:
 
 ```sh  
 cloudshell edit vm-config.yaml  
@@ -405,7 +412,7 @@ Save your changes and redeploy your configuration to confirm the variables work.
     gcloud deployment-manager deployments create deployment-with-template-properties --config vm-config.yaml  
 ```
 
-## Deleting the deployment
+## Delete the deployment
 
 Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
@@ -413,7 +420,7 @@ Once again, you will want to delete the deployment to avoid charges. Run the fol
 gcloud deployment-manager deployments delete deployment-with-template-properties  
 ```
 
-### Looking forward: helper scripts
+### Looking ahead: helper scripts
 
 Next, you will learn how to use helper scripts to efficiently perform repeated tasks.
 
@@ -425,7 +432,7 @@ You will now explore a Python helper script that names a virtual machine, given 
 
 ## Viewing the helper script
 
-The helper script in this example generates the name for a virtual machine. To view the helper script, first run the following command:
+The helper script in this example generates the name for a virtual machine. To view the helper script, first run the following command to open your home directory:
 
 ```sh  
 cd  
@@ -473,7 +480,7 @@ Deploy your configuration to confirm the changes work:
 gcloud deployment-manager deployments create deployment-with-helper-script --config two-vms.yaml  
 ```
 
-## Viewing your deployment
+## View your deployment
 
 View your deployment with the following command:
 
@@ -481,7 +488,13 @@ View your deployment with the following command:
  gcloud deployment-manager deployments describe deployment-with-helper-script  
 ```
 
-**Note that you do not need to delete this deployment yet because you will use it in the next step.**
+## Delete the deployment
+
+Once again, you will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
+
+```sh  
+gcloud deployment-manager deployments delete deployment-with-helper-script  
+```
 
 ### Looking forward: updating deployments
 
@@ -494,13 +507,35 @@ Once you have created a deployment, you can update it as your application change
 +   Adding or removing resources from a deployment
 +   Updating the properties of existing resources in a deployment
 
-You will now update a deployment by adding custom metadata to an existing resource and creating a new virtual machine resource.
+You will now update a deployment by changing the metadata in `vm-template.py`.
 
-## Viewing the updated configuration file
+## Deploy the original configuration
 
-In this example, a new resource is also added to the configuration file `two-vms.yaml`.
+In this step, deploy the configuration that you will later update.
 
-To view these changes, first run the following command:
+First, run the following command to open your home directory:
+
+```sh  
+cd  
+```
+
+Next, change to this directory: 
+
+```sh  
+cd deploymentmanager-samples/examples/v2/step_by_step_guide/step8_metadata_and_startup_scripts/python  
+```
+
+Deploy your configuration:
+
+```sh  
+gcloud deployment-manager deployments create deployment-to-update --config config-with-many-templates.yaml  
+```
+
+## Viewing the updated template
+
+In this example, the metadata is changed in `vm-template.py`.
+
+To view these changes, first run the following command to open your home directory:
 
 ```sh  
 cd  
@@ -512,37 +547,39 @@ Next, change to this directory:
 cd deploymentmanager-samples/examples/v2/step_by_step_guide/step9_update_a_deployment/python  
 ```
 
-Then, open `two-vms.yaml`:
+Then, open `vm-template.py`:
 
 ```sh  
-cloudshell edit two-vms.yaml  
+cloudshell edit vm-template.py  
 ```
 
-## Committing the update
+Notice that theThe metadata section is changed in the file. 
 
-### Previewing the configuration
+## Commit the update
 
-If you want to preview your updated configuration before committing changes, run the following command:
+### Preview the configuration
+
+To preview your updated configuration before committing changes, run the following command:
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-helper-script  \  
-  --config two-vms.yaml --preview  
+gcloud deployment-manager deployments update deployment-to-update  \  
+  --config config-with-many-templates.yaml --preview  
 ```
 
-### Updating the configuration
+### Update the configuration
 
 To commit the update, run the following command:
 
 ```sh  
-gcloud deployment-manager deployments update deployment-with-helper-script  
+gcloud deployment-manager deployments update deployment-to-update  
 ```
 
-## Deleting the deployment
+## Delete the deployment
 
 You will want to delete the deployment to avoid charges. Run the following command to delete the deployment:
 
 ```sh  
-gcloud deployment-manager deployments delete deployment-with-helper-script  
+gcloud deployment-manager deployments delete deployment-to-update  
 ```
 
 ### Next: Wrapping up
@@ -566,10 +603,9 @@ You learned skills such as:
 
 Here are some areas to explore as you learn more details about specific Deployment Manager functions:
 
++   [Explore more complex tutorials](https://cloud.google.com/deployment-manager/docs/tutorials)
 +   Page on metadata and startup scripts
 +   [Learn about available resource types](https://cloud.google.com/deployment-manager/docs/configuration/supported-resource-types) 
 +   [Read the environment variables documentation](https://cloud.google.com/deployment-manager/docs/configuration/templates/use-environment-variables)
-+   [Learn about Compute Engine startup scripts](https://cloud.google.com/compute/docs/startupscript)
 +   [Read about importing Python libraries](https://cloud.google.com/deployment-manager/docs/configuration/templates/import-python-libraries)
 +   [Understand guidelines for preparing updates](https://cloud.google.com/deployment-manager/docs/deployments/updating-deployments)
-+   [Explore more complex tutorials](https://cloud.google.com/deployment-manager/docs/tutorials) 
