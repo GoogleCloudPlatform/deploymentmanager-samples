@@ -158,7 +158,17 @@ Then, open the `two-vms.yaml` file:
 cloudshell edit two-vms.yaml  
 ```
 
+### Exploring the reference to a network
+
 In the properties section of both of your virtual machine instances, the value of `network` is replaced with a reference to the new network's `selfLink` property.
+
+### Update your project ID
+
+Replace all instances of "MY_PROJECT" in the file with your project ID:
+
+```sh  
+sed -i -e 's/MY_PROJECT/{{project-id}}/g' two-vms.yaml  
+```
 
 ## Deploy your new configuration
 
