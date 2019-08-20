@@ -48,6 +48,7 @@ def GenerateConfig(context):
                   'type': 'ONE_TO_ONE_NAT'
               }]
           }],
+	  # The metadata section of this template is changed below.
           'metadata': {
               'items': [{
                   'key': 'startup-script',
