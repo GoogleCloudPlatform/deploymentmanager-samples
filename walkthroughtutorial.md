@@ -62,6 +62,14 @@ cloudshell edit two-vms.yaml
 
 You will now be able to view your configuration file, which has two resources: `the-first-vm` and `the-second-vm`.  Note that each resource has a `name`, `type`, and `properties` field.
 
+### Update your project ID
+
+Replace all instances of "MY_PROJECT" in the file with your project ID:
+
+```sh  
+sed -i -e 's/MY_PROJECT/{{project-id}}/g' two-vms.yaml  
+```
+
 ### Looking ahead: deploying resources
 
 You can use this configuration file to create a deployment. To learn how to deploy the resources in your configuration, continue to the next step. 
@@ -500,7 +508,7 @@ gcloud deployment-manager deployments delete deployment-with-helper-script
 
 Next, learn to add, delete, and change the properties of resources of a deployment as your application evolves.
 
-## Updating the deployment
+## Updating a deployment
 
 Once you have created a deployment, you can update it as your application changes. You can use Deployment Manager to update a deployment by:
 
@@ -553,7 +561,7 @@ Then, open `vm-template.py`:
 cloudshell edit vm-template.py  
 ```
 
-Notice that theThe metadata section is changed in the file. 
+Notice that the metadata section is changed in the file. 
 
 ## Commit the update
 
@@ -608,4 +616,4 @@ Here are some areas to explore as you learn more details about specific Deployme
 +   [Learn about available resource types](https://cloud.google.com/deployment-manager/docs/configuration/supported-resource-types) 
 +   [Read the environment variables documentation](https://cloud.google.com/deployment-manager/docs/configuration/templates/use-environment-variables)
 +   [Read about importing Python libraries](https://cloud.google.com/deployment-manager/docs/configuration/templates/import-python-libraries)
-+   [Understand guidelines for preparing updates](https://cloud.google.com/deployment-manager/docs/deployments/updating-deployments)
++   [Understand guidelines for preparing updates](https://cloud.google.com/deployment-manager/docs/deployments/updating-deployments) 
