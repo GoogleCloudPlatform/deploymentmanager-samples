@@ -158,19 +158,21 @@ Then, open the `two-vms.yaml` file:
 cloudshell edit two-vms.yaml  
 ```
 
-### Exploring the reference to a network
+### Viewing the reference to a network
 
 In the properties section of both of your virtual machine instances, the value of `network` is replaced with a reference to the new network's `selfLink` property.
 
+## Deploy your new configuration
+
 ### Update your project ID
 
-Replace all instances of "MY_PROJECT" in the file with your project ID:
+Replace all instances of "MY_PROJECT" in `two-vms.yaml` with your project ID:
 
 ```sh  
 sed -i -e 's/MY_PROJECT/{{project-id}}/g' two-vms.yaml  
 ```
 
-## Deploy your new configuration
+### Deploy your configuration
 
 Deploy your configuration with the following command: 
 
@@ -283,11 +285,15 @@ Next, combine templates so that your configuration only calls one template to de
 
 ## Using multiple templates
 
-Next, you will explore a template that imports another template. You will examine a template for a network and a template for a firewall rule to allow incoming traffic on port 80.
+Next, you will explore a template that imports other templates. 
 
 After incorporating these templates, your configuration only needs to call a single template to create a deployment with all of these resources.
 
-## Viewing a template for a network
+## Exploring a template that uses multiple templates
+
+The template in this example creates a Compute Engine with a network and a firewall.
+
+### Access the template
 
 First, use the following command to open your home directory:
 
@@ -295,33 +301,11 @@ First, use the following command to open your home directory:
 cd  
 ```
 
-To view the network template, use the following command:
+Next, use the following command:
 
 ```sh  
 cd deploymentmanager-samples/examples/v2/step_by_step_guide/step6_use_multiple_templates/python  
 ```
-
-Then, open the `network-template.py` file:
-
-```sh  
-cloudshell edit network-template.py  
-```
-
-## Viewing a template for a firewall
-
-The firewall template in this example allows TCP traffic from port 80.
-
-To view the `firewall-template.py` file, run the following command:
-
-```sh  
-cloudshell edit firewall-template.py  
-```
-
-## Exploring a template that uses multiple templates
-
-The template in the following example creates the Compute Engine with the network and firewall from the previous templates. 
-
-Its resources include `vm-template.py`, `vm-template-2.py`, `network-template.py`, and `firewall-template.py`. 
 
 To view this template, run the following command:
 
@@ -329,9 +313,13 @@ To view this template, run the following command:
 cloudshell edit compute-engine-template.py  
 ```
 
+### Viewing the template's resources
+
+The template's resources include `vm-template.py`, `vm-template-2.py`, `network-template.py`, and `firewall-template.py`. You can view these templates using the `cloudshell edit {file-name}` command.
+
 ## Importing many templates into a configuration 
 
-Now, you will explore a configuration that uses all the templates you previously viewed. 
+Now, you will explore a configuration that uses the template you previously viewed. 
 
 To see this file, run the following command:
 
