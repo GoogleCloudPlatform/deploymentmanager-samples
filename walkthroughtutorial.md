@@ -345,7 +345,7 @@ Notice that the configuration did not directly call the other templates. However
 Save your configuration and deploy it:
 
 ```sh  
-gcloud deployment-manager deployments create deployment-with-many-templates \  
+gcloud deployment-manager deployments create deployment-with-many-templates
  --config config-with-many-templates.yaml  
 ```
 
