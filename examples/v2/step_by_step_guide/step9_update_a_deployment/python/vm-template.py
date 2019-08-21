@@ -18,9 +18,9 @@ COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
 
 def GenerateConfig(context):
-  """Creates the virtual machine."""
+      """Creates the virtual machine."""
 
-  resources = [{
+      resources = [{
       'name': context.env['name'],
       'type': 'compute.v1.instance',
       'properties': {
@@ -48,7 +48,7 @@ def GenerateConfig(context):
                   'type': 'ONE_TO_ONE_NAT'
               }]
           }],
-	  # The metadata section of this template is changed below.
+          # The metadata section of this template is changed below.
           'metadata': {
               'items': [{
                   'key': 'startup-script',
