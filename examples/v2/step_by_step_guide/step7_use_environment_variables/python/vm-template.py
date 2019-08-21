@@ -26,9 +26,9 @@ def GenerateConfig(context):
       'type': 'compute.v1.instance',
       'properties': {
           # All occurrences of `us-central1-f` are replaced with
-	  # `context.properties[`zone`]. 
+          # `context.properties[`zone`]. 
           # All occurrences of the project ID are replaced with 
-	  # `context.env[`project`]`.
+          # `context.env[`project`]`.
           # `f1-micro` is replaced with `context.properties["machineType"].  
           'zone': context.properties['zone'],
           'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
