@@ -345,7 +345,7 @@ Notice that the configuration did not directly call the other templates. However
 Save your configuration and deploy it:
 
 ```sh  
-gcloud deployment-manager deployments create deployment-with-many-templates
+gcloud deployment-manager deployments create deployment-with-many-templates \  
  --config config-with-many-templates.yaml  
 ```
 
@@ -420,13 +420,13 @@ Various parts of the file have been replaced with template properties and enviro
 To view the configuration file for this deployment, run the following command:
 
 ```sh  
-cloudshell edit vm-config.yaml  
+cloudshell edit config-with-many-templates.yaml  
 ```
 
 Save your changes and redeploy your configuration to confirm the variables work.
 
 ```sh  
-    gcloud deployment-manager deployments create deployment-with-template-properties --config vm-config.yaml  
+    gcloud deployment-manager deployments create deployment-with-template-properties --config config-with-many-templates.yaml  
 ```
 
 ## Delete the deployment
