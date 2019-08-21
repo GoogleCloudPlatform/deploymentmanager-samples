@@ -579,8 +579,7 @@ Notice that the metadata section is changed in the file.
 To preview your updated configuration before committing changes, run the following command:
 
 ```sh  
-gcloud deployment-manager deployments update deployment-to-update  \  
-  --config config-with-many-templates.yaml --preview  
+gcloud deployment-manager deployments update deployment-to-update --config config-with-many-templates.yaml --preview  
 ```
 
 ### Update the configuration
