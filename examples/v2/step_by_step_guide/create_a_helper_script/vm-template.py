@@ -1,37 +1,32 @@
 """Creates the virtual machine."""
 
 # `common.py` is imported below.
-from helpers import common
+import common
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
 
 def GenerateConfig(context):
-  """Creates the virtual machine with environment variables."""
-  # The `name` listing has been changed to use the helper script.
+  """Generates configuration of a VM."""
   resources = [{
-      'name': {{ common.GenerateMachineName("myfrontend", "prod") }},
+      'name': common.GenerateMachineName('myfrontend', 'prod'),
       'type': 'compute.v1.instance',
       'properties': {
-          'zone': context.properties['zone'],
-          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                  context.env['project'], '/zones/',
-                                  context.properties['zone'], '/machineTypes/',
-                                  context.properties['machineType']]),
+          'zone': 'us-central1-f',
+          'machineType': COMPUTE_URL_BASE + 'projects/' + context.env['project']
+                         + '/zones/us-central1-f/machineTypes/f1-micro',
           'disks': [{
               'deviceName': 'boot',
               'type': 'PERSISTENT',
               'boot': True,
               'autoDelete': True,
               'initializeParams': {
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                          'debian-cloud/global/',
-                                          'images/family/debian-9'])
-              }
+                  'sourceImage': COMPUTE_URL_BASE + 'projects/'
+                                 'debian-cloud/global/images/family/debian-9'}
           }],
           'networkInterfaces': [{
-              'network': '$(ref.' + context.properties['network']
-                         + '.selfLink)',
+              'network': COMPUTE_URL_BASE + 'projects/' + context.env['project']
+                         + '/global/networks/default',
               'accessConfigs': [{
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
@@ -40,4 +35,4 @@ def GenerateConfig(context):
       }
   }]
   return {'resources': resources}
-
+ 
