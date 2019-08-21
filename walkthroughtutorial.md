@@ -44,7 +44,7 @@ gcloud services enable compute.googleapis.com deploymentmanager.googleapis.com
 
 A **configuration** defines the structure of a deployment. You must specify a configuration to create a deployment.
 
-In this step, you will access a configuration that creates a deployment with two instances. 
+In this step, you will access a configuration that creates a deployment with two instances. An **instance** is one of several kinds of resources you can deploy with Deployment Manager.
 
 ## Access a configuration
 
