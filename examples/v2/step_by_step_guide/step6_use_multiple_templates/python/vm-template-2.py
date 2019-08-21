@@ -17,7 +17,7 @@
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
 
-def GenerateConfig(unused_context):
+def GenerateConfig(context):
   """Creates the second virtual machine."""
 
   resources = [{
