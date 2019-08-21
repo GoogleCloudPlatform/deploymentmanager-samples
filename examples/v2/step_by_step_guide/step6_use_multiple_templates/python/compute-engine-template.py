@@ -15,7 +15,7 @@
 """Creates the Compute Engine."""
 
 
-def GenerateConfig(unused_context):
+def GenerateConfig(context):
   """Creates the Compute Engine with network and firewall."""
 
   resources = [{
