@@ -46,8 +46,8 @@ def GenerateConfig(context):
                                           'images/family/debian-9'])
               }
           }],
-	  # `$(ref.a-new-network.selfLink)` is replaced with 
-	  # `$(ref.` + context.properties[`network`] + `selfLink)`.
+          # `$(ref.a-new-network.selfLink)` is replaced with 
+          # `$(ref.` + context.properties[`network`] + `selfLink)`.
           'networkInterfaces': [{
               'network': '$(ref.' + context.properties['network']
                          + '.selfLink)',
