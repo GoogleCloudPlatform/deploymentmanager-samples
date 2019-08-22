@@ -26,8 +26,6 @@ Select a GCP Console project to use for this tutorial.
 
 ## Setup
 
-Enable billing
-
 Every command requires a project ID. Set a default project ID so you do not need to provide it every time. 
 
 ```sh  
@@ -345,8 +343,7 @@ Notice that the configuration did not directly call the other templates. However
 Save your configuration and deploy it:
 
 ```sh  
-gcloud deployment-manager deployments create deployment-with-many-templates \  
- --config config-with-many-templates.yaml  
+gcloud deployment-manager deployments create deployment-with-many-templates --config config-with-many-templates.yaml  
 ```
 
 To view your deployment, run the following command:
