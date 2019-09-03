@@ -26,10 +26,14 @@ required:
 - zone
 - cidr
 - oss_node_count
+- mds_ip_range_start
 - mds_boot_disk_type
 - mds_boot_disk_size_gb
+- mdt_per_mds
 - mdt_disk_size_gb
 - mdt_disk_type
+- oss_ip_range_start
+- ost_per_oss
 - ost_disk_size_gb
 - ost_disk_type
 - external_ips
@@ -45,7 +49,6 @@ optional:
 - mds_machine_type
 #- mgs_machine_type
 - mds_ip_address
-- oss_ip_range_start
 - vpc_net
 - vpc_subnet
 - shared_vpc_host_proj
@@ -62,6 +65,10 @@ properties:
   oss_ip_range_start:
     type        : string
     description : IP address range start for the OSS nodes.
+
+  mds_ip_range_start:
+    type        : string
+    description : IP address range start for the MDS nodes.
 
   cluster_name:
     type        : string
@@ -150,6 +157,16 @@ properties:
   oss_node_count:
     type        : integer
     description : Number of OSS node instances to run.
+
+  mdt_per_mds:
+    type        : integer
+    default     : 1
+    description : Number of MDT disks per MDS instance.
+
+  ost_per_oss:
+    type        : integer
+    default     : 1
+    description : Number of OST disk per OSS instances.
 
   zone:
     type        : string

@@ -21,6 +21,8 @@ FS_NAME="@FS_NAME@"
 NODE_ROLE="@NODE_ROLE@"
 ost_mount_point="/mnt/ost"
 mdt_mount_point="/mnt/mdt"
+mdt_per_mds="@MDT_PER_MDS@"
+ost_per_oss="@OST_PER_OSS@"
 
 LUSTRE_VERSION="@LUSTRE_VERSION@"
 LUSTRE_URL="https://downloads.whamcloud.com/public/lustre/${LUSTRE_VERSION}/el7/server/RPMS/x86_64/"
@@ -149,25 +151,32 @@ function main() {
 			while [ `sudo lctl ping ${CLUSTER_NAME}-oss1 | grep -c "Input/output error"` -gt 0 ]; do
 				sleep 10
 			done
-
-			# Make the MDT mount and mount the device
-			mkdir $mdt_mount_point
-			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-			echo "$lustre_device	$mdt_mount_point	lustre" >> /etc/fstab
-			mount -a
-
-			# Once the network is up, make the lustre filesystem on the MDT
-			#mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
-
-			# Make the MDT mount and mount the device
-			#mkdir /mdt
-			#mount -t lustre /dev/sdb /mdt
 			
-			# Check for a successful mount, and fail otherwise.
-			if [ `mount | grep -c $mdt_mount_point` -eq 0 ]; then
-				echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $lustre_device $mdt_mount_point", or reboot this node."
-				exit 1
-			fi
+			let host_index=$host_index*$mdt_per_mds
+			i=0
+			for lustre_device in $(ls /dev/sd* | grep -v sda[0-9]*$ ); do
+			
+				# Make the MDT mount and mount the device
+			        let host_index=host_index+i
+				mkdir $mdt_mount_point$i
+				if [[ "$MDS_HOSTNAME" == $(hostname) && ${host_index} == 0 ]]; then
+					# Create the first mdt as the mgs of the cluster
+					mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+				else
+					mkfs.lustre --mdt --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+					# Sleep 60 seconds to give MGS time to come up 
+					sleep 60
+				fi
+				echo "$lustre_device	$mdt_mount_point$i	lustre" >> /etc/fstab
+				mount -a
+			
+				# Check for a successful mount, and fail otherwise.
+				if [ `mount | grep -c $mdt_mount_point` -eq 0 ]; then
+					echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $lustre_device $mdt_mount_point", or reboot this node."
+					exit 1
+				fi
+				let i=i+1
+			done
 
 			# Disable the authentication upcall by default, change if using auth
 			echo NONE > /proc/fs/lustre/mdt/lustre-MDT0000/identity_upcall
@@ -182,17 +191,24 @@ function main() {
 			# Sleep 60 seconds to give MDS/MGS time to come up before the OSS. More robust communication would be good.
 			sleep 60
 
-			# Make the directory to mount the OST, and mount the OST
-			mkdir $ost_mount_point
-			mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-			echo "$lustre_device	$ost_mount_point	lustre" >> /etc/fstab
-			mount -a
-			
-			# Check for a successful mount, and fail otherwise.
-			if [ `mount | grep -c $ost_mount_point` -eq 0 ]; then
-				echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $lustre_device $ost_mount_point\", or reboot this node."
-				exit 1
-			fi
+			let host_index=host_index*ost_per_oss
+			echo "OST_PER_OSS = $ost_per_oss" >> /lustre/install.log
+			i=0
+			for lustre_device in $(ls /dev/sd* | grep -v sda[0-9]*$ ); do
+				# Make the directory to mount the OST, and mount the OST
+				let host_index=host_index+i
+				mkdir $ost_mount_point$i
+				mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+				echo "$lustre_device	$ost_mount_point$i	lustre" >> /etc/fstab
+				mount -a
+				
+				# Check for a successful mount, and fail otherwise.
+				if [ `mount | grep -c $ost_mount_point$i` -eq 0 ]; then
+					echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $lustre_device $ost_mount_point$i\", or reboot this node." >> /lustre/install.log
+					exit 1
+				fi
+				let i=i+1
+			done
 		fi
 		# Mark install.log as reaching stage 2
 		echo 2 > /lustre/install.log

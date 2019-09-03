@@ -116,20 +116,22 @@ resources:
         {% set num_mdt_local_ssds = 8 %}
     {% endif %}
     {% for i in range(num_mdt_local_ssds) %}
-    - type: SCRATCH
-      autoDelete: true
-      interface: NVME
-      initializeParams:
-        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
+      - type: SCRATCH
+        autoDelete: true
+        interface: NVME
+        initializeParams:
+          diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
     {% endfor %}
     {% else %}
-    - deviceName: mdt
+    {% for i in range(properties ["mdt_per_mds"]) %}
+    - deviceName: mdt-{{ i + 1 }}
       type: PERSISTENT
       autoDelete: true
       initializeParams:
-        diskName: {{properties["cluster_name"]}}-mdt{{ n + 1 }}
+        diskName: {{properties["cluster_name"]}}-mdt{{ n + 1 }}-{{ i + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
         diskSizeGb: {{ properties["mdt_disk_size_gb"] }}
+    {% endfor %}
     {% endif %}
 {% if not properties['external_ips'] %}
     canIpForward: true
@@ -150,14 +152,12 @@ resources:
         type: ONE_TO_ONE_NAT
   {% endif %}
 # If the MDS IP is specified, use that
-{% if properties["mds_ip_address"] %}
-      networkIP: {{ properties["mds_ip_address"] }}
-# If no MDS IP is specified, use DHCP
-# This code used to hardcode the MDS IP as X.X.X.2
-#{% else %}
-#{% set mds_ip = subnet_split[0] ~ '.' ~ subnet_split[1] ~ '.' ~ subnet_split[2] ~ '.2' %}
-#      networkIP: {{ mds_ip }}
-{% endif %}
+{% if properties['mds_ip_range_start'] %}
+{% set mds_ip_split = properties['mds_ip_range_start'].split('.')[3] | int %}
+{% set mds_ip_uniq = mds_ip_split + n %}
+{% set mds_ip = subnet_split[0] ~ '.' ~ subnet_split[1] ~ '.' ~ subnet_split[2] ~ '.' ~ mds_ip_uniq %}
+      networkIP: {{ mds_ip }}
+ {% endif %}
     serviceAccounts:
       - email: "default"
         scopes:
@@ -168,7 +168,7 @@ resources:
       items:
         - key: startup-script
           value: |
-            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS") }}
+            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS")|replace("@MDT_PER_MDS@",properties["mdt_per_mds"])|replace("@OST_PER_OSS@",properties["ost_per_oss"]) }}
 {% endfor %}
 
 # Create N OSS nodes
@@ -200,13 +200,15 @@ resources:
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
     {% endfor %}
     {% else %}
-    - deviceName: ost
+    {% for i in range(properties ["ost_per_oss"]) %}
+    - deviceName: ost-{{ i + 1 }}
       type: PERSISTENT
       autoDelete: true
       initializeParams:
-        diskName: {{properties["cluster_name"]}}-ost{{ n + 1 }}
+        diskName: {{properties["cluster_name"]}}-ost{{ n + 1 }}-{{ i + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
         diskSizeGb: {{ properties["ost_disk_size_gb"] }}
+    {% endfor %}
     {% endif %}
   {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
     networkInterfaces:
@@ -229,10 +231,6 @@ resources:
 {% set oss_ip_uniq = oss_ip_split + n %}
 {% set oss_ip = subnet_split[0] ~ '.' ~ subnet_split[1] ~ '.' ~ subnet_split[2] ~ '.' ~ oss_ip_uniq %}
       networkIP: {{ oss_ip }}
-#{% else %}
-#{% set oss_ip_uniq = n + 3 %}
-#{% set oss_ip = subnet_split[0] ~ '.' ~ subnet_split[1] ~ '.' ~ subnet_split[2] ~ '.' ~ oss_ip_uniq %}
-#      networkIP: {{ oss_ip }}
 {% endif %}
     serviceAccounts:
       - email: "default"
@@ -242,5 +240,5 @@ resources:
       items:
         - key: startup-script
           value: |
-            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","OSS") }}
+            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","OSS")|replace("@OST_PER_OSS@",properties["ost_per_oss"])|replace("@MDT_PER_MDS@",properties["mdt_per_mds"])  }}
 {% endfor %}
