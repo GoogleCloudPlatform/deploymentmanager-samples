@@ -6,6 +6,18 @@ This repository contains example templates for use with Deployment Manager.
 
 For an overview of Deployment Manager, see https://cloud.google.com/deployment-manager/docs.
 
+## Getting started
+
+Get started drafting your VM solution templates by using Google's [Deployment Manager Autogen](https://github.com/GoogleCloudPlatform/deploymentmanager-autogen) tool. By using it you will get most of work done and the generated templates will include the following features:
+
+1. Dynamic Quota checks for CPUs and GPUs, preventing deployment if user exceeds quota for one of those resources
+2. Dynamic price updates in Deployment Manager configuration UI
+3. Prevent users to select resources that are not available in certain zones (zone based resource filtering), like GPUs and certain Machine Types
+4. Automatic selection of the allowed number of GPU cores that can be used, given the selected machine type
+5. Better overall UX in the Deployment Manager configuration UI, since native component pickers are being used
+6. Users can deploy solutions using Shared VPCs
+7. Better validation rules in Network related fields (Network, Subnetwork, External IP and Firewall rules)
+
 ## Try the samples
 
 Clone this repostory into [Cloud Shell](https://cloud.google.com/shell/), edit the samples, and deploy them from within Cloud Shell, without installing anything.
