@@ -8,11 +8,7 @@ For an overview of Deployment Manager, see https://cloud.google.com/deployment-m
 
 ## Run the walkthrough tutorial
 
-<<<<<<< HEAD
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FGoogleCloudPlatform%2Fdeploymentmanager-samples&cloudshell_tutorial=walkthroughtutorial.md)
-=======
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fanitagarg%2Fdeploymentmanager-samples&cloudshell_tutorial=walkthroughtutorial.md)
->>>>>>> 17e71a7... Changing the container image (#484)
 
 ## Try the samples
 
