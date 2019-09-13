@@ -15,7 +15,7 @@
 """Creates the firewall."""
 
 
-def GenerateConfig(unused_context):
+def GenerateConfig(context):
   """Creates the firewall."""
 
   resources = [{

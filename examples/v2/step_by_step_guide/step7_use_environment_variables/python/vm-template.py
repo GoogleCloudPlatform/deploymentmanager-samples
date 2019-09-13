@@ -21,9 +21,15 @@ def GenerateConfig(context):
   """Creates the virtual machine with environment variables."""
 
   resources = [{
+      # `the-first-vm` is replaced with `context.env[`name`]`
       'name': context.env['name'],
       'type': 'compute.v1.instance',
       'properties': {
+          # All occurrences of `us-central1-f` are replaced with
+          # `context.properties[`zone`]. 
+          # All occurrences of the project ID are replaced with 
+          # `context.env[`project`]`.
+          # `f1-micro` is replaced with `context.properties["machineType"].  
           'zone': context.properties['zone'],
           'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/zones/',
@@ -40,6 +46,8 @@ def GenerateConfig(context):
                                           'images/family/debian-9'])
               }
           }],
+          # `$(ref.a-new-network.selfLink)` is replaced with 
+          # `$(ref.` + context.properties[`network`] + `selfLink)`.
           'networkInterfaces': [{
               'network': '$(ref.' + context.properties['network']
                          + '.selfLink)',
