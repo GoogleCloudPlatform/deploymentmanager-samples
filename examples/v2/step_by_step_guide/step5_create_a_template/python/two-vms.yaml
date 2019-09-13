@@ -16,6 +16,8 @@ imports:
 - path: vm-template.py
 - path: vm-template-2.py
 
+# In the resources section below, the properties of the resources are replaced
+# with the names of the templates.
 resources:
 - name: vm-1
   type: vm-template.py

@@ -15,7 +15,7 @@
 """Creates the network."""
 
 
-def GenerateConfig(unused_context):
+def GenerateConfig(context):
   """Creates the network."""
 
   resources = [{

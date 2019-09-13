@@ -25,7 +25,7 @@ def GenerateConfig(unused_context):
       'type': 'compute.v1.instance',
       'properties': {
           'zone': 'us-central1-f',
-          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/[MY_PROJECT]',
+          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/MY_PROJECT',
                                   '/zones/us-central1-f/',
                                   'machineTypes/g1-small']),
           'disks': [{
