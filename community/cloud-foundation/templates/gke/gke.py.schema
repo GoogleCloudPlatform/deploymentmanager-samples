@@ -328,14 +328,12 @@ properties:
           https://kubernetes.io/docs/concepts/services-networking/networkpolicies/
         properties:
           provider:
-            type: array
+            type: string
             description: The selected network policy provider.
-            items:
-              type: string
-              default: PROVIDER_UNSPECIFIED
-              enum:
-                - PROVIDER_UNSPECIFIED
-                - CALICO
+            default: PROVIDER_UNSPECIFIED
+            enum:
+              - PROVIDER_UNSPECIFIED
+              - CALICO
           enabled:
             type: boolean
             default: False
