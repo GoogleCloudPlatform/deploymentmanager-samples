@@ -53,4 +53,10 @@ resources:
     oss_boot_disk_size_gb   : < OSS Boot Disk Size (GB);        100;            OPTIONAL >
     ost_disk_type           : < OST Disk Type;                  pd-ssd >
     ost_disk_size_gb        : < OST Disk Size (GB);             100 >
+
+    ## Lustre HSM Lemur Configuration
+    hsm_node_count          : < Num Lustre HSM Data Mover instances;    1;             OPTIONAL >
+    hsm_machine_type        : < HSM instance profile;                   n1-standard-8; OPTIONAL >
+    hsm_gcs_bucket          : < HSM Archive bucket;                     ;              OPTIONAL >
+    hsm_gcs_bucket_import   : < GCS Bucket path to import data from;    ;              OPTIONAL >
     #  [END cluster_yaml]
