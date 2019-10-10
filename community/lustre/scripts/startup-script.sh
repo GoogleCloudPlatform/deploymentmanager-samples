@@ -90,12 +90,13 @@ function main() {
 		wait_for_internet
 		# Install wget
 		yum install -y wget
-		# Update and install packages in background while RPMs are downloaded
-		yum_install &
-	
+
 		mkdir /lustre
 		cd /lustre
 
+		# Update and install packages in background while RPMs are downloaded
+		yum_install &
+	
 		# Loop over RPM arrays and download them locally
 		for i in ${LUSTRE_RPMS[@]}; do wget -r -l1 --no-parent -A "$i" ${LUSTRE_URL} -P /lustre; done
 		for i in ${E2FS_RPMS[@]}; do wget -r -l1 --no-parent -A "$i" ${E2FS_URL} -P /lustre; done
