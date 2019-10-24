@@ -1,4 +1,8 @@
-# Cloud Foundation Toolkit Project
+# Cloud Foundation Toolkit Project - MOVED TO A NEW REPO
+
+| WARNING: This folder is deprecated and not updated anymore. Please visit the [CFT Repository](https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit/tree/master/dm/templates). |
+| --- |
+| This folder will be removed at the 1st of December 2019 to avoid confusion. |
 
 ## Overview
 
