@@ -7,7 +7,7 @@ This is a
 template that deploys a Cloud Function and calls the cloud function.
 
 ## NOTE
-As of November 1, 2019, newly created Functions are private-by-default and will require [appropriate IAM permissions](https://cloud.google.com/functions/docs/reference/iam/roles) to be invoked. See below examples for how to set up the appropriate permissions, or view the [Cloud Functions IAM resources](https://www.terraform.io/docs/providers/google/r/cloudfunctions_cloud_function_iam.html) for Cloud Functions.
+As of November 1, 2019, newly created Functions are private-by-default and will require [appropriate IAM permissions](https://cloud.google.com/functions/docs/reference/iam/roles) to be invoked. See the [cloud foundation toolkit](https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit/tree/master/dm/templates/cloud_function) project for example implementations.
 
 ## Deploy the template
 
