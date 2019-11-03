@@ -66,8 +66,7 @@ def GenerateConfig(context):
                 },
                 # According to kubernetes spec, the path parameter 'name'
                 # should be the value inside the metadata field
-                # https://github.com/kubernetes/community/blob/master
-                # /contributors/devel/api-conventions.md
+                # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
                 # This mapping specifies that
                 'inputMappings': [{
                     'fieldName': 'name',
