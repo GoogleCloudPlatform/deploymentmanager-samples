@@ -92,7 +92,8 @@ or with `python`:
 
 ```bash
 $ gcloud deployment-manager deployments create dm-service \
-    --template deployment.apiVersion: "stable.example.com/v1"
+    --template deployment.py \
+    --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
 ```
 
 As above, you can use the defaults for defined in `deployment.yaml` if you used the defaults `yaml` during cluster creation
@@ -125,7 +126,6 @@ service/kubernetes                            ClusterIP   10.27.240.1    <none> 
 
 ```bash
 $ gcloud deployment-manager deployments delete dm-service -q
-Delete operation operation-1550337146155-58205fee0f097-edbb49e0-f337e0df completed successfully.
 
 $ kubectl get deployments
 No resources found.
@@ -146,30 +146,62 @@ If you manage certain resource types (`ClusterRole`, etc), you will need to gran
 
 to  the service account.
 
-## Deploying other types
+## Deploying CustomResourceDefinitions
 
-If you want to deploy any other k8s artifact, create a collection reference and apply the [k8s API specifications](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json) for that resource.
+If you want to deploy other dynamic k8s artifacts such as [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions), define the collection first for that resource and then the object itself.
 
-For example, to _define_  `CustomResourceDefinitions`,
+For example, for `CustomResourceDefinitions`, create a cluster that supports [CustomResourcePublishOpenAPI](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#publish-validation-schema-in-openapi-v2).  At the time of writing `11/6/19`, you need a GKE cluster version of atleast `1.14.7` plus Alpha feature gate enabled:
+
+```bash
+$ gcloud deployment-manager deployments create ${NAME} \
+    --template cluster.jinja \
+    --properties clusterName:${CLUSTER_NAME},zone:${ZONE},initialClusterVersion:1.14.7,enableKubernetesAlpha:true
+
+$ gcloud container clusters get-credentials $CLUSTER_NAME --zone $ZONE    
+```
+
+Then define the CRD
 
 ```bash
 $ gcloud deployment-manager deployments create my-crd --template crd.jinja --properties clusterType:${CLUSTER_NAME}-provider
 NAME                  TYPE                                                                                                               STATE      ERRORS  INTENT
 my-crd-crd-jinja-crd  mineral-minutia-820/dm-gke-cluster-1-provider:/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/{name}  COMPLETED  []
 
-$ kubectl get crd
-NAME                                    AGE
-backendconfigs.cloud.google.com         6m
-crontabs.stable.example.com             19s
-scalingpolicies.scalingpolicy.kope.io   6m
-
-$ gcloud deployment-manager deployments delete my-crd -q
+$ gcloud container clusters get-credentials dm-gke-cluster-1
 
 $ kubectl get crd
-NAME                                    AGE
-backendconfigs.cloud.google.com         7m
-scalingpolicies.scalingpolicy.kope.io   7m
+NAME                                    CREATED AT
+crontabs.stable.example.com             2019-05-17T20:59:52Z
 ```
 
->> **However**, kubernetes currently (2/19/19) does not update the `/openapi/v2` endpoint with the CRDs that get defined (see limitations of CRDs defined [here](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#advanced-features-and-flexibility)).  The implication of not having an updated swagger definition of CRDs is that Deployment Manager cannot create a CRD _instance_  (DM can define the CRD but not the instance).  You can define instances by any other means (eg, `kubectl`, k8s API, etc)
-Please see [design doc](https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/00xx-publish-crd-openapi.md) and [PR](https://github.com/kubernetes/kubernetes/pull/71192) to dynamically add CRDs to `/openapi/v2`.
+Finally define the CRD instance
+
+```bash
+$ gcloud deployment-manager deployments create my-crd-instance --template crd-instance.jinja --properties clusterType:${CLUSTER_NAME}-provider
+
+$ gcloud deployment-manager deployments list
+    dm-1                      insert               DONE                 manifest-1572649527023  []
+    my-crd                    insert               DONE                 manifest-1572650044724  []
+    my-crd-instance           insert               DONE                 manifest-1572656117578  []
+
+$ kubectl get crd
+    NAME                                    CREATED AT
+    crontabs.stable.example.com             2019-11-01T23:18:47Z
+
+$ kubectl get crontab
+    NAME                 AGE
+    my-new-cron-object   2m30s
+```
+
+To delete the CRD instance and definition, apply
+
+```
+$ gcloud deployment-manager deployments delete my-crd-instance -q
+
+$ kubectl get crontab
+    No resources found.
+
+$ gcloud deployment-manager deployments delete my-crd -q
+```
+
+Note, if delete the CRD or CRD definition directly via `kubectl`, deployment manager's state will not be consistent with what the GKE cluster has.

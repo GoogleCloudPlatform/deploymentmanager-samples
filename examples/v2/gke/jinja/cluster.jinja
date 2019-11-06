@@ -20,6 +20,8 @@ resources:
     cluster:
       name: {{ properties['clusterName'] }}
       initialNodeCount: {{ properties['initialNodeCount'] }}
+      initialClusterVersion: {{ properties['initialClusterVersion'] }}
+      enableKubernetesAlpha: {{ properties['enableKubernetesAlpha'] }}
       nodeConfig:
         oauthScopes:
         - https://www.googleapis.com/auth/compute

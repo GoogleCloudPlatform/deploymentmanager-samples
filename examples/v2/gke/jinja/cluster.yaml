@@ -20,4 +20,6 @@ resources:
   type: cluster.jinja
   properties:
     clusterName: dm-gke-cluster-1
-    zone: us-central1-a
+    zone: us-east1-d
+    initialClusterVersion: latest
+    enableKubernetesAlpha: false

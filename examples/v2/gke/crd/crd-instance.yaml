@@ -1,0 +1,8 @@
+imports:
+- path: crd-instance.jinja
+
+resources:
+- name: my-crd-instance
+  type: crd-instance.jinja
+  properties:
+    name: my-crd-instance

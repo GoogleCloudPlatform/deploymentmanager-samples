@@ -21,3 +21,5 @@ resources:
   properties:
     clusterName: dm-gke-cluster-1
     zone: us-central1-a
+    initialClusterVersion: latest
+    enableKubernetesAlpha: false

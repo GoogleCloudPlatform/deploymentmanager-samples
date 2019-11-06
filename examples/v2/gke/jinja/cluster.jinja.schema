@@ -36,6 +36,14 @@ properties:
   clusterName:
     type: string
     description: Name of the GKE Cluster to create.
+  initialClusterVersion:
+    type: string
+    description: The initial Kubernetes version for this cluster.
+    default: latest
+  enableKubernetesAlpha:
+    type: boolean
+    description: Kubernetes alpha features are enabled on this cluster.
+    default: false
 
 outputs:
   clusterType:

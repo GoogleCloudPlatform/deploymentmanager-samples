@@ -28,6 +28,8 @@ def GenerateConfig(context):
               'cluster': {
                   'name': clusterName,
                   'initialNodeCount': context.properties['initialNodeCount'],
+                  'initialClusterVersion': context.properties['initialClusterVersion'],
+                  'enableKubernetesAlpha': context.properties['enableKubernetesAlpha'],
                   'nodeConfig': {
                       'oauthScopes': [
                           'https://www.googleapis.com/auth/' + s

@@ -1,0 +1,16 @@
+options:
+  validationOptions:
+    schemaValidation: IGNORE_WITH_WARNINGS
+  inputMappings:
+  - fieldName: name
+    location: PATH
+    methodMatch: ^(get|delete|put|patch|post)$
+    value: $.resource.properties.metadata.name
+  - fieldName: namespace
+    location: PATH
+    methodMatch: ^(get|delete|put|patch|post)$
+    value: $.resource.properties.metadata.namespace   
+  - fieldName: Authorization
+    location: HEADER
+    value: >
+      $.concat("Bearer ", $.googleOauth2AccessToken())
