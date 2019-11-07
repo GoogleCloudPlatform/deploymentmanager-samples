@@ -34,15 +34,7 @@ resources:
   properties:
     options:
       validationOptions:
-        # Kubernetes API accepts ints, in fields they annotate with string.
-        # This validation will show as warning rather than failure for
-        # Deployment Manager.
-        # https://github.com/kubernetes/kubernetes/issues/2971
-        schemaValidation: IGNORE_WITH_WARNINGS
-      # According to kubernetes spec, the path parameter 'name' and 'namespace`
-      # *must* be set inside the metadata field.
-      # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
-      # The input mappings will map the values to path parameters
+        schemaValidation: FAIL
       inputMappings:
       - fieldName: name
         location: PATH
@@ -51,11 +43,23 @@ resources:
       - fieldName: namespace
         location: PATH
         methodMatch: ^(get|delete|put|patch|post)$
-        value: $.resource.properties.metadata.namespace   
+        value: $.resource.properties.metadata.namespace
+      - fieldName: metadata.resourceVersion
+        location: BODY
+        methodMatch: ^(put|patch)$
+        value: $.resource.self.metadata.resourceVersion    
       - fieldName: Authorization
         location: HEADER
         value: >
           $.concat("Bearer ", $.googleOauth2AccessToken())
+    collectionOverrides:
+    - collection: /api/v1/namespaces/{namespace}/services/{name}
+      options:
+        inputMappings:
+        - fieldName: spec.clusterIP
+          location: BODY
+          methodMatch: ^(put|patch)$
+          value: $.resource.self.spec.clusterIP
     descriptorUrl: https://$(ref.{{ properties['clusterName'] }}.endpoint)/openapi/v2
 
 outputs:

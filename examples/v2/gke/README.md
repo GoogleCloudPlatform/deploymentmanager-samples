@@ -25,16 +25,15 @@ NAME="dm-1"
 CLUSTER_NAME="dm-gke-cluster-1"
 ZONE="us-central1-a"
 ```
--  jinja:
+for  `jinja`:
 ```bash
     gcloud deployment-manager deployments create ${NAME} \
     --template cluster.jinja \
+    --api-options=api-options.yaml \    
     --properties clusterName:${CLUSTER_NAME},zone:${ZONE}
 ```
 
-or
-
-- python:
+or for `python`:
 ```bash
     gcloud deployment-manager deployments create ${NAME} \
     --template cluster.py \
@@ -46,6 +45,7 @@ For example,
 ```bash
 gcloud deployment-manager deployments create ${NAME} \
     --template cluster.jinja  \
+    --api-options=api-options.yaml \    
     --properties clusterName:${CLUSTER_NAME},zone:${ZONE} 
 NAME                       TYPE                                   STATE      ERRORS  INTENT
 dm-gke-cluster-1           container.v1.cluster                   COMPLETED  []
@@ -74,11 +74,14 @@ Note the `clusterType` (in this case `dm-gke-cluster-1-provider`).  You can use 
 Using `deployment.yaml`, create a `Deployment` and a `Service`
 to the GKE cluster created in the last step.
 
-with `jinja`
+First set
 ```bash
 IMAGE=nginx
 PORT=80
+```
 
+for  `jinja`
+```bash
 gcloud deployment-manager deployments create dm-service \
     --template deployment.jinja \
     --properties clusterType:${CLUSTER_NAME}-provider,image:${IMAGE},port:${PORT}
@@ -88,7 +91,7 @@ dm-service-deployment-jinja-deployment  mineral-minutia-820/dm-gke-cluster-1-pro
 dm-service-deployment-jinja-service     mineral-minutia-820/dm-gke-cluster-1-provider:/api/v1/namespaces/{namespace}/services/{name}           COMPLETED  []
 ```
 
-or with `python`:
+or for `python`:
 
 ```bash
 $ gcloud deployment-manager deployments create dm-service \
@@ -150,7 +153,7 @@ to  the service account.
 
 If you want to deploy other dynamic k8s artifacts such as [CustomResourceDefinitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions), define the collection first for that resource and then the object itself.
 
-For example, for `CustomResourceDefinitions`, create a cluster that supports [CustomResourcePublishOpenAPI](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#publish-validation-schema-in-openapi-v2).  At the time of writing `11/6/19`, you need a GKE cluster version of atleast `1.14.7` plus Alpha feature gate enabled:
+For example, for `CustomResourceDefinitions`, create a cluster that supports [CustomResourcePublishOpenAPI](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#publish-validation-schema-in-openapi-v2).  At the time of writing `11/6/19`, you need a GKE cluster version of atleast `1.14.7` and the Alpha feature gate enabled.  If you are using GKE 1.15+, `CustomResourcePublishOpenAPI` is enabled by default so the alpha flag is not required.
 
 ```bash
 $ gcloud deployment-manager deployments create ${NAME} \
@@ -204,4 +207,4 @@ $ kubectl get crontab
 $ gcloud deployment-manager deployments delete my-crd -q
 ```
 
-Note, if delete the CRD or CRD definition directly via `kubectl`, deployment manager's state will not be consistent with what the GKE cluster has.
+Note, if you delete the CRD or CRD definition directly via `kubectl`, deployment manager's state will not be consistent with what the GKE cluster has.

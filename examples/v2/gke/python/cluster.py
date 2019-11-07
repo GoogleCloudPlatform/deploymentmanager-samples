@@ -56,7 +56,7 @@ def GenerateConfig(context):
                     # with string. This validation will show as warning
                     # rather than failure for Deployment Manager.
                     # https://github.com/kubernetes/kubernetes/issues/2971
-                    'schemaValidation': 'IGNORE_WITH_WARNINGS'
+                    'schemaValidation': 'FAIL'
                 },
                 # According to kubernetes spec, the path parameter 'name' and 'namespace'
                 # *must* be set inside the metadata field.
@@ -73,12 +73,28 @@ def GenerateConfig(context):
                     'methodMatch': '^(get|delete|put|patch|post)$',
                     'value': '$.resource.properties.metadata.namespace'
                 }, {
+                    'fieldName': 'metadata.resourceVersion',
+                    'location': 'BODY',
+                    'methodMatch': '^(put|patch)$',
+                    'value': '$.resource.self.metadata.resourceVersion'
+                }, {
                     'fieldName': 'Authorization',
                     'location': 'HEADER',
                     'value': '$.concat("Bearer ",'
                              '$.googleOauth2AccessToken())'
                 }]
             },
+            'collectionOverrides': [{
+                    'collection': '/api/v1/namespaces/{namespace}/services/{name}',
+                    'options': {
+                        'inputMappings': [{
+                            'fieldName': 'spec.clusterIP',
+                            'location': 'BODY',
+                            'methodMatch': '^(put|patch)$',
+                            'value': '$.resource.self.spec.clusterIP'
+                        }]
+                    }
+            }],
             'descriptorUrl': 'https://$(ref.' + clusterName + '.endpoint)/openapi/v2'
         }
     })
