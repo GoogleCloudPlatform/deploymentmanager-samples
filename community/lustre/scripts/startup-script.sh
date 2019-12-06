@@ -20,6 +20,7 @@ MDS_HOSTNAME="@CLUSTER_NAME@-mds1"
 FS_NAME="@FS_NAME@"
 NODE_ROLE="@NODE_ROLE@"
 HSM_GCS_BUCKET="@HSM_GCS_BUCKET@"
+HSM_GCS_BUCKET_IMPORT="@HSM_GCS_BUCKET_IMPORT@"
 ost_mount_point="/mnt/ost"
 mdt_mount_point="/mnt/mdt"
 
@@ -160,7 +161,7 @@ num_threads=8
 ##
 archive "1" {
         id = 1
-        bucket = "${HSM_GCS_BUCKET}"
+        bucket = "${HSM_GCS_BUCKET:5}"
 }
 EOF
 
@@ -170,6 +171,27 @@ EOF
 	systemctl start lhsmd
 
 
+}
+
+function hsm_import_bucket()
+{
+
+	bucket_file_list=`gsutil ls -r ${HSM_GCS_BUCKET_IMPORT}/** | sed "/\/:$/d"`
+
+	for i in $bucket_file_list
+	do
+		# Convert to destination file full path
+		dest_file_name=`echo ${i} | sed "s%${HSM_GCS_BUCKET_IMPORT}%/mnt/%g"`
+		dir_name=`dirname ${dest_file_name}`
+
+		if [ ! -d ${dir_name} ]; then
+			mkdir -p ${dir_name}
+		fi
+
+		src_file_name=`echo $i | sed "s%gs://.[^/]*/%%g"`
+		lhsm import --uuid ${src_file_name} --uid 0 --gid 0 ${dest_file_name}
+
+	done
 }
 
 function install_lustre_client() {
@@ -333,6 +355,10 @@ function main() {
 
 			install_lemur
 			configure_lemur
+
+			if [ ! -z "${HSM_GCS_BUCKET_IMPORT}" ]; then
+				hsm_import_bucket
+			fi
 
 		fi
 		# Mark install.log as reaching stage 2
