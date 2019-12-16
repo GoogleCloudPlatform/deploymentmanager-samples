@@ -57,4 +57,10 @@ resources:
     ### Lustre Object Storage Target disk
     ost_disk_type           : pd-standard
     ost_disk_size_gb        : 1000
+
+    ## Lustre HSM Lemur Configuration
+    #hsm_node_count         : 1
+    #hsm_machine_type       : n1-standard-8
+    #hsm_gcs_bucket         : [MY_BUCKET]
+    #hsm_gcs_bucket_import  : [MY_BUCKET_PATH]
     #  [END cluster_yaml]

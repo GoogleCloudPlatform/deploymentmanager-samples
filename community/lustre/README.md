@@ -51,6 +51,12 @@ The lustre.yaml file has the following fields. The fields with a \* following th
 * ost_disk_type\* - Disk type to use for the Object Storage Target (OST) disk (pd-standard, pd-ssd, local-ssd)
 * ost_disk_size_gb\* - Size of OST disk in GB
 
+#### HSM Configuration
+* hsm_node_count - Number of Hierarchical Storage Management (HSM) nodes to create
+* hsm_machine_type - Machine type to use for HSM node(s)
+* hsm_gcs_bucket - Google Cloud Storage Bucket to archive data fo/from
+* hsm_gcs_bucket_import - Google Cloud Storage Bucket path to import data from to Lustre
+
 ## Launch the Lustre Cluster
 
 Once you've customized the lustre.yaml file and completed all the required fields, and ensure you have adequate [resource quota](https://cloud.google.com/compute/quotas), you are ready to launch your Lustre cluster.
