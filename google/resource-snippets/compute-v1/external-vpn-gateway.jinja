@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2019 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,22 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Creates the firewall."""
-
-
-def GenerateConfig(context):
-  """Creates the firewall."""
-
-  resources = [{
-      'name': 'a-firewall-rule',
-      'type': 'compute.v1.firewall',
-      'properties': {
-          'network': '$(ref.a-new-network.selfLink)',
-          'sourceRanges': ['0.0.0.0/0'],
-          'allowed': [{
-              'IPProtocol': 'TCP',
-              'ports': [80]
-          }]
-      }
-  }]
-  return {'resources': resources}
+resources:
+- name: external-vpn-gateway-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:externalVpnGateways
+  properties:
+    redundancyType: SINGLE_IP_INTERNALLY_REDUNDANT
+    interfaces:
+     - id: 0
+       ipAddress: 192.168.0.0

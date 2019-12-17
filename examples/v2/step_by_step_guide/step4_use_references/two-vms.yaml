@@ -17,7 +17,7 @@ resources:
   type: compute.v1.instance
   properties:
     zone: us-central1-f
-    machineType: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/zones/us-central1-f/machineTypes/f1-micro
+    machineType: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/zones/us-central1-f/machineTypes/f1-micro
     disks:
     - deviceName: boot
       type: PERSISTENT
@@ -26,6 +26,9 @@ resources:
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
+    # The resource's "network value" has been replaced with a
+    # reference to the new network's "selfLink" property. The network 
+    # resource has been added to the end of this file.
     - network: $(ref.a-new-network.selfLink)
       accessConfigs:
       - name: External NAT
@@ -34,7 +37,7 @@ resources:
   type: compute.v1.instance
   properties:
     zone: us-central1-f
-    machineType: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/zones/us-central1-f/machineTypes/g1-small
+    machineType: https://www.googleapis.com/compute/v1/projects/MY_PROJECT/zones/us-central1-f/machineTypes/g1-small
     disks:
     - deviceName: boot
       type: PERSISTENT
@@ -43,10 +46,13 @@ resources:
       initializeParams:
         sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     networkInterfaces:
+    # As in the resource above, the "network" value has been replaced with 
+    # the new network's "selfLink" property. 
     - network: $(ref.a-new-network.selfLink)
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
+# The following network is a new resource added to the "two-vms.yaml" file.
 - name: a-new-network
   type: compute.v1.network
   properties:
