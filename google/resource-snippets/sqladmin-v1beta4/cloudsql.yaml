@@ -19,5 +19,5 @@ resources:
 - name: cloudsql
   type: cloudsql.jinja
   properties:
-    tier: db-n1-standard-1
+    tier: db-f1-micro
     charset: utf8
