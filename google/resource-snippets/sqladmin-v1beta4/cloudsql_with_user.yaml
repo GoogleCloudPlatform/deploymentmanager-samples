@@ -19,7 +19,7 @@ resources:
 - name: cloudsql_with_user
   type: cloudsql_with_user.jinja
   properties:
-    tier: D1
+    tier: db-f1-micro
     charset: utf8
     password: testpass
     hostName: testhost
