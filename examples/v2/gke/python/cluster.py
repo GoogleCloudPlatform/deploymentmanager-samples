@@ -13,6 +13,8 @@
 # limitations under the License.
 """Create configuration to deploy GKE cluster."""
 
+import six
+
 
 def GenerateConfig(context):
   """Generate YAML resource configuration."""
@@ -51,7 +53,7 @@ def GenerateConfig(context):
       }
   ]
   outputs = []
-  for type_suffix, endpoint in k8s_endpoints.iteritems():
+  for type_suffix, endpoint in six.iteritems(k8s_endpoints):
     resources.append({
         'name': type_name + type_suffix,
         'type': 'deploymentmanager.v2beta.typeProvider',

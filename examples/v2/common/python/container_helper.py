@@ -14,6 +14,7 @@
 
 """Helper methods for working with containers in config."""
 
+import six
 import yaml
 
 
@@ -29,7 +30,7 @@ def GenerateManifest(context):
   """
   env_list = []
   if 'dockerEnv' in context.properties:
-    for key, value in context.properties['dockerEnv'].iteritems():
+    for key, value in six.iteritems(context.properties['dockerEnv']):
       env_list.append({'name': key, 'value': str(value)})
 
   manifest = {

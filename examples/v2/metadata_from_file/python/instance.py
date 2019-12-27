@@ -15,6 +15,8 @@
 """Creates a Compute Instance with the provided metadata."""
 
 
+import six
+
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
 
@@ -34,7 +36,7 @@ def GenerateConfig(context):
   base_name = context.env['deployment'] + '-' + context.env['name']
 
   items = []
-  for key, value in context.properties['metadata-from-file'].iteritems():
+  for key, value in six.iteritems(context.properties['metadata-from-file']):
     items.append({
         'key': key,
         'value': context.imports[value]

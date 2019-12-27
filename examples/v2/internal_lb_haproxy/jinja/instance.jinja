@@ -22,7 +22,7 @@ resources:
     machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/{{ properties['machine-type'] }}
     metadata:
       items:
-      {% for key, value in properties['metadata'].iteritems() %}
+      {% for key, value in properties['metadata'].items() %}
       - key: {{ key }}
         value: {{ value }}
       {% endfor %}
