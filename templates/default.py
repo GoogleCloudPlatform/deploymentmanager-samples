@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Convinence module to hold default constants for C2D components.
+"""Convenience module to hold default constants for C2D components.
 
 There should not be any logic in this module. Its purpose is to simplify
 analysis of commonly used GCP and properties names and identify the names
