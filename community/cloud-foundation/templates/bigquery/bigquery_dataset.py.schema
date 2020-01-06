@@ -38,9 +38,22 @@ properties:
       https://cloud.google.com/bigquery/docs/dataset-locations.
     default: 'US'
     enum:
-      - Asia
       - EU
       - US
+      - asia-east2
+      - asia-south1
+      - asia-northeast2
+      - asia-east1
+      - asia-northeast1
+      - asia-southeast1
+      - australia-southeast1
+      - europe-north1
+      - europe-west2
+      - europe-west6
+      - us-west2
+      - northamerica-northeast1
+      - us-east4
+      - southamerica-east1
   access:
     type: array
     description: |
