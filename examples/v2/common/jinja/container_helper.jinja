@@ -34,7 +34,7 @@ spec:
       containerPort: {{ port }}
     {% if dockerEnv -%}
     env:
-    {% for key, value in dockerEnv.iteritems() -%}
+    {% for key, value in dockerEnv.items() -%}
     - name: {{ key }}
       value: '{{ value }}'
     {% endfor -%}

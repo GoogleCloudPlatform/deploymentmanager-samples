@@ -19,5 +19,6 @@ resources:
 - name: access-levels-template
   type: ip_and_os_access_level.jinja
   properties:
+    version: v1beta
     level: level_name
     osType: DESKTOP_MAC

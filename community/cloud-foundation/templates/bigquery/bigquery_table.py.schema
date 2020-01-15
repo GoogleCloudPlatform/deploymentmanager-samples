@@ -145,7 +145,7 @@ properties:
           description: |
             The field data type. Possible values are STRING, BYTES,
             INTEGER, INT64 (same as INTEGER), FLOAT, FLOAT64 (same as
-            FLOAT), BOOLEAN, BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME,
+            FLOAT), NUMERIC, BOOLEAN, BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME,
             DATETIME, RECORD (indicates that the field contains a nested 
             schema), and STRUCT (same as RECORD). See details at 
             https://cloud.google.com/bigquery/docs/schemas and 
@@ -157,6 +157,7 @@ properties:
             - INT64
             - FLOAT
             - FLOAT64
+            - NUMERIC
             - BOOLEAN
             - BOOL
             - TIMESTAMP

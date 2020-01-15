@@ -24,7 +24,7 @@ resources:
     machineType: {{ COMPUTE_URL_BASE }}projects/{{ env['project'] }}/zones/{{ properties['zone'] }}/machineTypes/f1-micro
     metadata:
       items:
-      {% for key, value in properties['metadata-from-file'].iteritems() %}
+      {% for key, value in properties['metadata-from-file'].items() %}
       - key: {{ key }}
         value: |
           {{ imports[value]|indent(10) }}

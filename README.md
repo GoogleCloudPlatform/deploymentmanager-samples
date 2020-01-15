@@ -6,6 +6,10 @@ This repository contains example templates for use with Deployment Manager.
 
 For an overview of Deployment Manager, see https://cloud.google.com/deployment-manager/docs.
 
+## Run the walkthrough tutorial
+
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FGoogleCloudPlatform%2Fdeploymentmanager-samples&cloudshell_tutorial=walkthroughtutorial.md)
+
 ## Try the samples
 
 Clone this repostory into [Cloud Shell](https://cloud.google.com/shell/), edit the samples, and deploy them from within Cloud Shell, without installing anything.

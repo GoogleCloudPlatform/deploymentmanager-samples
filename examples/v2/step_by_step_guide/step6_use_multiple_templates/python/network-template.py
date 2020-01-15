@@ -15,14 +15,17 @@
 """Creates the network."""
 
 
-def GenerateConfig(unused_context):
+def GenerateConfig(context):
   """Creates the network."""
 
   resources = [{
       'name': 'a-new-network',
       'type': 'compute.v1.network',
       'properties': {
-          'IPv4Range': '10.0.0.0/16'
+          'routingConfig': {
+              'routingMode': 'REGIONAL'
+          },
+          'autoCreateSubnetworks': True
       }
   }]
   return {'resources': resources}

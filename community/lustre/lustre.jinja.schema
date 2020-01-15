@@ -49,6 +49,9 @@ optional:
 - vpc_net
 - vpc_subnet
 - shared_vpc_host_proj
+- hsm_node_count
+- hsm_machine_type
+- gcs_bucket_import
 
 properties:
   cidr:
@@ -171,3 +174,21 @@ properties:
   shared_vpc_host_proj:
     type        : string
     description : Name of the host project containing the Shared VPC specified in vpc_net to deploy Lustre into. Requires vpc_net.
+
+  hsm_node_count:
+    type: integer
+    default: 0
+    description: Number of Lustre HSM Data Movers node instances to run.
+
+  hsm_machine_type:
+    type        : string
+    default     : n1-standard-8
+    description : Machine type to use for Lustre HSM Data Movers node instances, eg. n1-standard-4.
+
+  hsm_gcs_bucket:
+    type        : string
+    description : Google Cloud Storage bucket to archive to
+
+  hsm_gcs_bucket_import:
+    type: string
+    description: Google Cloud Storage bucket path to import data from to Lustre.

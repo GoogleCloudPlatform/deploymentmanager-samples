@@ -16,5 +16,6 @@ resources:
 - type: gcp-types/compute-v1:networks
   name: network-{{ env["deployment"] }}
   properties:
-    IPv4Range: 10.0.0.0/24
-    gatewayIPv4: 10.0.0.1
+    routingConfig:
+      routingMode: REGIONAL
+    autoCreateSubnetworks: true

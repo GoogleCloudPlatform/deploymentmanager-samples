@@ -169,6 +169,8 @@ resources:
         - key: startup-script
           value: |
             {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS") }}
+        - key: enable-oslogin
+          value: "TRUE"
 {% endfor %}
 
 # Create N OSS nodes
@@ -243,4 +245,46 @@ resources:
         - key: startup-script
           value: |
             {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","OSS") }}
+{% endfor %}
+
+# Create N Lustre HSM Data Movers nodes
+{% for n in range(properties['hsm_node_count']) %}
+- name: {{properties["cluster_name"]}}-hsm{{ n + 1 }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/{{ properties["hsm_machine_type"] }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/pd-standard
+        diskSizeGb: 10
+  {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
+    networkInterfaces:
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
+    networkInterfaces:
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+  {% else %}
+    networkInterfaces:
+    - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
+  {% endif %}
+  {% if properties['external_ips'] or properties['shared_vpc_host_proj'] %}
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+  {% endif %}
+    serviceAccounts:
+      - email: "default"
+        scopes:
+        - "https://www.googleapis.com/auth/cloud-platform"
+    metadata:
+      items:
+        - key: startup-script
+          value: |
+            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","HSM")|replace("@HSM_GCS_BUCKET@",properties["hsm_gcs_bucket"])|replace("@HSM_GCS_BUCKET_IMPORT@",properties["hsm_gcs_bucket_import"]) }}
 {% endfor %}

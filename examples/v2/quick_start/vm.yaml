@@ -36,10 +36,9 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        # Replace [IMAGE_PROJECT] with the image project, such as `debian-cloud`
-        # Replace [FAMILY_NAME] with the image family name.
         # See a full list of image families at https://cloud.google.com/compute/docs/images#os-compute-support
-        sourceImage: https://www.googleapis.com/compute/v1/projects/[IMAGE_PROJECT]/global/images/family/[FAMILY_NAME]
+        # The format of the sourceImage URL is: https://www.googleapis.com/compute/v1/projects/[IMAGE_PROJECT]/global/images/family/[FAMILY_NAME]
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
     # Replace [MY_PROJECT] with your project ID
     networkInterfaces:
     - network: https://www.googleapis.com/compute/v1/projects/[MY_PROJECT]/global/networks/default

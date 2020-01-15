@@ -31,7 +31,7 @@ resources:
         - https://www.googleapis.com/auth/devstorage.read_only
         - https://www.googleapis.com/auth/logging.write
         - https://www.googleapis.com/auth/monitoring
-{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
+{% for typeSuffix, endpoint in K8S_ENDPOINTS.items() %}
 - name: {{ TYPE_NAME }}{{ typeSuffix }}
   type: deploymentmanager.v2beta.typeProvider
   properties:
@@ -63,7 +63,7 @@ resources:
 {% endfor %}
 
 outputs:
-{% for typeSuffix, endpoint in K8S_ENDPOINTS.iteritems() %}
+{% for typeSuffix, endpoint in K8S_ENDPOINTS.items() %}
 - name: clusterType{{ typeSuffix }}
   value: {{ TYPE_NAME }}{{ typeSuffix }}
 {% endfor %}

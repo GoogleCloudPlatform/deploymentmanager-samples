@@ -225,9 +225,13 @@ if size < currentTarget:
         if len(name_status) > 1:
             name = name_status[0]
             status = name_status[1]
+            slot = "NO-SLOT"
             slot_server = name.split('@')
-            slot = slot_server[0]
-            server = slot_server[1].split('.')[0]
+            if len(slot_server) > 1:
+                slot = slot_server[0]
+                server = slot_server[1].split('.')[0]
+            else:
+                server = slot_server[0].split('.')[0]
 
             if debug > 0:
                 print slot + ', ' + server + ', ' + status + '\n'

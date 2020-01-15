@@ -14,6 +14,7 @@
 """Creates a cloud Bigtable instance, cluster, and table."""
 
 import copy
+import six
 
 
 def _ClusterProperties(cluster, project_path):
@@ -31,7 +32,7 @@ def GenerateConfig(context):
     project_id = context.env['project']
   project_path = 'projects/' + project_id
   clusters = []
-  for id, properties in context.properties['clusters'].iteritems():
+  for id, properties in six.iteritems(context.properties['clusters']):
     clusters.append({
         'id': id,
         'properties': _ClusterProperties(properties, project_path)
