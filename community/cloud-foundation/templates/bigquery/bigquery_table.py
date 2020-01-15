@@ -38,6 +38,7 @@ def generate_config(context):
         'timePartitioning',
         'rangePartitioning',
         'clustering',
+        'requirePartitionFilter',
         'view'
     ]
 
