@@ -4,16 +4,15 @@
 ##
 #####################################################################################################
 
-import collections
-
+from collections import abc
+import importlib
 
 def update(d, u):
-    for k, v in u.iteritems():
-        if isinstance(v, collections.Mapping):
-            r = update(d.get(k, {}), v)
-            d[k] = r
+    for k, v in u.items():
+        if isinstance(v, abc.Mapping):
+            d[k] = update(d.get(k, {}), v)
         else:
-            d[k] = u[k]
+            d[k] = v
     return d
 
 
@@ -58,7 +57,7 @@ class ConfigContext:
             path = 'configs'
         else:
             path = 'configs.' + path
-        env_context = __import__(path + '.' + fileName, globals(), locals(), fileName, -1)  
+        env_context = importlib.import_module(path + '.' + fileName, '')
         return env_context.config
 
     def getEnvSpecificConfig(self):
