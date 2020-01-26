@@ -35,7 +35,7 @@ def GenerateConfig(ctx):
   m.update(content)
   source_archive_url = 'gs://%s/%s' % (ctx.properties['codeBucket'],
                                        m.hexdigest() + '.zip')
-  cmd = "echo '%s' | base64 -d > /function/function.zip;" % (content)
+  cmd = "echo '%s' | base64 -d > /function/function.zip;" % (content.decode('ascii'))
   volumes = [{'name': 'function-code', 'path': '/function'}]
   build_step = {
       'name': 'upload-function-code',
