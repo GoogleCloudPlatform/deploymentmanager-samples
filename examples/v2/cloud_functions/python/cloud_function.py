@@ -35,8 +35,9 @@ def GenerateConfig(ctx):
   m.update(content)
   source_archive_url = 'gs://%s/%s' % (ctx.properties['codeBucket'],
                                        m.hexdigest() + '.zip')
-  cmd = "echo '%s' | base64 -d > /function/function.zip;" % (content.decode('ascii'))
-  volumes = [{'name': 'function-code', 'path': '/function'}]
+  cmd = "echo '%s' | base64 -d > /%sfunction.zip;" % (content.decode('ascii'),
+                                                      ctx.properties['codeLocation'])
+  volumes = [{'name': 'function-code', 'path': '/%s' % (ctx.properties['codeLocation'])}]
   build_step = {
       'name': 'upload-function-code',
       'action': 'gcp-types/cloudbuild-v1:cloudbuild.projects.builds.create',
@@ -50,7 +51,9 @@ def GenerateConfig(ctx):
               'volumes': volumes,
           }, {
               'name': 'gcr.io/cloud-builders/gsutil',
-              'args': ['cp', '/function/function.zip', source_archive_url],
+              'args': ['cp',
+                       '/%sfunction.zip' % (ctx.properties['codeLocation']),
+                       source_archive_url],
               'volumes': volumes
           }],
           'timeout':
