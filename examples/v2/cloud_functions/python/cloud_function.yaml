@@ -23,7 +23,7 @@ resources:
     name: $(ref.function.name)
     data: |
       {
-        "hola": "mundo"
+        "message": "hola, mundo"
       }
   metadata:
     runtimePolicy:

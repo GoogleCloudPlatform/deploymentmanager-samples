@@ -5,7 +5,8 @@
  * @param {Object} res Cloud Function response context.
  */
 exports.handler = function(req, res) {
-  console.log(req.body.message);
+  const { message } = req.body;
+  console.log(message);
   res.status(200).send(
-      {hello: 'world', time: new Date(), codeHash: process.env.codeHash});
+      {hello: 'world', message, time: new Date(), codeHash: process.env.codeHash});
 };
