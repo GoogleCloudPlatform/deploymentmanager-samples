@@ -103,5 +103,8 @@ def GenerateConfig(ctx):
       }, {
           'name': 'name',
           'value': '$(ref.' + function_name + '.name)'
+      }, {
+          'name': 'url',
+          'value': '$(ref.' + function_name + '.httpsTrigger.url)'
       }]
   }
