@@ -67,6 +67,7 @@ properties:
       requirePartitionFilter:
         type: boolean
         description: |
+          DEPRECATED. Please set the field with the same name on the table itself.
           If True, queries over the table require a partition filter
           (that can be used for partition elimination) to be specified.
       type:
@@ -87,6 +88,11 @@ properties:
           will be generated, so it is important.
         items:
           type: string
+  requirePartitionFilter:
+    type: boolean
+    description: |
+      Optional. If set to true, queries over this table require a partition filter 
+      that can be used for partition elimination to be specified.
   view:
     type: object
     description: The view definintion.
