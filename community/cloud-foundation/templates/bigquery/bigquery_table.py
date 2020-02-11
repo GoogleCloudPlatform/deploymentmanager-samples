@@ -37,6 +37,7 @@ def generate_config(context):
         'schema',
         'timePartitioning',
         'clustering',
+        'requirePartitionFilter',
         'view'
     ]
 
