@@ -36,7 +36,6 @@ def generate_config(context):
         'expirationTime',
         'schema',
         'timePartitioning',
-        'rangePartitioning',
         'clustering',
         'requirePartitionFilter',
         'view'
