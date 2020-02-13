@@ -67,7 +67,7 @@ resources:
 - name: {{ env["deployment"] }}-gke-type
   type: deploymentmanager.local.typeProvider
   properties:
-    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/swaggerapi/api/v1
+    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/openapi/v2
     options:
       validationOptions:
         schemaValidation: IGNORE_WITH_WARNINGS
@@ -79,7 +79,7 @@ resources:
 - name: {{ env["deployment"] }}-gke-type-extensions
   type: deploymentmanager.local.typeProvider
   properties:
-    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/swaggerapi/apis/extensions/v1beta1
+    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/openapi/v2
     options:
       validationOptions:
         schemaValidation: IGNORE_WITH_WARNINGS
