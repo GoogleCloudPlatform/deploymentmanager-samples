@@ -50,7 +50,7 @@ resources:
       backupConfiguration:
         enabled: true
         binaryLogEnabled: true
-        startTime: {{ properties['cloudsql']['backupStartTime'] }}
+        startTime: "{{ properties['cloudsql']['backupStartTime'] }}"
       ipConfiguration:
         authorizedNetworks: {{ properties['cloudsql']['authorizedNetworks'] }}
 
