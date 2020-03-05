@@ -17,45 +17,41 @@ import six
 
 
 def GenerateConfig(context):
-  """Generate YAML resource configuration."""
+    """Generate YAML resource configuration."""
 
-  name_prefix = context.env['deployment'] + '-' + context.env['name']
-  cluster_name = name_prefix
-  type_name = name_prefix + '-type'
-  k8s_endpoints = {
-      '': 'api/v1',
-      '-apps': 'apis/apps/v1beta1',
-      '-v1beta1-extensions': 'apis/extensions/v1beta1'
-  }
+    name_prefix = context.env['deployment'] + '-' + context.env['name']
+    cluster_name = name_prefix
+    type_name = name_prefix + '-type'
 
-  resources = [
-      {
-          'name': cluster_name,
-          'type': 'container.v1.cluster',
-          'properties': {
-              'zone': context.properties['zone'],
-              'cluster': {
-                  'name': cluster_name,
-                  'initialNodeCount': context.properties['initialNodeCount'],
-                  'nodeConfig': {
-                      'oauthScopes': [
-                          'https://www.googleapis.com/auth/' + s
-                          for s in [
-                              'compute',
-                              'devstorage.read_only',
-                              'logging.write',
-                              'monitoring'
-                          ]
-                      ]
-                  }
-              }
-          }
-      }
-  ]
-  outputs = []
-  for type_suffix, endpoint in six.iteritems(k8s_endpoints):
+    resources = [
+        {
+            'name': cluster_name,
+            'type': 'container.v1.cluster',
+            'properties': {
+                'zone': context.properties['zone'],
+                'cluster': {
+                    'name': cluster_name,
+                    'initialNodeCount': context.properties['initialNodeCount'],
+                    'nodeConfig': {
+                        'oauthScopes': [
+                            'https://www.googleapis.com/auth/' + s
+                            for s in [
+                                'compute',
+                                'devstorage.read_only',
+                                'logging.write',
+                                'monitoring'
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+
+    outputs = []
+
     resources.append({
-        'name': type_name + type_suffix,
+        'name': type_name,
         'type': 'deploymentmanager.v2beta.typeProvider',
         'properties': {
             'options': {
@@ -74,34 +70,43 @@ def GenerateConfig(context):
                 'inputMappings': [{
                     'fieldName': 'name',
                     'location': 'PATH',
-                    'methodMatch': '^(GET|DELETE|PUT)$',
-                    'value': '$.ifNull('
-                             '$.resource.properties.metadata.name, '
-                             '$.resource.name)'
+                    'methodMatch': '^(get|delete|put|patch|post)$',
+                    'value': '$.resource.properties.metadata.name'
                 }, {
-                    'fieldName': 'metadata.name',
+                    'fieldName': 'namespace',
+                    'location': 'PATH',
+                    'methodMatch': '^(get|delete|put|patch|post)$',
+                    'value': '$.resource.properties.metadata.namespace'
+                }, {
+                    'fieldName': 'metadata.resourceVersion',
                     'location': 'BODY',
-                    'methodMatch': '^(PUT|POST)$',
-                    'value': '$.ifNull('
-                             '$.resource.properties.metadata.name, '
-                             '$.resource.name)'
+                    'methodMatch': '^(put|patch)$',
+                    'value': '$.resource.self.metadata.resourceVersion'
                 }, {
                     'fieldName': 'Authorization',
                     'location': 'HEADER',
                     'value': '$.concat("Bearer ",'
-                             '$.googleOauth2AccessToken())'
+                        '$.googleOauth2AccessToken())'
                 }]
             },
+            'collectionOverrides': [{
+                'collection': '/api/v1/namespaces/{namespace}/services/{name}',
+                'options': {
+                    'inputMappings': [{
+                        'fieldName': 'spec.clusterIP',
+                        'location': 'BODY',
+                        'methodMatch': '^(put|patch)$',
+                        'value': '$.resource.self.spec.clusterIP'
+                    }]
+                }
+            }],
             'descriptorUrl':
-                ''.join([
-                    'https://$(ref.', cluster_name, '.endpoint)/swaggerapi/',
-                    endpoint
-                ])
+                ''.join(['https://$(ref.', cluster_name, '.endpoint)/openapi/v2'])
         }
     })
     outputs.append({
-        'name': 'clusterType' + type_suffix,
-        'value': type_name + type_suffix
+        'name': 'clusterType',
+        'value': type_name
     })
 
-  return {'resources': resources, 'outputs': outputs}
+    return {'resources': resources, 'outputs': outputs}
