@@ -20,7 +20,7 @@ def GenerateConfig(context):
     cluster_types_root = ''.join([context.env['project'], '/', context.properties['clusterType']])
     cluster_types = {
         'Service': ''.join([cluster_types_root, ':', '/api/v1/namespaces/{namespace}/services/{name}']),
-        'Deployment': ''.join([cluster_types_root, '-apps', ':', '/apis/apps/v1beta1/namespaces/{namespace}/deployments/{name}'])
+        'Deployment': ''.join([cluster_types_root, ':', '/apis/apps/v1beta1/namespaces/{namespace}/deployments/{name}'])
     }
 
     name_prefix = context.env['deployment'] + '-' + context.env['name']
