@@ -109,6 +109,6 @@ From a second session, you may then browse or:
 
 When deploying into a Kubernetes cluster with Deployment Manager, it is
 important to be aware that deleting `Deployment` Kubernetes objects
-**does not delete the underlying pods**, and it is your responsibility to
+**may not delete the underlying pods**, and it is your responsibility to
 manage the destruction of these resources when deleting a
 `Deployment` in your configuration.
