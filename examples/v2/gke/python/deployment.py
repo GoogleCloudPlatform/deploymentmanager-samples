@@ -17,23 +17,10 @@
 def GenerateConfig(context):
     """Generate YAML resource configuration."""
 
-    cluster_types_root = ''.join([
-        context.env['project'],
-        '/',
-        context.properties['clusterType']
-        ])
+    cluster_types_root = ''.join([context.env['project'], '/', context.properties['clusterType']])
     cluster_types = {
-        'Service': ''.join([
-            cluster_types_root,
-            ':',
-            '/api/v1/namespaces/{namespace}/services'
-            ]),
-        'Deployment': ''.join([
-            cluster_types_root,
-            '-apps',
-            ':',
-            '/apis/apps/v1beta1/namespaces/{namespace}/deployments'
-            ])
+        'Service': ''.join([cluster_types_root, ':', '/api/v1/namespaces/{namespace}/services/{name}']),
+        'Deployment': ''.join([cluster_types_root, '-apps', ':', '/apis/apps/v1beta1/namespaces/{namespace}/deployments/{name}'])
     }
 
     name_prefix = context.env['deployment'] + '-' + context.env['name']
@@ -45,9 +32,9 @@ def GenerateConfig(context):
         'properties': {
             'apiVersion': 'v1',
             'kind': 'Service',
-            'namespace': 'default',
             'metadata': {
                 'name': name_prefix + '-service',
+                'namespace': 'default',
                 'labels': {
                     'id': 'deployment-manager'
                 }
@@ -70,9 +57,9 @@ def GenerateConfig(context):
         'properties': {
             'apiVersion': 'apps/v1beta1',
             'kind': 'Deployment',
-            'namespace': 'default',
             'metadata': {
-                'name': name_prefix + '-deployment'
+                'name': name_prefix + '-deployment',
+                'namespace': 'default'
             },
             'spec': {
                 'replicas': 1,
