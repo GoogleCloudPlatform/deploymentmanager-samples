@@ -13,7 +13,7 @@ Templated Cloud VPN deployment with an auto subnet network
 - Network with auto subnets
 - Static IP address
 - VPN gateway
-- Forwrding rules for ESP, UDP 500, UDP 4500
+- Forwarding rules for ESP, UDP 500, UDP 4500
 - VPN tunnel
 - Firewall rules for inbound traffic
 - Static route for outbound traffic
