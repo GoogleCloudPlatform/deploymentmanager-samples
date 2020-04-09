@@ -51,6 +51,8 @@ optional:
 - shared_vpc_host_proj
 - hsm_node_count
 - hsm_machine_type
+- hsm_boot_disk_type
+- hsm_boot_disk_size_gb
 - gcs_bucket_import
 
 properties:
@@ -184,6 +186,18 @@ properties:
     type        : string
     default     : n1-standard-8
     description : Machine type to use for Lustre HSM Data Movers node instances, eg. n1-standard-4.
+
+  hsm_boot_disk_type:
+    enum        : ["pd-ssd", "pd-standard"]
+    default     : pd-standard
+    description : Disk type (pd-ssd or pd-standard) for HSM boot disk.
+
+  hsm_boot_disk_size_gb:
+    type        : integer
+    default     : 20
+    minimum     : 20
+    maximum     : 64000
+    description : Size of disk for the HSM boot disk.
 
   hsm_gcs_bucket:
     type        : string
