@@ -39,7 +39,7 @@ properties:
       backupStartTime:
         type: string
         description: HH:MM in 24 hour format
-        default: 00:00
+        default: '00:00'
       tier:
         type: string
         description: https://cloud.google.com/sql/pricing#2nd-gen-pricing
