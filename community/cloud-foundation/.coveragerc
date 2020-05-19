@@ -1,6 +1,0 @@
-[report]
-precision=1
-fail_under=60
-show_missing = True
-exclude_lines =
-    if __name__ == .__main__.:
