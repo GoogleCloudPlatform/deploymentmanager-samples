@@ -11,16 +11,16 @@ This tutorial is a walkthrough of Deployment Manager best practices. As you comp
 
 After completing this tutorial, you can apply these techniques to carry out tasks such as:
 
-+   Creating and managing Google Cloud Platform (GCP) resources using templates
++   Creating and managing Google Cloud resources using templates
 +   Harnessing templates to reuse deployment paradigms
 +   Deploying multiple resources at once
-+   Configuring GCP resources such as Cloud Storage, Compute Engine, and Cloud SQL to work together
++   Configuring Google Cloud resources such as Cloud Storage, Compute Engine, and Cloud SQL to work together
 
 This tutorial assumes that you are familiar with YAML syntax and are comfortable running commands in a Linux terminal. 
 
 ### Select a project
 
-Select a GCP Console project to use for this tutorial.
+Select a Google Cloud project to use for this tutorial.
 
 <walkthrough-project-setup></walkthrough-project-setup>
 
@@ -49,7 +49,7 @@ In this step, you will access a configuration that creates a deployment with two
 To access the configuration, first use the following command:
 
 ```sh  
-cd examples/v2/step_by_step_guide/step2_create_a_configuration  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step2_create_a_configuration  
 ```
 
 Next, open the file `two-vms.yaml`:
@@ -147,7 +147,7 @@ cd
 To open the new `two-vms.yaml` file with the network and references, first use the following command:
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step4_use_references  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step4_use_references  
 ```
 
 Then, open the `two-vms.yaml` file:
@@ -219,7 +219,7 @@ cd
 Next, change directories with the following command:
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step5_create_a_template/python  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step5_create_a_template/python  
 ```
 
 Then, open the `vm-template.py` file:
@@ -313,7 +313,7 @@ cd
 Next, use the following command:
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step6_use_multiple_templates/python  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step6_use_multiple_templates/python  
 ```
 
 To view this template, run the following command:
@@ -399,7 +399,7 @@ cd
 Next, run the following command:
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step7_use_environment_variables/python  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step7_use_environment_variables/python  
 ```
 
 Then, open the `vm-template.py` file:
@@ -455,7 +455,7 @@ cd
 Next, change to this directory: 
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/create_a_helper_script  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/create_a_helper_script  
 ```
 
 Then, open `common.py`:
@@ -536,7 +536,7 @@ cd
 Next, change to this directory: 
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step8_metadata_and_startup_scripts/python  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step8_metadata_and_startup_scripts/python  
 ```
 
 Deploy your configuration:
@@ -558,7 +558,7 @@ cd
 Next, change to this directory: 
 
 ```sh  
-cd deploymentmanager-samples/examples/v2/step_by_step_guide/step9_update_a_deployment/python  
+cd cloudshell_open/deploymentmanager-samples/examples/v2/step_by_step_guide/step9_update_a_deployment/python  
 ```
 
 Then, open `vm-template.py`:
