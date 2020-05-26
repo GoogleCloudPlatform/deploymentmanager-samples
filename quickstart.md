@@ -3,7 +3,7 @@
 To restart this tutorial, run this command in the Cloud Shell terminal:
 
 ```sh
-teachme ~/deploymentmanager-samples/quickstart.md
+teachme ~/cloudshell_open/deploymentmanager-samples/quickstart.md
 ```
 
 ## Introduction
@@ -48,7 +48,7 @@ comfortable running commands in a Linux terminal.
 To begin, run these commands to open the quickstart configuration in `vm.yaml`:
 
 ```sh
-cd ~/deploymentmanager-samples/examples/v2/quick_start/
+cd ~/cloudshell_open/deploymentmanager-samples/examples/v2/quick_start/
 cloudshell edit vm.yaml
 ```
 
