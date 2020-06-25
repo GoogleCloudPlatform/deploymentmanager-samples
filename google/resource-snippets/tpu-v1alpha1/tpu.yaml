@@ -5,7 +5,7 @@ resources:
 - name: tpu
   type: tpu.py
   properties:
-    zone: us-central1-b
+    zone: ZONE_TO_RUN
     acceleratorType: v2-8
     tensorflowVersion: "1.8"
     cidrBlock: 10.27.101.0/29
