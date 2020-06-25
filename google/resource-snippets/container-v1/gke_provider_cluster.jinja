@@ -43,6 +43,13 @@ resources:
       {% if properties["initialClusterVersion"] %}
       initialClusterVersion: {{ properties["initialClusterVersion"] }}
       {% endif %}
+      {% if properties["maintenanceWindowDuration"] %}
+      maintenancePolicy:
+        window:
+          dailyMaintenanceWindow:
+            startTime: 00:00
+            duration: {{ properties["maintenanceWindowDuration"] }}
+      {% endif %}
       nodePools:
       - name: {{ env["deployment"] }}np
         config:
@@ -65,7 +72,7 @@ resources:
           autoUpgrade: {{ properties["autoUpgrade"] }}
           autoRepair: {{ properties["autoRepair"] }}
 - name: {{ env["deployment"] }}-gke-type
-  type: deploymentmanager.local.typeProvider
+  type: gcp-types/deploymentmanager-v2beta:typeProviders
   properties:
     descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/openapi/v2
     options:
@@ -76,15 +83,5 @@ resources:
         location: HEADER
         value: >
           $.concat("Bearer ", $.googleOauth2AccessToken())
-- name: {{ env["deployment"] }}-gke-type-extensions
-  type: deploymentmanager.local.typeProvider
-  properties:
-    descriptorUrl: https://$(ref.{{ env["deployment"] }}.endpoint)/openapi/v2
-    options:
-      validationOptions:
-        schemaValidation: IGNORE_WITH_WARNINGS
-      inputMappings:
-      - fieldName: Authorization
-        location: HEADER
-        value: >
-          $.concat("Bearer ", $.googleOauth2AccessToken())
+    customCertificateAuthorityRoots:
+    - $(ref.{{env["deployment"]}}.masterAuth.clusterCaCertificate)

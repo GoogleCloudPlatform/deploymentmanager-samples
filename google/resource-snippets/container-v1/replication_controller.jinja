@@ -14,7 +14,7 @@
 
 {% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
 {% set COLLECTION_PREFIX = '/api/v1/namespaces/{namespace}/' %}
-{% set RC_COLLECTION = COLLECTION_PREFIX + 'replicationcontrollers' %}
+{% set RC_COLLECTION = COLLECTION_PREFIX + 'replicationcontrollers/{name}' %}
 
 resources:
 - name: {{ env['deployment'] }}
