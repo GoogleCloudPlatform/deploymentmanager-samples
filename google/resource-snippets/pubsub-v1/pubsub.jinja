@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% set topic = env['deployment'] + '-' + env['name'] + '-topic' %}
+{% set topic = 'configurable-pubsub-topic-' + env['deployment'] %}
 {% set subscription = env['deployment'] + '-' + env['name'] + '-subscription' %}
 
 resources:
@@ -27,3 +27,6 @@ resources:
   properties:
     subscription: {{ subscription }}
     topic: $(ref.my-topic.name)
+    {% if "ackDeadlineSeconds" in properties %}
+    ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
+    {% endif %}

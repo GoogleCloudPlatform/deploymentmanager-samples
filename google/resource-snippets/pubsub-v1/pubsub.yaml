@@ -19,4 +19,4 @@ resources:
 - name: pubsub
   type: pubsub.jinja
   properties:
-    ackDeadlineSeconds: 4
+    ackDeadlineSeconds: 15
