@@ -13,8 +13,11 @@
 # limitations under the License.
 
 resources:
-  - name: {{ env["name"] }}
-    type: gcp-types/cloudresourcemanager-v2:folders
-    properties:
-      parent: folders/{{ properties["folderParent"] }}
-      displayName: {{ properties["folderDisplayName"] }}
+- name: afolder
+  type: gcp-types/cloudresourcemanager-v2:folders
+  properties:
+    parent: {{ properties["folderParent"] }}
+    displayName: {{ properties["friendlyName"] }}
+    {% if properties["name"] %}
+    name: {{ properties["name"] }}
+    {% endif %}
