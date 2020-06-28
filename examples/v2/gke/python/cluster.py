@@ -90,8 +90,24 @@ def GenerateConfig(context):
                     'location': 'HEADER',
                     'value': '$.concat("Bearer ",'
                              '$.googleOauth2AccessToken())'
+                }, {
+                    'fieldName': 'metadata.resourceVersion',
+                    'location': 'BODY',
+                    'methodMatch': '^(PUT|PATCH)$',
+                    'value': '$.resource.self.metadata.resourceVersion'
                 }]
             },
+            'collectionOverrides': [{
+                'collection': '/api/v1/namespaces/{namespace}/services',
+                'options': {
+                    'inputMappings': [{
+                        'fieldName': 'spec.clusterIP',
+                        'location': 'BODY',
+                        'methodMatch': '^(PUT|PATCH)$',
+                        'value': '$.resource.self.spec.clusterIP'
+                    }]
+                }
+            }] if endpoint == 'api/v1' else [],
             'descriptorUrl':
                 ''.join([
                     'https://$(ref.', cluster_name, '.endpoint)/swaggerapi/',
