@@ -25,14 +25,16 @@ def GenerateConfig(ctx):
   function_name = ctx.env['deployment'] + 'cf'
   zip_file = zipfile.ZipFile(
       in_memory_output_file, mode='w', compression=zipfile.ZIP_DEFLATED)
-  for imp in ctx.imports:
+  m = hashlib.md5()
+  for imp in sorted(ctx.imports):
     if imp.startswith(ctx.properties['codeLocation']):
-      zip_file.writestr(imp[len(ctx.properties['codeLocation']):],
-                        ctx.imports[imp])
+      filename = imp[len(ctx.properties['codeLocation']):]
+      contents = ctx.imports[imp]
+      m.update(filename)
+      m.update(contents)
+      zip_file.writestr(filename, contents)
   zip_file.close()
   content = base64.b64encode(in_memory_output_file.getvalue())
-  m = hashlib.md5()
-  m.update(content)
   source_archive_url = 'gs://%s/%s' % (ctx.properties['codeBucket'],
                                        m.hexdigest() + '.zip')
   cmd = "echo '%s' | base64 -d > /function/function.zip;" % (content.decode('ascii'))
