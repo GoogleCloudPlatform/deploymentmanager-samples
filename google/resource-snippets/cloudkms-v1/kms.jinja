@@ -13,13 +13,6 @@
 # limitations under the License.
 
 resources:
-- name: listLocations
-  action: gcp-types/cloudkms-v1:cloudkms.projects.locations.list
-  properties:
-    name: projects/{{ env["project"] }}
-  metadata:
-    runtimePolicy:
-    - CREATE
 - name: keyRing
   type: gcp-types/cloudkms-v1:projects.locations.keyRings
   properties:
@@ -45,18 +38,6 @@ resources:
   properties:
     parent: $(ref.cryptoKey.name)
 {% endif %}
-- name: encrypt
-  action: gcp-types/cloudkms-v1:cloudkms.projects.locations.keyRings.cryptoKeys.encrypt
-  properties:
-    name: $(ref.cryptoKey.name)
-    # Base64 encoded plain text string
-    plaintext: $(ref.listLocations.toString().base64Encode())
-- name: decrypt
-  action: gcp-types/cloudkms-v1:cloudkms.projects.locations.keyRings.cryptoKeys.decrypt
-  properties:
-    name: $(ref.cryptoKey.name)
-    # Base64 encoded plain text string
-    ciphertext: $(ref.encrypt.ciphertext)
 - name: dummy
   type: DUMMY_V1_RESOURCE
   properties:

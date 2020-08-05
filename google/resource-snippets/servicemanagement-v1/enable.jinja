@@ -18,8 +18,3 @@ resources:
   properties:
     consumerId: "project:{{ env['project'] }}"
     serviceName: drive
-- name: {{ env['deployment'] }}-enable-other
-  action: gcp-types/servicemanagement-v1:servicemanagement.services.enable
-  properties:
-    consumerId: "project:{{ env['project'] }}"
-    serviceName: bigtableadmin.googleapis.com

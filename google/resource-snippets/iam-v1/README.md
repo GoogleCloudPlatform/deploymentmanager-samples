@@ -3,13 +3,12 @@
 ## Overview
 
 This folder contains [Google Cloud Deployment
-Manager](https://cloud.google.com/deployment-manager/overview) samples for follwing types and actions:
+Manager](https://cloud.google.com/deployment-manager/overview) samples for follwing types:
 
 * gcp-types/iam-v1:projects.serviceAccounts
 * gcp-types/iam-v1:projects.serviceAccounts.keys
 * gcp-types/iam-v1:organizations.roles
 * gcp-types/iam-v1:projects.roles
-* gcp-types/iam-v1:iam.projects.serviceAccounts.testIamPermissions
 
 ## Sample usage
 

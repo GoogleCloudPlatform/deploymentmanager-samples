@@ -35,19 +35,4 @@ resources:
       workerConfig:
         numInstances: {{ properties["initialWorkerSize"] }}
         machineTypeUri: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/n1-standard-2
-- name: update-worker-num
-  action: gcp-types/dataproc-v1:dataproc.projects.regions.clusters.patch
-  properties:
-    region: {{ properties["region"] }}
-    clusterName: {{ clusterName }}
-    projectId: {{ env["project"] }}
-    updateMask: config.worker_config.num_instances
-    config:
-      workerConfig:
-        numInstances: {{ properties["updatedWorkerSize"] }}
-  metadata:
-    runtimePolicy:
-    - UPDATE_ON_CHANGE
-    dependsOn:
-    - {{ clusterName }}
-  
+
