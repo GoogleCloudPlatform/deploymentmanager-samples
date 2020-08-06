@@ -29,6 +29,9 @@ resources:
       {% if properties["monitoringService"] %}
       monitoringService: {{ properties["monitoringService"] }}
       {% endif %}
+      {% if properties["loggingService"] %}
+      loggingService: {{ properties["loggingService"] }}
+      {% endif %}
       {% if properties["httpLoadBalancing"] is defined %}
       addonsConfig:
         httpLoadBalancing:
