@@ -47,8 +47,12 @@ properties:
     default: false
   monitoringService:
     type: string
-    description: What monitoring service to use. Can be
-      monitoring.googleapis.com (API default) or none.
+    description: What monitoring service to use. Can be monitoring.googleapis.com/kubernetes (API default)
+      or monitoring.googleapis.com (< GKE 1.15) or none.
+  loggingService:
+    type: string
+    description: What logging service to use. Can be logging.googleapis.com/kubernetes (API default)
+      or logging.googleapis.com (< GKE 1.15) or none.
   httpLoadBalancing:
     type: boolean
     description: If false, httpLoadBalancing is disabled. If not set, no
