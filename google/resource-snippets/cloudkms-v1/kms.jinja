@@ -38,10 +38,3 @@ resources:
   properties:
     parent: $(ref.cryptoKey.name)
 {% endif %}
-- name: dummy
-  type: DUMMY_V1_RESOURCE
-  properties:
-    duration: 0,0
-    kind: $(ref.decrypt.plaintext.base64Decode().load().locations[0].name)
-    name: indirect-{{ env["deployment"] }}
-    project: {{ env["project"] }}
