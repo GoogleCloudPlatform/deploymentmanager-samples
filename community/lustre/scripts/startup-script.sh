@@ -98,10 +98,8 @@ function install_lemur() {
 	mkdir /lustre
 	cd /lustre
 
-	git clone https://github.com/mhugues/lemur.git
-	cd lemur
-
-	git checkout feature/lhsm-plugin-gcs
+	git clone https://github.com/GoogleCloudPlatform/storage-lemur.git
+	cd storage-lemur
 
 	sudo make local-rpm
 
