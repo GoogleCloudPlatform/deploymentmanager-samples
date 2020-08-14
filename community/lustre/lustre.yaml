@@ -37,24 +37,27 @@ resources:
     e2fs_version            : latest
 
     ## Lustre MDS/MGS Node Configuration
-    #mds_node_count          : 1
-    mds_ip_address          : 10.20.0.2
+    ## The mds1 will assume the mgs role
+    mds_node_count          : 2
+    mds_ip_range_start      : 10.20.0.2
     mds_machine_type        : n1-standard-32
     ### MDS/MGS Boot disk
     mds_boot_disk_type      : pd-standard
     mds_boot_disk_size_gb   : 20
     ### Lustre MetaData Target disk
+    mdt_per_mds             : 1
     mdt_disk_type           : pd-ssd
     mdt_disk_size_gb        : 100
 
     ## Lustre OSS Configuration
     oss_node_count          : 4
-    oss_ip_range_start      : 10.20.0.5
+    oss_ip_range_start      : 10.20.0.50
     oss_machine_type        : n1-standard-16
     ### OSS Boot disk
     oss_boot_disk_type      : pd-standard
     oss_boot_disk_size_gb   : 20
     ### Lustre Object Storage Target disk
+    ost_per_oss             : 2
     ost_disk_type           : pd-standard
     ost_disk_size_gb        : 1000
 

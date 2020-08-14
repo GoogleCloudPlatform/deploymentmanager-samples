@@ -37,20 +37,22 @@ resources:
     e2fs_version            : < E2FSPROGS version;              latest;         OPTIONAL >
 
     ## MDS/MGS Configuration
-    mds_node_count          : < Num Lustre MDS instances;       1;              OPTIONAL >
-    mds_ip_address          : < MDS IP Address range start;     10.20.0.2;      OPTIONAL >
+    mds_node_count          : < Num Lustre MDS instances;       1 >
+    mds_ip_range_start      : < MDS IP Address range start;     10.20.0.1;      OPTIONAL >
     mds_machine_type        : < MDS instance profile;           n1-standard-16; OPTIONAL >
     mds_boot_disk_type      : < MDS Boot Disk Type;             pd-standard;    OPTIONAL >
     mds_boot_disk_size_gb   : < MDS Boot Disk Size (GB);        40;             OPTIONAL >
+    mdt_per_mds             : < Num Lustre MDT per MDS;         1 >
     mdt_disk_type           : < Metadata Target Disk Type;      pd-ssd >
     mdt_disk_size_gb        : < MDT Disk Size (GB);             500 >
 
     ## OSS Configuration
     oss_node_count          : < Num Lustre OSS instances;           4 >
-    oss_ip_range_start      : < OSS IP Address range start;     10.20.0.5;      OPTIONAL >
+    oss_ip_range_start      : < OSS IP Address range start;     10.20.0.50;      OPTIONAL >
     oss_machine_type        : < OSS instance profile;           n1-standard-16; OPTIONAL >
     oss_boot_disk_type      : < OSS Boot Disk Type;             pd-standard;    OPTIONAL >
     oss_boot_disk_size_gb   : < OSS Boot Disk Size (GB);        100;            OPTIONAL >
+    ost_per_mdt             : < Num Lustre OST per OSS;         1 >
     ost_disk_type           : < OST Disk Type;                  pd-ssd >
     ost_disk_size_gb        : < OST Disk Size (GB);             100 >
 
