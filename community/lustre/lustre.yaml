@@ -61,6 +61,9 @@ resources:
     ## Lustre HSM Lemur Configuration
     #hsm_node_count         : 1
     #hsm_machine_type       : n1-standard-8
+    ### HSM Boot Disk
+    #hsm_boot_disk_type     : pd-standard
+    #hsm_boot_disk_size_gb  : 20
     #hsm_gcs_bucket         : [MY_BUCKET]
     #hsm_gcs_bucket_import  : [MY_BUCKET_PATH]
     #  [END cluster_yaml]
