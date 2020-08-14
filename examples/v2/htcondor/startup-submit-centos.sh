@@ -15,7 +15,7 @@ fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
 
 # Install utilities and condor and configure it
-sleep 2 #Give some time to setup yum info
+while ! ping -c1 google.com >/dev/null; do sleep 1 ; done
 cd /tmp
 yum install -y wget curl net-tools vim gcc
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor

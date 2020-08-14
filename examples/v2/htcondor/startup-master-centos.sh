@@ -14,7 +14,7 @@ else
 fi
 CONDOR_REPO_URL=https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel${OS_VERSION}.repo
 
-sleep 2 #Give it some time to setup yum
+while ! ping -c1 google.com >/dev/null; do sleep 1 ; done
 cd /tmp
 yum install -y wget curl net-tools vim
 wget https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor

@@ -7,6 +7,7 @@ else
 fi
 
 cd /tmp
+while ! ping -c1 google.com >/dev/null; do sleep 1 ; done
 apt-get update && apt-get install -y wget curl net-tools vim
 echo "deb http://research.cs.wisc.edu/htcondor/debian/stable/ jessie contrib" >> /etc/apt/sources.list
 wget -qO - http://research.cs.wisc.edu/htcondor/debian/HTCondor-Release.gpg.key | apt-key add -
