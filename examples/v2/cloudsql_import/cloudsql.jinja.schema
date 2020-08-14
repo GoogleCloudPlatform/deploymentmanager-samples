@@ -1,16 +1,16 @@
 info:
-  title: Cloud SQL Template
-  author: ohammami <osm.hammami@gmail.com>
-  description: Creates a new sql cloud instance
-  version: 1.0
-
-imports:
-- path: cloudsql.jinja
-
-#required:
-#- rootpass
+  title: CloudSQL
+  author: osm.hammami@gmail.com
+  description: |
+    Creates a CloudSQL deployment
+  version: 0.2
 
 properties:
+  failover:
+    type: boolean
+    description: enable failover replica
+    default: true
+
   region:
     type: string
     description: i.e. europe-west3
@@ -18,39 +18,100 @@ properties:
 
   zone:
     type: string
+    description: i.e. europe-west3-a
     default: europe-west3-a
-    description: Zone to run
 
-  dataDiskSizeGb:
-    type: integer
-    minimum: 10
-    maximum: 10000
-    default: 20
+  sqlimport:
+    type: object
+    description: An object of SQL dump file to import to  Cloud SQL
+    required:
+      - bucket
+      - file
+    properties:
+      bucket:
+        type: string
+      file:
+        type: string
 
-  sqlimportstructure:
-    type: string
-    description: uri of the sqldump to import
+  cloudsql:
+    type: object
+    default:
+      properties: 
+    properties:
+      databaseVersion:
+        type: string
+        description: MYSQL_5_7 or MYSQL_5_6
+        default: MYSQL_5_7
+      dataDiskSizeGb:
+        type: integer
+        minimum: 10
+        maximum: 10000
+        default: 20
+      dataDiskType:
+        type: string
+        decription: PD_SSD or PD_HDD
+        default: PD_SSD
+      backupStartTime:
+        type: string
+        description: HH:MM in 24 hour format
+        default: 00:00
+      privateNetwork:
+        type: string
+        description: The ressource link for the VPC network from which the Cloud SQL instance is accessible for private IP.
+        default: default
+      tier:
+        type: string
+        description: https://cloud.google.com/sql/pricing#2nd-gen-pricing
+        default: db-n1-standard-2
+      authorizedNetworks:
+        type: array
+        description: An array of allowed CIDR blocks
 
-  rootpass:
-    type: string
-    description: root password
-    default: mysaferootpass
-
-  machinetype:
-    type: string
-    description: machine type, for more info https://cloud.google.com/sql/pricing#2nd-gen-pricing
-    default: db-f1-micro
-
-  databases:
+  databaseFlags: 
     type: array
-    description: An array of mysql databases
+    description: An array of https://cloud.google.com/sql/docs/mysql/flags
+    items:
+      type: object
+      required:
+        - name
+        - value 
+      properties:
+        name: 
+          type: string 
+        value:
+          type: 
+            - integer
+            - string
 
-  users:
+  dbusers:
     type: array
-    description: An array of allowed userss
-
-  authorization:
+    description: An array for the SQL users.
+    items:
+      type: object
+      required:
+        - password
+      properties:
+        name:
+          type: string
+          default: root
+        host:
+          type: string
+          default: '%'
+        password:
+          type: string
+  
+  databases: 
     type: array
-    description: An array of allowed CIDR blocks
+    description: An array for the SQL databases.
+    items:
+      type: object
+      required:
+        - name
+      properties:
+        name: 
+          type: string
+        charset:
+          type: string
+          description: https://dev.mysql.com/doc/refman/5.7/en/charset.html
+          default: utf8
 
- 
