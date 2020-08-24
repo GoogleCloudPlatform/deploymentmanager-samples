@@ -86,5 +86,21 @@ resources:
         location: HEADER
         value: >
           $.concat("Bearer ", $.googleOauth2AccessToken())
+      - fieldName: metadata.resourceVersion
+        location: BODY
+        methodMatch: ^(put|patch)$
+        value: $.resource.self.metadata.resourceVersion
+      - fieldName: id
+        location: PATH
+        methodMatch: ^(put|get|delete|post|patch)$
+        value: $.resource.properties.id
+      - fieldName: name
+        location: PATH
+        methodMatch: ^(put|get|delete|post|patch)$
+        value: $.resource.properties.metadata.name
+      - fieldName: namespace
+        location: PATH
+        methodMatch: ^(put|get|delete|post|patch)$
+        value: $.resource.properties.namespace
     customCertificateAuthorityRoots:
     - $(ref.{{env["deployment"]}}.masterAuth.clusterCaCertificate)
