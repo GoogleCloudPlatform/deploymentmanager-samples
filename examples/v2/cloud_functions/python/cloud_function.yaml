@@ -33,3 +33,5 @@ outputs:
   value: $(ref.function-call.result)
 - name: function-code
   value: $(ref.function.sourceArchiveUrl)
+- name: function-url
+  value: $(ref.function.url)
