@@ -22,19 +22,7 @@ resources:
     name: {{ database_name }}
     instance: $(ref.{{ instance_name }}.name)
     charset: utf8
-- name: delete-user-root
-  action: gcp-types/sqladmin-v1beta4:sql.users.delete
-  metadata:
-    runtimePolicy:
-    - CREATE
-    dependsOn:
-    - {{ database_name }}
-  properties:
-    project: {{ env['project'] }}
-    instance: $(ref.{{ env['deployment'] }}-instance.name)
-    name: root
-    host: "%"
-{% set dependency = 'delete-user-root' %}
+{% set dependency = 'database_name' %}
 
 {% for n in range(properties['readReplicas']) %}
 - name: {{ replica_name }}-{{n}}
@@ -42,7 +30,7 @@ resources:
   metadata:
     dependsOn:
     {% if n == 0 %}
-    - delete-user-root
+    - database_name
     {% else %}
     - {{ replica_name + '-' + (n-1)|string }}
     {% endif %}
