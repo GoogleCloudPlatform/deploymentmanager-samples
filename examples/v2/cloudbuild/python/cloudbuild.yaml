@@ -1,9 +1,0 @@
-imports:
-- path: cloudbuild.py
-
-resources:
-- name: build
-  type: cloudbuild.py
-  properties:
-    resourceToList: deployments
-

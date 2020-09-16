@@ -1,9 +1,0 @@
-imports:
-- path: cloudbuild.jinja
-
-resources:
-- name: build
-  type: cloudbuild.jinja
-  properties:
-    resourceToList: deployments
-
