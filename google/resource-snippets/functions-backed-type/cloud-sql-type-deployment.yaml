@@ -1,0 +1,18 @@
+
+resources:
+
+- name: cloud-sql-custom-type
+  type: deploymentmanager.local.typeProvider
+  properties:
+    descriptorUrl: https://OPEN_API_DOC_URL
+
+- name: test-instance-name
+  type: YOUR_GCP_PROJECT/sql-custom-type49:/CLOUD_FUNCTION_NAME/{instance}
+  properties:
+    instance: test-sql-instance
+    name: test-sql-instance
+    settings:
+      tier: db-n1-standard-1
+  metadata:
+    dependsOn:
+    - cloud-sql-custom-type
