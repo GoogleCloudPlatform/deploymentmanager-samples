@@ -24,8 +24,4 @@ resources:
     event_types:
     - OBJECT_FINALIZE
     - OBJECT_DELETE
-  metadata:
-    dependsOn:
-    - {{ TOPIC }}
-    - {{ BUCKET }}
 {% endfor %}
