@@ -25,7 +25,9 @@ def GenerateConfig(context):
   region = properties['region']
   compute_resource_util.SetContext(context)
 
-  network = ComputeResource('network', compute_constants.NETWORKS, {})
+  network = ComputeResource('network', compute_constants.NETWORKS, {
+    'autoCreateSubnetworks': True
+  })
   vpn_gateway = ComputeResource('vpg', compute_constants.TARGETVPNGATEWAYS, {
       'network': network.SelfLink(),
       'region': region
