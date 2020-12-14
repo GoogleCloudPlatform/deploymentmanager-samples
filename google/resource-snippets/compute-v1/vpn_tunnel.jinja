@@ -60,6 +60,8 @@ resources:
     peerIp: {{ properties["peerIp"] }}
     targetVpnGateway: $(ref.{{ VPN_GATEWAY }}.selfLink)
     description: Must be deployed after $(ref.{{ ESP_RULE }}.selfLink).
+    localTrafficSelector:
+    - 192.168.0.0/16
 - name: vpn-route-{{ env["deployment"] }}
   type: gcp-types/compute-v1:routes
   properties:
