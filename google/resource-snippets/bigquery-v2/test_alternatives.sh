@@ -10,22 +10,20 @@ DM_PROJECT_ID=[DM_PROJECT_ID]
 gcloud auth application-default login
 
 # Create DM resources
-pushd ../
 gcloud config set project $DM_PROJECT_ID
 gcloud services enable deploymentmanager.googleapis.com
 gcloud deployment-manager deployments create d1 --config bigquery.yaml
-popd
 
 # Create Terraform resources
-pushd tf
+pushd alternatives/tf
 gcloud config set project $TF_PROJECT_ID
 terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 popd
 
 # Create KCC resources
-cp -R krm krm_${KRM_PROJECT_ID}
-pushd krm_${KRM_PROJECT_ID}
+cp -R alternatives/krm /tmp/krm_${KRM_PROJECT_ID}
+pushd /tmp/krm_${KRM_PROJECT_ID}
 kpt cfg set . deployment d1
 kubectl apply -f bigquery.yaml
 kubectl  wait --for=condition=Ready BigQueryTable --all
