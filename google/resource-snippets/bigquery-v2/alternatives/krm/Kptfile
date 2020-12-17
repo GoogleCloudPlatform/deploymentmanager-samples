@@ -1,0 +1,31 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: bigquery
+packageMetadata:
+  shortDescription: configure bigquery
+openAPI:
+  definitions:
+    io.k8s.cli.setters.deployment:
+      x-k8s-cli:
+        setter:
+          name: deployment
+          value: ${DEPLOYMENT?}
+          setBy: PLACEHOLDER
+      description: deployment name
+    io.k8s.cli.substitutions.dataset-sub:
+      x-k8s-cli:
+        substitution:
+          name: deployment-sub
+          pattern: DEPLOYMENT_SETTERdataset
+          values:
+          - marker: DEPLOYMENT_SETTER
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
+    io.k8s.cli.substitutions.table-sub:
+      x-k8s-cli:
+        substitution:
+          name: table-sub
+          pattern: DEPLOYMENT_SETTERtable
+          values:
+          - marker: DEPLOYMENT_SETTER
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
