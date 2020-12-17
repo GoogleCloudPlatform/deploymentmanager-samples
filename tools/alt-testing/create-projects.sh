@@ -1,10 +1,11 @@
 set -e
-
-# Expecting
+# This script can sourced into test_alternatives script
+# The following variables are expected to be defined in the parrent script
 # TF_PROJECT_ID=
 # KRM_PROJECT_ID=
 # DM_PROJECT_ID=
 
+# The following variables are local to this script and should be specified
 BILLING_ACCOUNT=[BILLING_ACCOUNT]
 FOLDER_ID=[FOLDER_ID]
 CLUSTER_ID=[CLUSTER_ID]
