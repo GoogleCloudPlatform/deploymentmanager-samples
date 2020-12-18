@@ -17,8 +17,8 @@
 
 # Can't use deployment name as it is going to be filled in with a generated
 # name which has dashes in it, which are not valid bigquery name characters.
-{% set DATASET = (env["deployment"] + "-dataset")|replace("-","_") %}
-{% set TABLE = (env["deployment"] + "-table")|replace("-","_") %}
+{% set DATASET = (env["deployment"] + "dataset")|replace("-","_") %}
+{% set TABLE = (env["deployment"] + "table")|replace("-","_") %}
 
 resources:
 - name: {{ DATASET }}-test
