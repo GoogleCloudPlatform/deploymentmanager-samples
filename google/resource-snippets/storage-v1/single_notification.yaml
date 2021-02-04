@@ -1,0 +1,9 @@
+imports:
+- path: notification.jinja
+
+resources:
+- name: notification
+  type: notification.jinja
+  properties:
+    payload_format: JSON_API_V1
+    notification_count: 1

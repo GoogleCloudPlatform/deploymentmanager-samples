@@ -1,0 +1,16 @@
+apiVersion: bigquery.cnrm.cloud.google.com/v1beta1
+kind: BigQueryTable
+metadata:
+  name: ${DEPLOYMENT?}table # {"$ref":"#/definitions/io.k8s.cli.substitutions.table-sub"}
+  labels:
+      goog-dm: ${DEPLOYMENT?} # {"$ref":"#/definitions/io.k8s.cli.setters.deployment"}
+spec:
+  datasetRef:
+    name: ${DEPLOYMENT?}dataset # {"$ref":"#/definitions/io.k8s.cli.substitutions.dataset-sub"}
+---
+apiVersion: bigquery.cnrm.cloud.google.com/v1beta1
+kind: BigQueryDataset
+metadata:
+  name: ${DEPLOYMENT?}dataset # {"$ref":"#/definitions/io.k8s.cli.substitutions.dataset-sub"}
+  labels:
+    goog-dm: ${DEPLOYMENT?} # {"$ref":"#/definitions/io.k8s.cli.setters.deployment"}

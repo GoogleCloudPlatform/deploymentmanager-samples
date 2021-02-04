@@ -45,21 +45,8 @@ def GenerateConfig(context):
           'instance': ''.join(['$(ref.', instance_name,'.name)']),
           'charset': 'utf8'
       }
-  }, {
-      'name': 'delete-user-root',
-      'action': 'gcp-types/sqladmin-v1beta4:sql.users.delete',
-      'metadata': {
-          'runtimePolicy': ['CREATE'],
-          'dependsOn': [ database_name ]
-      },
-      'properties': {
-          'project': context.env['project'],
-          'instance': ''.join(['$(ref.', instance_name,'.name)']),
-          'name': 'root',
-          'host': '%'
-      }
   }]
-  dependency='delete-user-root'
+  dependency=database_name
   for n in range(0,context.properties['readReplicas']):
     name = ''.join([replica_name,'-',str(n)])
     resources.append({'name': name,

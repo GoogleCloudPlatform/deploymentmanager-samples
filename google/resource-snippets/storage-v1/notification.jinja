@@ -1,0 +1,27 @@
+{% set TOPIC = "topic-" + env["deployment"] %}
+{% set BUCKET = "bucket-" + env["deployment"] %}
+{% set NOTIFICATION = "notification-" + env["deployment"] %}
+{% set PROJECT = env['project_number'] %}
+
+resources:
+- type: gcp-types/pubsub-v1:projects.topics
+  name: {{ TOPIC }}
+  properties:
+    topic: {{ TOPIC }}
+- type: gcp-types/storage-v1:buckets
+  name: {{ BUCKET }}
+  properties:
+    location: US
+    storageClass: STANDARD
+{% for id in range(properties['notification_count']) %}
+- type: gcp-types/storage-v1:notifications
+  name: {{ NOTIFICATION }}-{{id}}
+  properties:
+    bucket: $(ref.{{ BUCKET }}.name)
+    topic: $(ref.{{ TOPIC }}.name)
+    payload_format: {{ properties['payload_format'] }}
+    object_name_prefix: env_{{id}}
+    event_types:
+    - OBJECT_FINALIZE
+    - OBJECT_DELETE
+{% endfor %}

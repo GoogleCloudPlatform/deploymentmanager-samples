@@ -1,1 +1,0 @@
-../../../global/helper/naming_helper.py

@@ -11,7 +11,7 @@ def GenerateConfig(context):
       if 'acceleratorType' in context.properties else 'v2-8')
   tensorflow_version = (
       context.properties['tensorflowVersion']
-      if 'tensorflowVersion' in context.properties else '1.8')
+      if 'tensorflowVersion' in context.properties else '2.3')
   cidr_block = context.properties['cidrBlock']
   resources = []
   resources.append({
@@ -29,29 +29,22 @@ def GenerateConfig(context):
   gcs_bucket = context.properties.get('gcsBucket')
   if gcs_bucket:
     resources.append({
-        'name': 'get-iam-policy',
-        'action': 'gcp-types/storage-v1:storage.buckets.getIamPolicy',
+        'name': gcs_bucket,
+        'type': 'gcp-types/storage-v1:buckets',
         'properties': {
-            'bucket': gcs_bucket,
-            'userProject': project,
+            'location': 'US',
+            'storageClass': 'STANDARD',
         }
     })
+
     resources.append({
-        'name': 'add-iam-policy',
-        'action': 'gcp-types/storage-v1:storage.buckets.setIamPolicy',
+        'name': 'tpu-bucket-iam',
+        'type': 'gcp-types/storage-v1:virtual.buckets.iamMemberBinding',
         'properties': {
-            'bucket': gcs_bucket,
-            'userProject': project,
-            'policy': '$(ref.get-iam-policy)',
-            'gcpIamPolicyPatch': {
-                'add': [{
-                    'roles':
-                        'roles/storage.objectViewer',
-                    'members': [
-                        'serviceAccount:$(ref.%s.serviceAccount)' % tpu_name
-                    ]
-                }]
-            }
+            'bucket': '$(ref.%s.name)' % gcs_bucket,
+            'member': 'serviceAccount:$(ref.%s.serviceAccount)' % tpu_name,
+            'role': 'roles/storage.admin'
         }
     })
+
   return {'resources': resources}

@@ -65,18 +65,4 @@ resources:
     - {{ ESP_RULE }}
     - {{ UDP_500_RULE }}
     - {{ UDP_4500_RULE }}
-# An action that its executed after the VPN_TUNNEL, it calls the method patch
-# by ID on the descriptor document
-# https://www.googleapis.com/discovery/v1/apis/compute/v1/rest
-- name: {{ ROUTER_VPN_BINDING }}
-  action: gcp-types/compute-v1:compute.routers.patch
-  properties:
-    router: {{ ROUTER }}
-    region: {{ properties["region"] }}
-    project: {{ env["project"] }}
-    name: {{ ROUTER }}
-    asn: {{ properties["asn"] }}
-    interfaces:
-    - ipRange: 169.254.1.1/31
-      linkedVpnTunnel: $(ref.{{ VPN_TUNNEL }}.selfLink)
-      name: if-1
+
