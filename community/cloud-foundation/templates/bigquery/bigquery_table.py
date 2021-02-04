@@ -36,7 +36,9 @@ def generate_config(context):
         'expirationTime',
         'schema',
         'timePartitioning',
-        'view'
+        'view',
+        'materializedView',
+        'storedProcedure'
     ]
 
     for prop in optional_properties:
