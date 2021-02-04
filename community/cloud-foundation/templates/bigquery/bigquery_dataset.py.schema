@@ -109,7 +109,7 @@ properties:
               description: |
                 The table ID. The ID must contain only letters
                 (a-z, A-Z), numbers (0-9), or underscores (_). The maximum
-                length is 1,024 characters.
+                length is 1,024 characters.              
   description:
     type: string
     description: A user-friendly description of the dataset.
@@ -134,7 +134,55 @@ properties:
       expirationTime while creating the table, that value takes precedence over
       the default expiration time indicated by this property.
     minimum: 3600000
-
+    
+        - storeProcedure:
+          type: object
+          description: |
+               A storeProcedure created in different dataset to grant access to. Queries
+               executed against that views have the Read access to tables in that
+               dataset. EXECUTE role is required and will need to be granted again once the SP is dropped.
+          properties:
+          datasetId:
+             type: string
+             description: The ID of the dataset containing the table.
+          definitionBody:
+             type: string
+             description: |
+                   The query that BigQuery executes when the view is referenced.
+          arguments:
+             type: object
+          returnType:
+             type: object
+             description: |
+                 (StandardSqlDataType) Optional if language is SQL; required otherwise.If absent, the return type is 
+                 inferred from definitionBody at query time in each query that references this routine. If present, 
+                 then the evaluated result will be cast to the specified returned type at query time.
+           
+        - materializedView:
+          type: object
+          description: The view definintion.
+          properties:
+          query:
+             type: string
+             description: |
+                 The query that BigQuery executes when the view is referenced.
+          lastRefreshTime:
+             type: string
+             format: int64
+          lastRefreshTime:
+             type: string
+             format: int64
+          refreshIntervalMs:
+             type: string
+             format: UInt64Value
+             description: |
+                 Optional. The maximum frequency at which this materialized view will be refreshed. 
+                 The default value is "1800000" (30 minutes).
+          enableRefresh:
+            type: boolean
+            description: |
+                Optional. Enable automatic refresh of the materialized view when the base table is updated. 
+                The default value is true.
 outputs:
   properties:
     - selfLink:
