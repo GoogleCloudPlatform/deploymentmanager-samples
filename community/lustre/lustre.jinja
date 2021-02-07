@@ -15,13 +15,12 @@
 # Determine region
 {% set region_ext = properties['zone'].split('-')[0] ~ '-' ~ properties['zone'].split('-')[1] %}
 
-# Split the subnet CIDR range into octets
-{% set subnet = properties['cidr'].split('/')[0] %}
-{% set subnet_split = subnet.split('.') %}
-
 resources:
 # If we're not using an existing VPC, create a VPC, subnet and firewall rules
 {% if not properties['vpc_net'] %}
+# Split the subnet CIDR range into octets
+{% set subnet = properties['cidr'].split('/')[0] %}
+{% set subnet_split = subnet.split('.') %}
 # Create a network for the new cluster
 - name: {{properties["cluster_name"]}}-lustre-network
   type: compute.v1.network
@@ -110,20 +109,26 @@ resources:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mds_boot_disk_type"] }}
         diskSizeGb: {{ properties["mds_boot_disk_size_gb"] }}
-    {% if properties ["mdt_disk_type"] == "local-ssd" %}
-    {% set num_mdt_local_ssds = (properties['mdt_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
-    {% if num_mdt_local_ssds > 8 %}
-        {% set num_mdt_local_ssds = 8 %}
+    {% if properties["mdt_disk_type"] == "local-ssd" %}
+    {% if (properties["mdt_disk_size_gb"]|int) <= 3000 %}
+    {% set mdt_per_mds = (properties['mdt_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
+    {% elif (properties["mdt_disk_size_gb"]|int) <= 6000 %}
+    {% set mdt_per_mds = 16 %}
+    {% elif (properties["mdt_disk_size_gb"]|int) <= 9000 %}
+    {% set mdt_per_mds = 24 %}
+    {% elif (properties["mdt_disk_size_gb"]|int) > 9000 %}
+    {% set mdt_per_mds = 24 %}
     {% endif %}
-    {% for i in range(num_mdt_local_ssds) %}
-      - type: SCRATCH
-        autoDelete: true
-        interface: NVME
-        initializeParams:
-          diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
+    {% for i in range(mdt_per_mds) %}
+    - type: SCRATCH
+      autoDelete: true
+      interface: NVME
+      initializeParams:
+        diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
     {% endfor %}
     {% else %}
-    {% for i in range(properties ["mdt_per_mds"]) %}
+    {% set mdt_per_mds = properties["mdt_per_mds"] %}
+    {% for i in range(mdt_per_mds) %}
     - deviceName: mdt-{{ i + 1 }}
       type: PERSISTENT
       autoDelete: true
@@ -136,12 +141,12 @@ resources:
 {% if not properties['external_ips'] %}
     canIpForward: true
 {% endif %}
-  {% if (properties ['vpc_net'] and properties ['vpc_subnet'] and properties ['shared_vpc_host_proj'])  %}
+  {% if (properties['vpc_net'] and properties['vpc_subnet'] and properties['shared_vpc_host_proj'])  %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
+  {% elif (properties['vpc_subnet'] and properties['vpc_net']) %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
   {% else %}
     networkInterfaces:
     - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
@@ -168,7 +173,7 @@ resources:
       items:
         - key: startup-script
           value: |
-            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS")|replace("@MDT_PER_MDS@",properties["mdt_per_mds"])|replace("@OST_PER_OSS@",properties["ost_per_oss"]) }}
+            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","MDS")|replace("@MDT_PER_MDS@",mdt_per_mds)|replace("@OST_PER_OSS@",properties["ost_per_oss"])|replace("@OST_DISK_TYPE@",properties["ost_disk_type"])|replace("@MDT_DISK_TYPE@",properties["mdt_disk_type"]) }}
         - key: enable-oslogin
           value: "TRUE"
 {% endfor %}
@@ -189,12 +194,17 @@ resources:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["oss_boot_disk_type"] }}
         diskSizeGb: {{ properties["oss_boot_disk_size_gb"] }}
-    {% if properties ["ost_disk_type"] == "local-ssd" %}
-    {% set num_ost_local_ssds = (properties['ost_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
-    {% if num_ost_local_ssds > 8 %}
-        {% set num_ost_local_ssds = 8 %}
+    {% if properties["ost_disk_type"] == "local-ssd" %}
+    {% if (properties["ost_disk_size_gb"]|int) <= 3000 %}
+    {% set ost_per_oss = (properties['ost_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
+    {% elif (properties["ost_disk_size_gb"]|int) <= 6000 %}
+    {% set ost_per_oss = 16 %}
+    {% elif (properties["ost_disk_size_gb"]|int) <= 9000 %}
+    {% set ost_per_oss = 24 %}
+    {% elif (properties["ost_disk_size_gb"]|int) > 9000 %}
+    {% set ost_per_oss = 24 %}
     {% endif %}
-    {% for i in range(num_ost_local_ssds) %}
+    {% for i in range(ost_per_oss) %}
     - type: SCRATCH
       autoDelete: true
       interface: NVME
@@ -202,7 +212,8 @@ resources:
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
     {% endfor %}
     {% else %}
-    {% for i in range(properties ["ost_per_oss"]) %}
+    {% set ost_per_oss = properties["ost_per_oss"] %}
+    {% for i in range(ost_per_oss) %}
     - deviceName: ost-{{ i + 1 }}
       type: PERSISTENT
       autoDelete: true
@@ -212,12 +223,12 @@ resources:
         diskSizeGb: {{ properties["ost_disk_size_gb"] }}
     {% endfor %}
     {% endif %}
-  {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
+  {% if (properties['vpc_subnet'] and properties['vpc_net'] and properties['shared_vpc_host_proj'])  %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
+  {% elif (properties['vpc_subnet'] and properties['vpc_net']) %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
   {% else %}
     networkInterfaces:
     - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)
@@ -242,7 +253,7 @@ resources:
       items:
         - key: startup-script
           value: |
-            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","OSS")|replace("@OST_PER_OSS@",properties["ost_per_oss"])|replace("@MDT_PER_MDS@",properties["mdt_per_mds"])  }}
+            {{ imports["scripts/startup-script.sh"]|indent(12)|replace("@CLUSTER_NAME@",properties["cluster_name"])|replace("@FS_NAME@",properties["fs_name"])|replace("@LUSTRE_VERSION@",properties["lustre_version"])|replace("@E2FS_VERSION@",properties["e2fs_version"])|replace("@NODE_ROLE@","OSS")|replace("@OST_PER_OSS@",ost_per_oss)|replace("@MDT_PER_MDS@",properties["mdt_per_mds"])|replace("@OST_DISK_TYPE@",properties["ost_disk_type"])|replace("@MDT_DISK_TYPE@",properties["mdt_disk_type"])  }}
 {% endfor %}
 
 # Create N Lustre HSM Data Movers nodes
@@ -261,12 +272,12 @@ resources:
         sourceImage: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/family/centos-7
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["hsm_boot_disk_type"] }}
         diskSizeGb: {{ properties["hsm_boot_disk_size_gb"] }}
-  {% if (properties ['vpc_subnet'] and properties ['vpc_net'] and properties ['shared_vpc_host_proj'])  %}
+  {% if (properties['vpc_subnet'] and properties['vpc_net'] and properties['shared_vpc_host_proj'])  %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
-  {% elif (properties ['vpc_subnet'] and properties ['vpc_net']) %}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ properties["shared_vpc_host_proj"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
+  {% elif (properties['vpc_subnet'] and properties['vpc_net']) %}
     networkInterfaces:
-    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties ["vpc_subnet"] }}
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/regions/{{ region_ext }}/subnetworks/{{ properties["vpc_subnet"] }}
   {% else %}
     networkInterfaces:
     - subnetwork: $(ref.{{properties["cluster_name"]}}-lustre-subnet.selfLink)

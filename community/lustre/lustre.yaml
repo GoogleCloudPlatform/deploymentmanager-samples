@@ -45,9 +45,11 @@ resources:
     mds_boot_disk_type      : pd-standard
     mds_boot_disk_size_gb   : 20
     ### Lustre MetaData Target disk
+    ### mdt_per_oss sets the number of PD disks if used, up to 256TB per VM.
+    ### if mdt_disk_type = local-ssd then mdt_per_oss is ignored.
     mdt_per_mds             : 1
     mdt_disk_type           : pd-ssd
-    mdt_disk_size_gb        : 100
+    mdt_disk_size_gb        : 1000
 
     ## Lustre OSS Configuration
     oss_node_count          : 4
@@ -56,9 +58,11 @@ resources:
     ### OSS Boot disk
     oss_boot_disk_type      : pd-standard
     oss_boot_disk_size_gb   : 20
-    ### Lustre Object Storage Target disk
+    ### Lustre Object Storage Target disks
+    ### ost_per_oss sets the number of PD disks if used, up to 256TB per VM.
+    ### if ost_disk_type = local-ssd then ost_per_oss is ignored.
     ost_per_oss             : 2
-    ost_disk_type           : pd-standard
+    ost_disk_type           : pd-balanced
     ost_disk_size_gb        : 1000
 
     ## Lustre HSM Lemur Configuration

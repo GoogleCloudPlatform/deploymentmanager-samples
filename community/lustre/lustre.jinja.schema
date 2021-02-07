@@ -24,30 +24,30 @@ imports:
 required:
 - cluster_name
 - zone
-- cidr
 - oss_node_count
-- mds_ip_range_start
 - mds_boot_disk_type
 - mds_boot_disk_size_gb
 - mdt_per_mds
 - mdt_disk_size_gb
 - mdt_disk_type
-- oss_ip_range_start
 - ost_per_oss
 - ost_disk_size_gb
 - ost_disk_type
 - external_ips
 
 optional:
+- cidr
 - fs_name
 - lustre_version
 - e2fs_version
 - mds_node_count
+- oss_ip_range_start
 - oss_boot_disk_type
 - oss_boot_disk_size_gb
 - oss_machine_type
 - mds_machine_type
-#- mgs_machine_type
+- mds_ip_range_start
+- oss_ip_range_start
 - mds_ip_address
 - vpc_net
 - vpc_subnet

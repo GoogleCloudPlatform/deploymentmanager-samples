@@ -25,6 +25,8 @@ ost_mount_point="/mnt/ost"
 mdt_mount_point="/mnt/mdt"
 mdt_per_mds="@MDT_PER_MDS@"
 ost_per_oss="@OST_PER_OSS@"
+mdt_disk_type="@MDT_DISK_TYPE@"
+ost_disk_type="@OST_DISK_TYPE@"
 
 LUSTRE_VERSION="@LUSTRE_VERSION@"
 LUSTRE_CLIENT_VERSION="lustre-2.10.8"
@@ -106,7 +108,6 @@ function install_lemur() {
 	sudo make local-rpm
 
 	rpm -ivh /root/rpmbuild/RPMS/x86_64/*.rpm
-
 }
 
 function configure_lemur() {
@@ -169,8 +170,6 @@ EOF
 
 	#Start lhsm agent daemon
 	systemctl start lhsmd
-
-
 }
 
 function hsm_import_bucket()
@@ -251,11 +250,11 @@ function main() {
 		fi
 	
 		# Mark install.log as reaching stage 1
-		echo 1 > /lustre/install.log
+		echo "Stage 1" >> /lustre/install.log
 		# Reboot to switch to the Lustre kernel
 		reboot
 	# If the install.log exists, and contains a 1, begin installation stage 2
-	elif [ "`cat /lustre/install.log`" == "1" ]; then
+	elif [ `grep -c "Stage 1" /lustre/install.log` -eq 1 ]; then
 		# Load the Lustre kernel modules
 		modprobe lustre
 		
@@ -265,20 +264,9 @@ function main() {
 		if [ ! $host_index ]; then
 			host_index=0
 		else
-			let host_index=host_index-1
+			let host_index=$host_index-1
 		fi
 
-		# Determine if the OST/MDT disk is PD or Local SSD
-        	num_local_ssds=`lsblk | grep -c nvme`
-        	if [ ${num_local_ssds} -gt 1 ]; then
-	        	lustre_device="/dev/md0"
-	        	sudo mdadm --create ${lustre_device} --level=0 --raid-devices=${num_local_ssds} /dev/nvme0n*
-        	elif [ $num_local_ssds -eq 1 ]; then
-	        	lustre_device="/dev/nvme0n1"
-        	else
-	        	lustre_device="/dev/sdb"
-        	fi
-		
 		# If the local node running this script is a Lustre MDS, install the MDS/MGS software
 		if [ "$NODE_ROLE" == "MDS" ]; then
 			# Do LCTL ping to the OSS nodes and sleep until LNET is up and we get a response
@@ -286,11 +274,35 @@ function main() {
 				sleep 10
 			done
 
-			# Make the MDT mount and mount the device
-			mkdir $mdt_mount_point
-			mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-			echo "$lustre_device	$mdt_mount_point	lustre" >> /etc/fstab
-			mount -a
+			let index=$host_index*$mdt_per_mds
+			if [ "$mdt_disk_type" == "local-ssd" ]; then
+				disks=$(ls /dev/nvme0n*)
+			else
+				disks=$(ls /dev/sd* | grep -v sda[0-9]*$ )
+			fi
+			for lustre_device in $disks; do
+				# Make the MDT mount and mount the device
+				mkdir $mdt_mount_point$index
+				if [[ "$MDS_HOSTNAME" == $(hostname) && ${index} == 0 ]]; then
+					# Create the first mdt as the mgs of the cluster
+					mkfs.lustre --mdt --mgs --index=${index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+					# Sleep 60 seconds to give MGS time to come up 
+					sleep 60
+				else
+					mkfs.lustre --mdt --index=${index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+				fi
+				echo "$lustre_device	$mdt_mount_point$index	lustre" >> /etc/fstab
+				mount $mdt_mount_point$index
+				
+				if [ $? -ne 0 ]; then
+					echo -e "MDT device \"$lustre_device\" mount to \"$mdt_mount_point$index\" has failed. Please try mounting manually with \"mount -t lustre $mdt_mount_point$index\", or reboot this node."
+					#exit 1
+				fi
+				let index=$index+1
+			done
+
+                        # Enable lustre server-side read cache
+			lctl set_param osd-*.*.read_cache_enable=1
 
 			# Enable HSM on the Lustre MGS
 			lctl set_param -P mdt.*-MDT0000.hsm_control=enabled
@@ -302,70 +314,45 @@ function main() {
 			# experiment with various values if you intend to go to production
 			lctl set_param mdt.*-MDT0000.hsm.max_requests=128
 
-			# Once the network is up, make the lustre filesystem on the MDT
-			#mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} /dev/sdb
-
-			# Make the MDT mount and mount the device
-			#mkdir /mdt
-			#mount -t lustre /dev/sdb /mdt
-			
-			let host_index=$host_index*$mdt_per_mds
-			i=0
-			for lustre_device in $(ls /dev/sd* | grep -v sda[0-9]*$ ); do
-			
-				# Make the MDT mount and mount the device
-			        let host_index=host_index+i
-				mkdir $mdt_mount_point$i
-				if [[ "$MDS_HOSTNAME" == $(hostname) && ${host_index} == 0 ]]; then
-					# Create the first mdt as the mgs of the cluster
-					mkfs.lustre --mdt --mgs --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-				else
-					mkfs.lustre --mdt --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-					# Sleep 60 seconds to give MGS time to come up 
-					sleep 60
-				fi
-				echo "$lustre_device	$mdt_mount_point$i	lustre" >> /etc/fstab
-				mount -a
-			
-				# Check for a successful mount, and fail otherwise.
-				if [ `mount | grep -c $mdt_mount_point` -eq 0 ]; then
-					echo "MDT mount has failed. Please try mounting manually with "mount -t lustre $lustre_device $mdt_mount_point", or reboot this node."
-					exit 1
-				fi
-				let i=i+1
-			done
-
 			# Disable the authentication upcall by default, change if using auth
 			echo NONE > /proc/fs/lustre/mdt/lustre-MDT0000/identity_upcall
 		# If the local node running this script is a Lustre OSS, install the OSS software
 		elif [ "$NODE_ROLE" == "OSS" ]; then
 			# Do LCTL ping to the OSS nodes and sleep until LNET is up and we get a response 
 			while [ `sudo lctl ping ${MDS_HOSTNAME} | grep -c "Input/output error"` -gt 0 ]; do
-				sleep 10
+				sleep 5
 			done
 
-			# Make the Lustre OST
 			# Sleep 60 seconds to give MDS/MGS time to come up before the OSS. More robust communication would be good.
 			sleep 60
 
-			let host_index=host_index*ost_per_oss
+			# Make the Lustre OST
+			let index=$host_index*$ost_per_oss
+			echo "INDEX = $index" >> /lustre/install.log
 			echo "OST_PER_OSS = $ost_per_oss" >> /lustre/install.log
-			i=0
-			for lustre_device in $(ls /dev/sd* | grep -v sda[0-9]*$ ); do
+			if [ "$ost_disk_type" == "local-ssd" ]; then
+				disks=$(ls /dev/nvme0n*)
+			else
+				disks=$(ls /dev/sd* | grep -v sda[0-9]*$ )
+			fi
+			for lustre_device in $disks; do
+			#for lustre_device in $(ls /dev/sd* | grep -v sda[0-9]*$ ); do
+				echo "DEVICE = $lustre_device" >> /lustre/install.log
 				# Make the directory to mount the OST, and mount the OST
-				let host_index=host_index+i
-				mkdir $ost_mount_point$i
-				mkfs.lustre --ost --index=${host_index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
-				echo "$lustre_device	$ost_mount_point$i	lustre" >> /etc/fstab
-				mount -a
+				mkdir $ost_mount_point$index
+				mkfs.lustre --ost --index=${index} --fsname=${FS_NAME} --mgsnode=${MDS_HOSTNAME} $lustre_device
+				echo "$lustre_device	$ost_mount_point$index	lustre" >> /etc/fstab
 				
-				# Check for a successful mount, and fail otherwise.
-				if [ `mount | grep -c $ost_mount_point$i` -eq 0 ]; then
-					echo "OST mount has failed. Please try mounting manually with \"mount -t lustre $lustre_device $ost_mount_point$i\", or reboot this node." >> /lustre/install.log
-					exit 1
-				fi
-				let i=i+1
+				let index=$index+1
 			done
+			
+			# Mount OST devices
+			sleep 20
+			mount -a
+			if [ `mount | grep -c $ost_mount_point` -eq 0 ]; then
+				echo "OST mount has failed. Please try mounting manually with \"mount -a\", or reboot this node." >> /lustre/install.log
+				#exit 1
+			fi
 
 		# If the local node running this script is a Lustre HSM Data Mover, install the Lemur software
 		elif [ "$NODE_ROLE" == "HSM" ]; then
@@ -389,21 +376,12 @@ function main() {
 			fi
 		fi
 		# Mark install.log as reaching stage 2
-		echo 2 > /lustre/install.log
+		sed -i 's/Stage 1//g'
+		echo "Stage 2" >> /lustre/install.log
 		# Change MOTD to mark install as complete
 		end_motd
 		# Run the cleanup function to remove RPMs
 		cleanup
-	# If install.log shows stage 2, then Lustre is installed and just needs to be started
-	#else
-		# If it's an MDS/MGS, mount the MDT
-	#	if [ "$NODE_ROLE" == "MDS" ]; then
-	#		mount -t lustre /dev/sdb /mdt
-		# If it's an OSS, sleep to let the MDT mount, and then mount the OST
-	#	elif [ "$NODE_ROLE" == "OSS" ]; then
-	#		sleep 20
-	#		mount -t lustre /dev/sdb $ost_mount_point
-	#	fi
 	fi
 }
 
