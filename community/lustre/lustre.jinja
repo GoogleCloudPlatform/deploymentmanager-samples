@@ -15,6 +15,10 @@
 # Determine region
 {% set region_ext = properties['zone'].split('-')[0] ~ '-' ~ properties['zone'].split('-')[1] %}
 
+{% set max_gb_per_vm = 263168 %}
+{% set max_gb_per_pd = 64000 %}
+{% set max_gb_per_localssd = 9000 %}
+
 resources:
 # If we're not using an existing VPC, create a VPC, subnet and firewall rules
 {% if not properties['vpc_net'] %}
@@ -114,9 +118,9 @@ resources:
     {% set mdt_per_mds = (properties['mdt_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
     {% elif (properties["mdt_disk_size_gb"]|int) <= 6000 %}
     {% set mdt_per_mds = 16 %}
-    {% elif (properties["mdt_disk_size_gb"]|int) <= 9000 %}
+    {% elif (properties["mdt_disk_size_gb"]|int) <= max_gb_per_localssd %}
     {% set mdt_per_mds = 24 %}
-    {% elif (properties["mdt_disk_size_gb"]|int) > 9000 %}
+    {% elif (properties["mdt_disk_size_gb"]|int) > max_gb_per_localssd %}
     {% set mdt_per_mds = 24 %}
     {% endif %}
     {% for i in range(mdt_per_mds) %}
@@ -128,6 +132,14 @@ resources:
     {% endfor %}
     {% else %}
     {% set mdt_per_mds = properties["mdt_per_mds"] %}
+    {% if properties["mdt_disk_size_gb"] > max_gb_per_pd %}
+    {% set mdt_disk_size_gb = max_gb_per_pd %}
+    {% else %}
+    {% set mdt_disk_size_gb = properties["mdt_disk_size_gb"] %}
+    {% endif %}
+    {% if mdt_per_mds*mdt_disk_size_gb > max_gb_per_vm %}
+    {% set mdt_per_mds = (max_gb_per_vm / mdt_disk_size_gb)|round(0, 'floor')|int %}
+    {% endif %}
     {% for i in range(mdt_per_mds) %}
     - deviceName: mdt-{{ i + 1 }}
       type: PERSISTENT
@@ -135,7 +147,7 @@ resources:
       initializeParams:
         diskName: {{properties["cluster_name"]}}-mdt{{ n + 1 }}-{{ i + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["mdt_disk_type"] }}
-        diskSizeGb: {{ properties["mdt_disk_size_gb"] }}
+        diskSizeGb: {{ mdt_disk_size_gb }}
     {% endfor %}
     {% endif %}
 {% if not properties['external_ips'] %}
@@ -199,9 +211,9 @@ resources:
     {% set ost_per_oss = (properties['ost_disk_size_gb'] / 375)|round(0, 'ceil')|int %}
     {% elif (properties["ost_disk_size_gb"]|int) <= 6000 %}
     {% set ost_per_oss = 16 %}
-    {% elif (properties["ost_disk_size_gb"]|int) <= 9000 %}
+    {% elif (properties["ost_disk_size_gb"]|int) <= max_gb_per_localssd %}
     {% set ost_per_oss = 24 %}
-    {% elif (properties["ost_disk_size_gb"]|int) > 9000 %}
+    {% elif (properties["ost_disk_size_gb"]|int) > max_gb_per_localssd %}
     {% set ost_per_oss = 24 %}
     {% endif %}
     {% for i in range(ost_per_oss) %}
@@ -213,6 +225,14 @@ resources:
     {% endfor %}
     {% else %}
     {% set ost_per_oss = properties["ost_per_oss"] %}
+    {% if properties["ost_disk_size_gb"] > max_gb_per_pd %}
+    {% set ost_disk_size_gb = max_gb_per_pd %}
+    {% else %}
+    {% set ost_disk_size_gb = properties["ost_disk_size_gb"] %}
+    {% endif %}
+    {% if ost_per_oss*ost_disk_size_gb > max_gb_per_vm %}
+    {% set ost_per_oss = (max_gb_per_vm / ost_disk_size_gb)|round(0, 'floor')|int %}
+    {% endif %}
     {% for i in range(ost_per_oss) %}
     - deviceName: ost-{{ i + 1 }}
       type: PERSISTENT
@@ -220,7 +240,7 @@ resources:
       initializeParams:
         diskName: {{properties["cluster_name"]}}-ost{{ n + 1 }}-{{ i + 1 }}
         diskType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/diskTypes/{{ properties["ost_disk_type"] }}
-        diskSizeGb: {{ properties["ost_disk_size_gb"] }}
+        diskSizeGb: {{ ost_disk_size_gb }}
     {% endfor %}
     {% endif %}
   {% if (properties['vpc_subnet'] and properties['vpc_net'] and properties['shared_vpc_host_proj'])  %}
