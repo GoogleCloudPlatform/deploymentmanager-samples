@@ -14,12 +14,40 @@
 
 resources:
   - type: pubsub.v1.topic
-    name: {TOPIC_NAME}
+    name: my-pubsub-topic
     properties:
-      topic: {TOPIC}
+      topic: my-pubsub-topic1
   - type: pubsub.v1.subscription
-    name: {SUBSCRIPTION_NAME}
+    name: my-subscription
     properties:
-      topic: $(ref.{TOPIC}.name)
-      subscription: {SUBSCRIPTION}
+      topic: $(ref.my-pubsub-topic.name)
+      subscription: my-pubsub-subscription
+      {% if "ackDeadlineSeconds" in properties %}
+      ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
+      {% endif %}
+
+      {% if "messageRetentionDuration" in properties %}
+      messageRetentionDuration: {{ properties["messageRetentionDuration"] }}
+      {% endif %}
+
+      {% if "retainAckedMessages" in properties %}
+      retainAckedMessages: {{ properties["retainAckedMessages"] }}
+      {% endif %}
+
+      {% if "deadLetterPolicy" in properties %}
+      deadLetterPolicy:
+       deadLetterTopic: {{ properties["deadLetterPolicy"].deadLetterTopic }}
+       maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
+      {% endif %}
+
+      {% if "retryPolicy" in properties %}
+      retryPolicy:
+       minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
+       maximumBackoff: {{ properties["retryPolicy"].minimumBackoff}}
+      {% endif %}
+
+      {% if "expirationPolicy" in properties %}
+      expirationPolicy:
+       ttl: {{ properties["expirationPolicy"].ttl }}
+      {% endif %}
    
