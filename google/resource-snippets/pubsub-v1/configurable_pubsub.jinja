@@ -40,17 +40,20 @@ resources:
     {% endif %}
     
     {% if "deadLetterPolicy" in properties %}
-    deadLetterTopic: {{ properties["deadLetterPolicy"].deadLetterTopic }}
-    maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
+    deadLetterPolicy:
+     deadLetterTopic: {{ properties["deadLetterPolicy"].deadLetterTopic }}
+     maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
     {% endif %}
     
     {% if "retryPolicy" in properties %}
-    minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
-    minimumBackoff: {{ properties["retryPolicy"].minimumBackoff}}
+    retryPolicy:
+     minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
+     minimumBackoff: {{ properties["retryPolicy"].minimumBackoff}}
     {% endif %}
     
     {% if "expirationPolicy" in properties %}
-    ttl: {{ properties["expirationPolicy"].ttl }}
+    expirationPolicy:
+     ttl: {{ properties["expirationPolicy"].ttl }}
     {% endif %}
     
    
