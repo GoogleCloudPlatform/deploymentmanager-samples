@@ -1,6 +1,6 @@
 imports:
-- path: pubsub.jinja
+- path: dm-pubsub.jinja
 
 resources:
 - name: pubsub
-  type: pubsub.jinja
+  type: dm-pubsub.jinja
