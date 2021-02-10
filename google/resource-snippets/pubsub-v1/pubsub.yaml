@@ -13,10 +13,8 @@
 # limitations under the License.
 
 imports:
-- path: pubsub.jinja
+- path: dm-pubsub.jinja
 
 resources:
 - name: pubsub
-  type: pubsub.jinja
-  properties:
-    ackDeadlineSeconds: 15
+  type: dm-pubsub.jinja
