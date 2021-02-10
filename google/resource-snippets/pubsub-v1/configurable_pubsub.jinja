@@ -27,3 +27,31 @@ resources:
   properties:
     subscription: {{ subscription }}
     topic: $(ref.my-topic.name)
+    {% if "ackDeadlineSeconds" in properties %}
+    ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
+    {% endif %}
+    
+    {% if "messageRetentionDuration" in properties %}
+    messageRetentionDuration: {{ properties["messageRetentionDuration"] }}
+    {% endif %}
+    
+    {% if "retainAckedMessages" in properties %}
+    retainAckedMessages: {{ properties["retainAckedMessages"] }}
+    {% endif %}
+    
+    {% if "deadLetterPolicy" in properties %}
+    deadLetterTopic: {{ properties["deadLetterPolicy"].deadLetterTopic }}
+    maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
+    {% endif %}
+    
+    {% if "retryPolicy" in properties %}
+    minimumBackoff: {{ properties["deadLetterPolicy"].minimumBackoff }}
+    minimumBackoff: {{ properties["maxDeliveryAttempts"].minimumBackoff}}
+    {% endif %}
+    
+    {% if "expirationPolicy" in properties %}
+    ttl: {{ properties["expirationPolicy"].ttl }}
+    {% endif %}
+    
+   
+   
