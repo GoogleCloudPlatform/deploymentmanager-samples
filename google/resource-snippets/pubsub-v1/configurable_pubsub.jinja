@@ -45,8 +45,8 @@ resources:
     {% endif %}
     
     {% if "retryPolicy" in properties %}
-    minimumBackoff: {{ properties["deadLetterPolicy"].minimumBackoff }}
-    minimumBackoff: {{ properties["maxDeliveryAttempts"].minimumBackoff}}
+    minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
+    minimumBackoff: {{ properties["retryPolicy"].minimumBackoff}}
     {% endif %}
     
     {% if "expirationPolicy" in properties %}
