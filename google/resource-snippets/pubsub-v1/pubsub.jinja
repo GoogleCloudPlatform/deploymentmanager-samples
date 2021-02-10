@@ -12,21 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% set topic = 'configurable-pubsub-topic-' + env['deployment'] %}
-{% set subscription = env['deployment'] + '-' + env['name'] + '-subscription' %}
-
 resources:
-- name: my-topic
-  #type: pubsub.v1.topic
-  type: gcp-types/pubsub-v1:projects.topics
-  properties:
-    topic: {{ topic }}
-- name: my-subscription
-  #type: pubsub.v1.subscription
-  type: gcp-types/pubsub-v1:projects.subscriptions
-  properties:
-    subscription: {{ subscription }}
-    topic: $(ref.my-topic.name)
-    {% if "ackDeadlineSeconds" in properties %}
-    ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
-    {% endif %}
+  - type: pubsub.v1.topic
+    name: {TOPIC_NAME}
+    properties:
+      topic: {TOPIC}
+  - type: pubsub.v1.topic
+    name: {BACKUP_TOPIC_NAME}
+    properties:
+      topic: {BACKUP_TOPIC}
+  - type: pubsub.v1.subscription
+    name: my-subscription
+    properties:
+      topic: $(ref.{TOPIC}.name)
+      subscription: {SUBSCRIPTION_NAME}
+      ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+      messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
+      retainAckedMessages: {TRUE,FALSE}
+      deadLetterPolicy:
+        deadLetterTopic: $(ref.{BACKUP_TOPIC}.name)
+        maxDeliveryAttempts: {MAX_DELIVERY_ATTEMPTS}
+      retryPolicy:
+        minimumBackoff: {MINIMUM_BACKOFF}
+        maximumBackoff: {MAXIMUM_BACKOFF}
+      expirationPolicy:
+        ttl: {TTL} 
