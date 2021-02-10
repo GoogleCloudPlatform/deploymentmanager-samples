@@ -1,0 +1,39 @@
+# Copyright 2017 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+  - type: pubsub.v1.topic
+    name: {TOPIC_NAME}
+    properties:
+      topic: {TOPIC}
+  - type: pubsub.v1.topic
+    name: {BACKUP_TOPIC_NAME}
+    properties:
+      topic: {BACKUP_TOPIC}
+  - type: pubsub.v1.subscription
+    name: my-subscription
+    properties:
+      topic: $(ref.{TOPIC}.name)
+      subscription: {SUBSCRIPTION_NAME}
+      ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+      messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
+      retainAckedMessages: {TRUE,FALSE}
+      deadLetterPolicy:
+        deadLetterTopic: $(ref.{BACKUP_TOPIC}.name)
+        maxDeliveryAttempts: {MAX_DELIVERY_ATTEMPTS}
+      retryPolicy:
+        minimumBackoff: {MINIMUM_BACKOFF}
+        maximumBackoff: {MAXIMUM_BACKOFF}
+      expirationPolicy:
+        ttl: {TTL} 
