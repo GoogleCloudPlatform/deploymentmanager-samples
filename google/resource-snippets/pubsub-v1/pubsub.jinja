@@ -18,8 +18,8 @@ resources:
     properties:
       topic: {TOPIC}
   - type: pubsub.v1.subscription
-    name: my-subscription
+    name: {SUBSCRIPTION_NAME}
     properties:
       topic: $(ref.{TOPIC}.name)
-      subscription: {SUBSCRIPTION_NAME}
+      subscription: {SUBSCRIPTION}
    
