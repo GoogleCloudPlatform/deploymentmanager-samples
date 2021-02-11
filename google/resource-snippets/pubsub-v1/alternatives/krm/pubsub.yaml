@@ -7,7 +7,7 @@ metadata:
 apiVersion: pubsub.cnrm.cloud.google.com/v1beta1
 kind: PubSubTopic
 metadata:
-    name: {BACKUP_TOPIC_NAME}
+    name: {DEADLETTER_TOPIC_NAME}
 ---
 apiVersion: pubsub.cnrm.cloud.google.com/v1beta1
 kind: PubSubSubscription
@@ -21,9 +21,17 @@ spec:
         name: {TOPIC_NAME}
     deadLetterPolicy:
         deadLetterTopicRef:
-            name: {BACKUP_TOPIC_NAME}
+            name: {DEADLETTER_TOPIC_NAME}
     retryPolicy:
         minimumBackoff: {MINIMUM_BACKOFF}
         maximumBackoff: {MAXIMUM_BACKOFF}
     expirationPolicy:
         ttl: {TTL}
+---
+apiVersion: pubsub.cnrm.cloud.google.com/v1beta1
+kind: PubSubSubscription
+metadata:
+  name: {DEADLETTER_SUBSCRIPTION_NAME}
+spec:
+  topicRef:
+      name: {DEADLETTER_TOPIC_NAME}
