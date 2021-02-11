@@ -41,6 +41,12 @@ resource "google_pubsub_subscription" "{SUBSCRIPTION_REF}" {
     maximum_backoff= "{MAXIMUM_BACKOFF}"
 
   }
+  
+  resource "google_pubsub_subscription" "deadletter_sub" {
+    name = "my-backup-subscription"
+    topic = google_pubsub_topic.sample_dead_letter.name
+
+  }
 
 }
 
