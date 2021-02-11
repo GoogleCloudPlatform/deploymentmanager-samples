@@ -17,9 +17,14 @@ imports:
 
 resources:
 - type: pubsub.v1.topic
-  name: {BACKUP_TOPIC_NAME}
+  name: {DEADLETTER_TOPIC_NAME}
   properties:
-    topic: {BACKUP_TOPIC}
+    topic: {DEADLETTER_TOPIC}
+- type: pubsub.v1.subscription
+  name: {DEADLETTER_SUBSCRIPTION_NAME}
+  properties:
+    subscription: {DEADLETTER_SUBSCRIPTION}
+    topic: $(ref.{DEADLETTER_TOPIC}.name)
 - name: pubsub
   type: pubsub.jinja
   properties:
@@ -27,7 +32,7 @@ resources:
       messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
       retainAckedMessages: {TRUE,FALSE}
       deadLetterPolicy:
-        deadLetterTopic: $(ref.{BACKUP_TOPIC}.name)
+        deadLetterTopic: $(ref.{DEADLETTER_TOPIC}.name)
         maxDeliveryAttempts: {MAX_DELIVERY_ATTEMPTS}
       retryPolicy:
         minimumBackoff: {MINIMUM_BACKOFF}
