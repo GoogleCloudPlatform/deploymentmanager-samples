@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-
+// [START deploymentmanager_setiampolicy_migration_python2]
 iam_policy_resource = {
     'name': policy_name,
     'type': 'gcp-types/storage-v1:virtual.buckets.iamMemberBinding',
@@ -24,3 +24,4 @@ iam_policy_resource = {
            'member': member,
          }
 }
+// [END deploymentmanager_setiampolicy_migration_python2]
