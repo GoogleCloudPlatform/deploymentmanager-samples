@@ -5,6 +5,7 @@ This is a Deployment Manager script to deploy a Lustre parallel file system clus
 This script deploys a MDS/MGS combined node, and N OSS nodes. On both node types the IP addresses, machine type, disk type, and disk size are all configurable in the lustre.yaml file.
 
 Please note: This software is provided as-is, with no guarantees of support. This is an example script, and should be used as such.
+There are partner-provided and supported Lustre options available in the Google Cloud Marketplace.
 
 ## Planning and Design
 
@@ -35,12 +36,14 @@ The lustre.yaml file has the following fields. The fields with a \* following th
 * e2fs_version - E2fsprogs version to deploy,  use "latest" to get the latest branch from [https://downloads.whamcloud.com/public/e2fsprogs/](https://downloads.whamcloud.com/public/e2fsprogs/)
 
 #### MDS/MGS Configuration
+* mds_node_count - Number of Metadata Server (MDS) nodes to create
 * mds_ip_address - Internal IP Address to specify for MDS/MGS node
 * mds_machine_type - Machine type to use for MDS/MGS node (see [https://cloud.google.com/compute/docs/machine-types](https://cloud.google.com/compute/docs/machine-types))
 * mds_boot_disk_type - Disk type to use for the MDS/MGS boot disk (pd-standard, pd-ssd)
 * mds_boot_disk_size_gb - Size of MDS boot disk in GB 
-* mdt_disk_type\* - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-ssd, local-ssd)
-* mdt_disk_size_gb\* - Size of MDT disk in GB
+* mdt_per_oss - Number of Persistent Disks to attach to each MDS, supporting up to 256TB per VM. Ignored if mdt_disk_type = local-ssd
+* mdt_disk_type\* - Disk type to use for the Metadata Target (MDT) disk (pd-standard, pd-balanced, pd-ssd, local-ssd)
+* mdt_disk_size_gb\* - Size of MDT disk in GB. Up to 64TB for Persistent Disk (PD), and up to 9TB for Local SSD.
 
 #### OSS Configuration
 * oss_node_count\* - Number of Object Storage Server (OSS) nodes to create
@@ -48,8 +51,9 @@ The lustre.yaml file has the following fields. The fields with a \* following th
 * oss_machine_type - Machine type to use for OSS node(s)
 * oss_boot_disk_type - Disk type to use for the OSS boot disk (pd-standard, pd-ssd)
 * oss_boot_disk_size_gb - Size of MDS boot disk in GB
+* ost_per_oss - Number of Persistent Disks to attach to each OSS, supporting up to 256TB per VM. Ignored if ost_disk_type = local-ssd
 * ost_disk_type\* - Disk type to use for the Object Storage Target (OST) disk (pd-standard, pd-ssd, local-ssd)
-* ost_disk_size_gb\* - Size of OST disk in GB
+* ost_disk_size_gb\* - Size of OST disk in GB. Up to 64TB for Persistent Disk (PD), and up to 9TB for Local SSD.
 
 #### HSM Configuration
 * hsm_node_count - Number of Hierarchical Storage Management (HSM) nodes to create
@@ -77,7 +81,7 @@ An example would be:
 
     mount -t lustre lustre-mds1:/lustre /mnt/lustre
 
-You may use the Lustre Metadata Server (MDS) to test if the clients can mount the filesystem. However, please do not leave the filesystem mounted on the MDS server as it may cause filesystem corruption.
+You may use the Lustre Metadata Server (MDS) to test if the clients can mount the filesystem. It is best practice not to leave the filesystem mounted on the MDS server long-term.
 
 Once the filesystem is mounted you will see no output returned with the mount command. You can verify the filesystem is mounted by checking the "mount" command, and by running "sudo lfs df".
 
@@ -113,12 +117,7 @@ Refer to the Lustre Wiki page [Mounting a Lustre File System on Client Nodes](ht
 ### Lustre Community
 The largest source of information for Lustre is the [Lustre wiki](http://lustre.org/), and the [Lustre mailing lists](http://lustre.org/mailing-lists/). If you experience issues with Lustre itself, please refer to those resources first.
 
-## Discussion Group & Feedback
+### Discussion Group & Feedback
 To ask questions or post customizations to the community, please use the [Google Cloud Lustre Discuss Google group](https://groups.google.com/forum/#!forum/google-cloud-lustre-discuss).
 
 To request features, provide feedback, or report bugs please use [this form](https://docs.google.com/forms/d/e/1FAIpQLSfoyL6MneXmUiTV5DFdXeJZ8N9pR3o-GmbFjduKW0DfOOIQdA/viewform?usp=sf_link).
-
-## To Do
-- Multiple MDS node support
-- MDS IP Range support
-- Add auth field

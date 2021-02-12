@@ -24,30 +24,30 @@ imports:
 required:
 - cluster_name
 - zone
-- cidr
 - oss_node_count
-- mds_ip_range_start
 - mds_boot_disk_type
 - mds_boot_disk_size_gb
 - mdt_per_mds
 - mdt_disk_size_gb
 - mdt_disk_type
-- oss_ip_range_start
 - ost_per_oss
 - ost_disk_size_gb
 - ost_disk_type
 - external_ips
 
 optional:
+- cidr
 - fs_name
 - lustre_version
 - e2fs_version
 - mds_node_count
+- oss_ip_range_start
 - oss_boot_disk_type
 - oss_boot_disk_size_gb
 - oss_machine_type
 - mds_machine_type
-#- mgs_machine_type
+- mds_ip_range_start
+- oss_ip_range_start
 - mds_ip_address
 - vpc_net
 - vpc_subnet
@@ -102,9 +102,9 @@ properties:
       Machine type to use for OSS node instances, eg. n1-standard-4.
 
   mds_boot_disk_type:
-    enum        : ["pd-ssd", "pd-standard"]
+    enum        : ["pd-ssd", "pd-standard", "pd-balanced"]
     default     : pd-standard
-    description : Disk type (pd-ssd or pd-standard) for the MDS boot disk.
+    description : Disk type (pd-ssd, pd-balanced, or pd-standard) for the MDS boot disk.
 
   mds_boot_disk_size_gb:
     type        : integer
@@ -114,9 +114,9 @@ properties:
     description : Size of disk for the MDS boot disk.
 
   mdt_disk_type:
-    enum        : ["pd-ssd", "pd-standard", "local-ssd"]
+    enum        : ["pd-ssd", "pd-standard", "pd-balanced", "local-ssd"]
     default     : pd-standard
-    description : Disk type (pd-ssd or pd-standard) for MDT disks.
+    description : Disk type (pd-ssd, pd-balanced, or pd-standard) for MDT disks.
 
   mdt_disk_size_gb:
     type        : integer
@@ -126,9 +126,9 @@ properties:
     description : Size of disk for MDTs.
 
   oss_boot_disk_type:
-    enum        : ["pd-ssd", "pd-standard"]
+    enum        : ["pd-ssd", "pd-standard", "pd-balanced"]
     default     : pd-standard
-    description : Disk type (pd-ssd or pd-standard) for OSS boot disk.
+    description : Disk type (pd-ssd, pd-balanced, or pd-standard) for OSS boot disk.
 
   oss_boot_disk_size_gb:
     type        : integer
@@ -138,9 +138,9 @@ properties:
     description : Size of disk for the OSS boot disk.
 
   ost_disk_type:
-    enum        : ["pd-ssd", "pd-standard", "local-ssd"]
+    enum        : ["pd-ssd", "pd-standard", "pd-balanced", "local-ssd"]
     default     : pd-standard
-    description : Disk type (pd-ssd or pd-standard) for OST disks.
+    description : Disk type (pd-ssd, pd-balanced, or pd-standard) for OST disks.
 
   ost_disk_size_gb:
     type        : integer
@@ -205,9 +205,9 @@ properties:
     description : Machine type to use for Lustre HSM Data Movers node instances, eg. n1-standard-4.
 
   hsm_boot_disk_type:
-    enum        : ["pd-ssd", "pd-standard"]
+    enum        : ["pd-ssd", "pd-standard", "pd-balanced"]
     default     : pd-standard
-    description : Disk type (pd-ssd or pd-standard) for HSM boot disk.
+    description : Disk type (pd-ssd, pd-balanced, or pd-standard) for HSM boot disk.
 
   hsm_boot_disk_size_gb:
     type        : integer
