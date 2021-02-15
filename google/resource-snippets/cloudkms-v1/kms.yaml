@@ -21,5 +21,5 @@ resources:
 - name: kms
   type: kms.jinja
   properties:
-    region: REGION_TO_RUN
-    user: ananke.iam@gmail.com
+    region: us-central1
+    user: zyanshu@google.com
