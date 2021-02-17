@@ -43,7 +43,7 @@ resource "google_pubsub_subscription" "{SUBSCRIPTION_REF}" {
   }
   
   resource "google_pubsub_subscription" "deadletter_sub" {
-    name = "my-backup-subscription"
+    name = "{DEADLETTER_SUBSCRIPTION_NAME}"
     topic = google_pubsub_topic.sample_dead_letter.name
 
   }
