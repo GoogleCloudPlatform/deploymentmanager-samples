@@ -14,11 +14,11 @@
 
 resources:
   - type: pubsub.v1.topic
-    name: my-pubsub-topic
+    name: {TOPIC_NAME}
     properties:
       topic: my-pubsub-topic1
   - type: pubsub.v1.subscription
-    name: my-subscription
+    name: {SUBSCRIPTION_NAME}
     properties:
       topic: $(ref.my-pubsub-topic.name)
       subscription: my-pubsub-subscription
@@ -43,7 +43,7 @@ resources:
       {% if "retryPolicy" in properties %}
       retryPolicy:
        minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
-       maximumBackoff: {{ properties["retryPolicy"].minimumBackoff}}
+       maximumBackoff: {{ properties["retryPolicy"].maximumBackoff}}
       {% endif %}
 
       {% if "expirationPolicy" in properties %}
