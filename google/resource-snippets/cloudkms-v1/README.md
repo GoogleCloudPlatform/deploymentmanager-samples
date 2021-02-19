@@ -6,6 +6,7 @@ Setup:
 
 * Install [gcloud](https://cloud.google.com/sdk/docs/install)
 * Create GCP project
+* Setup [Credential](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials)
 
 ```bash
 DM_PROJECT_ID=[DM_PROJECT_ID]
@@ -21,6 +22,7 @@ Setup:
 * Install [gcloud](https://cloud.google.com/sdk/docs/install)
 * Install [terraform](https://www.terraform.io/downloads.html)
 * Create GCP project
+* Setup [Credential](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials)
 
 ```bash
 TF_PROJECT_ID=[TF_PROJECT_ID]
