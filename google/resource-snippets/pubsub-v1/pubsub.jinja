@@ -14,14 +14,14 @@
 
 resources:
   - type: pubsub.v1.topic
-    name: {TOPIC_NAME}
+    name: properties["topic_name"]
     properties:
       topic: {TOPIC}
   - type: pubsub.v1.subscription
-    name: {SUBSCRIPTION_NAME}
+    name: properties["subscription_name"]
     properties:
       topic: $(ref.my-pubsub-topic.name)
-      subscription: $(ref.my-pubsub-subscription.name)
+      subscription: {SUBSCRIPTION}
       {% if "ackDeadlineSeconds" in properties %}
       ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
       {% endif %}
