@@ -10,17 +10,17 @@ gcloud auth login
 # Create DM resources
 gcloud config set project $DM_PROJECT_ID
 gcloud services enable deploymentmanager.googleapis.com
-gcloud deployment-manager deployments create dm --config pubsub.yaml
+gcloud deployment-manager deployments create d1 --config pubsub.yaml
 
 # Create Terraform resources
 gcloud config set project $TF_PROJECT_ID
 gcloud config list --format 'value(core.project)'
 terraform init
-terraform apply -auto-approve -var="deployment=dm" -var="project_id=${TF_PROJECT_ID}"
+terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 
 
 # Export DM and TF resources for comparison
-gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project $DM_PROJECT_ID | sed "s/${DM_PROJECT_ID}/PROJECT/" > dm.yaml
+gcloud pubsub subscriptions list --filter="labels.goog-dm:d1" --project $DM_PROJECT_ID | sed "s/${DM_PROJECT_ID}/PROJECT/" > dm.yaml
 
 gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project $TF_PROJECT_ID | sed "s/${TF_PROJECT_ID}/PROJECT/"  > tf.yaml
 gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project $TF_PROJECT_ID | sed "s/${TF_PROJECT_ID}/PROJECT/"  >> tf.yaml
