@@ -1,5 +1,6 @@
 variable "project_id" {}
 variable "deployment" {}
+variable "user" {}
 
 provider "google" {
   project = var.project_id
@@ -7,19 +8,15 @@ provider "google" {
   zone    = "us-central1-c"
 }
 
-locals{
-    user = "user:zyanshu@google.com"
-}
-
 resource "google_kms_key_ring" "default" {
-  name     = "test--keyring"
+  name     = "test-keyring"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "default" {
-  name            = format("%s-cryptoKey", var.deployment)
-  key_ring        = google_kms_key_ring.default.id
-  purpose         = "ENCRYPT_DECRYPT"
+  name     = format("%s-cryptoKey", var.deployment)
+  key_ring = google_kms_key_ring.default.id
+  purpose  = "ENCRYPT_DECRYPT"
   labels = {
     foo = var.deployment
   }
@@ -30,16 +27,16 @@ data "google_iam_policy" "admin" {
     role = "roles/cloudkms.admin"
 
     members = [
-      local.user,
+      var.user,
     ]
   }
 }
 
 resource "google_kms_crypto_key_iam_policy" "crypto_key" {
   crypto_key_id = google_kms_crypto_key.default.id
-  policy_data = data.google_iam_policy.admin.policy_data
+  policy_data   = data.google_iam_policy.admin.policy_data
 }
 
 data "google_kms_crypto_key_version" "crypto-key-version" {
-  crypto_key =  google_kms_crypto_key.default.self_link
+  crypto_key = google_kms_crypto_key.default.self_link
 }
