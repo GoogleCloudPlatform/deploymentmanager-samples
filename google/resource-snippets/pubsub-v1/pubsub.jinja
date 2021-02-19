@@ -50,4 +50,8 @@ resources:
       expirationPolicy:
        ttl: {{ properties["expirationPolicy"].ttl }}
       {% endif %}
+  - type: pubsub.v1.subscription
+    name: properties["backup_subscription_name"]
+    properties:
+      topic: $(ref.deadLetterPolicy.deadLetterTopic)
    
