@@ -17,6 +17,15 @@ imports:
 
 resources:
 - type: pubsub.v1.topic
+  name: {TOPIC_NAME}
+  properties:
+    topic: {TOPIC}
+- type: pubsub.v1.subscription
+  name: {SUBSCRIPTION_NAME}
+  properties:
+    subscription: {SUBSCRIPTION}
+    topic: $(ref.{DEADLETTER_TOPIC}.name)
+- type: pubsub.v1.topic
   name: {DEADLETTER_TOPIC_NAME}
   properties:
     topic: {DEADLETTER_TOPIC}
