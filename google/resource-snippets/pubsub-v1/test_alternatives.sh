@@ -25,14 +25,12 @@ gcloud container clusters get-credentials {CLUSTER_NAME} --zone us-central1-c
 kubectl apply --namespace krm -f pubsub.yaml 
 
 
-#gcloud pubsub subscriptions list --filter=my-pubsub-topic --filter=${DM_PROJECT_ID} --format=yaml > dm-output.yaml
 # Export DM and TF resources for comparison
 gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project {DM_PROJECT_ID} > dm.yaml
 
 gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project {TF_PROJECT_ID} --format=yaml > tf.yaml
 gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project {KRM_PROJECT_ID} --format=yaml >> krm.yaml
 
-#source ../../../../tools/alt-testing/delete-projects.sh
 
 diff tf.yaml dm.yaml
 
