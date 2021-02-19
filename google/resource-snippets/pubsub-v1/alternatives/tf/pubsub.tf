@@ -16,6 +16,9 @@ variable "project_id" {
 
 resource "google_pubsub_topic" "{TOPIC_REF}" {
   name = "{TOPIC_NAME}"
+  labels= {
+    goog-dm=var.deployment
+  }
 }
 
 resource "google_pubsub_topic" "{BACKUP_TOPIC_REF}" {
@@ -42,9 +45,9 @@ resource "google_pubsub_subscription" "{SUBSCRIPTION_REF}" {
 
   }
   
-  resource "google_pubsub_subscription" "deadletter_sub" {
+  resource "google_pubsub_subscription" "{DEADLETTER_SUBSCRIPTION}" {
     name = "{DEADLETTER_SUBSCRIPTION_NAME}"
-    topic = google_pubsub_topic.sample_dead_letter.name
+    topic = google_pubsub_topic.{DEADLETTER_SUBSCRIPTION}.name
 
   }
 
