@@ -11,45 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+ 
 imports:
 - path: pubsub.jinja
 
 resources:
-- name: pubsub
-  type: pubsub.jinja
-  properties:
-    topic_name: my-pubsub-topic
-    subscription: my-pubsub-subscription
-- type: pubsub.v1.topic
-  name: {TOPIC_NAME}
-  properties:
-    topic: {TOPIC}
-- type: pubsub.v1.subscription
-  name: {SUBSCRIPTION_NAME}
-  properties:
-    subscription: {SUBSCRIPTION}
-    topic: $(ref.{DEADLETTER_TOPIC}.name)
-- type: pubsub.v1.topic
-  name: {DEADLETTER_TOPIC_NAME}
-  properties:
-    topic: {DEADLETTER_TOPIC}
-- type: pubsub.v1.subscription
-  name: {DEADLETTER_SUBSCRIPTION_NAME}
-  properties:
-    subscription: {DEADLETTER_SUBSCRIPTION}
-    topic: $(ref.{DEADLETTER_TOPIC}.name)
-- name: pubsub
-  type: pubsub.jinja
-  properties:
-    ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
-      messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
-      retainAckedMessages: {TRUE,FALSE}
-      deadLetterPolicy:
-        deadLetterTopic: $(ref.{DEADLETTER_TOPIC}.name)
-        maxDeliveryAttempts: {MAX_DELIVERY_ATTEMPTS}
-      retryPolicy:
-        minimumBackoff: {MINIMUM_BACKOFF}
-        maximumBackoff: {MAXIMUM_BACKOFF}
-      expirationPolicy:
-        ttl: {TTL} 
+-name: pubsub
+ type: pubsub.jinja
+ properties:
+   topic_name: {TOPIC_NAME}
+   subscription_name: {SUBSCRIPTION_NAME}
+   ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+   messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
+   retainedAckedMessages: {TRUE or FALSE}
+   deadLetterPolicy:
+    deadLetterTopic: {DEADLETTER_TOPIC_NAME}
+    maxDeliveryAttempts: {MAXIMUM_DELIVERY_ATTEMPTS}
+   retryPolicy:
+    minimumBackoff: {MINIMUM_BACKOFF_SECONDS}
+    maximumBackoff: {MAXIMUM_BACKOFF_SECONDS}
+   expirationPolicy:
+    ttl: {TTL}
