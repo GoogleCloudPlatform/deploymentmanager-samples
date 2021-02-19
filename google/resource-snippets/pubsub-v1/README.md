@@ -1,4 +1,4 @@
-# Cloudkms Snippets
+# PubSub Snippets
 
 ## DM
 
@@ -12,7 +12,7 @@ Setup:
 DM_PROJECT_ID=[DM_PROJECT_ID]
 gcloud config set project $DM_PROJECT_ID
 gcloud services enable deploymentmanager.googleapis.com
-gcloud deployment-manager deployments create d1 --config kms.yaml
+gcloud deployment-manager deployments create d1 --config pubsub.yaml
 ```
 
 ## Terraform
