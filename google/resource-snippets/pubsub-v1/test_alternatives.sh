@@ -26,11 +26,13 @@ kubectl apply --namespace krm -f pubsub.yaml
 
 
 # Export DM and TF resources for comparison
-gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project {DM_PROJECT_ID} > dm.yaml
+gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project $DM_PROJECT_ID | sed "s/${DM_PROJECT_ID}/PROJECT/" > dm.yaml
 
-gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project {TF_PROJECT_ID} --format=yaml > tf.yaml
-gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project {KRM_PROJECT_ID} --format=yaml >> krm.yaml
+gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project $TF_PROJECT_ID | sed "s/${TF_PROJECT_ID}/PROJECT/"  > tf.yaml
+gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project $TF_PROJECT_ID | | sed "s/${TF_PROJECT_ID}/PROJECT/"  >> tf.yaml
 
+# gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project {KRM_PROJECT_ID} --format=yaml > krm.yaml
+# gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project {KRM_PROJECT_ID} --format=yaml >> krm.yaml
 
 diff tf.yaml dm.yaml
 
