@@ -16,8 +16,7 @@ gcloud deployment-manager deployments create dm --config pubsub.yaml
 gcloud config set project $TF_PROJECT_ID
 gcloud config list --format 'value(core.project)'
 terraform init
-terraform apply -auto-approve -var="deployment=tf" -var="project_id=${TF_PROJECT_ID}"
-# popd
+terraform apply -auto-approve -var="deployment=dm" -var="project_id=${TF_PROJECT_ID}"
 
 
 # Export DM and TF resources for comparison
