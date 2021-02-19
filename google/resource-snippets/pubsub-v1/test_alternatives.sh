@@ -4,7 +4,6 @@ TF_PROJECT_ID={TF_PROJECT_ID}
 KRM_PROJECT_ID={KRM_PROJECT_ID}
 DM_PROJECT_ID={DM_PROJECT_ID}
 
-# source ../../../../tools/alt-testing/create-projects.sh
 
 gcloud auth login
 
@@ -14,32 +13,24 @@ gcloud services enable deploymentmanager.googleapis.com
 gcloud deployment-manager deployments create dm --config pubsub.yaml
 
 # Create Terraform resources
-# pushd alternatives/tf
 gcloud config set project $TF_PROJECT_ID
 gcloud config list --format 'value(core.project)'
 terraform init
-#terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=tf" -var="project_id=${TF_PROJECT_ID}"
 # popd
 
 #Create KCC resources
 gcloud config set project $KRM_PROJECT_ID
 gcloud container clusters get-credentials {CLUSTER_NAME} --zone us-central1-c
-#cp -R alternatives/krm /tmp/krm_${KRM_PROJECT_ID}
-#pushd /tmp/krm_${KRM_PROJECT_ID}
-#kpt cfg set . deployment d1
 kubectl apply --namespace krm -f pubsub.yaml 
-#kubectl  wait --for=condition=Ready PubSubTopic --all
-#kubectl  wait --for=condition=Ready PubSubSubscription --all
-#popd
-#rm -rf krm_${KRM_PROJECT_ID}
+
 
 #gcloud pubsub subscriptions list --filter=my-pubsub-topic --filter=${DM_PROJECT_ID} --format=yaml > dm-output.yaml
 # Export DM and TF resources for comparison
-gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project namratashah-test-295817 > dm.yaml
+gcloud pubsub subscriptions list --filter="labels.goog-dm:dm" --project {DM_PROJECT_ID} > dm.yaml
 
-gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project namratashah-dm-convert --format=yaml > tf.yaml
-gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project namratashah-dm-convert --format=yaml >> tf.yaml
+gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project {TF_PROJECT_ID} --format=yaml > tf.yaml
+gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project {KRM_PROJECT_ID} --format=yaml >> krm.yaml
 
 #source ../../../../tools/alt-testing/delete-projects.sh
 
