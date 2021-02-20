@@ -24,7 +24,7 @@ resources:
    deadletter_subscription_name: {DEADLETTER_SUBSCRIPTION_NAME}
    ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
    messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
-   retainedAckedMessages: {TRUE or FALSE}
+   retainAckedMessages: {TRUE or FALSE}
    deadLetterPolicy:
     deadLetterTopic: {DEADLETTER_TOPIC_NAME}
     maxDeliveryAttempts: {MAXIMUM_DELIVERY_ATTEMPTS}
