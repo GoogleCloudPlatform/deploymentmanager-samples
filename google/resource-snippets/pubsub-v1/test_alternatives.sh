@@ -26,7 +26,8 @@ gcloud pubsub subscriptions list --filter=topic:my-pubsub-topic --project $TF_PR
 gcloud pubsub subscriptions list --filter=topic:my-backup-topic --project $TF_PROJECT_ID | sed "s/${TF_PROJECT_ID}/PROJECT/"  >> tf.yaml
 
 
-diff tf.yaml dm.yaml
+sort tf.yaml > tf.yaml
+sort dm.yaml > dm.yaml
 
 if [[ $(diff dm.yaml tf.yaml) ]]; then
     echo "TF and DM outputs are NOT identical"
