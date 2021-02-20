@@ -14,14 +14,18 @@
 
 resources:
   - type: pubsub.v1.topic
-    name: properties["topic_name"]
+    name: {{ properties["topic_name"] }}
     properties:
-      topic: {TOPIC}
+      topic: my-pubsub-topic
+  - type: pubsub.v1.topic
+    name: {{ properties["backup_topic_name"] }}
+    properties:
+      topic: my-backup-topic
   - type: pubsub.v1.subscription
-    name: properties["subscription_name"]
+    name: {{ properties["subscription_name"] }}
     properties:
-      topic: $(ref.my-pubsub-topic.name)
-      subscription: {SUBSCRIPTION}
+      subscription: my-pubsub-subscription
+      topic: $(ref.{{properties["topic_name"]}}.name)
       {% if "ackDeadlineSeconds" in properties %}
       ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
       {% endif %}
@@ -29,14 +33,13 @@ resources:
       {% if "messageRetentionDuration" in properties %}
       messageRetentionDuration: {{ properties["messageRetentionDuration"] }}
       {% endif %}
-
       {% if "retainAckedMessages" in properties %}
       retainAckedMessages: {{ properties["retainAckedMessages"] }}
       {% endif %}
 
       {% if "deadLetterPolicy" in properties %}
       deadLetterPolicy:
-       deadLetterTopic: {{ properties["deadLetterPolicy"].deadLetterTopic }}
+       deadLetterTopic: $(ref.{{properties["backup_topic_name"]}}.name)
        maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
       {% endif %}
 
@@ -50,8 +53,9 @@ resources:
       expirationPolicy:
        ttl: {{ properties["expirationPolicy"].ttl }}
       {% endif %}
+      
   - type: pubsub.v1.subscription
-    name: properties["backup_subscription_name"]
+    name: {{ properties["backup_subscription_name"] }}
     properties:
-      topic: $(ref.deadLetterPolicy.deadLetterTopic)
-   
+      subscription: backup-subscription
+      topic: $(ref.{{properties["backup_topic_name"]}}.name)
