@@ -23,10 +23,16 @@ resource "google_pubsub_topic" "{TOPIC_REF}" {
 
 resource "google_pubsub_topic" "{BACKUP_TOPIC_REF}" {
   name="{BACKUP_TOPIC_NAME}"
+  labels= {
+    goog-dm=var.deployment
+  }
 }
 
 resource "google_pubsub_subscription" "{SUBSCRIPTION_REF}" {
   name = "{SUBSCRIPTION_NAME}"
+  labels= {
+    goog-dm=var.deployment
+  }
   topic = google_pubsub_topic.{TOPIC_REF}.name
   message_retention_duration="{MESSAGE_RETENTION_DURATION}"
   retain_acked_messages={TRUE,FALSE}
@@ -47,6 +53,9 @@ resource "google_pubsub_subscription" "{SUBSCRIPTION_REF}" {
   
   resource "google_pubsub_subscription" "{DEADLETTER_SUBSCRIPTION}" {
     name = "{DEADLETTER_SUBSCRIPTION_NAME}"
+    labels= {
+      goog-dm=var.deployment
+    }
     topic = google_pubsub_topic.{DEADLETTER_SUBSCRIPTION}.name
 
   }
