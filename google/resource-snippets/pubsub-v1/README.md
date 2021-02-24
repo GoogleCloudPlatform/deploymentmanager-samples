@@ -10,6 +10,7 @@ Setup:
 ```bash
 DM_PROJECT_ID=[DM_PROJECT_ID]
 gcloud config set project $DM_PROJECT_ID
+gcloud services enable pubsub.googleapis.com
 gcloud services enable deploymentmanager.googleapis.com
 gcloud deployment-manager deployments create d1 --config pubsub.yaml
 ```
@@ -26,9 +27,9 @@ Setup:
 ```bash
 TF_PROJECT_ID=[TF_PROJECT_ID]
 gcloud config set project $TF_PROJECT_ID
+gcloud services enable pubsub.googleapis.com
 cd alternatives/tf
 terraform init
-terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 ```
 
