@@ -31,10 +31,10 @@ resource "google_pubsub_subscription" "my-subscription" {
     goog-dm = var.deployment
   }
   topic                      = google_pubsub_topic.my-topic.name
-  message_retention_duration = "{MESSAGE_RETENTION_DURATION}"
-  retain_acked_messages      = {TRUE,FALSE}
-  ack_deadline_seconds       = {ACK_DEADLINE_SECONDS}
+  message_retention_duration = "1200s"
+  retain_acked_messages      = TRUE
+  ack_deadline_seconds       = 60
   expiration_policy {
-    ttl = {TTL}
+    ttl = "86400s"
   }
 }
