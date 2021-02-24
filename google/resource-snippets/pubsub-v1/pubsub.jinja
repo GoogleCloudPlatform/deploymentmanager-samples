@@ -14,7 +14,7 @@
 
 resources:
   - type: pubsub.v1.topic
-    name: {{ properties["topic_name"] }}
+    name: {{ properties["topicName"] }}
     properties:
       topic: my-pubsub-topic
   - type: pubsub.v1.topic
@@ -22,10 +22,10 @@ resources:
     properties:
       topic: my-backup-topic
   - type: pubsub.v1.subscription
-    name: {{ properties["subscription_name"] }}
+    name: {{ properties["subscriptionName"] }}
     properties:
       subscription: my-pubsub-subscription
-      topic: $(ref.{{properties["topic_name"]}}.name)
+      topic: $(ref.{{properties["topicName"]}}.name)
       {% if "ackDeadlineSeconds" in properties %}
       ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
       {% endif %}
