@@ -19,8 +19,8 @@ resources:
 -name: pubsub
  type: pubsub.jinja
  properties:
-   topic_name: {TOPIC_NAME}
-   subscription_name: {SUBSCRIPTION_NAME}
+   topicName: {TOPIC_NAME}
+   subscriptionName: {SUBSCRIPTION_NAME}
    deadletterSubscriptionName: {DEADLETTER_SUBSCRIPTION_NAME}
    ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
    messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
