@@ -23,3 +23,6 @@ resources:
       subscriptionName: {SUBSCRIPTION_NAME}
       messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
       retainAckedMessages: {TRUE or FALSE}
+      ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+      expirationPolicy:
+        ttl: {TTL}
