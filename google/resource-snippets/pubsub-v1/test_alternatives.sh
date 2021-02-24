@@ -13,7 +13,6 @@ gcloud deployment-manager deployments create d1 --config pubsub.yaml
 
 # Create Terraform resources
 gcloud config set project $TF_PROJECT_ID
-gcloud config list --format 'value(core.project)'
 terraform init
 terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
