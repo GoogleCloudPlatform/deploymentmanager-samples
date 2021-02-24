@@ -30,6 +30,10 @@ resources:
       {% if "retainAckedMessages" in properties %}
       retainAckedMessages: {{ properties["retainAckedMessages"] }}
       {% endif %}
-
+      
+      {% if "expirationPolicy" in properties %}
+      expirationPolicy:
+        ttl: {{ properties["expirationPolicy"].ttl }}
+      {% endif %}
       
   
