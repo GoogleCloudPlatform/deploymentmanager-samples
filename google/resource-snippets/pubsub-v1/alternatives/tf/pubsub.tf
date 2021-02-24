@@ -12,6 +12,8 @@ variable "deployment" {
 }
 
 variable "project_id" {
+ type = string
+ description = "Project id used to create resources in that project."
  default={}
 
 }
