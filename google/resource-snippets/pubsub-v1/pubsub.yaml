@@ -21,7 +21,7 @@ resources:
  properties:
    topic_name: {TOPIC_NAME}
    subscription_name: {SUBSCRIPTION_NAME}
-   deadletter_subscription_name: {DEADLETTER_SUBSCRIPTION_NAME}
+   deadletterSubscriptionName: {DEADLETTER_SUBSCRIPTION_NAME}
    ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
    messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
    retainAckedMessages: {TRUE or FALSE}
