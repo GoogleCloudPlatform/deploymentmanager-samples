@@ -13,23 +13,23 @@
 # limitations under the License.
  
 imports:
-- path: pubsub.jinja
+  - path: pubsub.jinja
 
 resources:
--name: pubsub
- type: pubsub.jinja
- properties:
-   topicName: {TOPIC_NAME}
-   subscriptionName: {SUBSCRIPTION_NAME}
-   deadletterSubscriptionName: {DEADLETTER_SUBSCRIPTION_NAME}
-   ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
-   messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
-   retainAckedMessages: {TRUE or FALSE}
-   deadLetterPolicy:
-    deadLetterTopic: {DEADLETTER_TOPIC_NAME}
-    maxDeliveryAttempts: {MAXIMUM_DELIVERY_ATTEMPTS}
-   retryPolicy:
-    minimumBackoff: {MINIMUM_BACKOFF_SECONDS}
-    maximumBackoff: {MAXIMUM_BACKOFF_SECONDS}
-   expirationPolicy:
-    ttl: {TTL}
+  - name: pubsub
+    type: pubsub.jinja
+    properties:
+      topicName: {TOPIC_NAME}
+      subscriptionName: {SUBSCRIPTION_NAME}
+      deadletterSubscriptionName: {DEADLETTER_SUBSCRIPTION_NAME}
+      ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+      messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
+      retainAckedMessages: {TRUE or FALSE}
+      deadLetterPolicy:
+       deadLetterTopic: {DEADLETTER_TOPIC_NAME}
+       maxDeliveryAttempts: {MAXIMUM_DELIVERY_ATTEMPTS}
+      retryPolicy:
+       minimumBackoff: {MINIMUM_BACKOFF_SECONDS}
+       maximumBackoff: {MAXIMUM_BACKOFF_SECONDS}
+      expirationPolicy:
+       ttl: {TTL}
