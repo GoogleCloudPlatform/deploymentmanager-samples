@@ -33,20 +33,20 @@ resources:
       {% if "messageRetentionDuration" in properties %}
       messageRetentionDuration: {{ properties["messageRetentionDuration"] }}
       {% endif %}
-      {% if "retainAckedMessages" in properties %}
+      { % if "retainAckedMessages" in properties % }
       retainAckedMessages: {{ properties["retainAckedMessages"] }}
       {% endif %}
 
       {% if "deadLetterPolicy" in properties %}
       deadLetterPolicy:
-       deadLetterTopic: $(ref.{{properties["backup_topic_name"]}}.name)
+       deadLetterTopic: $(ref.{{ properties["backup_topic_name"] }}.name)
        maxDeliveryAttempts: {{ properties["deadLetterPolicy"].maxDeliveryAttempts }}
       {% endif %}
 
       {% if "retryPolicy" in properties %}
       retryPolicy:
        minimumBackoff: {{ properties["retryPolicy"].minimumBackoff }}
-       maximumBackoff: {{ properties["retryPolicy"].maximumBackoff}}
+       maximumBackoff: {{ properties["retryPolicy"].maximumBackoff }}
       {% endif %}
 
       {% if "expirationPolicy" in properties %}
