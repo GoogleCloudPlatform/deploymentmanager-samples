@@ -4,7 +4,8 @@ TF_PROJECT_ID={TF_PROJECT_ID}
 DM_PROJECT_ID={DM_PROJECT_ID}
 
 
-gcloud auth login
+gcloud auth application-default login
+export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
 
 # Create DM resources
 gcloud config set project $DM_PROJECT_ID
