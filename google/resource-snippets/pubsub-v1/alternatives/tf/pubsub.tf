@@ -30,7 +30,7 @@ resource "google_pubsub_subscription" "my-subscription" {
   }
   topic                      = google_pubsub_topic.my-topic.name
   message_retention_duration = "1200s"
-  retain_acked_messages      = TRUE
+  retain_acked_messages      = true
   ack_deadline_seconds       = 60
   expiration_policy {
     ttl = "86400s"
