@@ -7,14 +7,12 @@ provider "google" {
 variable "deployment" {
   type        = string
   description = "Deployment name used to label the resources created."
-  default     = {}
 
 }
 
 variable "project_id" {
   type        = string
   description = "Project id used to create resources in that project."
-  default     = {}
 
 }
 
