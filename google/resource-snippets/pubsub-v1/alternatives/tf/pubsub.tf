@@ -17,14 +17,14 @@ variable "project_id" {
 }
 
 resource "google_pubsub_topic" "my-topic" {
-  name = "{TOPIC_NAME}"
+  name = "my-pubsub-topic"
   labels = {
     goog-dm = var.deployment
   }
 }
 
 resource "google_pubsub_subscription" "my-subscription" {
-  name = "{SUBSCRIPTION_NAME}"
+  name = "my-pubsub-subscription"
   labels = {
     goog-dm = var.deployment
   }
