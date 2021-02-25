@@ -15,6 +15,12 @@ gcloud deployment-manager deployments create d1 --config pubsub.yaml
 # Create Terraform resources
 pushd alternatives/tf
 gcloud config set project $TF_PROJECT_ID
+
+#Authentication
+gcloud auth application-default login
+export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
+
+# Initialize Terraform and apply resources
 terraform init
 terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
