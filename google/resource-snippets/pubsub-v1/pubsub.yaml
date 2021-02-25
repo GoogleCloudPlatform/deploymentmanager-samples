@@ -19,8 +19,8 @@ resources:
   - name: pubsub
     type: pubsub.jinja
     properties:
-      topicName: {TOPIC_NAME}
-      subscriptionName: {SUBSCRIPTION_NAME}
+      topicName: my-pubsub-topic
+      subscriptionName: my-pubsub-subscription
       messageRetentionDuration: "1200s"
       retainAckedMessages: true
       ackDeadlineSeconds: 60
