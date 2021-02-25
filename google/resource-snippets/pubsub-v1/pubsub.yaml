@@ -21,8 +21,8 @@ resources:
     properties:
       topicName: {TOPIC_NAME}
       subscriptionName: {SUBSCRIPTION_NAME}
-      messageRetentionDuration: {MESSAGE_RETENTION_DURATION}
-      retainAckedMessages: {TRUE or FALSE}
-      ackDeadlineSeconds: {ACK_DEADLINE_SECONDS}
+      messageRetentionDuration: "1200s"
+      retainAckedMessages: true
+      ackDeadlineSeconds: 60
       expirationPolicy:
-        ttl: {TTL}
+        ttl: "86400s"
