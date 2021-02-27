@@ -16,11 +16,11 @@ resources:
   - type: pubsub.v1.topic
     name: {{ properties["topicName"] }}
     properties:
-      topic: my-pubsub-topic
+      topic: {{ properties["topicName"] }}
   - type: pubsub.v1.subscription
     name: {{ properties["subscriptionName"] }}
     properties:
-      subscription: my-pubsub-subscription
+      subscription: {{ properties["subscriptionName"] }}
       topic: $(ref.{{properties["topicName"]}}.name)
 
       {% if "messageRetentionDuration" in properties %}
