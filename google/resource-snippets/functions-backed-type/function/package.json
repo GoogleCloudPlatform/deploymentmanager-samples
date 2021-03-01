@@ -1,0 +1,7 @@
+{
+  "name": CLOUD_FUNCTION_NAME,
+  "version": "0.0.1",
+  "dependencies": {
+    "googleapis": "^61.0.0"
+  }
+}

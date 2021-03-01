@@ -1,0 +1,219 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SQL instance By name",
+    "description": "Sample API for Custom DM type Provider Backed by Cloud Functions",
+    "version": "1.0.0"
+  },
+  "host": "EXAMPLE_REGION_EXAMPLE_PROJECT.cloudfunctions.net",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/CLOUD_FUNCTION_NAME/{instance}": {
+      "post": {
+        "operationId": "createSqlInstance",
+        "produces": [
+          "application/json"
+        ],
+        "x-google-backend": {
+          "address": "https://EXAMPLE_REGION_EXAMPLE_PROJECT.cloudfunctions.net/CLOUD_FUNCTION_NAME",
+          "protocol": "h2"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "settings",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sqlInstanceSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/updateResponse"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateSqlInstance",
+        "produces": [
+          "application/json"
+        ],
+        "x-google-backend": {
+          "address": "https://EXAMPLE_REGION_EXAMPLE_PROJECT.cloudfunctions.net/CLOUD_FUNCTION_NAME",
+          "protocol": "h2"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "settings",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sqlInstanceSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/updateResponse"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSqlInstance",
+        "produces": [
+          "application/json"
+        ],
+        "x-google-backend": {
+          "address": "https://EXAMPLE_REGION_EXAMPLE_PROJECT.cloudfunctions.net/CLOUD_FUNCTION_NAME",
+          "protocol": "h2"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/sqlInstance"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete-instance-by-name",
+        "produces": [
+          "application/json"
+        ],
+        "x-google-backend": {
+          "address": "https://EXAMPLE_REGION_EXAMPLE_PROJECT.cloudfunctions.net/CLOUD_FUNCTION_NAME",
+          "protocol": "h2"
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instance",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/updateResponse"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "errorResponse": {
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "error": {
+          "schema": {
+            "$ref": "#/definitions/stringMessage"
+          }
+        }
+      }
+    },
+    "stringMessage": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "updateResponse": {
+      "properties": {
+        "instance": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "string"
+        }
+      }
+    },
+    "sqlInstance": {
+      "properties": {
+        "instance": {
+          "type": "string"
+        },
+        "databaseVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "sqlInstanceSettings": {
+      "properties": {
+        "tier": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
