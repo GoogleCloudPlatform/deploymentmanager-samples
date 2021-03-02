@@ -11,12 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+ 
 imports:
-- path: pubsub.jinja
+  - path: pubsub.jinja
 
 resources:
-- name: pubsub
-  type: pubsub.jinja
-  properties:
-    ackDeadlineSeconds: 15
+  - name: pubsub
+    type: pubsub.jinja
+    properties:
+      topicName: my-pubsub-topic
+      subscriptionName: my-pubsub-subscription
+      messageRetentionDuration: "1200s"
+      retainAckedMessages: true
+      ackDeadlineSeconds: 60
+      expirationPolicy:
+        ttl: "86400s"

@@ -12,21 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% set topic = 'configurable-pubsub-topic-' + env['deployment'] %}
-{% set subscription = env['deployment'] + '-' + env['name'] + '-subscription' %}
-
 resources:
-- name: my-topic
-  #type: pubsub.v1.topic
-  type: gcp-types/pubsub-v1:projects.topics
-  properties:
-    topic: {{ topic }}
-- name: my-subscription
-  #type: pubsub.v1.subscription
-  type: gcp-types/pubsub-v1:projects.subscriptions
-  properties:
-    subscription: {{ subscription }}
-    topic: $(ref.my-topic.name)
-    {% if "ackDeadlineSeconds" in properties %}
-    ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
-    {% endif %}
+  - type: pubsub.v1.topic
+    name: {{ properties["topicName"] }}
+    properties:
+      topic: {{ properties["topicName"] }}
+  - type: pubsub.v1.subscription
+    name: {{ properties["subscriptionName"] }}
+    properties:
+      subscription: {{ properties["subscriptionName"] }}
+      topic: $(ref.{{properties["topicName"]}}.name)
+
+      {% if "messageRetentionDuration" in properties %}
+      messageRetentionDuration: {{ properties["messageRetentionDuration"] }}
+      {% endif %}
+      
+      {% if "retainAckedMessages" in properties %}
+      retainAckedMessages: {{ properties["retainAckedMessages"] }}
+      {% endif %}
+      
+      {% if "ackDeadlineSeconds" in properties %}
+      ackDeadlineSeconds: {{ properties["ackDeadlineSeconds"] }}
+      {% endif %}
+      
+      {% if "expirationPolicy" in properties %}
+      expirationPolicy:
+        ttl: {{ properties["expirationPolicy"].ttl }}
+      {% endif %}
+      
+  
