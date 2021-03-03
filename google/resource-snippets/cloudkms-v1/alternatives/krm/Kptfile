@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: cloudkms
+packageMetadata:
+  shortDescription: configure cloudkms
+openAPI:
+  definitions:
+    io.k8s.cli.setters.deployment:
+      description: deployment name
+      x-k8s-cli:
+        setter:
+          name: deployment
+          value: ${DEPLOYMENT?}
+          isSet: true
+    io.k8s.cli.substitutions.deployment-sub:
+      x-k8s-cli:
+        substitution:
+          name: deployment-sub
+          pattern: ${deployment}cryptokey
+          values:
+          - marker: ${deployment}
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
