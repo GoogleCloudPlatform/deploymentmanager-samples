@@ -45,7 +45,7 @@ gcloud pubsub subscriptions list --filter="labels.goog-dm:d1" --project $DM_PROJ
 
 gcloud pubsub subscriptions list --filter="labels.goog-dm:d1" --project $TF_PROJECT_ID | sed "s/${TF_PROJECT_ID}/PROJECT/"  > /tmp/tf.yaml
 
-gcloud pubsub subscriptions list --filter="labels.goog-dm:d1" --project $KRM_PROJECT_ID | sed "s/${KRM_PROJECT_ID}/PROJECT/"  > /tmp/krm.yaml
+gcloud pubsub subscriptions list --filter="labels.goog-dm:d1" --project $KRM_PROJECT_ID | sed "s/${KRM_PROJECT_ID}/PROJECT/" | sed "s/creationTime: .*/creationTime: TIME/" | sed "/cnrm-lease-.*/d" | sed "/managed-by-cnrm.*/d" \  > /tmp/krm.yaml
 
 
 if [[ $(diff /tmp/dm.yaml /tmp/tf.yaml) ]]; then
