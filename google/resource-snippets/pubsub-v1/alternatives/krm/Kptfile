@@ -1,1 +1,38 @@
-
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: pubsub
+packageMetadata:
+  shortDescription: configure pubsub
+openAPI:
+  definitions:
+    io.k8s.cli.setters.deployment:
+      description: deployment name
+      x-k8s-cli:
+        setter:
+          name: deployment
+          value: ${DEPLOYMENT?}
+          isSet: true
+        setter:
+          name: pubsub
+          value: ${PUBSUB?}
+          isSet: true
+    io.k8s.cli.substitutions.deployment-sub:
+      x-k8s-cli:
+        substitution:
+          name: deployment-sub
+          pattern: ${DEPLOYMENT}
+          values:
+          - marker: ${DEPLOYMENT}
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
+          name: topic-substitution
+          pattern: ${PUBSUB}-topic
+          values:
+          - marker: ${PUBSUB}
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
+          name: subscription-substitution
+          pattern: ${PUBSUB}-subscription
+          values:
+          - marker: ${PUBSUB}
+            ref: '#/definitions/io.k8s.cli.setters.deployment'
+    
