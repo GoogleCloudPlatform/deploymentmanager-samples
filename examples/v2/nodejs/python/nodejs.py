@@ -22,22 +22,25 @@ def GenerateConfig(context):
   frontend = context.env['deployment'] + '-frontend'
   firewall = context.env['deployment'] + '-application-fw'
   application_port = 8080
-  mysql_port = 8080
+  mysql_port = 3306
   resources = [{
       'name': backend,
       'type': 'container_vm.py',
       'properties': {
           'zone': context.properties['zone'],
-          'dockerImage': 'gcr.io/deployment-manager-examples/mysql',
+          'dockerImage': 'gcr.io/qwiklabs-resources/mysql',
           'containerImage': 'family/cos-stable',
-          'port': mysql_port
+          'port': mysql_port,
+          'dockerEnv': {
+              'MYSQL_ROOT_PASSWORD': 'mypassword'
+          }
       }
   }, {
       'name': frontend,
       'type': 'frontend.py',
       'properties': {
           'zone': context.properties['zone'],
-          'dockerImage': 'gcr.io/deployment-manager-examples/nodejsservice',
+          'dockerImage': 'gcr.io/qwiklabs-resources/nodejsservice',
           'port': application_port,
           # Define the variables that are exposed to container as env variables.
           'dockerEnv': {
