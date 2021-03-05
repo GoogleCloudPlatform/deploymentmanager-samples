@@ -33,6 +33,23 @@ terraform plan -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 ```
 
+## KRM
+
+Setup:
+
+* Install [gcloud](https://cloud.google.com/sdk/docs/install)
+* Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* Install [kpt](https://github.com/GoogleContainerTools/kpt#installation)
+* Create GCP project
+
+```bash
+gcloud container clusters get-credentials [CLUSTER_ID] --zone=[ZONE]
+cd alternatives/krm
+kpt cfg set . deployment d1
+kpt cfg set . service-account ananke.iam@gmail.com
+kubectl apply -f cloudkms.yaml
+```
+
 ## Testing
 
 ```bash

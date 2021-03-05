@@ -1,0 +1,31 @@
+apiVersion: kms.cnrm.cloud.google.com/v1beta1
+kind: KMSCryptoKey
+metadata:
+  labels:
+    foo: ${DEPLOYMENT?} # {"$kpt-set":"deployment"}
+  name: ${DEPLOYMENT?}-cryptokey # {"$kpt-set":"deployment-sub"}
+spec:
+  keyRingRef:
+    name: test-keyring
+  purpose: ENCRYPT_DECRYPT
+---
+apiVersion: kms.cnrm.cloud.google.com/v1beta1
+kind: KMSKeyRing
+metadata:
+  name: test-keyring
+spec:
+  location: us-central1
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicy
+metadata:
+  name: iampolicy
+spec:
+  resourceRef:
+    apiVersion: kms.cnrm.cloud.google.com/v1beta1
+    kind: KMSKeyRing
+    name: test-keyring
+  bindings:
+  - role: roles/cloudkms.admin
+    members:
+    - serviceAccount: ${SERVICE-ACCOUNT?} # {"$kpt-set":"service-account"}
