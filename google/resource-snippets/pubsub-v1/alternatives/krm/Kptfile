@@ -25,7 +25,7 @@ openAPI:
       x-k8s-cli:
         substitution:
           name: subscription-substitution
-            pattern: ${PUBSUB}-subscription
-            values:
-            - marker: PUBSUB_SETTER
-              ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
+          pattern: ${PUBSUB}-subscription
+          values:
+          - marker: PUBSUB_SETTER
+            ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
