@@ -8,7 +8,7 @@ kind: PubSubSubscription
 metadata:
   name: ${PUBSUB?}-subscription
   labels:
-    goog-dm: ${DEPLOYMENT?}
+    goog-dm: d1
 spec:
     ackDeadlineSeconds: 60
     messageRetentionDuration: "1200s"
