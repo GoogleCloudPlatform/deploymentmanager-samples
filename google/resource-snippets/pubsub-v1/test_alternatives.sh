@@ -32,7 +32,6 @@ popd
 gcloud config set project $KRM_PROJECT_ID
 cp -R alternatives/krm /tmp/krm_${KRM_PROJECT_ID}
 pushd /tmp/krm_${KRM_PROJECT_ID}
-kpt cfg set . DEPLOYMENT d1
 kpt cfg set . PUBSUB my-pubsub
 kubectl apply -f pubsub.yaml
 kubectl  wait --for=condition=Ready PubSub --all
