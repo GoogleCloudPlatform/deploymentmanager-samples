@@ -46,6 +46,7 @@ Setup:
 gcloud container clusters get-credentials [CLUSTER_ID] --zone=[ZONE]
 cd alternatives/krm
 kpt cfg set . deployment d1
+kpt cfg set . service-account ananke.iam@gmail.com
 kubectl apply -f cloudkms.yaml
 ```
 

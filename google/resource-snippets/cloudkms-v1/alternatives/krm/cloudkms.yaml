@@ -28,4 +28,4 @@ spec:
   bindings:
   - role: roles/cloudkms.admin
     members:
-    - serviceAccount:zyansh-dm@zyanshu-dm-convert.iam.gserviceaccount.com
+    - serviceAccount: ${SERVICE-ACCOUNT?} # {"$kpt-set":"service-account"}

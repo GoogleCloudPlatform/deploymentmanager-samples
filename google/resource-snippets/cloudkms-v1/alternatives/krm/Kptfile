@@ -3,7 +3,7 @@ kind: Kptfile
 metadata:
   name: cloudkms
 packageMetadata:
-  shortDescription: configure cloudkms
+  shortDescription: Example Kpt package for configuring a Cloud KMS key
 openAPI:
   definitions:
     io.k8s.cli.setters.deployment:
@@ -17,7 +17,14 @@ openAPI:
       x-k8s-cli:
         substitution:
           name: deployment-sub
-          pattern: ${deployment}cryptokey
+          pattern: ${deployment}-cryptokey
           values:
           - marker: ${deployment}
             ref: '#/definitions/io.k8s.cli.setters.deployment'
+    io.k8s.cli.setters.service-account:
+      description: service account name
+      x-k8s-cli:
+        setter:
+          name: service-account
+          value: ${SERVICE-ACCOUNT?}
+          isSet: true

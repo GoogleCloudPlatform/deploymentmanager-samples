@@ -25,6 +25,7 @@ popd
 cp -R alternatives/krm /tmp/krm_${KRM_PROJECT_ID}
 pushd /tmp/krm_${KRM_PROJECT_ID}
 kpt cfg set . deployment d1
+kpt cfg set . service-account ananke.iam@gmail.com
 kubectl apply -f cloudkms.yaml
 kubectl  wait --for=condition=Ready KMSCryptoKey --all
 popd
