@@ -6,33 +6,26 @@ packageMetadata:
   shortDescription: configure pubsub
 openAPI:
   definitions:
-    io.k8s.cli.setters.deployment:
-      description: deployment name
+    io.k8s.cli.setters.topicsub:
       x-k8s-cli:
         setter:
-          name: deployment
-          value: ${DEPLOYMENT?}
-          isSet: true
-        setter:
-          name: pubsub
+          name: topicsub
           value: ${PUBSUB?}
           isSet: true
-    io.k8s.cli.substitutions.deployment-sub:
+      description: pubsub name
+    io.k8s.cli.substitutions.topic-sub:
       x-k8s-cli:
         substitution:
-          name: deployment-sub
-          pattern: ${DEPLOYMENT}
-          values:
-          - marker: ${DEPLOYMENT}
-            ref: '#/definitions/io.k8s.cli.setters.DEPLOYMENT'
-          name: topic-substitution
+          name: topic-sub
           pattern: ${PUBSUB}-topic
           values:
-          - marker: ${PUBSUB}
+          - marker: PUBSUB_SETTER
             ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
+    io.k8s.cli.substitutions.subscription-sub:
+      x-k8s-cli:
+        substitution:
           name: subscription-substitution
-          pattern: ${PUBSUB}-subscription
-          values:
-          - marker: ${PUBSUB}
-            ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
-    
+            pattern: ${PUBSUB}-subscription
+            values:
+            - marker: PUBSUB_SETTER
+              ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
