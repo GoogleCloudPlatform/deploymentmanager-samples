@@ -32,6 +32,14 @@ cd alternatives/tf
 terraform init
 terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
 ```
+## KRM
+
+Setup:
+
+* Install [gcloud](https://cloud.google.com/sdk/docs/install)
+* Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* Install [kpt](https://github.com/GoogleContainerTools/kpt#installation)
+* Create GCP project
 
 ## Testing
 
