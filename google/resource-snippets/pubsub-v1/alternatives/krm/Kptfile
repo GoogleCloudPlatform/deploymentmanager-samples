@@ -3,29 +3,27 @@ kind: Kptfile
 metadata:
   name: pubsub
 packageMetadata:
-  shortDescription: configure pubsub
+  shortDescription: sample description
 openAPI:
   definitions:
-    io.k8s.cli.setters.topicsub:
+    io.k8s.cli.setters.PUBSUB:
       x-k8s-cli:
         setter:
-          name: topicsub
-          value: ${PUBSUB?}
-          isSet: true
-      description: pubsub name
-    io.k8s.cli.substitutions.topic-sub:
+          name: PUBSUB
+          value: my-pubsub
+    io.k8s.cli.substitutions.topic-subs:
       x-k8s-cli:
         substitution:
-          name: topic-sub
+          name: topic-subs
           pattern: ${PUBSUB}-topic
           values:
-          - marker: PUBSUB_SETTER
+          - marker: ${PUBSUB}
             ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
-    io.k8s.cli.substitutions.subscription-sub:
+    io.k8s.cli.substitutions.subscription-subs:
       x-k8s-cli:
         substitution:
-          name: subscription-substitution
+          name: subscription-subs
           pattern: ${PUBSUB}-subscription
           values:
-          - marker: PUBSUB_SETTER
+          - marker: ${PUBSUB}
             ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
