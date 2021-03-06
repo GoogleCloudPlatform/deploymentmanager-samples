@@ -32,7 +32,10 @@ popd
 gcloud config set project $KRM_PROJECT_ID
 cp -R alternatives/krm /tmp/krm_${KRM_PROJECT_ID}
 pushd /tmp/krm_${KRM_PROJECT_ID}
-kpt cfg set . PUBSUB my-pubsub
+kpt pkg init .
+kpt cfg create-setter . PUBSUB  my-pubsub
+kpt cfg create-subst . topic-subs --field-value my-pubsub-topic --pattern \${PUBSUB}-topic
+kpt cfg create-subst . subscription-subs --field-value my-pubsub-subscription --pattern \${PUBSUB}-subscription
 kubectl apply -f pubsub.yaml
 kubectl  wait --for=condition=Ready PubSub --all
 popd
