@@ -13,11 +13,11 @@
 # limitations under the License.
 
 resources:
-  - type: pubsub.v1.topic
+  - type: gcp-types/pubsub-v1:projects.topics
     name: {{ properties["topicName"] }}
     properties:
       topic: {{ properties["topicName"] }}
-  - type: pubsub.v1.subscription
+  - type: gcp-types/pubsub-v1:projects.subscriptions
     name: {{ properties["subscriptionName"] }}
     properties:
       subscription: {{ properties["subscriptionName"] }}
