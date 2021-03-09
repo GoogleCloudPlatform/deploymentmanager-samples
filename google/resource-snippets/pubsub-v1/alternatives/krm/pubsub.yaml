@@ -1,17 +1,17 @@
 apiVersion: pubsub.cnrm.cloud.google.com/v1beta1
 kind: PubSubTopic
 metadata:
-  name: my-pubsub-topic
+  name: {$PUBSUB?}-topic
 ---
 apiVersion: pubsub.cnrm.cloud.google.com/v1beta1
 kind: PubSubSubscription
 metadata:
-  name: my-pubsub-subscription
+  name: {$PUBSUB?}-subscription
   labels:
     goog-dm: d1
 spec:
   topicRef:
-    name: my-pubsub-topic
+    name: {$PUBSUB?}-topic
   ackDeadlineSeconds: 60
   messageRetentionDuration: "1200s"
   retainAckedMessages: true
