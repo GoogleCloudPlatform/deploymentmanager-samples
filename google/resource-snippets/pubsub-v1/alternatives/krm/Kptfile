@@ -3,7 +3,7 @@ kind: Kptfile
 metadata:
   name: pubsub
 packageMetadata:
-  shortDescription: sample description
+  shortDescription: Example Kpt package for configuring a Cloud Pub/Sub topic and subscription 
 openAPI:
   definitions:
     io.k8s.cli.setters.PUBSUB:
