@@ -38,7 +38,7 @@ provision_using_krm() {
   gcloud pubsub subscriptions list --filter="labels.goog-dm:deployment" --project "${PROJECT_ID}" | sed "s/creationTime: .*/creationTime: TIME/" | sed "/cnrm-lease-.*/d" | sed "/managed-by-cnrm.*/d"  > /tmp/krm.yaml
   kubectl delete -f pubsub.yaml
   popd
-  rm -rf krm_${PROJECT_ID}
+  rm -rf /tmp/krm_${PROJECT_ID}
 }
 
 gcloud config set project "${PROJECT_ID}"
