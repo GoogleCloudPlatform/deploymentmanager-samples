@@ -12,7 +12,7 @@ DM_PROJECT_ID=[DM_PROJECT_ID]
 gcloud config set project $DM_PROJECT_ID
 gcloud services enable pubsub.googleapis.com
 gcloud services enable deploymentmanager.googleapis.com
-gcloud deployment-manager deployments create d1 --config pubsub.yaml
+gcloud deployment-manager deployments create deployment --config pubsub.yaml
 ```
 
 ## Terraform
@@ -30,7 +30,7 @@ gcloud config set project $TF_PROJECT_ID
 gcloud services enable pubsub.googleapis.com
 cd alternatives/tf
 terraform init
-terraform apply -auto-approve -var="deployment=d1" -var="project_id=${TF_PROJECT_ID}"
+terraform apply -auto-approve -var="deployment=deployment" -var="project_id=${TF_PROJECT_ID}"
 ```
 ## KRM
 
