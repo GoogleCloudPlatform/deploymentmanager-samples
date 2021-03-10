@@ -1,0 +1,29 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: pubsub
+packageMetadata:
+  shortDescription: Example Kpt package for configuring a Cloud Pub/Sub topic and subscription 
+openAPI:
+  definitions:
+    io.k8s.cli.setters.PUBSUB:
+      x-k8s-cli:
+        setter:
+          name: PUBSUB
+          value: my-pubsub
+    io.k8s.cli.substitutions.topic-subs:
+      x-k8s-cli:
+        substitution:
+          name: topic-subs
+          pattern: ${PUBSUB}-topic
+          values:
+          - marker: ${PUBSUB}
+            ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
+    io.k8s.cli.substitutions.subscription-subs:
+      x-k8s-cli:
+        substitution:
+          name: subscription-subs
+          pattern: ${PUBSUB}-subscription
+          values:
+          - marker: ${PUBSUB}
+            ref: '#/definitions/io.k8s.cli.setters.PUBSUB'
