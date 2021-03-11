@@ -8,10 +8,10 @@ kind: PubSubSubscription
 metadata:
   name: ${PUBSUB?}-subscription # {"$ref":"#/definitions/io.k8s.cli.substitutions.subscription-subs"}
   labels:
-    goog-dm: d1
+    goog-dm: deployment
 spec:
   topicRef:
-    name: {$PUBSUB?}-topic # {"$ref":"#/definitions/io.k8s.cli.substitutions.topic-subs"}
+    name: ${PUBSUB?}-topic # {"$ref":"#/definitions/io.k8s.cli.substitutions.topic-subs"}
   ackDeadlineSeconds: 60
   messageRetentionDuration: "1200s"
   retainAckedMessages: true
