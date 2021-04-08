@@ -80,11 +80,11 @@ First, we can use `kubectl` and port-forward from one of the Kubernetes Pods (`$
       kubectl get pods --output=jsonpath="{.items[0].metadata.name}") \
       9999:${PORT}
 
-You may then:
+Since that session will be occupied running `kubectl port-forward`, you'll  have to open a second session in which you may then:
 
     curl localhost:9999
 
-Second, we can use `gcloud compute ssh` to port-forward from one of the Kubernetes Nodes using the Service's `NodePort` to our localhost (`:9999`):
+In that second session, you can also use `gcloud compute ssh` to port-forward from one of the Kubernetes Nodes using the Service's `NodePort` to our localhost (`:9999`):
 
 Let's grab one of our cluster's nodes at random:
 
@@ -101,7 +101,7 @@ Let's determine the `NodePort` of our Service; it is exposed on every Node:
 
     gcloud compute ssh ${NODE_HOST} --ssh-flag="-L ${NODE_PORT}:localhost:${NODE_PORT}"
 
-From a second session, you may then browse or:
+Now  that you have additional port forwarding turned on in that second session, from a third session, you may then browse or:
 
     curl localhost:${NODE_PORT}
 
@@ -109,6 +109,6 @@ From a second session, you may then browse or:
 
 When deploying into a Kubernetes cluster with Deployment Manager, it is
 important to be aware that deleting `Deployment` Kubernetes objects
-**does not delete the underlying pods**, and it is your responsibility to
+**may not delete the underlying pods**, and it is your responsibility to
 manage the destruction of these resources when deleting a
 `Deployment` in your configuration.
