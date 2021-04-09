@@ -26,13 +26,12 @@ def GenerateConfig(context):
       'Service': ''.join([
           cluster_types_root,
           ':',
-          '/api/v1/namespaces/{namespace}/services'
+          '/api/v1/namespaces/{namespace}/services/{name}'
           ]),
       'Deployment': ''.join([
           cluster_types_root,
-          '-apps',
           ':',
-          '/apis/apps/v1beta1/namespaces/{namespace}/deployments'
+          '/apis/apps/v1/namespaces/{namespace}/deployments/{name}'
           ])
   }
 
@@ -68,7 +67,7 @@ def GenerateConfig(context):
       'name': name_prefix + '-deployment',
       'type': cluster_types['Deployment'],
       'properties': {
-          'apiVersion': 'apps/v1beta1',
+          'apiVersion': 'apps/v1',
           'kind': 'Deployment',
           'namespace': 'default',
           'metadata': {
@@ -76,6 +75,11 @@ def GenerateConfig(context):
           },
           'spec': {
               'replicas': 1,
+              'selector': {
+                  'matchLabels': {
+                      'app': name_prefix
+                  }
+              },
               'template': {
                   'metadata': {
                       'labels': {
