@@ -14,11 +14,8 @@ limitations under the License.
 
 {% set CLUSTER_TYPE = env['project'] + '/' + properties['clusterType'] %}
 
-{% set SERVICE_COLLECTION_PREFIX = '/api/v1/namespaces/{namespace}/' %}
-{% set SERVICE_COLLECTION = SERVICE_COLLECTION_PREFIX + 'services' %}
-
-{% set DEPLOYMENT_COLLECTION_PREFIX = '/apis/apps/v1beta1/namespaces/{namespace}/' %}
-{% set DEPLOYMENT_COLLECTION = DEPLOYMENT_COLLECTION_PREFIX + 'deployments' %}
+{% set SERVICE_COLLECTION = '/api/v1/namespaces/{namespace}/services/{name}' %}
+{% set DEPLOYMENT_COLLECTION = '/apis/apps/v1/namespaces/{namespace}/deployments/{name}' %}
 
 {% set NAME_PREFIX = env['deployment'] + '-' + env['name'] %}
 
@@ -45,15 +42,18 @@ resources:
         app: {{ NAME_PREFIX }}
 
 - name: {{ NAME_PREFIX }}-deployment
-  type: {{ CLUSTER_TYPE }}-apps:{{ DEPLOYMENT_COLLECTION }}
+  type: {{ CLUSTER_TYPE }}:{{ DEPLOYMENT_COLLECTION }}
   properties:
-    apiVersion: apps/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     namespace: default
     metadata:
       name: {{ NAME_PREFIX }}-deployment
     spec:
       replicas: 1
+      selector:
+        matchLabels:
+          app: {{ NAME_PREFIX }}
       template:
         metadata:
           labels:

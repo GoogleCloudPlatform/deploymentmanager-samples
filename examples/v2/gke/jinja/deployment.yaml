@@ -19,6 +19,6 @@ resources:
 - name: my-service
   type: deployment.jinja
   properties:
-    clusterType: m-my-cluster-type #<cluster-type>
+    clusterType: <cluster-type>
     image: nginx #gcr.io/deployment-manager-examples/nodejsservicestatic
     port: 80
