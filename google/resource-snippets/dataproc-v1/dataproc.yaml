@@ -21,6 +21,6 @@ resources:
   properties:
     # Don't change "initialWorkerSize" after dataproc cluster get created 
     # since dataproc doesn't support UPDATE request on exsiting cluster.
-    initialWorkerSize: 3
+    initialWorkerSize: 2
     region: REGION_TO_RUN
     zone: ZONE_TO_RUN
