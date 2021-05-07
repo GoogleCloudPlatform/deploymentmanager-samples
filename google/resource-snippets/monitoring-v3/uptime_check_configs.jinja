@@ -1,0 +1,34 @@
+resources:
+- name: uptime-check-{{ env["deployment"] }}
+  type: gcp-types/monitoring-v3:projects.uptimeCheckConfigs
+  properties:
+    displayName: My uptime check
+    httpCheck:
+      path: /
+      port: 80
+    monitoredResource:
+      labels:
+        module_id: default
+        project_id: {{ env["project"] }}
+        version_id: $(ref.app-{{ env["deployment"] }}.id)
+      type: gae_app
+    period: 300s
+    timeout: 10s
+- name: app-{{ env["deployment"] }}
+  type: gcp-types/appengine-v1:apps.services.versions
+  properties:
+    servicesId: default
+    appsId: {{ env["project"] }}
+    deployment:
+      files:
+        main.py:
+          sourceUrl: https://storage.googleapis.com/admin-api-public-samples/hello_world/main.py
+    handlers:
+      - script:
+          scriptPath: main.app
+        securityLevel: SECURE_OPTIONAL
+        urlRegex: /
+    runtime: python27
+    threadsafe: true
+
+
