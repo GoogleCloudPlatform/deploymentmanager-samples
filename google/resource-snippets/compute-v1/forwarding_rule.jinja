@@ -18,10 +18,13 @@ resources:
   properties:
     region: {{ properties["region"] }}
     IPProtocol: TCP
-    portRange: 80
-    target: $(ref.target-pool-{{ env["deployment"] }}.selfLink)
-- type: gcp-types/compute-v1:targetPools
-  name: target-pool-{{ env["deployment"] }}
+    allPorts: true
+    target: $(ref.target-instance-{{ env["deployment"] }}.selfLink)
+    loadBalancingScheme: INTERNAL
+- type: gcp-types/compute-v1:targetInstances
+  name: target-instance-{{ env["deployment"] }}
   properties:
-    description: integration test target pool
-    region: {{ properties["region"] }}
+    natPolicy: NO_NAT
+    instance: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/instances/instance-404
+    description: integration test target instance
+    zone: {{ properties["zone"] }}

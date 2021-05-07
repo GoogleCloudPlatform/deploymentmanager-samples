@@ -25,20 +25,18 @@ resources:
   properties:
     region: {{ properties["region"] }}
     IPProtocol: TCP
+    IPAddress: 127.0.0.1
     portRange: 80
     target: $(ref.{{ TARGET }}.selfLink)
+    loadBalancingScheme: INTERNAL_SELF_MANAGED
 
-- type: gcp-types/compute-v1:httpHealthChecks
+- type: gcp-types/compute-v1:healthChecks
   name: {{ HEALTHCHECK }}
   properties:
-    host: localhost
-    port: 8080
-    requestPath: /path/to/my/service
-    timeoutSec: 3
-    description: integration test http health check
-    checkIntervalSec: 3
-    unhealthyThreshold: 5
-    healthyThreshold: 2
+    type: TCP
+    tcpHealthCheck:
+      portName: test-port
+      port: 8080
 
 - type: gcp-types/compute-v1:backendServices
   name: {{ BS1 }}
@@ -50,6 +48,7 @@ resources:
     portName: http
     protocol: HTTP
     timeoutSec: 30
+    loadBalancingScheme: INTERNAL_SELF_MANAGED
 
 - type: gcp-types/compute-v1:backendServices
   name: {{ BS2 }}
@@ -61,6 +60,7 @@ resources:
     portName: http
     protocol: HTTP
     timeoutSec: 30
+    loadBalancingScheme: INTERNAL_SELF_MANAGED
 
 - type: gcp-types/compute-v1:urlMaps
   name: {{ URLMAP }}
