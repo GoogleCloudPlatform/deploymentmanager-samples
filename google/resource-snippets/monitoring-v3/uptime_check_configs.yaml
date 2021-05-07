@@ -4,3 +4,5 @@ imports:
 resources:
 - name: uptime_check_config
   type: uptime_check_configs.jinja
+  properties:
+    timeout: 10s
