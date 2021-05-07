@@ -20,3 +20,4 @@ resources:
   type: forwarding_rule.jinja
   properties:
     region: REGION_TO_RUN
+    zone: ZONE_TO_RUN
