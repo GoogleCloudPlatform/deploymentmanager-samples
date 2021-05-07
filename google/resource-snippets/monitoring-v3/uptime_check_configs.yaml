@@ -1,15 +1,6 @@
+imports:
+- path: uptime_check_configs.jinja
+
 resources:
 - name: uptime_check_config
-  type: gcp-types/monitoring-v3:projects.uptimeCheckConfigs
-  properties:
-    displayName: My uptime check
-    httpCheck:
-      path: /
-      port: 80
-    monitoredResource:
-      labels:
-        module_id: default
-      type: gae_app
-    period: 300s
-    timeout: 10s
-
+  type: uptime_check_configs.jinja
