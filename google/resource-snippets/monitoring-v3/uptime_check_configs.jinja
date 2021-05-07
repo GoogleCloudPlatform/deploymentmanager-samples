@@ -13,7 +13,7 @@ resources:
         version_id: $(ref.app-{{ env["deployment"] }}.id)
       type: gae_app
     period: 300s
-    timeout: 10s
+    timeout: {{ properties["timeout"] }}
 - name: app-{{ env["deployment"] }}
   type: gcp-types/appengine-v1:apps.services.versions
   properties:
