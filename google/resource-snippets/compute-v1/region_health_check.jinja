@@ -1,0 +1,9 @@
+resources:
+- name: hc-{{ env["deployment"] }}
+  type: gcp-types/compute-v1:regionHealthChecks
+  properties:
+    region: {{ properties["region"] }}
+    type: TCP
+    tcpHealthCheck:
+      portName: port-{{ env["deployment"] }}
+      port: {{ properties["port"] }}
