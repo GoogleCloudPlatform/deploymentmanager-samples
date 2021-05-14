@@ -1,0 +1,9 @@
+imports:
+- path: region_health_check.jinja
+
+resources:
+- name: health-check
+  type: region_health_check.jinja
+  properties:
+    region: REGION_TO_RUN
+    port: 80
