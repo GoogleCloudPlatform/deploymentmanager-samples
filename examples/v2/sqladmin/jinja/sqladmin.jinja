@@ -22,7 +22,7 @@ resources:
     name: {{ database_name }}
     instance: $(ref.{{ instance_name }}.name)
     charset: utf8
-{% set dependency = 'database_name' %}
+{% set dependency = database_name %}
 
 {% for n in range(properties['readReplicas']) %}
 - name: {{ replica_name }}-{{n}}
@@ -30,7 +30,7 @@ resources:
   metadata:
     dependsOn:
     {% if n == 0 %}
-    - database_name
+    - {{ database_name }}
     {% else %}
     - {{ replica_name + '-' + (n-1)|string }}
     {% endif %}
