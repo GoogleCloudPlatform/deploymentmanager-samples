@@ -65,13 +65,13 @@ if (args.computeinstancelimit):
 
 
 if debug > 1:
-    print 'Launching autoscaler.py with the following arguments:'
-    print 'project_id: ' + project
-    print 'region: ' + region
-    print 'zone: ' + zone
-    print 'group_manager: ' + instance_group_manager
-    print 'computeinstancelimit: ' + str(compute_instance_limit)
-    print 'debuglevel: ' + str(debug)
+    print('Launching autoscaler.py with the following arguments:')
+    print('project_id: ' + project)
+    print('region: ' + region)
+    print('zone: ' + zone)
+    print('group_manager: ' + instance_group_manager)
+    print('computeinstancelimit: ' + str(compute_instance_limit))
+    print('debuglevel: ' + str(debug))
 
 
 # Remove specified instance from MIG and decrease MIG size
@@ -86,7 +86,7 @@ def deleteFromMig(instance):
             body=instances_to_delete)
     response = requestDelInstance.execute()
     if debug > 0:
-        print 'Request to delete instance ' + instance
+        print('Request to delete instance ' + instance)
         pprint(response)
 
     return response
@@ -100,7 +100,7 @@ def getInstanceTemplateInfo():
     template_name = ''
 
     if debug > 1:
-        print 'Request for the template name'
+        print('Request for the template name')
         pprint(responseTemplateName)
 
     if len(responseTemplateName) > 0:
@@ -115,23 +115,23 @@ def getInstanceTemplateInfo():
     responseInstanceTemplateInfo = requestInstanceTemplate.execute()
 
     if debug > 1:
-        print 'Template information'
+        print('Template information')
         pprint(responseInstanceTemplateInfo['properties'])
 
     machine_type = responseInstanceTemplateInfo['properties']['machineType']
     is_preemtible = responseInstanceTemplateInfo['properties']['scheduling']['preemptible']
     if debug > 0:
-        print 'Machine Type: ' + machine_type
-        print 'Is preemtible: ' + str(is_preemtible)
+        print('Machine Type: ' + machine_type)
+        print('Is preemtible: ' + str(is_preemtible))
     request = service.machineTypes().get(project=project, zone=zone,
             machineType=machine_type)
     response = request.execute()
     guest_cpus = response['guestCpus']
     if debug > 1:
-        print 'Machine information'
+        print('Machine information')
         pprint(responseInstanceTemplateInfo['properties'])
     if debug > 0:
-        print 'Guest CPUs: ' + str(guest_cpus)
+        print('Guest CPUs: ' + str(guest_cpus))
 
     instanceTemlateInfo = {'machine_type': machine_type,
                            'is_preemtible': is_preemtible,
@@ -156,67 +156,67 @@ else:
     idle_jobs = 0
     on_hold_jobs = 0
 
-print 'Total queue length: ' + str(queue)
-print 'Idle jobs: ' + str(idle_jobs)
-print 'Jobs on hold: ' + str(on_hold_jobs)
+print('Total queue length: ' + str(queue))
+print('Idle jobs: ' + str(idle_jobs))
+print('Jobs on hold: ' + str(on_hold_jobs))
 
 instanceTemlateInfo = getInstanceTemplateInfo()
 if debug > 1:
-    print 'Information about the compute instance template'
+    print('Information about the compute instance template')
     pprint(instanceTemlateInfo)
 
 cores_per_node = instanceTemlateInfo['guest_cpus']
-print 'Number of CPU per compute node: ' + str(cores_per_node)
+print('Number of CPU per compute node: ' + str(cores_per_node))
 
 # Get state for for all jobs in Condor
 name_req = 'condor_status  -af name state'
 slot_names = os.popen(name_req).read().splitlines()
 if debug > 1:
-    print 'Currently running jobs in Condor'
-    print slot_names
+    print('Currently running jobs in Condor')
+    print(slot_names)
 
 # Adjust current queue length by the number of jos that are on-hold
 queue -=on_hold_jobs
 if on_hold_jobs>0:
-    print "Adjusted queue length: " + str(queue) 
+    print("Adjusted queue length: " + str(queue))
 
 # Calculate number instances to satisfy current job queue length
 if queue > 0:
     size = int(math.ceil(float(queue) / float(cores_per_node)))
     if debug>0:
-       print "Calucalting size of MIG: ⌈" + str(queue) + "/" + str(cores_per_node) + "⌉ = " + str(size)
+       print("Calucalting size of MIG: ⌈" + str(queue) + "/" + str(cores_per_node) + "⌉ = " + str(size))
 else:
     size = 0
 
 # If compute instance limit is specified, can not start more instances then specified in the limit
 if compute_instance_limit > 0 and size > compute_instance_limit:
     size = compute_instance_limit;
-    print "MIG target size will be limited by " + str(compute_instance_limit)
+    print("MIG target size will be limited by " + str(compute_instance_limit))
 
-print 'New MIG target size: ' + str(size)
+print('New MIG target size: ' + str(size))
 
 # Get current number of instances in the MIG
 requestGroupInfo = service.instanceGroupManagers().get(project=project,
         zone=zone, instanceGroupManager=instance_group_manager)
 responseGroupInfo = requestGroupInfo.execute()
 currentTarget = int(responseGroupInfo['targetSize'])
-print 'Current MIG target size: ' + str(currentTarget)
+print('Current MIG target size: ' + str(currentTarget))
 
 if debug > 1:
-    print 'MIG Information:'
-    print responseGroupInfo
+    print('MIG Information:')
+    print(responseGroupInfo)
 
 if size == 0 and currentTarget == 0:
-    print 'No jobs in the queue and no compute instances running. Nothing to do'
+    print('No jobs in the queue and no compute instances running. Nothing to do')
     exit()
 
 if size == currentTarget:
-    print 'Running correct number of compute nodes to handle number of jobs in the queue'
+    print('Running correct number of compute nodes to handle number of jobs in the queue')
     exit()
 
 
 if size < currentTarget:
-    print 'Scaling down. Looking for nodes that can be shut down' 
+    print('Scaling down. Looking for nodes that can be shut down' )
     # Find nodes that are not busy (all slots showing status as "Unclaimed")
 
     node_busy = {}
@@ -234,7 +234,7 @@ if size < currentTarget:
                 server = slot_server[0].split('.')[0]
 
             if debug > 0:
-                print slot + ', ' + server + ', ' + status + '\n'
+                print(slot + ', ' + server + ', ' + status + '\n')
 
             if server not in node_busy:
                 if status == 'Unclaimed':
@@ -246,23 +246,23 @@ if size < currentTarget:
                     node_busy[server] = True
                     
     if debug > 1:
-        print 'Compuute node busy status:'
-        print node_busy
+        print('Compuute node busy status:')
+        print(node_busy)
 
     # Shut down nodes that are not busy
     for node in node_busy:
         if not node_busy[node]:
-            print 'Will shut down: ' + node + ' ...'
+            print('Will shut down: ' + node + ' ...')
             respDel = deleteFromMig(node)
             if debug > 1:
-                print "Shut down request for compute node " + node
+                print("Shut down request for compute node " + node)
                 pprint(respDel)
                 
     if debug > 1:
-        print "Scaling down complete"
+        print("Scaling down complete")
 
 if size > currentTarget:
-    print "Scaling up. Need to increase number of instances to " + str(size)
+    print("Scaling up. Need to increase number of instances to " + str(size))
     #Request to resize
     request = service.instanceGroupManagers().resize(project=project,
             zone=zone, 
@@ -270,6 +270,6 @@ if size > currentTarget:
             size=size)
     response = request.execute()
     if debug > 1:
-        print 'Requesting to increase MIG size'
+        print('Requesting to increase MIG size')
         pprint(response)
-        print "Scaling up complete"
+        print("Scaling up complete")
