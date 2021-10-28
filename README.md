@@ -1,6 +1,6 @@
 # Deployment Manager Examples
 
-> NOTE: You can now convert your existing Deployment Manager configuration to KRM or Terraform. For more details, see [Using DM Convert to transition to Kubernetes Resource Model (KRM) or Terraform](https://cloud.google.com/deployment-manager/docs/dm-convert). You can also find examples of equivalent KRM or Terraform configuration in `alternatives` subfolders of [resource snippets](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/master/google/resource-snippets).
+> NOTE: You can now convert your existing Deployment Manager configuration to [KRM](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/resource-management.md) or [Terraform](https://cloud.google.com/docs/terraform). For more details, see [Using DM Convert to transition to Kubernetes Resource Model (KRM) or Terraform](https://cloud.google.com/deployment-manager/docs/dm-convert). You can also find examples of equivalent KRM or Terraform configuration in `alternatives` subfolders of [resource snippets](https://github.com/GoogleCloudPlatform/deploymentmanager-samples/tree/master/google/resource-snippets).
 
 Google Cloud Deployment Manager is an infrastructure management service that makes it simple to create, deploy, and manage Google Cloud Platform resources. With Deployment Manager, you can create a static or dynamic template that describes the configuration of your Google Cloud environment and then use Deployment Manager to create these resources as a single deployment.
 
