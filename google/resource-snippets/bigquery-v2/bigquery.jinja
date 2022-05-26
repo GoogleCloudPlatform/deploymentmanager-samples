@@ -34,3 +34,8 @@ resources:
     datasetId: $(ref.{{ DATASET }}-test.datasetReference.datasetId)
     tableReference:
       tableId: {{ TABLE }}
+# tableMetadataView property allows consumers to set the query parameter
+# used on GET requests
+    {% if properties and properties["tableMetadataView"] %}
+    tableMetadataView: {{ properties["tableMetadataView"] }}
+    {% endif %}
