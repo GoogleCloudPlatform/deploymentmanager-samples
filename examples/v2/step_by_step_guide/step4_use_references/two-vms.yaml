@@ -24,7 +24,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-11
     networkInterfaces:
     # The resource's "network value" has been replaced with a
     # reference to the new network's "selfLink" property. The network 
@@ -44,7 +44,7 @@ resources:
       boot: true
       autoDelete: true
       initializeParams:
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-11
     networkInterfaces:
     # As in the resource above, the "network" value has been replaced with 
     # the new network's "selfLink" property. 

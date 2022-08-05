@@ -16,7 +16,7 @@
 """
 
 IMAGE = ('https://www.googleapis.com/compute/v1/projects/debian-cloud'
-         '/global/images/family/debian-9')
+         '/global/images/family/debian-11')
 
 
 def GenerateConfig(context):

@@ -64,7 +64,7 @@ def GenerateConfig(context):
               'diskName': base_name + '-disk',
               'sourceImage': GlobalComputeUrl(
                   'debian-cloud', 'images',
-                  'family/debian-9')
+                  'family/debian-11')
               },
           }],
       'networkInterfaces': [{
