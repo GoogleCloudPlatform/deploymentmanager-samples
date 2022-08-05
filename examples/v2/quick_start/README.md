@@ -7,7 +7,7 @@ Manager](https://cloud.google.com/deployment-manager/quickstart) configuration
 file that deploys a single VM. It is the most basic example of a configuration
 file. To use it, replace `[MY_PROJECT]` with your project ID, `[IMAGE_PROJECT]`
 with a project name, like "debian-cloud", and `[FAMILY_NAME]`
-with image family name, like "debian-9". Then run
+with image family name, like "debian-11". Then run
 
     gcloud deployment-manager deployments create quick-start-deployment
     --config vm.yaml

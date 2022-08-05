@@ -49,7 +49,7 @@ def GenerateConfig(context):
                     'diskName': project + '-boot',
                     'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
                                             'debian-cloud/global/images/',
-                                            'family/debian-9'])
+                                            'family/debian-11'])
                 }
                })
   for disk_obj in context.properties['disks']:

@@ -64,7 +64,7 @@ def GenerateConfig(context):
                   'diskName': 'disk-' + context.env['deployment'],
                   'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
                                           'debian-cloud/global/',
-                                          'images/family/debian-9'])}
+                                          'images/family/debian-11'])}
           }, {
               # Specify the data disk to mount. The deviceName can be anything,
               # but by convention is typically set to the same name.
