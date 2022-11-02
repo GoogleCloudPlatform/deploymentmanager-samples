@@ -29,10 +29,10 @@ properties:
   imageType:
     type: string
     description: Image type of the cluster's node pool (cos or ubuntu)
-    default: cos
+    default: cos_containerd
     enum:
-    - cos
-    - container_vm
+    - cos_containerd
+    - ubuntu_containerd
   autoscaling:
     type: boolean
     description: True if node pool should autoscale.
