@@ -19,5 +19,5 @@ resources:
 - name: access-levels-template
   type: ios_access_level.jinja
   properties:
-    version: v1
+    version: v1beta
     level: level_name

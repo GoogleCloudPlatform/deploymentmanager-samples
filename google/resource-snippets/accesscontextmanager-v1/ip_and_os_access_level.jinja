@@ -12,12 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-imports:
-- path: mac_os_access_level.jinja
-
 resources:
-- name: access-levels-template
-  type: mac_os_access_level.jinja
+- name: access-level-1-{{ env["deployment"] }}
+  type: gcp-types/accesscontextmanager-{{ properties["version"] }}:accessPolicies.accessLevels
   properties:
-    version: v1beta
-    level: level_name
+    name: accessPolicies/578359180191/accessLevels/{{ properties["level"] }}
+    parent: accessPolicies/578359180191
+    title: access-level-1-title-{{ env["deployment"] }}
+    description: Sample access level using IP and OS constraints.
+    basic:
+      combiningFunction: AND
+      conditions:
+      - ipSubnetworks:
+        - 192.0.2.0/24
+      - devicePolicy:
+          osConstraints:
+          - osType: {{ properties["osType"] }}
+            minimumVersion: 10.10.0
