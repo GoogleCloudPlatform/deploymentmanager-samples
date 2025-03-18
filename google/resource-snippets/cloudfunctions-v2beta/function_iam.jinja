@@ -24,7 +24,7 @@ resources:
           bucket: cloud-function-sample
           object: function.zip
       entryPoint: handler
-      runtime: nodejs16
+      runtime: {{ properties['runtime'] }}
 - name: {{ env['deployment'] }}-my-function-iam
   type: gcp-types/cloudfunctions-v2beta:virtual.projects.locations.functions.iamMemberBinding
   properties:
