@@ -21,4 +21,4 @@ resources:
   properties:
      region: REGION_TO_RUN
      entryPoint: handler
-     runtime: nodejs18
+     runtime: nodejs22
