@@ -1,3 +1,7 @@
+# Deprecation Notice
+This code is deprecated, and is not guaranteed to work in any way. If you want to deploy Lustre on Google Cloud, it is recommended that you consider using the [Managed Lustre service](https://cloud.google.com/products/managed-lustre?hl=en), or
+deploying [DDN EXAScaler Lustre using the Cluster Toolkit](https://github.com/GoogleCloudPlatform/cluster-toolkit/tree/main/community/modules/file-system/DDN-EXAScaler).
+
 # Lustre Deployment Manager Script
 
 This is a Deployment Manager script to deploy a Lustre parallel file system cluster on Google Cloud Platform. This tool deploys the open source Lustre RPMs available on whamcloud.com.
