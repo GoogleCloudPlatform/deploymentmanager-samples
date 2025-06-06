@@ -57,7 +57,7 @@ resources:
       - name: {{ env["deployment"] }}np
         config:
           machineType: g1-small
-          diskSizeGb: 10
+          diskSizeGb: 20
           oauthScopes:
           - https://www.googleapis.com/auth/devstorage.read_only
           imageType: {{ properties["imageType"] }}
