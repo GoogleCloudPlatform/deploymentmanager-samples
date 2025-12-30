@@ -175,7 +175,7 @@ EOF
 function hsm_import_bucket()
 {
 
-	bucket_file_list=`gsutil ls -r ${HSM_GCS_BUCKET_IMPORT}/** | sed "/\/:$/d"`
+	bucket_file_list=`gcloud storage ls --recursive ${HSM_GCS_BUCKET_IMPORT}/** | sed "/\/:$/d"`
 
 	for i in $bucket_file_list
 	do

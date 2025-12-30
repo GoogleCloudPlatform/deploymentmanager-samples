@@ -12,8 +12,8 @@
 deleteBucket() {
   local BUCKET_NAME=$PROJECT-$APP
   echo "Deleting bucket"
-  gsutil rm -raf gs://${BUCKET_NAME}/*
-  gsutil rb -f gs://${BUCKET_NAME}/
+  gcloud storage rm --recursive --all-versions --continue-on-error gs://${BUCKET_NAME}/*
+  gcloud storage buckets delete --continue-on-error gs://${BUCKET_NAME}/
 }
 
 ##

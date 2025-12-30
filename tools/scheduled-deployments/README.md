@@ -67,7 +67,7 @@ $ zip -jr ./functions scheduled-deployments.zip
 and upload that folder to Cloud Storage
 
 ```sh
-$ gsutil cp scheduled-deployments.zip gs://[PROJECT-ID].appspot.com
+$ gcloud storage cp scheduled-deployments.zip gs://[PROJECT-ID].appspot.com
 ```
 
 where `gs://[PROJECT-ID].appspot.com` is your Cloud Storage bucket name.
@@ -89,7 +89,7 @@ Cloud Storage. Make sure the file is set to be shared publicly. To upload to
 Cloud Storage, you can execute
 
 ```sh
-$ gsutil cp -a public-read openapi.json gs://[PROJECT-ID].appspot.com
+$ gcloud storage cp --predefined-acl=public-read openapi.json gs://[PROJECT-ID].appspot.com
 ```
 
 so your specification file will be available at
