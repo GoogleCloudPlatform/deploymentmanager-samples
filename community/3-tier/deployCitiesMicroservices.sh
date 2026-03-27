@@ -28,7 +28,7 @@ echo ${BUCKET_NAME}
   echo_mesg "Deploying cities-service"
 
   ######### Copy Startup Script for cities-service
-  gsutil cp -r startup-scripts/cities-service.sh gs://${BUCKET_NAME}/startup-scripts/cities-service.sh 
+  gcloud storage cp --recursive startup-scripts/cities-service.sh gs://${BUCKET_NAME}/startup-scripts/cities-service.sh 
 
   ######### Create Instance Group for cities service
   createRegionalInstanceGroup cities-service ${APP_REGION} ${PROJECT} $NETWORK $SUBNET $BUCKET_NAME
@@ -49,7 +49,7 @@ deployCitiesUI() {
   echo_mesg "Deploying cities-ui"
 
   ######### Copy startup script for cities-ui
-  gsutil cp -r startup-scripts/cities-ui.sh gs://${BUCKET_NAME}/startup-scripts/cities-ui.sh
+  gcloud storage cp --recursive startup-scripts/cities-ui.sh gs://${BUCKET_NAME}/startup-scripts/cities-ui.sh
 
   ######### Create Instance Groups for cities ui
   createRegionalInstanceGroup cities-ui ${APP_REGION} ${PROJECT} $NETWORK $SUBNET $BUCKET_NAME
@@ -94,7 +94,7 @@ echo_mesg "****** Deploying Microservices *****"
 
 ######### Create Bucket
 echo_mesg "Creating Bucket"
-gsutil mb gs://${BUCKET_NAME}/
+gcloud storage buckets create gs://${BUCKET_NAME}/
 
 ######## Create VPC Network and subnetwork
 createVPCNetwork

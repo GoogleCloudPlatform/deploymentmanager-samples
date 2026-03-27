@@ -36,7 +36,7 @@ gcloud iam service-accounts add-iam-policy-binding \
     cnrm-system@${KRM_PROJECT_ID}.iam.gserviceaccount.com \
     --member="serviceAccount:${KRM_PROJECT_ID}.svc.id.goog[cnrm-system/cnrm-controller-manager]" \
     --role="roles/iam.workloadIdentityUser"
-gsutil cp gs://cnrm/latest/release-bundle.tar.gz release-bundle.tar.gz
+gcloud storage cp gs://cnrm/latest/release-bundle.tar.gz release-bundle.tar.gz
 rm -rf release-bundle
 tar zxvf release-bundle.tar.gz
 sed -i.bak 's/${PROJECT_ID?}/'"$KRM_PROJECT_ID"'/' install-bundle-workload-identity/0-cnrm-system.yaml
